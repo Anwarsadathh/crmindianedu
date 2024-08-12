@@ -1,0 +1,2949 @@
+
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suggest me the Best Online/Distance University - Indian Edu Hub</title>
+  <link rel="shortcut icon" href="./assets/favicon.jpg" type="image/x-icon">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- Alertify.js CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+
+<!-- Alertify.js Default Theme CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css" />
+
+<!-- Alertify.js JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- Meta Pixel Code -->
+    {{!-- <script>
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '879142736719103');
+        fbq('track', 'PageView');
+    </script> --}}
+    <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=879142736719103&ev=PageView&noscript=1"/></noscript>
+    <!-- End Meta Pixel Code -->
+  <script>
+    window.addEventListener('pageshow', function(event) {
+        if (event.persisted) {
+            window.location.reload();
+        }
+    });
+  </script>
+  
+  <style>
+    html, body, h1, h2, h3, h4, h5, h6, span, p, a, span, select{
+        font-family: "Poppins", sans-serif;
+    }
+    
+    select{
+        font-size: 12px !important;
+        width: 100%;
+        padding: 6px;
+        font-weight: normal;
+        white-space: nowrap;
+        box-sizing: border-box;
+        min-height: 33px;
+        border-radius: 3px;
+        background-repeat: no-repeat;
+        background-position: right center;
+        background-size: 12px auto;
+    }
+    
+    option {
+        font-size: 12px;
+        font-weight: normal;
+        white-space: nowrap;
+        min-height: 1.2em;
+        box-sizing: border-box;
+    }
+    
+    html, body{
+        height: 100%;
+    }
+    
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .graybg{
+        position: absolute;
+        background-color: #00000099;
+        height: 100%;
+        width: 100%;
+        z-index: 100000;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        padding-inline: 30vw;
+    }
+    .graybg div{
+        background-color: #EDCF2E;
+        width: auto;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 6vh;
+        gap: 10px;
+        border-radius: 10px;
+        transition: opacity 1s ease;
+    }
+    .graybg div img{
+        width: 150px;
+        padding: 20px;
+    }
+    .graybg div .title{
+        font-size: 1.6rem;
+        font-weight: bold;
+        text-align: center;
+    }
+    .graybg div .content{
+        font-size: 1rem;
+        font-weight: normal;
+        text-align: center;
+    }
+    
+    .container{
+        max-width: 1140px;
+    }
+    
+    header {
+        padding-block: 0.5%;
+        background-color: #FFFFFF;
+    }
+    
+    header .headerContent{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    header .headerContent .logoWrapper{
+        width: 8vw;
+        height: auto;
+    }
+    
+    header .headerContent .logoWrapper .header-logo{
+        width: 100%;
+        height: auto;
+    }
+    
+    header .headerContent .suggestDiv {
+        width: max-content;
+        border: 1px solid #2A5DCE;
+        padding: 10px;
+        border-radius: 3px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+    }
+    
+    header .headerContent .suggestDiv:active{
+        background-color: rgba(42, 162, 206, 0.286);
+    }
+    
+    header .headerContent .suggestDiv i{
+        color: #2A5DCE;
+        fill: #2A5DCE;
+        font-size: 12px;
+    }
+    
+    header .headerContent .suggestDiv span{
+        color: #2A5DCE;
+        fill: #2A5DCE;
+        font-size: 12px;
+        width: max-content;
+        font-weight: 500;
+    }
+    
+    .main {
+        padding-top: 10vh;
+    }
+    
+    footer {
+        background-color: #232F65;
+        color: #abb8c3;
+        padding: 6px;
+        text-align: left;
+        width: 100%;
+        font-size: x-small;
+        margin-top: auto;
+    }
+    
+    .left-col-container{
+        margin-bottom: 1vh;
+    }
+    
+    .left-col-headerText{
+        color: #2A5DCE;
+        font-size: 37px;
+        font-weight: 600;
+        line-height: 1.1em;
+        margin-bottom: 40px;
+    }
+    
+    .left-col-step{
+        color: #2A5DCE;
+        padding: 0;
+        margin: 0;
+        margin-top: 20px;
+        font-size: 15px;
+        font-weight: 600;
+    }
+    
+    .left-col-title{
+        color: #000;
+        font-size: 24px;
+        font-weight: 600;
+        padding: 0;
+        margin: 0;
+        margin-bottom: 6px;
+    }
+    
+    .left-col-desc{
+        color: #626060;
+        font-size: 13px;
+        font-weight: 400;
+        padding: 0;
+        margin: 0;
+        margin-bottom: 10px;
+    }
+    
+    /* form */
+    @keyframes shake {
+        10%, 90% {
+          transform: translateX(-10px);
+        }
+        
+        20%, 80% {
+          transform: translateX(10px);
+        }
+        
+        30%, 50%, 70% {
+          transform: translateX(-10px);
+        }
+        
+        40%, 60% {
+          transform: translateX(10px);
+        }
+    }
+    .shake-form {
+        animation: shake 0.5s;
+    }
+    .formWrapper{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #232F65;
+        padding: 5%;
+        border-radius: 10px;
+        box-shadow: 0px 7px 20px 1px rgba(0, 0, 0, 0.23);
+    }
+    .formWrapper .heading{
+        width: 90%;
+        color: #EDCF2E;
+        text-align: center;
+        padding-block: 6%;
+        font-size: 27px;
+        font-weight: 600;
+        line-height: 1.4em;
+    }
+    .formWrapper .stepProgress{
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .formWrapper .stepProgress .circle{
+        width: 18px;
+        height: 18px;
+        background-color: #ffffff;
+        color: #333333;
+        font-size: 0.6rem;
+        font-weight: 600;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 1000px;
+        border: 1px solid #cccccc;
+    }
+    .formWrapper .stepProgress .line{
+        background-color: #ffffff;
+        height: 1px;
+        width: 10px;
+    }
+    .formWrapper .stepProgress .blue{
+        background-color: #2A5DCE;
+        color: #ffffff;
+        border: 1px solid #ffffff;
+    }
+    .formWrapper .stepProgress .yellow{
+        background-color: #EDCF2E;
+        color: #2A5DCE;
+        border: 1px solid #2A5DCE;
+    }
+    
+    
+    .formWrapper .form{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+    .formWrapper .form .steps{
+        margin-top: 30px;
+    }
+    .formWrapper .form .steps .question{
+        color: #ffffff;
+        font-size: 18px;
+        font-weight: 500;
+    }
+    
+    /* q1 */
+    .formWrapper .form .answerWrapper1{
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        height: max-content;
+        gap: 12px;
+        row-gap: 16px;
+        margin-block: 20px;
+    }
+    .formWrapper .form .answerWrapper1 .answer{
+        background-color: #ffffff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-inline: 20px;
+        padding-block: 8px;
+        box-sizing: border-box;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+    .formWrapper .form .answerWrapper1 .selected{
+        background-color: #EDCF2E;
+    }
+    .formWrapper .form .answerWrapper1 .answer input[type=radio]{
+        display: inline;
+        opacity: 0;
+        position: fixed;
+        width: 0;
+        padding: 0;
+        margin: 0;
+    }
+    .formWrapper .form .answerWrapper1 .answer label{
+        font-size: 12px;
+        font-weight: 500;
+        color: #232F65;
+        padding: 0;
+        margin: 0;
+        pointer-events: none;
+    }
+    
+    /* q2 */
+    .formWrapper .form .answerWrapper2{
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        height: max-content;
+        gap: 12px;
+        row-gap: 16px;
+        margin-block: 20px;
+    }
+    .formWrapper .form .answerWrapper2 .answer{
+        background-color: #ffffff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-inline: 20px;
+        padding-block: 8px;
+        box-sizing: border-box;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+    .formWrapper .form .answerWrapper2 .selected{
+        background-color: #EDCF2E;
+    }
+    .formWrapper .form .answerWrapper2 .answer input[type=radio]{
+        display: inline;
+        opacity: 0;
+        position: fixed;
+        width: 0;
+        padding: 0;
+        margin: 0;
+    }
+    .formWrapper .form .answerWrapper2 .answer label{
+        font-size: 12px;
+        font-weight: 500;
+        color: #232F65;
+        padding: 0;
+        margin: 0;
+        pointer-events: none;
+    }
+    
+    .formWrapper .form .answerWrapper2-1{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: max-content;
+        margin-block: 20px;
+        gap: 12px;
+        row-gap: 16px;
+        box-sizing: border-box;
+    }
+    .formWrapper .form .answerWrapper2-1 input[type=text]{
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        border: none;
+        background: none;
+        padding: 0;
+        margin: 0;
+        font: inherit;
+        color: inherit;
+        outline: none;
+    
+        border-radius: 3px;
+        padding-inline: 10px;
+        padding-block: 8px;
+        background-color: #ffffff;
+        font-family: "Poppins", Sans-serif;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 1.7em;
+        width: 100%;
+    }
+    
+    /* q3 */
+    .formWrapper .form .answerWrapper3{
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        height: max-content;
+        gap: 12px;
+        row-gap: 16px;
+        margin-block: 20px;
+    }
+    .formWrapper .form .answerWrapper3 .answer{
+        background-color: #ffffff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-inline: 20px;
+        padding-block: 8px;
+        box-sizing: border-box;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+    .formWrapper .form .answerWrapper3 .selected{
+        background-color: #EDCF2E;
+    }
+    .formWrapper .form .answerWrapper3 .answer input[type=radio]{
+        display: inline;
+        opacity: 0;
+        position: fixed;
+        width: 0;
+        padding: 0;
+        margin: 0;
+    }
+    .formWrapper .form .answerWrapper3 .answer label{
+        font-size: 12px;
+        font-weight: 500;
+        color: #232F65;
+        padding: 0;
+        margin: 0;
+        pointer-events: none;
+    }
+    
+    /* q4 */
+    .formWrapper .form .answerWrapper4{
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        height: max-content;
+        gap: 12px;
+        row-gap: 16px;
+        margin-block: 20px;
+    }
+    .formWrapper .form .answerWrapper4 .answer{
+        background-color: #ffffff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-inline: 20px;
+        padding-block: 8px;
+        box-sizing: border-box;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+    .formWrapper .form .answerWrapper4 .selected{
+        background-color: #EDCF2E;
+    }
+    .formWrapper .form .answerWrapper4 .answer input[type=radio]{
+        display: inline;
+        opacity: 0;
+        position: fixed;
+        width: 0;
+        padding: 0;
+        margin: 0;
+    }
+    .formWrapper .form .answerWrapper4 .answer label{
+        font-size: 12px;
+        font-weight: 500;
+        color: #232F65;
+        padding: 0;
+        margin: 0;
+        pointer-events: none;
+    }
+    
+    /* q5 */
+    .formWrapper .form .answerWrapper5{
+        display: flex;
+        width: 100%;
+        height: max-content;
+        margin-bottom: 20px;
+        padding-inline: 10px;
+        padding-block: 8px;
+        background-color: #ffffff;
+        align-items: center;
+        box-sizing: border-box;
+        border-radius: 3px;
+    }
+    .formWrapper .form .answerWrapper5 input[type=text]{
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        border: none;
+        background: none;
+        padding: 0;
+        margin: 0;
+        font: inherit;
+        color: inherit;
+        outline: none;
+    
+        font-family: "Poppins", Sans-serif;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 1.7em;
+        width: 100%;
+    }
+    
+    /* q6 */
+    .formWrapper .form .answerWrapper6{
+        display: flex;
+        width: 100%;
+        height: max-content;
+        margin-bottom: 20px;
+        padding-inline: 10px;
+        padding-block: 8px;
+        background-color: #ffffff;
+        align-items: center;
+        box-sizing: border-box;
+        border-radius: 3px;
+    }
+    .formWrapper .form .answerWrapper6 input[type=text]{
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        border: none;
+        background: none;
+        padding: 0;
+        margin: 0;
+        font: inherit;
+        color: inherit;
+        outline: none;
+    
+        font-family: "Poppins", Sans-serif;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 1.7em;
+        width: 100%;
+    }
+    
+    
+    /* q7 here */
+    .formWrapper .form .answerWrapper7{
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        height: max-content;
+        gap: 12px;
+        row-gap: 16px;
+        margin-block: 20px;
+    }
+    .formWrapper .form .answerWrapper7 .answer{
+        background-color: #ffffff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-inline: 20px;
+        padding-block: 8px;
+        box-sizing: border-box;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+    .formWrapper .form .answerWrapper7 .selected{
+        background-color: #EDCF2E;
+    }
+    .formWrapper .form .answerWrapper7 .answer input[type=radio]{
+        display: inline;
+        opacity: 0;
+        position: fixed;
+        width: 0;
+        padding: 0;
+        margin: 0;
+    }
+    .formWrapper .form .answerWrapper7 .answer label{
+        font-size: 12px;
+        font-weight: 500;
+        color: #232F65;
+        padding: 0;
+        margin: 0;
+        pointer-events: none;
+    }
+    
+    /* q7-1 here */
+    .formWrapper .form .answerWrapper7-1{
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        height: max-content;
+        gap: 12px;
+        row-gap: 16px;
+        margin-block: 20px;
+    }
+    .formWrapper .form .answerWrapper7-1 .answer{
+        background-color: #ffffff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-inline: 20px;
+        padding-block: 8px;
+        box-sizing: border-box;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+    .formWrapper .form .answerWrapper7-1 .selected{
+        background-color: #EDCF2E;
+    }
+    .formWrapper .form .answerWrapper7-1 .answer input[type=radio]{
+        display: inline;
+        opacity: 0;
+        position: fixed;
+        width: 0;
+        padding: 0;
+        margin: 0;
+    }
+    .formWrapper .form .answerWrapper7-1 .answer label{
+        font-size: 12px;
+        font-weight: 500;
+        color: #232F65;
+        padding: 0;
+        margin: 0;
+        pointer-events: none;
+    }
+    
+    /* q8 */
+    .formWrapper .form .answerWrapper8{
+        display: flex;
+        height: max-content;
+        margin-bottom: 20px;
+        padding-left: 8px;
+        padding-top: 3px;
+        background-color: #ffffff;
+        align-items: center;
+        box-sizing: border-box;
+        border-radius: 3px;
+    }
+    .formWrapper .form .answerWrapper8 textarea{
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        border: none;
+        background: none;
+        padding: 0;
+        margin: 0;
+        font: inherit;
+        color: inherit;
+        outline: none;
+    
+        font-family: "Poppins", Sans-serif;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 1.7em;
+        min-height: 10vh;
+        width: 100%;
+    }
+    
+    /* q9 */
+    .formWrapper .form .answerWrapper9{
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        gap: 12px;
+        margin-bottom: 20px;
+        box-sizing: border-box;
+    }
+    .formWrapper .form .answerWrapper9 .answer{
+        background-color: #ffffff;
+        box-sizing: border-box;
+        border-radius: 3px;
+        flex-grow: 1;
+    }
+    .formWrapper .form .answerWrapper9 .answer input[type=text]{
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        border: none;
+        background: none;
+        padding: 0;
+        margin: 0;
+        font: inherit;
+        color: inherit;
+        outline: none;
+    
+        margin-inline: 10px;
+        margin-block: 8px;
+        width: 92%;
+    
+        font-family: "Poppins", Sans-serif;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 1.7em;
+    }
+    
+    .nav{
+        margin-block: 10px;
+        display: flex;
+        width: 100%;
+        gap: 6px;
+    }
+    .nav button{
+        flex-grow: 1;
+        box-sizing: border-box;
+        background-color: #EDCF2E;
+        color: #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0px;
+        border-radius: 4px;
+        font-size: 26px;
+        border: 0;
+    }
+    .nav button:hover{
+        color: #ffffff;
+    }
+    .nav .submit{
+        flex-grow: 1;
+        box-sizing: border-box;
+        background-color: #EDCF2E;
+        color: #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0px;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+    .nav .submit:hover{
+        color: #FFFFFF;
+    }
+    .last{
+        width: 11%;
+    }
+        
+    #alert {
+        position: absolute;
+        top: 1.5vh;
+        right: 2vw;
+        display: none;
+        z-index: 100;
+        padding: 0.5vh 1vw;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    
+    .orWrapper{
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        margin-block: 5px;
+    }
+    .orWrapper span{
+        font-size: 22px;
+        font-weight: 600;
+    }
+    
+    .mentorWrapper{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+        background-color: #232F65;
+        padding: 5%;
+        border-radius: 10px;
+        box-shadow: 0px 7px 20px 1px rgba(0, 0, 0, 0.23);
+    }
+    
+    .mentorWrapper > span{
+        font-size: 24px;
+        font-weight: 600;
+        color: #FFFFFF;
+    }
+    
+    .mentorWrapper > a{
+        background-color: #EDCF2E;
+        width: 100%;
+        border-radius: 4px;
+        padding: 2%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+        color: inherit;
+    }
+    
+    .mentorWrapper > a > div > span{
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+    
+    .graybg{
+        position: absolute;
+        background-color: #00000099;
+        height: 100%;
+        width: 100%;
+        z-index: 100000;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        padding-inline: 30vw;
+    }
+    .graybg div{
+        background-color: #EDCF2E;
+        width: auto;
+        height: auto;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        padding: 6vh;
+        gap: 10px;
+        border-radius: 10px;
+        transition: opacity 0.5s ease;
+    }
+    .graybg div img{
+        width: 150px;
+        padding: 20px;
+    }
+    .graybg div .title{
+        font-size: 1.6rem;
+        font-weight: bold;
+        text-align: center;
+    }
+    .graybg div .content{
+        font-size: 1rem;
+        font-weight: normal;
+        text-align: center;
+    }
+
+    
+    
+    @media only screen and (max-width: 1199px) {
+        /* CSS rules for mobile & tablet devices */
+        *{
+            font-family: "Poppins", sans-serif;
+        }
+    
+        header {
+            padding-top: 5%;
+            padding-bottom: 5%;
+        }
+    
+        header .headerContent .logoWrapper{
+            width: 25vw;
+            height: auto;
+        }
+    
+        .main {
+            padding-top: 14vh;
+        }
+    
+        .main .right-col{
+            margin: 5px;
+            padding: 0;
+        }
+    
+        #alert {
+            position: absolute;
+            top: 1.5vh;
+            right: 2vw;
+            display: none;
+            z-index: 100;
+            padding: 0.5vh 4vw;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+    
+        .formWrapper .heading {
+            font-size: 1.2rem;
+            width: 80%;
+        }
+    
+        #q1 > span,#q2 > span,#q3 > span,#q4 > span,#q5 > span,#q6 > span,#q7 > span,#q8 > span,#q9 > span {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+    
+        select {
+            -webkit-appearance: none;
+            background-color: #ffffff;
+            color: #000000;
+        }
+    
+        header .headerContent .suggestDiv span{
+            font-size: 10px;
+        }
+    
+        .row{
+            gap: 20px;
+        }
+    
+        .left-col-headerText{
+            font-size: 30px;
+        }
+    
+        .mentorWrapper{
+            padding-block: 12%;
+        }
+    
+        .mentorWrapper > a > div > span{
+            font-size: 1rem;
+            font-weight: 500;
+        }
+    
+        .graybg{
+            padding-inline: 5vw;
+        }
+    }
+  </style>
+</head>
+  <body>
+    <!-- modal -->
+    <div class="graybg">
+      <div>
+        <img src="/images/checked.png" alt="success" style="font-size: 20px;">
+        <span class="title">Congratulations your university suggestion form is submitted.</span>
+        <span class="content">Within the next half hour, you will receive a University Suggestion Report via WhatsApp and email. The report will be prepared by our certified Mentors and Researchers.</span>
+        <span class="content">To learn more about our services, please <a href="https://indianeduhub.in/end-to-end-service/">click here</a></span>
+      </div>
+    </div>
+  <!-- alert -->
+    <!-- Header -->
+    <header class="fixed-top">
+      <div class="container">
+          <!-- Logo on left -->
+          <div class="headerContent">
+            <a href="https://indianeduhub.in" class="logoWrapper">
+              <img class="header-logo" src="./images/ieh-logo.png" alt="Logo">
+            </a>
+            <div href="https://suggest.indianeduhub.in" class="suggestDiv">
+              <i class="fas fa-lightbulb"></i>
+              <span>Suggest me a University</span>
+            </div>
+          </div>
+      </div>
+    </header>
+    <!-- Two Column Layout -->
+    <div class="container main">
+      <div class="row">
+        <!-- Right Column -->
+        <div class="col order-md-2 right-col">
+          <!-- Form container -->
+          <form class="formWrapper">
+            <div class="alert alert-danger" role="alert" id="alert"></div>
+            <span class="heading">Suggest me an Online/Distance University</span>
+            <!-- Step Progress -->
+            <div class="stepProgress">
+              <div class="circle yellow">
+                <span>1</span>
+              </div>
+              <div class="line"></div>
+              <div class="circle">
+                <span>2</span>
+              </div>
+              <div class="line"></div>
+              <div class="circle">
+                <span>3</span>
+              </div>
+              <div class="line"></div>
+              <div class="circle">
+                <span>4</span>
+              </div>
+              <div class="line"></div>
+              <div class="circle">
+                <span>5</span>
+              </div>
+              <div class="line"></div>
+              <div class="circle">
+                <span>6</span>
+              </div>
+              <div class="line"></div>
+              <div class="circle">
+                <span>7</span>
+              </div>
+              <div class="line"></div>
+              <div class="circle">
+                <span>8</span>
+              </div>
+              <div class="line"></div>
+              <div class="circle">
+                <span>9</span>
+              </div>
+            </div>
+           
+            <!-- Form -->
+            <div class="form">
+                        <input type="text" class="form-control" id="ReferredBy" name="ReferredBy" value="{{student.studentid}}" disabled hidden>
+              <!-- Question 1 -->
+              <div id="q1" class="steps">
+              <span class="question">What course are you interested in pursuing?</span>
+              <div class="answerWrapper1">
+                <div class="answer">
+                  <input type="radio" value="MBA" name="course" required aria-required="true">
+                  <label for="MBA">MBA</label>
+                </div>
+                <div class="answer">
+                  <input type="radio" value="MTECH" name="course" required aria-required="true">
+                  <label for="M.Tech">M.Tech</label>
+                </div>
+                <div class="answer">
+                  <input type="radio" value="MCOM" name="course" required aria-required="true">
+                  <label for="M.Com">M.Com</label>
+                </div>
+                <div class="answer">
+                  <input type="radio" value="MCA" name="course" required aria-required="true">
+                  <label for="MCA">MCA</label>
+                </div>
+                <div class="answer">
+                  <input type="radio" value="MA" name="course" required aria-required="true">
+                  <label for="MA">MA</label>
+                </div>
+                <div class="answer">
+                  <input type="radio" value="MSC" name="course" required aria-required="true">
+                  <label for="MSc">MSc</label>
+                </div>
+                <div class="answer">
+                  <input type="radio" value="BBA" name="course" required aria-required="true">
+                  <label for="BBA">BBA</label>
+                </div>
+                <div class="answer">
+                  <input type="radio" value="BCOM" name="course" required aria-required="true">
+                  <label for="B.Com">B.Com</label>
+                </div>
+                <div class="answer">
+                  <input type="radio" value="BCA" name="course" required aria-required="true">
+                  <label for="BCA">BCA</label>
+                </div>
+                <div class="answer">
+                  <input type="radio" value="BA" name="course" required aria-required="true">
+                  <label for="BA">BA</label>
+                </div>
+                <div class="answer">
+                  <input type="radio" value="BSC" name="course" required aria-required="true">
+                  <label for="BSc">BSc</label>
+                </div>
+                <!-- specs -->
+                <select name="MBA-Spec" class="form-select" aria-required="true" hidden>
+                  <option value="- Select MBA specialization -">- Select MBA specialization -</option>
+                  <option value="General Management">General Management</option>
+                  <option value="Finance Management">Finance Management</option>
+                  <option value="Human Resource Management">Human Resource Management</option>
+                  <option value="Marketing Management">Marketing Management</option>
+                  <option value="Operations Management">Operations Management</option>
+                  <option value="Information Techonlogy">Information Techonlogy</option>
+                  <option value="International Buisness Management">International Buisness Management</option>
+                  <option value="Healthcare Management">Healthcare Management</option>
+                  <option value="Hospital Administration &amp; Healthcare">Hospital Administration &amp; Healthcare</option>
+                  <option value="Artificial Intelligence &amp; Machine Learning">Artificial Intelligence &amp; Machine Learning</option>
+                  <option value="Advertising &amp; Branding">Advertising &amp; Branding</option>
+                  <option value="Banking &amp; Finance">Banking &amp; Finance</option>
+                  <option value="Banking &amp; Insurance">Banking &amp; Insurance</option>
+                  <option value="Big Data Analytics">Big Data Analytics</option>
+                  <option value="Blockchain Management">Blockchain Management</option>
+                  <option value="Business Analytics">Business Analytics</option>
+                  <option value="Business Intelligence &amp; AI">Business Intelligence &amp; AI</option>
+                  <option value="Business Intelligence &amp; Analytics">Business Intelligence &amp; Analytics</option>
+                  <option value="Business Management">Business Management</option>
+                  <option value="Data Science Analytics">Data Science Analytics</option>
+                  <option value="Digital Finance">Digital Finance</option>
+                  <option value="Digital Marketing &amp; E-Commerce">Digital Marketing &amp; E-Commerce</option>
+                  <option value="Digital Marketing Management">Digital Marketing Management</option>
+                  <option value="E-Commerce">E-Commerce</option>
+                  <option value="Entrepreneurship">Entrepreneurship</option>
+                  <option value="Entrepreneurship &amp; Leadership">Entrepreneurship &amp; Leadership</option>
+                  <option value="Entrepreneurship &amp; Small Business">Entrepreneurship &amp; Small Business</option>
+                  <option value="Finance &amp; Leadership">Finance &amp; Leadership</option>
+                  <option value="Finance &amp; Marketing">Finance &amp; Marketing</option>
+                  <option value="Fintech Management">Fintech Management</option>
+                  <option value="HRM &amp; Finance">HRM &amp; Finance</option>
+                  <option value="Information Systems">Information Systems</option>
+                  <option value="International Finance">International Finance</option>
+                  <option value="International Marketing">International Marketing</option>
+                  <option value="International Trade Management">International Trade Management</option>
+                  <option value="Investing Banking &amp; Equity Research">Investing Banking &amp; Equity Research</option>
+                  <option value="IT &amp; Systems Management">IT &amp; Systems Management</option>
+                  <option value="Logistics Material &amp; Supply Chain Management">Logistics Material &amp; Supply Chain Management</option>
+                  <option value="Marketing &amp; HRM">Marketing &amp; HRM</option>
+                  <option value="Project Management">Project Management</option>
+                  <option value="Retail Management">Retail Management</option>
+                  <option value="Sports Management">Sports Management</option>
+                  <option value="Strategic Finance">Strategic Finance</option>
+                  <option value="Strategic Leadership">Strategic Leadership</option>
+                  <option value="Supply Chain Management">Supply Chain Management</option>
+                  <option value="System &amp; Operations Management">System &amp; Operations Management</option>
+                  <option value="Waste Management">Waste Management</option>
+                </select>
+                <select name="MTECH-Spec" class="form-select" aria-required="true" hidden>
+                  <option value="- Select M.Tech specialization -">- Select M.Tech specialization -</option>
+                  <option value="Big Data &amp; Block Chain">Big Data &amp; Block Chain</option>
+                  <option value="Cloud Computing">Cloud Computing</option>
+                </select>
+                <select name="MCOM-Spec" class="form-select" aria-required="true" hidden>
+                  <option value="- Select M.Com specialization -">- Select M.Com specialization -</option>
+                  <option value="General">General</option>
+                  <option value="Accounting &amp; Finance">Accounting &amp; Finance</option>
+                  <option value="International Finance">International Finance</option>
+                  <option value="Professional Accounting &amp; Finance">Professional Accounting &amp; Finance</option>
+                  <option value="Fintech">Fintech</option>
+                  <option value="Financial Management">Financial Management</option>
+                </select>
+                <select name="MCA-Spec" class="form-select" aria-required="true" hidden>
+                  <option value="- Select MCA specialization -">- Select MCA specialization -</option>
+                  <option value="General">General</option>
+                  <option value="Artificial Intelligence">Artificial Intelligence</option>
+                  <option value="Cloud Computing">Cloud Computing</option>
+                  <option value="Computer Science &amp; IT">Computer Science &amp; IT</option>
+                  <option value="Cyber Security">Cyber Security</option>
+                  <option value="Data Analytics">Data Analytics</option>
+                  <option value="Data Science">Data Science</option>
+                  <option value="Full Stack Development">Full Stack Development</option>
+                  <option value="Game Development">Game Development</option>
+                  <option value="Information Technology">Information Technology</option>
+                </select>
+                <select name="MA-Spec" class="form-select" aria-required="true" hidden>
+                  <option value="- Select MA specialization -">- Select MA specialization -</option>
+                  <option value="General">General</option>
+                  <option value="Economics">Economics</option>
+                  <option value="English">English</option>
+                  <option value="History">History</option>
+                  <option value="Journalism">Journalism</option>
+                  <option value="Journalism &amp; Mass communication">Journalism &amp; Mass communication</option>
+                  <option value="Political Science">Political Science</option>
+                  <option value="Public Policy &amp; Administration">Public Policy &amp; Administration</option>
+                  <option value="Sociology">Sociology</option>
+                  <option value="Psychology">Psychology</option>
+                  <option value="Liberal Arts">Liberal Arts</option>
+                  <option value="Urdu">Urdu</option>
+                  <option value="Hindi">Hindi</option>
+                </select>
+                <select name="MSC-Spec" class="form-select" aria-required="true" hidden>
+                  <option value="- Select MSc specialization -">- Select MSc specialization -</option>
+                  <option value="General">General</option>
+                  <option value="Artificial Intelligence &amp; Machine Learning">Artificial Intelligence &amp; Machine Learning</option>
+                  <option value="Applied Finance">Applied Finance</option>
+                  <option value="Business Analytics">Business Analytics</option>
+                  <option value="Data Science">Data Science</option>
+                  <option value="Mathematics">Mathematics</option>
+                </select>
+                <select name="BBA-Spec" class="form-select" aria-required="true" hidden>
+                  <option value="- Select BBA specialization -">- Select BBA specialization -</option>
+                  <option value="General Management">General Management</option>
+                  <option value="Finance Management">Finance Management</option>
+                  <option value="Human Resource Management">Human Resource Management</option>
+                  <option value="Marketing Management">Marketing Management</option>
+                  <option value="Advertisement &amp; Marketing">Advertisement &amp; Marketing</option>
+                  <option value="Banking &amp; Finance">Banking &amp; Finance</option>
+                  <option value="Banking Insurance">Banking Insurance</option>
+                  <option value="Business Analytics">Business Analytics</option>
+                  <option value="Business Intelligence &amp; Analytics">Business Intelligence &amp; Analytics</option>
+                  <option value="Data Science Analytics">Data Science Analytics</option>
+                  <option value="Digital Marketing">Digital Marketing</option>
+                  <option value="E-Business">E-Business</option>
+                  <option value="Engineering &amp; Project Management">Engineering &amp; Project Management</option>
+                  <option value="Family Business">Family Business</option>
+                  <option value="Finance &amp; Leadership">Finance &amp; Leadership</option>
+                  <option value="Finance &amp; Marketing">Finance &amp; Marketing</option>
+                  <option value="International Business Management">International Business Management</option>
+                  <option value="International Finance">International Finance</option>
+                  <option value="International Marketing">International Marketing</option>
+                  <option value="IT &amp; Systems">IT &amp; Systems</option>
+                  <option value="Logistics &amp; Supply Chain Management">Logistics &amp; Supply Chain Management</option>
+                  <option value="Multimedia Management">Multimedia Management</option>
+                  <option value="Retail &amp; Sales Marketing">Retail &amp; Sales Marketing</option>
+                  <option value="Strategic &amp; Leadership">Strategic &amp; Leadership</option>
+                </select>
+                <select name="BCOM-Spec" class="form-select" aria-required="true" hidden>
+                  <option value="- Select B.Com specialization -">- Select B.Com specialization -</option>
+                  <option value="General">General</option>
+                  <option value="Accounting &amp; Finance">Accounting &amp; Finance</option>
+                  <option value="Advanced Cost &amp; Management Account">Advanced Cost &amp; Management Account</option>
+                  <option value="Auditing">Auditing</option>
+                  <option value="Auditing &amp; Taxation">Auditing &amp; Taxation</option>
+                  <option value="Banking &amp; Insurance">Banking &amp; Insurance</option>
+                  <option value="Banking &amp; Finance">Banking &amp; Finance</option>
+                  <option value="Behavioural Finance">Behavioural Finance</option>
+                  <option value="Business Analytics">Business Analytics</option>
+                  <option value="E-Accounting">E-Accounting</option>
+                  <option value="E-Commerce">E-Commerce</option>
+                  <option value="Financial Market">Financial Market</option>
+                  <option value="Fintech">Fintech</option>
+                  <option value="International Business">International Business</option>
+                  <option value="Marketing Management">Marketing Management</option>
+                  <option value="Stock Market Operations">Stock Market Operations</option>
+                </select>
+                <select name="BCA-Spec" class="form-select" aria-required="true" hidden>
+                  <option value="- Select BCA specialization -">- Select BCA specialization -</option>
+                  <option value="Artificial Intelligence &amp; Machine Learning">Artificial Intelligence &amp; Machine Learning</option>
+                  <option value="Cyber Security">Cyber Security</option>
+                  <option value="Data Analytics">Data Analytics</option>
+                  <option value="Database Management System">Database Management System</option>
+                  <option value="Data Science">Data Science</option>
+                  <option value="Data Science &amp; Big Data Analytics">Data Science &amp; Big Data Analytics</option>
+                  <option value="Information Technology">Information Technology</option>
+                  <option value="Multimedia &amp; Animation">Multimedia &amp; Animation</option>
+                </select>
+                <select name="BA-Spec" class="form-select" aria-required="true" hidden>
+                  <option value="- Select BA specialization -">- Select BA specialization -</option>
+                  <option value="General">General</option>
+                  <option value="Journalism &amp; Mass communication">Journalism &amp; Mass communication</option>
+                  <option value="Hindi">Hindi</option>
+                  <option value="Tourism Administrator">Tourism Administrator</option>
+                  <option value="English">English</option>
+                  <option value="Hons. Economics">Hons. Economics</option>
+                  <option value="Urdu">Urdu</option>
+                  <option value="Political Science">Political Science</option>
+                  <option value="History">History</option>
+                </select>
+                <select name="BSC-Spec" class="form-select" aria-required="true" hidden>
+                  <option value="- Select BSc specialization -">- Select BSc specialization -</option>
+                  <option value="Computer Science">Computer Science</option>
+                </select>
+              </div>
+              <div class="nav">
+                  <button type="button" class="next">&#8594;</button>
+              </div>
+              </div>
+              <!-- Question 2 -->
+              <div id="q2" class="steps" hidden>
+                <span class="question">What is your current status?</span>
+                <div class="answerWrapper2">
+                  <div class="answer">
+                    <input type="radio" value="Student" name="status" aria-required="true">
+                    <label for="Student">Student</label>
+                  </div>
+                  <div class="answer">
+                    <input type="radio" value="Fresher" name="status" aria-required="true">
+                    <label for="Fresher">Fresher</label>
+                  </div>
+                  <div class="answer">
+                    <input type="radio" value="Working Professional" name="status" aria-required="true">
+                    <label for="Working Professional">Working Professional</label>
+                  </div>
+                </div>
+                <div class="answerWrapper2-1" hidden>
+                  <input type="text" name="expSalary" placeholder="Expected Salary" aria-required="true">
+                </div>
+                <div class="answerWrapper2-1" hidden>
+                  <input type="text" name="currSalary" placeholder="Current Salary" aria-required="true">
+                  <input type="text" name="experience" placeholder="Years of Experience" aria-required="true">
+                </div>
+                <!-- Navigation -->
+                <div class="nav">
+                  <button type="button" class="prev">&#8592;</button>
+                  <button type="button" class="next">&#8594;</button>
+                </div>
+              </div>
+              <!-- Question 3 -->
+              <div id="q3" class="steps" hidden>
+                <span class="question">Where are you seeking employment?</span>
+                <div class="answerWrapper3">
+                  <div class="answer">
+                    <input type="radio" value="Abroad" name="empLocation" aria-required="true">
+                    <label for="Abroad">Abroad</label>
+                  </div>
+                  <div class="answer">
+                    <input type="radio" value="India" name="empLocation" aria-required="true">
+                    <label for="India">India</label>
+                  </div>
+                </div>
+                <!-- Navigation -->
+                <div class="nav">
+                  <button type="button" class="prev">&#8592;</button>
+                  <button type="button" class="next">&#8594;</button>
+                </div>
+              </div>
+              <!-- Question 4 -->
+              <div id="q4" class="steps" hidden>
+                <span class="question">Which sector are you looking to explore?</span>
+                <div class="answerWrapper4">
+                  <div class="answer">
+                    <input type="radio" value="Govt Sector" name="sector" aria-required="true">
+                    <label for="Govt Sector">Govt Sector</label>
+                  </div>
+                  <div class="answer">
+                    <input type="radio" value="Private Sector" name="sector" aria-required="true">
+                    <label for="Private Sector">Private Sector</label>
+                  </div>
+                  <div class="answer">
+                    <input type="radio" value="Entrepreneur" name="sector" aria-required="true">
+                    <label for="Entrepreneur">Entrepreneur</label>
+                  </div>
+                </div>
+                <!-- Navigation -->
+                <div class="nav">
+                  <button type="button" class="prev">&#8592;</button>
+                  <button type="button" class="next">&#8594;</button>
+                </div>
+              </div>
+              <!-- Question 5 -->
+              <div id="q5" class="steps" hidden>
+                <div class="answerWrapper5">
+                  <input type="text" name="prevUniversity" placeholder="Previous University" aria-required="true">
+                </div>
+                <!-- Navigation -->
+                <div class="nav">
+                  <button type="button" class="prev">&#8592;</button>
+                  <button type="button" class="next">&#8594;</button>
+                </div>
+              </div>
+                  <input type="hidden" name="utm_source" value="{{utm_source}}">
+    <input type="hidden" name="utm_medium" value="{{utm_medium}}">
+    <input type="hidden" name="utm_campaign" value="{{utm_campaign}}">
+    <input type="hidden" name="utm_content" value="{{utm_content}}">
+    <input type="hidden" name="utm_id" value="{{utm_id}}">
+    <input type="hidden" name="utm_term" value="{{utm_term}}">
+              <!-- Question 6 -->
+              <div id="q6" class="steps" hidden>
+                <div class="answerWrapper6">
+                  <input type="text" name="prevQualification" placeholder="Previous Qualification" aria-required="true">
+                </div>
+                <!-- Navigation -->
+                <div class="nav">
+                  <button type="button" class="prev">&#8592;</button>
+                  <button type="button" class="next">&#8594;</button>
+                </div>
+              </div>
+              <!-- Question 7 -->
+              <div id="q7" class="steps" hidden>
+                <span class="question">What matters to you most when selecting a university?</span>
+                <div class="answerWrapper7">
+                  <div class="answer">
+                    <input type="radio" value="High Exposure" name="exposure" aria-required="true">
+                    <label for="High Exposure">Maximum Academic & Corporate exposure</label>
+                  </div>
+                  <div class="answer">
+                    <input type="radio" value="Minimal Exposure" name="exposure" aria-required="true">
+                    <label for="Minimal Exposure">Minimum Academic & Corporate Exposure</label>
+                  </div>
+                  <div class="answer">
+                    <input type="radio" value="Just Complete Degree" name="exposure" aria-required="true">
+                    <label for="Just Complete a Degree">Just want to complete a degree</label>
+                  </div>
+                </div>
+                <span class="question">Select your budget for university</span>
+                <!-- q7-1 -->
+                <div class="answerWrapper7-1" hidden>
+                  <div class="answer">
+                    <input type="radio" value="1,00,000 - 1,50,000" name="budget1" aria-required="true">
+                    <label for="1,00,000 - 1,50,000">1,00,000 - 1,50,000</label>
+                  </div>
+                  <div class="answer">
+                    <input type="radio" value="1,50,000 - 2,00,000" name="budget1" aria-required="true">
+                    <label for="1,50,000 - 2,00,000">1,50,000 - 2,00,000</label>
+                  </div>
+                  <div class="answer">
+                    <input type="radio" value="2,00,000 - 2,50,000" name="budget1" aria-required="true">
+                    <label for="2,00,000 - 2,50,000">2,00,000 - 2,50,000</label>
+                  </div>
+                  <div class="answer">
+                    <input type="radio" value="Above 2,50,000" name="budget1" aria-required="true">
+                    <label for="Above 2,50,000">Above 2,50,000</label>
+                  </div>
+                </div>
+                <!-- q7-2 -->
+                <div class="answerWrapper7-1" hidden>
+                  <div class="answer">
+                    <input type="radio" value="50,000 - 80,000" name="budget2" aria-required="true">
+                    <label for="50,000 - 80,000">50,000 - 80,000</label>
+                  </div>
+                  <div class="answer">
+                    <input type="radio" value="80,000 - 1,00,000" name="budget2" aria-required="true">
+                    <label for="80,000 - 1,00,000">80,000 - 1,00,000</label>
+                  </div>
+                  <div class="answer">
+                    <input type="radio" value="1,00,000 - 1,20,000" name="budget2" aria-required="true">
+                    <label for="1,00,000 - 1,20,000">1,00,000 - 1,20,000</label>
+                  </div>
+                </div>
+                <!-- q7-3 -->
+                <div class="answerWrapper7-1" hidden>
+                  <div class="answer">
+                    <input type="radio" value="50,000 - 1,00,000" name="budget3" aria-required="true">
+                    <label for="50,000 - 1,00,000">50,000 - 1,00,000</label>
+                  </div>
+                  <div class="answer">
+                    <input type="radio" value="1,00,000 - 1,50,000" name="budget3" aria-required="true">
+                    <label for="1,00,000 - 1,50,000">1,00,000 - 1,50,000</label>
+                  </div>
+                  <div class="answer">
+                    <input type="radio" value="1,50,000 - 2,00,000" name="budget3" aria-required="true">
+                    <label for="1,50,000 - 2,00,000">1,50,000 - 2,00,000</label>
+                  </div>
+                  <div class="answer">
+                    <input type="radio" value="2,00,000 - 2,50,000" name="budget3" aria-required="true">
+                    <label for="2,00,000 - 2,50,000">2,00,000 - 2,50,000</label>
+                  </div>
+                </div>
+
+                <!-- Navigation -->
+                <div class="nav">
+                  <button type="button" class="prev">&#8592;</button>
+                  <button type="button" class="next">&#8594;</button>
+                </div>
+              </div>
+              <!-- Question 8 -->
+              <div id="q8" class="steps" hidden>
+                <div class="answerWrapper8">
+                    <textarea type="text" name="Description" placeholder="Do you want to mention anything specific? Do mention below." aria-required="true"></textarea>
+                </div>
+                <!-- Navigation -->
+                <div class="nav">
+                  <button type="button" class="prev">&#8592;</button>
+                  <button type="button" class="next">&#8594;</button>
+                </div>
+              </div>
+              <!-- Question 9 -->
+              <div id="q9" class="steps" hidden>
+                <div class="answerWrapper9">
+                  <div class="answer">
+                    <input type="text" class="req" name="name" placeholder="Name" aria-required="true">
+                  </div>
+                  <div class="answer">
+                    <input type="text" class="req" name="email" placeholder="Email" aria-required="true">
+                  </div>
+                  <div class="answer">
+                    <input type="text" class="req" name="whatsapp" placeholder="Whatsapp Number" aria-required="true">
+                  </div>
+                  <div class="answer">
+                    <input type="text" name="mobile" placeholder="Alternative Number" aria-required="true">
+                  </div>
+                  <!---->
+    <script>
+        // Global object to store the JSON data
+        const statesDistricts = {
+    "Andaman And Nicobar Islands": [
+        "Nicobars",
+        "North And Middle Andaman",
+        "South Andamans"
+    ],
+    "Andhra Pradesh": [
+        "Alluri Sitharama Raju",
+        "Anakapalli",
+        "Ananthapuramu",
+        "Annamayya",
+        "Bapatla",
+        "Chittoor",
+        "Dr. B.R. Ambedkar Konaseema",
+        "East Godavari",
+        "Eluru",
+        "Guntur",
+        "Kakinada",
+        "Krishna",
+        "Kurnool",
+        "Nandyal",
+        "Ntr",
+        "Palnadu",
+        "Parvathipuram Manyam",
+        "Prakasam",
+        "Sri Potti Sriramulu Nellore",
+        "Sri Sathya Sai",
+        "Srikakulam",
+        "Tirupati",
+        "Visakhapatnam",
+        "Vizianagaram",
+        "West Godavari",
+        "Y.S.R."
+    ],
+    "Arunachal Pradesh": [
+        "Anjaw",
+        "Changlang",
+        "Dibang Valley",
+        "East Kameng",
+        "East Siang",
+        "Kamle",
+        "Kra Daadi",
+        "Kurung Kumey",
+        "Leparada",
+        "Lohit",
+        "Longding",
+        "Lower Dibang Valley",
+        "Lower Siang",
+        "Lower Subansiri",
+        "Namsai",
+        "Pakke Kessang",
+        "Papum Pare",
+        "Shi Yomi",
+        "Siang",
+        "Tawang",
+        "Tirap",
+        "Upper Siang",
+        "Upper Subansiri",
+        "West Kameng",
+        "West Siang"
+    ],
+    "Assam": [
+        "Bajali",
+        "Baksa",
+        "Barpeta",
+        "Biswanath",
+        "Bongaigaon",
+        "Cachar",
+        "Charaideo",
+        "Chirang",
+        "Darrang",
+        "Dhemaji",
+        "Dhubri",
+        "Dibrugarh",
+        "Dima Hasao",
+        "Goalpara",
+        "Golaghat",
+        "Hailakandi",
+        "Hojai",
+        "Jorhat",
+        "Kamrup",
+        "Kamrup Metro",
+        "Karbi Anglong",
+        "Karimganj",
+        "Kokrajhar",
+        "Lakhimpur",
+        "Majuli",
+        "Marigaon",
+        "Nagaon",
+        "Nalbari",
+        "Sivasagar",
+        "Sonitpur",
+        "South Salmara Mancachar",
+        "Tamulpur",
+        "Tinsukia",
+        "Udalguri",
+        "West Karbi Anglong"
+    ],
+    "Bihar": [
+        "Araria",
+        "Arwal",
+        "Aurangabad",
+        "Banka",
+        "Begusarai",
+        "Bhagalpur",
+        "Bhojpur",
+        "Buxar",
+        "Darbhanga",
+        "Gaya",
+        "Gopalganj",
+        "Jamui",
+        "Jehanabad",
+        "Kaimur (Bhabua)",
+        "Katihar",
+        "Khagaria",
+        "Kishanganj",
+        "Lakhisarai",
+        "Madhepura",
+        "Madhubani",
+        "Munger",
+        "Muzaffarpur",
+        "Nalanda",
+        "Nawada",
+        "Pashchim Champaran",
+        "Patna",
+        "Purbi Champaran",
+        "Purnia",
+        "Rohtas",
+        "Saharsa",
+        "Samastipur",
+        "Saran",
+        "Sheikhpura",
+        "Sheohar",
+        "Sitamarhi",
+        "Siwan",
+        "Supaul",
+        "Vaishali"
+    ],
+    "Chandigarh": [
+        "Chandigarh"
+    ],
+    "Chhattisgarh": [
+        "Balod",
+        "Balodabazar-Bhatapara",
+        "Balrampur-Ramanujganj",
+        "Bastar",
+        "Bemetara",
+        "Bijapur",
+        "Bilaspur",
+        "Dakshin Bastar Dantewada",
+        "Dhamtari",
+        "Durg",
+        "Gariyaband",
+        "Gaurela-Pendra-Marwahi",
+        "Janjgir-Champa",
+        "Jashpur",
+        "Kabeerdham",
+        "Khairagarh-Chhuikhadan-Gandai",
+        "Kondagaon",
+        "Korba",
+        "Korea",
+        "Mahasamund",
+        "Manendragarh-Chirmiri-Bharatpur(M C B)",
+        "Mohla-Manpur-Ambagarh Chouki",
+        "Mungeli",
+        "Narayanpur",
+        "Raigarh",
+        "Raipur",
+        "Rajnandgaon",
+        "Sakti",
+        "Sarangarh-Bilaigarh",
+        "Sukma",
+        "Surajpur",
+        "Surguja",
+        "Uttar Bastar Kanker"
+    ],
+    "Delhi": [
+        "Central",
+        "East",
+        "New Delhi",
+        "North",
+        "North East",
+        "North West",
+        "Shahdara",
+        "South",
+        "South East",
+        "South West",
+        "West"
+    ],
+    "Goa": [
+        "North Goa",
+        "South Goa"
+    ],
+    "Gujarat": [
+        "Ahmedabad",
+        "Amreli",
+        "Anand",
+        "Arvalli",
+        "Banas Kantha",
+        "Bharuch",
+        "Bhavnagar",
+        "Botad",
+        "Chhotaudepur",
+        "Dahod",
+        "Dangs",
+        "Devbhumi Dwarka",
+        "Gandhinagar",
+        "Gir Somnath",
+        "Jamnagar",
+        "Junagadh",
+        "Kachchh",
+        "Kheda",
+        "Mahesana",
+        "Mahisagar",
+        "Morbi",
+        "Narmada",
+        "Navsari",
+        "Panch Mahals",
+        "Patan",
+        "Porbandar",
+        "Rajkot",
+        "Sabar Kantha",
+        "Surat",
+        "Surendranagar",
+        "Tapi",
+        "Vadodara",
+        "Valsad"
+    ],
+    "Haryana": [
+        "Ambala",
+        "Bhiwani",
+        "Charki Dadri",
+        "Faridabad",
+        "Fatehabad",
+        "Gurugram",
+        "Hisar",
+        "Jhajjar",
+        "Jind",
+        "Kaithal",
+        "Karnal",
+        "Kurukshetra",
+        "Mahendragarh",
+        "Nuh",
+        "Palwal",
+        "Panchkula",
+        "Panipat",
+        "Rewari",
+        "Rohtak",
+        "Sirsa",
+        "Sonipat",
+        "Yamunanagar"
+    ],
+    "Himachal Pradesh": [
+        "Bilaspur",
+        "Chamba",
+        "Hamirpur",
+        "Kangra",
+        "Kinnaur",
+        "Kullu",
+        "Lahaul And Spiti",
+        "Mandi",
+        "Shimla",
+        "Sirmaur",
+        "Solan",
+        "Una"
+    ],
+    "Jammu And Kashmir": [
+        "Anantnag",
+        "Bandipora",
+        "Baramulla",
+        "Budgam",
+        "Doda",
+        "Ganderbal",
+        "Jammu",
+        "Kathua",
+        "Kishtwar",
+        "Kulgam",
+        "Kupwara",
+        "Poonch",
+        "Pulwama",
+        "Rajouri",
+        "Ramban",
+        "Reasi",
+        "Samba",
+        "Shopian",
+        "Srinagar",
+        "Udhampur"
+    ],
+    "Jharkhand": [
+        "Bokaro",
+        "Chatra",
+        "Deoghar",
+        "Dhanbad",
+        "Dumka",
+        "East Singhbum",
+        "Garhwa",
+        "Giridih",
+        "Godda",
+        "Gumla",
+        "Hazaribagh",
+        "Jamtara",
+        "Khunti",
+        "Koderma",
+        "Latehar",
+        "Lohardaga",
+        "Pakur",
+        "Palamu",
+        "Ramgarh",
+        "Ranchi",
+        "Sahebganj",
+        "Saraikela Kharsawan",
+        "Simdega",
+        "West Singhbhum"
+    ],
+    "Karnataka": [
+        "Bagalkote",
+        "Ballari",
+        "Belagavi",
+        "Bengaluru Rural",
+        "Bengaluru Urban",
+        "Bidar",
+        "Chamarajanagara",
+        "Chikkaballapura",
+        "Chikkamagaluru",
+        "Chitradurga",
+        "Dakshina Kannada",
+        "Davangere",
+        "Dharwad",
+        "Gadag",
+        "Hassan",
+        "Haveri",
+        "Kalaburagi",
+        "Kodagu",
+        "Kolar",
+        "Koppal",
+        "Mandya",
+        "Mysuru",
+        "Raichur",
+        "Ramanagara",
+        "Shivamogga",
+        "Tumakuru",
+        "Udupi",
+        "Uttara Kannada",
+        "Vijayanagar",
+        "Vijayapura",
+        "Yadgir"
+    ],
+    "Kerala": [
+        "Alappuzha",
+        "Ernakulam",
+        "Idukki",
+        "Kannur",
+        "Kasaragod",
+        "Kollam",
+        "Kottayam",
+        "Kozhikode",
+        "Malappuram",
+        "Palakkad",
+        "Pathanamthitta",
+        "Thiruvananthapuram",
+        "Thrissur",
+        "Wayanad"
+    ],
+    "Ladakh": [
+        "Kargil",
+        "Leh Ladakh"
+    ],
+    "Lakshadweep": [
+        "Lakshadweep District"
+    ],
+    "Madhya Pradesh": [
+        "Agar-Malwa",
+        "Alirajpur",
+        "Anuppur",
+        "Ashoknagar",
+        "Balaghat",
+        "Barwani",
+        "Betul",
+        "Bhind",
+        "Bhopal",
+        "Burhanpur",
+        "Chhatarpur",
+        "Chhindwara",
+        "Damoh",
+        "Datia",
+        "Dewas",
+        "Dhar",
+        "Dindori",
+        "Guna",
+        "Gwalior",
+        "Harda",
+        "Indore",
+        "Jabalpur",
+        "Jhabua",
+        "Katni",
+        "Khandwa (East Nimar)",
+        "Khargone (West Nimar)",
+        "MAUGANJ",
+        "Maihar",
+        "Mandla",
+        "Mandsaur",
+        "Morena",
+        "Narmadapuram",
+        "Narsimhapur",
+        "Neemuch",
+        "Niwari",
+        "Pandhurna",
+        "Panna",
+        "Raisen",
+        "Rajgarh",
+        "Ratlam",
+        "Rewa",
+        "Sagar",
+        "Satna",
+        "Sehore",
+        "Seoni",
+        "Shahdol",
+        "Shajapur",
+        "Sheopur",
+        "Shivpuri",
+        "Sidhi",
+        "Singrauli",
+        "Tikamgarh",
+        "Ujjain",
+        "Umaria",
+        "Vidisha"
+    ],
+    "Maharashtra": [
+        "Ahmednagar",
+        "Akola",
+        "Amravati",
+        "Beed",
+        "Bhandara",
+        "Buldhana",
+        "Chandrapur",
+        "Chhatrapati Sambhajinagar",
+        "Dharashiv",
+        "Dhule",
+        "Gadchiroli",
+        "Gondia",
+        "Hingoli",
+        "Jalgaon",
+        "Jalna",
+        "Kolhapur",
+        "Latur",
+        "Mumbai",
+        "Mumbai Suburban",
+        "Nagpur",
+        "Nanded",
+        "Nandurbar",
+        "Nashik",
+        "Palghar",
+        "Parbhani",
+        "Pune",
+        "Raigad",
+        "Ratnagiri",
+        "Sangli",
+        "Satara",
+        "Sindhudurg",
+        "Solapur",
+        "Thane",
+        "Wardha",
+        "Washim",
+        "Yavatmal"
+    ],
+    "Manipur": [
+        "Bishnupur",
+        "Chandel",
+        "Churachandpur",
+        "Imphal East",
+        "Imphal West",
+        "Jiribam",
+        "Kakching",
+        "Kamjong",
+        "Kangpokpi",
+        "Noney",
+        "Pherzawl",
+        "Senapati",
+        "Tamenglong",
+        "Tengnoupal",
+        "Thoubal",
+        "Ukhrul"
+    ],
+    "Meghalaya": [
+        "East Garo Hills",
+        "East Jaintia Hills",
+        "East Khasi Hills",
+        "Eastern West Khasi Hills",
+        "North Garo Hills",
+        "Ri Bhoi",
+        "South Garo Hills",
+        "South West Garo Hills",
+        "South West Khasi Hills",
+        "West Garo Hills",
+        "West Jaintia Hills",
+        "West Khasi Hills"
+    ],
+    "Mizoram": [
+        "Aizawl",
+        "Champhai",
+        "Hnahthial",
+        "Khawzawl",
+        "Kolasib",
+        "Lawngtlai",
+        "Lunglei",
+        "Mamit",
+        "Saitual",
+        "Serchhip",
+        "Siaha"
+    ],
+    "Nagaland": [
+        "Chumoukedima",
+        "Dimapur",
+        "Kiphire",
+        "Kohima",
+        "Longleng",
+        "Mokokchung",
+        "Mon",
+        "Niuland",
+        "Noklak",
+        "Peren",
+        "Phek",
+        "Shamator",
+        "Tseminyu",
+        "Tuensang",
+        "Wokha",
+        "Zunheboto"
+    ],
+    "Odisha": [
+        "Anugul",
+        "Balangir",
+        "Baleshwar",
+        "Bargarh",
+        "Bhadrak",
+        "Boudh",
+        "Cuttack",
+        "Deogarh",
+        "Dhenkanal",
+        "Gajapati",
+        "Ganjam",
+        "Jagatsinghapur",
+        "Jajapur",
+        "Jharsuguda",
+        "Kalahandi",
+        "Kandhamal",
+        "Kendrapara",
+        "Kendujhar",
+        "Khordha",
+        "Koraput",
+        "Malkangiri",
+        "Mayurbhanj",
+        "Nabarangpur",
+        "Nayagarh",
+        "Nuapada",
+        "Puri",
+        "Rayagada",
+        "Sambalpur",
+        "Sonepur",
+        "Sundargarh"
+    ],
+    "Puducherry": [
+        "Karaikal",
+        "Mahe",
+        "Pondicherry",
+        "Yanam"
+    ],
+    "Punjab": [
+        "Amritsar",
+        "Barnala",
+        "Bathinda",
+        "Faridkot",
+        "Fatehgarh Sahib",
+        "Fazilka",
+        "Ferozepur",
+        "Gurdaspur",
+        "Hoshiarpur",
+        "Jalandhar",
+        "Kapurthala",
+        "Ludhiana",
+        "Malerkotla",
+        "Mansa",
+        "Moga",
+        "Pathankot",
+        "Patiala",
+        "Rupnagar",
+        "S.A.S Nagar",
+        "Sangrur",
+        "Shahid Bhagat Singh Nagar",
+        "Sri Muktsar Sahib",
+        "Tarn Taran"
+    ],
+    "Rajasthan": [
+        "Ajmer",
+        "Alwar",
+        "Anupgarh",
+        "Balotra",
+        "Banswara",
+        "Baran",
+        "Barmer",
+        "Beawar",
+        "Bharatpur",
+        "Bhilwara",
+        "Bikaner",
+        "Bundi",
+        "Chittorgarh",
+        "Churu",
+        "Dausa",
+        "Deeg",
+        "Dholpur",
+        "Didwana-Kuchaman",
+        "Dudu",
+        "Dungarpur",
+        "Ganganagar",
+        "Gangapurcity",
+        "Hanumangarh",
+        "Jaipur",
+        "Jaipur (Gramin)",
+        "Jaisalmer",
+        "Jalore",
+        "Jhalawar",
+        "Jhunjhunu",
+        "Jodhpur",
+        "Jodhpur (Gramin)",
+        "Karauli",
+        "Kekri",
+        "Khairthal-Tijara",
+        "Kota",
+        "Kotputli-Behror",
+        "Nagaur",
+        "Neem Ka Thana",
+        "Pali",
+        "Phalodi",
+        "Pratapgarh",
+        "Rajsamand",
+        "Salumbar",
+        "Sanchore",
+        "Sawai Madhopur",
+        "Shahpura",
+        "Sikar",
+        "Sirohi",
+        "Tonk",
+        "Udaipur"
+    ],
+    "Sikkim": [
+        "Gangtok",
+        "Gyalshing",
+        "Mangan",
+        "Namchi",
+        "Pakyong",
+        "Soreng"
+    ],
+    "Tamil Nadu": [
+        "Ariyalur",
+        "Chengalpattu",
+        "Chennai",
+        "Coimbatore",
+        "Cuddalore",
+        "Dharmapuri",
+        "Dindigul",
+        "Erode",
+        "Kallakurichi",
+        "Kancheepuram",
+        "Kanniyakumari",
+        "Karur",
+        "Krishnagiri",
+        "Madurai",
+        "Mayiladuthurai",
+        "Nagapattinam",
+        "Namakkal",
+        "Perambalur",
+        "Pudukkottai",
+        "Ramanathapuram",
+        "Ranipet",
+        "Salem",
+        "Sivaganga",
+        "Tenkasi",
+        "Thanjavur",
+        "The Nilgiris",
+        "Theni",
+        "Thiruvallur",
+        "Thiruvarur",
+        "Thoothukkudi",
+        "Tiruchirappalli",
+        "Tirunelveli",
+        "Tirupathur",
+        "Tiruppur",
+        "Tiruvannamalai",
+        "Vellore",
+        "Viluppuram",
+        "Virudhunagar"
+    ],
+    "Telangana": [
+        "Adilabad",
+        "Bhadradri Kothagudem",
+        "Hanumakonda",
+        "Hyderabad",
+        "Jagitial",
+        "Jangoan",
+        "Jayashankar Bhupalapally",
+        "Jogulamba Gadwal",
+        "Kamareddy",
+        "Karimnagar",
+        "Khammam",
+        "Kumuram Bheem Asifabad",
+        "Mahabubabad",
+        "Mahabubnagar",
+        "Mancherial",
+        "Medak",
+        "Medchal Malkajgiri",
+        "Mulugu",
+        "Nagarkurnool",
+        "Nalgonda",
+        "Narayanpet",
+        "Nirmal",
+        "Nizamabad",
+        "Peddapalli",
+        "Rajanna Sircilla",
+        "Ranga Reddy",
+        "Sangareddy",
+        "Siddipet",
+        "Suryapet",
+        "Vikarabad",
+        "Wanaparthy",
+        "Warangal",
+        "Yadadri Bhuvanagiri"
+    ],
+    "The Dadra And Nagar Haveli And Daman And Diu": [
+        "Dadra And Nagar Haveli",
+        "Daman",
+        "Diu"
+    ],
+    "Tripura": [
+        "Dhalai",
+        "Gomati",
+        "Khowai",
+        "North Tripura",
+        "Sepahijala",
+        "South Tripura",
+        "Unakoti",
+        "West Tripura"
+    ],
+    "Uttar Pradesh": [
+        "Agra",
+        "Aligarh",
+        "Ambedkar Nagar",
+        "Amethi",
+        "Amroha",
+        "Auraiya",
+        "Ayodhya",
+        "Azamgarh",
+        "Baghpat",
+        "Bahraich",
+        "Ballia",
+        "Balrampur",
+        "Banda",
+        "Bara Banki",
+        "Bareilly",
+        "Basti",
+        "Bhadohi",
+        "Bijnor",
+        "Budaun",
+        "Bulandshahr",
+        "Chandauli",
+        "Chitrakoot",
+        "Deoria",
+        "Etah",
+        "Etawah",
+        "Farrukhabad",
+        "Fatehpur",
+        "Firozabad",
+        "Gautam Buddha Nagar",
+        "Ghaziabad",
+        "Ghazipur",
+        "Gonda",
+        "Gorakhpur",
+        "Hamirpur",
+        "Hapur",
+        "Hardoi",
+        "Hathras",
+        "Jalaun",
+        "Jaunpur",
+        "Jhansi",
+        "Kannauj",
+        "Kanpur Dehat",
+        "Kanpur Nagar",
+        "Kasganj",
+        "Kaushambi",
+        "Kheri",
+        "Kushinagar",
+        "Lalitpur",
+        "Lucknow",
+        "Mahoba",
+        "Mahrajganj",
+        "Mainpuri",
+        "Mathura",
+        "Mau",
+        "Meerut",
+        "Mirzapur",
+        "Moradabad",
+        "Muzaffarnagar",
+        "Pilibhit",
+        "Pratapgarh",
+        "Prayagraj",
+        "Rae Bareli",
+        "Rampur",
+        "Saharanpur",
+        "Sambhal",
+        "Sant Kabir Nagar",
+        "Shahjahanpur",
+        "Shamli",
+        "Shrawasti",
+        "Siddharthnagar",
+        "Sitapur",
+        "Sonbhadra",
+        "Sultanpur",
+        "Unnao",
+        "Varanasi"
+    ],
+    "Uttarakhand": [
+        "Almora",
+        "Bageshwar",
+        "Chamoli",
+        "Champawat",
+        "Dehradun",
+        "Haridwar",
+        "Nainital",
+        "Pauri Garhwal",
+        "Pithoragarh",
+        "Rudra Prayag",
+        "Tehri Garhwal",
+        "Udam Singh Nagar",
+        "Uttar Kashi"
+    ],
+    "West Bengal": [
+        "Alipurduar",
+        "Bankura",
+        "Birbhum",
+        "Cooch Behar",
+        "Dakshin Dinajpur",
+        "Darjeeling",
+        "Hooghly",
+        "Howrah",
+        "Jalpaiguri",
+        "Jhargram",
+        "Kalimpong",
+        "Kolkata",
+        "Malda",
+        "Murshidabad",
+        "Nadia",
+        "North 24 Parganas",
+        "Paschim Bardhaman",
+        "Paschim Medinipur",
+        "Purba Bardhaman",
+        "Purba Medinipur",
+        "Purulia",
+        "South 24 Parganas",
+        "Uttar Dinajpur"
+    ]
+}
+                
+        document.addEventListener("DOMContentLoaded", function() {
+            populateStates(statesDistricts);
+        });
+
+        function populateStates(data) {
+            const stateSelect = document.getElementById('state-select');
+            for (const state in data) {
+                const option = document.createElement('option');
+                option.value = state;
+                option.textContent = state;
+                stateSelect.appendChild(option);
+            }
+
+            // Add event listener for state selection change
+            stateSelect.addEventListener('change', function() {
+                populateCities(data, this.value);
+            });
+        }
+
+        function populateCities(data, selectedState) {
+            const citySelect = document.getElementById('city-select');
+            citySelect.innerHTML = '<option value="">Select City</option>'; // Reset the cities dropdown
+
+            if (selectedState in data) {
+                data[selectedState].forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    option.textContent = city;
+                    citySelect.appendChild(option);
+                });
+            }
+        }
+    </script>
+                  <!---->
+                    <select id="state-select" name="state" class="form-select req" aria-required="true">
+                        <option value="">Select State</option>
+                    </select>
+                    <select id="city-select" name="city" class="form-select req" aria-required="true">
+                        <option value="">Select City</option>
+                    </select>
+                  <!---->
+                  
+                </div>
+                <!-- Navigation -->
+                <div class="nav">
+                  <button type="button" class="prev last">&#8592;</button>
+                  <button type="button" class="submit" name="submit">Submit</button>
+                </div>
+              </div>
+            </div>
+          </form>
+          <!-- OR -->
+          <div class="orWrapper">
+            <span>OR</span>
+          </div>
+          <!-- Video session -->
+          <div class="mentorWrapper">
+            <span>Talk with a mentor</span>
+            <a href="https://indianeduhub.in/book-video-session/">
+            <div>
+              <span>Book Video Session</span>
+            </div>
+          </a>
+          </div>
+        </div>
+        <!-- Left Column -->
+        <div class="col-md-6">
+            <!-- Left column content here -->
+            <h3 class="left-col-headerText">Online & Distance University Selection Made Easy</h3>
+
+            <div class="left-col-container">
+                <p class="left-col-step">Step 1</p>
+                <p class="left-col-title">Questionnaire or Video Session</p>
+                <p class="left-col-desc"><strong>Questionnaire:</strong> Fill accurate details based on your interest and background.</p>
+                <p class="left-col-desc"><strong>Video Session:</strong> Mentor will help you in clarification and deep understanding of your interest and background.</p>
+            </div>
+
+            <div class="left-col-container">
+                <p class="left-col-step">Step 2</p>
+                <p class="left-col-title">Finding Suitable Online/Distance University</p>
+                <p class="left-col-desc">Based on your answer, our mentors and research team will find the best and suitable online/distance university for the candidate.</p>
+            </div>
+
+            <div class="left-col-container">
+                <p class="left-col-step">Step 3</p>
+                <p class="left-col-title">Online/Distance University Suggestions</p>
+                <p class="left-col-desc">Mentors will get in touch with the candidate regarding the best and suitable online/distance university. Will discuss the pros and cons of the options which the candidate has, and will be submitting a report to the candidate.</p>
+            </div>
+
+            <div class="left-col-container">
+                <p class="left-col-step">Step 4</p>
+                <p class="left-col-title">University Registration</p>
+                <p class="left-col-desc">Based on the report candidates will be able to select the best and suitable online/distance university for them. Then comes Online/Distance University Registration.</p>
+            </div>
+        </div>
+      </div>
+    </div>
+    <!--  -->
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p class="mb-0"> All rights reserved by Indian Edu Hub Private Limited</p>
+        </div>
+    </footer>
+  
+    <!-- Include Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- custom script -->
+    <script>
+      function showAlert(message) {
+          var alertDiv = document.getElementById("alert");
+          alertDiv.innerHTML = message;
+          alertDiv.style.display = "block";
+          alertDiv.classList.add("animate__animated", "animate__fadeInUp");
+          setTimeout(function(){
+              alertDiv.classList.remove("animate__fadeInUp");
+              alertDiv.classList.add("animate__fadeOutUp");
+              setTimeout(function(){
+                  alertDiv.style.display = "none";
+                  alertDiv.classList.remove("animate__fadeOutUp");
+              }, 1000);
+          }, 5000);
+      }
+      // q1
+      const q1 = document.querySelectorAll('#q1 .answer')
+      const speclist = document.querySelectorAll('#q1 select')
+
+      q1.forEach((element) => {
+        element.addEventListener('click', function() {
+          q1.forEach((element) => {
+            element.classList.remove('selected');
+          }); 
+          element.classList.add('selected');
+          element.children[0].checked = true;
+          courseName = element.children[0].getAttribute('value');
+          speclist.forEach((element) => {
+            element.hidden = true;
+          });
+          selector = "[name='"+courseName+"-Spec']"
+          document.querySelector(selector).hidden = false;
+        });
+      });
+
+          
+      // q2
+      const q2 = document.querySelectorAll('#q2 .answer')
+
+      q2.forEach((element, index) => {
+        element.addEventListener('click', function() {
+          q2.forEach((element) => {
+            element.classList.remove('selected');
+          }); 
+          element.classList.add('selected');
+          element.children[0].checked = true;
+          if(index == 0){
+            document.querySelectorAll('.answerWrapper2-1')[0].hidden = true;
+            document.querySelectorAll('.answerWrapper2-1')[1].hidden = true;
+          }else if(index == 1){
+            document.querySelectorAll('.answerWrapper2-1')[0].hidden = false;
+            document.querySelectorAll('.answerWrapper2-1')[1].hidden = true;
+          }else if(index == 2){
+            document.querySelectorAll('.answerWrapper2-1')[0].hidden = true;
+            document.querySelectorAll('.answerWrapper2-1')[1].hidden = false;
+          }
+        });
+      });
+          
+      // q3
+      const q3 = document.querySelectorAll('#q3 .answer')
+
+      q3.forEach((element) => {
+        element.addEventListener('click', function() {
+          q3.forEach((element) => {
+            element.classList.remove('selected');
+          }); 
+          element.classList.add('selected');
+          element.children[0].checked = true;
+        });
+      });
+          
+      // q4
+      const q4 = document.querySelectorAll('#q4 .answer')
+
+      q4.forEach((element) => {
+        element.addEventListener('click', function() {
+          q4.forEach((element) => {
+            element.classList.remove('selected');
+          }); 
+          element.classList.add('selected');
+          element.children[0].checked = true;
+        });
+      });
+
+      // q5
+
+      // q6
+
+      // q7
+      const q7 = document.querySelectorAll('#q7 .answerWrapper7 .answer')
+      const q7_1Wrapper = document.querySelectorAll('#q7 .answerWrapper7-1')
+      const q7_1 = document.querySelectorAll('#q7 .answerWrapper7-1 .answer')
+
+      q7.forEach((element, index) => {
+        element.addEventListener('click', function() {
+          q7.forEach((element) => {
+            element.classList.remove('selected');
+          });
+          element.classList.add('selected');
+          element.children[0].checked = true;
+          
+          q7_1Wrapper.forEach((element) => {
+            element.hidden = true;
+          });
+          q7_1Wrapper[index].hidden = false;
+        });
+      });
+
+      q7_1.forEach((element) => {
+        element.addEventListener('click', function() {
+          q7_1.forEach((element) => {
+            element.classList.remove('selected');
+          }); 
+          element.classList.add('selected');
+          element.children[0].checked = true;
+        });
+      });
+
+      // stepProgress
+      const steps = document.querySelectorAll('.steps')
+      const stepProgress = document.querySelectorAll('.circle')
+      const nextButtons = document.querySelectorAll('.nav .next')
+      const prevButtons = document.querySelectorAll('.nav .prev')
+      let nextValidate = false;
+      submitData = {}
+
+      // next button
+      nextButtons.forEach((element, index) => {
+        element.addEventListener('click', function() {
+          switch (index) {
+            case 0:
+              checkedRadio = document.querySelector('input[name = course]:checked')
+              if(checkedRadio != null) {
+                optionSelector = document.querySelector('select[name="'+checkedRadio.value+'-Spec"]')
+                if(optionSelector.selectedIndex != 0){
+                  nextValidate = true
+                  submitData.course = checkedRadio.value
+                  submitData.specialization = optionSelector.value
+                } else{
+                  nextValidate = false
+                  showAlert("Please select any specialization");
+                }
+              } else{
+                nextValidate = false
+                showAlert("Please select any course");
+              }
+            break;
+
+            case 1:
+              checkedRadio = document.querySelector('input[name = status]:checked')
+              if(checkedRadio != null) {
+                if(document.querySelectorAll('.answerWrapper2-1')[0].hidden && document.querySelectorAll('.answerWrapper2-1')[1].hidden){
+                  nextValidate = true
+                  submitData.status = document.querySelector('input[name = status]:checked').value
+                    submitData.expSalary = ''
+                    submitData.currSalary = ''
+                    submitData.experience = ''
+                }else if (!document.querySelectorAll('.answerWrapper2-1')[0].hidden){
+                  if(document.querySelector('input[name = expSalary]').value == ''){
+                    nextValidate = false
+                    showAlert("Please enter your expected salary");
+                  }else{
+                    nextValidate = true
+                    submitData.status = document.querySelector('input[name = status]:checked').value
+                    submitData.expSalary = document.querySelector('input[name = expSalary]').value
+                    submitData.currSalary = ''
+                    submitData.experience = ''
+                  }
+                }else if (!document.querySelectorAll('.answerWrapper2-1')[1].hidden){
+                  if(document.querySelector('input[name = currSalary]').value == ''){
+                    nextValidate = false
+                    showAlert("Please enter your current salary");
+                  } else if(document.querySelector('input[name = experience]').value == ''){
+                    nextValidate = false
+                    showAlert("Please enter your total year of experience");
+                  } else{
+                    nextValidate = true
+                    submitData.status = document.querySelector('input[name = status]:checked').value
+                    submitData.expSalary = ''
+                    submitData.currSalary = document.querySelector('input[name = currSalary]').value
+                    submitData.experience = document.querySelector('input[name = experience]').value
+                  }
+                }
+              } else{
+                nextValidate = false
+                showAlert("Please select your current status");
+              }
+            break;
+
+            case 2:
+              checkedRadio = document.querySelector('input[name = empLocation]:checked')
+              if(checkedRadio != null) {
+                nextValidate = true
+                submitData.empLocation = checkedRadio.value
+              } else{
+                nextValidate = false
+                showAlert("Please select a location");
+              }
+            break;
+
+            case 3:
+              checkedRadio = document.querySelector('input[name = sector]:checked')
+              if(checkedRadio != null) {
+                nextValidate = true
+                submitData.sector = checkedRadio.value
+              } else{
+                nextValidate = false
+                showAlert("Please select a sector");
+              }
+            break;
+
+            case 4:
+              if(document.querySelector('input[name = prevUniversity]').value == ''){
+                nextValidate = false
+                showAlert("Please enter your prev university");
+              } else{
+                nextValidate = true
+                submitData.prevUniversity = document.querySelector('input[name = prevUniversity]').value
+              }
+            break;
+
+            case 5:
+              if(document.querySelector('input[name = prevQualification]').value == ''){
+                nextValidate = false
+                showAlert("Please enter your prev qualification");
+              } else{
+                nextValidate = true
+                submitData.prevQualification = document.querySelector('input[name = prevQualification]').value
+              }
+            break;
+
+            case 6:
+              checkedRadio = document.querySelector('input[name = exposure]:checked')
+              if(checkedRadio != null) {
+                if(!document.querySelectorAll('.answerWrapper7-1')[0].hidden){
+                  if(document.querySelector('input[name = budget1]:checked') != null){
+                    nextValidate = true
+                    submitData.exposure = document.querySelector('input[name = exposure]:checked').value
+                    submitData.budget = document.querySelector('input[name = budget1]:checked').value
+                  } else{
+                    nextValidate = false
+                    showAlert("Please select a budget");
+                  }
+                }else if(!document.querySelectorAll('.answerWrapper7-1')[1].hidden){
+                  if(document.querySelector('input[name = budget2]:checked') != null){
+                    nextValidate = true
+                    submitData.budget = document.querySelector('input[name = budget2]:checked').value
+                  } else{
+                    nextValidate = false
+                    showAlert("Please select a budget");
+                  }
+                }else if(!document.querySelectorAll('.answerWrapper7-1')[2].hidden){
+                  if(document.querySelector('input[name = budget3]:checked') != null){
+                    nextValidate = true
+                    submitData.budget = document.querySelector('input[name = budget3]:checked').value
+                  } else{
+                    nextValidate = false
+                    showAlert("Please select a budget");
+                  }
+                }
+              } else{
+                nextValidate = false
+                showAlert("Please select an exposure");
+              }
+            break;
+
+            case 7:
+              nextValidate = true;
+              submitData.description = document.querySelector('textarea[name = Description]').value
+            break;
+          }
+
+          // NextValidate
+          if(nextValidate){
+            // reset stepprogress
+            stepProgress.forEach((element) => {
+              element.classList.remove('blue')
+              element.classList.remove('yellow')
+            })
+            
+            if(index == 2 && document.querySelector("input[name = empLocation]:checked").value == 'Abroad'){
+              // set stepprogress
+              stepProgress[index+2].classList.add('yellow')
+              for(i=0;i<index+2;i++){
+                stepProgress[i].classList.add('blue')
+              }
+              // reset steps
+              steps.forEach((element) => {
+                element.hidden = true;
+              })
+              // set step
+              steps[index+2].hidden = false;
+            }else{
+              stepProgress[index+1].classList.add('yellow')
+              for(i=0;i<index+1;i++){
+                stepProgress[i].classList.add('blue')
+              }
+              // reset steps
+              steps.forEach((element) => {
+                element.hidden = true;
+              })
+              // set step
+              steps[index+1].hidden = false;
+            }
+          }
+        });
+      });
+
+      // prev button
+      prevButtons.forEach((element, index) => {
+        element.addEventListener('click', function() {
+          // reset stepprogress
+          stepProgress.forEach((element) => {
+            element.classList.remove('blue')
+            element.classList.remove('yellow')
+          })
+          if(index == 3 && document.querySelector("input[name = empLocation]:checked").value == 'Abroad'){
+            // default for sector
+            submitData.sector =''
+            // set stepprogress
+            stepProgress[index-1].classList.add('yellow')
+            for(i=0;i<index-1;i++){
+              stepProgress[i].classList.add('blue')
+            }
+            // reset steps
+            steps.forEach((element) => {
+              element.hidden = true;
+            })
+            // set step
+            steps[index-1].hidden = false;
+          } else{
+            // set stepprogress
+            stepProgress[index].classList.add('yellow')
+            for(i=0;i<index;i++){
+              stepProgress[i].classList.add('blue')
+            }
+            // reset steps
+            steps.forEach((element) => {
+              element.hidden = true;
+            })
+            // set step
+            steps[index].hidden = false;
+          }
+
+        });
+      });
+// Function to show alerts using Alertify.js
+function showAlerts(message) {
+    alertify.error(message);
+
+    // Clear email and mobile fields
+    const emailField = document.querySelector('#q9 .answer input[name=email]');
+    const mobileField = document.querySelector('#q9 .answer input[name=mobile]');
+    const whatsappField = document.querySelector('#q9 .answer input[name=whatsapp]');
+
+    if (emailField) {
+        emailField.value = '';  // Clear email field
+    } else {
+        console.error('Email field not found');
+    }
+
+    if (whatsappField) {
+        whatsappField.value = '';  // Clear whatsapp field
+    } else {
+        console.error('Whatsapp field not found');
+    }
+
+    if (mobileField) {
+        mobileField.value = '';  // Clear mobile field
+    } else {
+        console.error('Mobile field not found');
+    }
+
+    // Enable the submit button again
+    const submitButton = document.querySelector("#q9 .nav .submit");
+    if (submitButton) {
+        submitButton.disabled = false;
+    } else {
+        console.error('Submit button not found');
+    }
+}
+
+
+// Function to get the value from a field or group of fields
+function getValue(selector) {
+    const element = document.querySelector(selector);
+    if (element) {
+        if (element.type === 'radio' || element.type === 'checkbox') {
+            if (element.checked) {
+                return element.value;
+            }
+        } else {
+            return element.value;
+        }
+    }
+    return '';
+}
+
+// Data Collection and Validation
+function collectFormData() {
+    let submitData = {};
+
+    // Collect data from multi-step form
+    submitData.course = document.querySelector('input[name=course]:checked')?.value || '';
+    submitData.specialization = document.querySelector('select[name="' + submitData.course + '-Spec"]')?.value || '';
+    submitData.status = document.querySelector('input[name=status]:checked')?.value || '';
+    submitData.expSalary = document.querySelector('input[name=expSalary]')?.value || '';
+    submitData.currSalary = document.querySelector('input[name=currSalary]')?.value || '';
+    submitData.experience = document.querySelector('input[name=experience]')?.value || '';
+    submitData.empLocation = document.querySelector('input[name=empLocation]:checked')?.value || '';
+    submitData.sector = document.querySelector('input[name=sector]:checked')?.value || '';
+    submitData.prevUniversity = document.querySelector('input[name=prevUniversity]')?.value || '';
+    submitData.prevQualification = document.querySelector('input[name=prevQualification]')?.value || '';
+    submitData.exposure = document.querySelector('input[name=exposure]:checked')?.value || '';
+    submitData.budget = document.querySelector('input[name=budget1]:checked')?.value ||
+                        document.querySelector('input[name=budget2]:checked')?.value ||
+                        document.querySelector('input[name=budget3]:checked')?.value || '';
+    submitData.description = document.querySelector('textarea[name=Description]')?.value || '';
+
+    // Collect data from the final step
+    submitData.name = document.querySelector('#q9 .answer input[name=name]')?.value || '';
+    submitData.email = document.querySelector('#q9 .answer input[name=email]')?.value || '';
+    submitData.whatsapp = document.querySelector('#q9 .answer input[name=whatsapp]')?.value || '';
+    submitData.mobile = document.querySelector('#q9 .answer input[name=mobile]')?.value || '';
+    submitData.state = document.querySelector('#q9 #state-select')?.value || '';
+    submitData.city = document.querySelector('#q9 #city-select')?.value || '';
+
+    // Add the current query parameter
+    const queryParams = new URLSearchParams(window.location.search);
+    const ReferredBy = queryParams.get('studentid');
+    if (ReferredBy) {
+        submitData.ReferredBy = ReferredBy;
+    }
+
+    return submitData;
+}
+
+function validateFinalForm(submitData) {
+    let valid = true;
+
+    // Mobile verification
+    const whatsappPattern = /^\d{10}$/;
+    if (!whatsappPattern.test(submitData.whatsapp)) {
+        valid = false;
+        showAlert("Please enter a valid WhatsApp number");
+    }
+
+    // Email verification
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(submitData.email)) {
+        valid = false;
+        showAlert("Please enter a valid email address");
+    }
+
+    // Empty field verification
+    const requiredFields = ['name', 'email', 'whatsapp', 'mobile', 'state', 'city'];
+    requiredFields.forEach(field => {
+        if (!submitData[field] || submitData[field].trim() === '') {
+            valid = false;
+            showAlert("Please fill all the required fields");
+        }
+    });
+
+    return valid;
+}
+
+// Submit Button
+const submitBtn = document.querySelector('.submit');
+
+submitBtn.addEventListener('click', function() {
+    // Collect all data
+    const submitData = collectFormData();
+
+    // Validate the final form
+    const submitValidate = validateFinalForm(submitData);
+
+    // Submit Process
+    if (submitValidate) {
+        document.querySelector("#q9 .nav .submit").disabled = true;
+
+        // Send the POST request
+        fetch('/submit-form-sug', {  // Make sure this URL matches your server route
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(submitData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Server Response:', data);
+            if (data.success) {
+                document.querySelector('.graybg').style.display = 'flex';
+                document.querySelector('.graybg > div').style.display = 'flex';
+                document.querySelector('html').style.overflow = 'hidden';
+                setTimeout(() => {
+                    window.location.href = 'https://indianeduhub.in/end-to-end-service/';
+                }, 8000);
+            } else {
+                showAlerts('Submission failed: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error submitting data:', error);
+            showAlerts('Error submitting data: ' + error.message);
+        });
+    }
+});
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+      <div class="col-12">
+        <div class="bg-light rounded h-100 p-4">
+          <h6 class="mb-4">Mentor Details</h6>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>No.</th>
+                  <th>Name of Student</th>
+                  <th>Course</th>
+                  <th>Specialization</th>
+                  <th>Email</th>
+                  <th>Mobile Number</th>
+                  <th>Role</th>
+                  <th>Specific Name</th>
+                  <th>Service Pack</th>
+                  <th>Intake</th>
+                  <th>Mentorship</th>
+                  <th>Select University</th>
+                  <th>Semester</th>
+                  <th>University Paid</th>
+                  <th>ID Approved</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each formData}}
+                <tr>
+                  <td>{{incrementIndex @index}}</td>
+                  <td>{{this.studentName}}</td>
+                  <td><input type="text" class="form-control" value="{{this.course}}" /></td>
+                  <td><input type="text" class="form-control" value="{{this.specialization}}" /></td>
+                  <td>{{this.email}}</td>
+                  <td>{{this.mobileNumber}}</td>
+                  <td>{{this.role}}</td>
+                  <td>{{this.specificName}}</td>
+                  <td>{{this.servicePack}}</td>
+                  <td>{{this.intake}}</td>
+                  <td>
+                    <button class="btn btn-status btn-not-paid" onclick="toggleStatus(this, 'Mentorship')">Not Paid</button>
+                    <button class="btn btn-status btn-paid d-none" onclick="toggleStatus(this, 'Mentorship')">Paid</button>
+                  </td>
+                  <td>
+                    <select class="form-select">
+                         <option value="" selected disabled>Select</option>
+                      <option value="Manipal Jaipur University">Manipal Jaipur University</option>
+                      <option value="Manipal Sikkim University">Manipal Sikkim University</option>
+                      <option value="Jain Online University">Jain Online University</option>
+                      <option value="Jain ODL University">Jain ODL University</option>
+                      <option value="Vignan University">Vignan University</option>
+                      <option value="Amity University">Amity University</option>
+                      <option value="SVSU">SVSU</option>
+                      <option value="Aligarh Muslim University Online">Aligarh Muslim University Online</option>
+                      <option value="KLU Online">KLU Online</option>
+                      <option value="Mizoram University">Mizoram University</option>
+                      <option value="Jamia Hamdard University">Jamia Hamdard University</option>
+                      <option value="Uttaranchal University">Uttaranchal University</option>
+                      <option value="Andhra University">Andhra University</option>
+                      <option value="LPU">LPU</option>
+                    </select>
+                  </td>
+                  <td>
+                    <select class="form-select">
+                         <option value="" selected disabled>Select</option>
+                      <option value="Semester 1">Semester 1</option>
+                      <option value="Semester 2">Semester 2</option>
+                      <option value="Semester 3">Semester 3</option>
+                      <option value="Semester 4">Semester 4</option>
+                      <option value="Semester 5">Semester 5</option>
+                      <option value="Semester 6">Semester 6</option>
+                    </select>
+                  </td>
+                  <td>
+                    <button class="btn btn-status btn-not-done" onclick="toggleStatus(this, 'University Paid')">Not Done</button>
+                    <button class="btn btn-status btn-done d-none" onclick="toggleStatus(this, 'University Paid')">Done</button>
+                  </td>
+                  <td>
+                    <button class="btn btn-status btn-not-approved" onclick="toggleStatus(this, 'ID Approved')">Not Approved</button>
+                    <button class="btn btn-status btn-approved d-none" onclick="toggleStatus(this, 'ID Approved')">Approved</button>
+                  </td>
+                </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Table End -->
+
+  <script>
+    $(document).ready(function() {
+      $('#dataTable').DataTable();
+
+      // Change header background on scroll
+      $(window).scroll(function() {
+        if ($(this).scrollTop() > 50) {
+          $('header').addClass('scrolled');
+        } else {
+          $('header').removeClass('scrolled');
+        }
+      });
+    });
+
+    function toggleStatus(button, type) {
+      const currentText = button.innerText;
+      let newText;
+      let newClass;
+      let otherButtons;
+      
+      if (currentText === 'Not Paid') {
+        newText = 'Paid';
+        newClass = 'btn-paid';
+        otherButtons = $(button).siblings('.btn-paid');
+      } else if (currentText === 'Paid') {
+        newText = 'Not Paid';
+        newClass = 'btn-not-paid';
+        otherButtons = $(button).siblings('.btn-not-paid');
+      } else if (currentText === 'Not Approved') {
+        newText = 'Approved';
+        newClass = 'btn-approved';
+        otherButtons = $(button).siblings('.btn-approved');
+      } else if (currentText === 'Approved') {
+        newText = 'Not Approved';
+        newClass = 'btn-not-approved';
+        otherButtons = $(button).siblings('.btn-not-approved');
+      } else if (currentText === 'Not Done') {
+        newText = 'Done';
+        newClass = 'btn-done';
+        otherButtons = $(button).siblings('.btn-done');
+      } else if (currentText === 'Done') {
+        newText = 'Not Done';
+        newClass = 'btn-not-done';
+        otherButtons = $(button).siblings('.btn-not-done');
+      }
+
+      $(button).addClass(newClass).removeClass($(button).attr('class').split(' ').pop());
+      $(button).text(newText);
+
+      otherButtons.addClass($(button).attr('class').split(' ').pop()).removeClass(newClass);
+      otherButtons.text(newText === 'Paid' ? 'Not Paid' : newText === 'Approved' ? 'Not Approved' : 'Not Done');
+    }
+  </script>

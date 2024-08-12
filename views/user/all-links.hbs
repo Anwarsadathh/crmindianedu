@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Indian Edu Hub</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <meta http-equiv="Permissions-Policy" content="accelerometer=(), gyroscope=(), magnetometer=(), camera=(), microphone=(), geolocation=(), fullscreen=()">
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #f8f9fa;
+    }
+    .container-box {
+      padding: 10px;
+      margin: 50px auto;
+      position: relative;
+    }
+    .box {
+      position: relative;
+      border: 1px solid #232f65;
+      padding: 20px;
+      margin: 15px;
+      height: 5rem;
+      border-radius: 10px;
+      text-align: center;
+      justify-content: center;
+      display: flex;
+      align-items: center;
+      color: white;
+      background-color: #232f65;
+      transition: transform 0.3s, background-color 0.3s, box-shadow 0.3s;
+    }
+    .box:not(.dropdown-box):hover {
+      background-color: #2980B9;
+      transform: scale(1.05);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .box p {
+      font-weight: 600;
+      color: #ffffff;
+      cursor: pointer;
+      margin-bottom: 0;
+      position: relative;
+      z-index: 2;
+    }
+    h2 {
+      font-weight: 600;
+      color: #232f65;
+      margin-bottom: 30px;
+    }
+    .dropbtn {
+      border: none;
+      transition: background-color 0.3s;
+    }
+    .dropbtn:hover, .dropbtn:focus {
+      background-color: #2980B9;
+      color: #fff;
+    }
+    .dropdown {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f1f1f1;
+      min-width: 100%;
+      overflow: auto;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 9999;
+      border-radius: 10px;
+    }
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .dropdown-content a:hover {
+      background-color: #3498DB;
+      color: white;
+    }
+    .show {
+      display: block;
+    }
+    img {
+      max-width: 150px;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <img src="/images/ieh-logo.png" alt="Indian Edu Hub Logo">
+  <div class="container container-box">
+    <div class="row">
+      <div class="col-12 text-center">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 col-lg-3">
+        <div class="box dropdown-box">
+          <p onclick="toggleDropdown('myDropdown1')" class="dropbtn">
+            University Admission Desk
+            <i class="fas fa-caret-down"></i>
+          </p>
+          <div id="myDropdown1" class="dropdown-content">
+            <a href="https://login.nopaperforms.io/" target="_blank">Jain University</a>
+            <a href="http://partner.schoolguru.in" target="_blank">Team Lease (mzu, amu, uttaranchal university)</a>
+            <a href="https://login.leadsquared.com/" target="_blank">Manipal University</a>
+            <a href="https://newiits.s2code.com/users/centers" target="_blank">SVSU/IITS</a>
+            <a href="https://marvin.leadsquared.com" target="_blank">Vignan University</a>
+            <a href="https://asodl.amizone.net/affiliatemanagement/clients/cDashboard" target="_blank">Amity University</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="box">
+          <p>Solution desk</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="box">
+          <p>Client Status</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="box">
+           <a href="/patner-login"><p>Patner Login</p></a>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="box">
+          <p>Client track</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="box">
+          <a href="/accounts"><p>Accounts</p></a>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="box">
+          <p>University Course Track</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="box">
+          <p>B to B client</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="box">
+          <p>work Track</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="box">
+          <p>CRM</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleDropdown(id) {
+      document.getElementById(id).classList.toggle("show");
+    }
+
+    window.onclick = function(event) {
+      if (!event.target.matches('.dropbtn') && !event.target.matches('.fa-caret-down')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        for (var i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

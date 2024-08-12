@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up / Login</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Arial', sans-serif;
+    position: relative; /* Allows header positioning */
+}
+
+header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px; /* Set header height */
+    background: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Added box shadow */
+    display: flex;
+    align-items: center;
+    padding-left: 20px; /* Added padding for logo alignment */
+}
+
+header img {
+    width: 100px; /* Adjust the logo size */
+    height: auto;
+}
+
+.signup-container {
+    position: relative;
+    padding: 1.5rem; /* Reduced padding */
+    border-radius: 10px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    max-width: 400px; /* Reduced max width */
+    width: 100%;
+    background: white;
+    margin-top: 100px !important; /* Adjusted for header height */
+}
+
+.signup-form h2 {
+    text-align: center;
+    margin-bottom: 15px; /* Reduced margin */
+    font-weight: 900;
+    color: #000000;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    background: #232f65;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.form-control {
+    border-radius: 10px; /* Reduced border-radius */
+    padding: 0.5rem; /* Reduced padding */
+    font-size: 0.9rem; /* Reduced font size */
+    transition: all 0.4s ease;
+    background: rgba(255, 255, 255, 0.1);
+    color: rgb(0, 0, 0);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.form-control:focus {
+    border-color: #4facfe;
+    box-shadow: 0 0 10px rgba(79, 172, 254, 0.5);
+    background: rgba(255, 255, 255, 0.2);
+    color: #000;
+}
+
+.btn-signup {
+    background: linear-gradient(135deg, #4facfe, #232f65);
+    color: white;
+    border-radius: 20px; /* Reduced border-radius */
+    padding: 0.5rem 1rem; /* Reduced padding */
+    font-size: 1rem; /* Reduced font size */
+    font-weight: bold;
+    transition: all 0.4s ease;
+    text-transform: uppercase;
+}
+
+.btn-signup:hover {
+    background: linear-gradient(135deg, #00f2fe, #232f65);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.btn-signup:active {
+    transform: translateY(1px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.nav-tabs {
+    border-bottom: none;
+    justify-content: center;
+    margin-bottom: 15px; /* Reduced margin */
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    background: none;
+    color: #000;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    margin-right: 10px;
+}
+
+.nav-tabs .nav-link.active {
+    color: #4facfe;
+    border-bottom: 2px solid #4facfe;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.875em;
+    margin-top: 0.25em;
+}
+
+/* Media query for mobile screens */
+@media (max-width: 600px) {
+    .signup-container {
+        max-width: 90%; /* Reduced width for mobile */
+        margin-left: 5%; /* Added margin to the left */
+        margin-right: 5%; /* Added margin to the right */
+    }
+
+    .signup-form h2 {
+        font-size: 1.2rem; /* Slightly smaller font size for mobile */
+    }
+
+    .form-control {
+        padding: 0.4rem; /* Slightly reduced padding */
+        font-size: 0.85rem; /* Slightly smaller font size */
+    }
+
+    .btn-signup {
+        padding: 0.4rem 0.8rem; /* Reduced padding */
+        font-size: 0.9rem; /* Slightly smaller font size */
+    }
+}
+
+    </style>
+</head>
+<body>
+    <header>
+        <img src="/images/ieh-logo.png" alt="Indian Edu Hub Logo">
+    </header>
+<div class="signup-container mt-5">
+    <ul class="nav nav-tabs" id="signupSigninTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="signup-tab" data-toggle="tab" href="#signup" role="tab" aria-controls="signup" aria-selected="true">Sign Up</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="signin-tab" data-toggle="tab" href="#signin" role="tab" aria-controls="signin" aria-selected="false">Sign In</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="signupSigninContent">
+        <!-- Sign Up Form -->
+       <div class="tab-pane fade show active" id="signup" role="tabpanel" aria-labelledby="signup-tab">
+    <form id="signupForm" class="signup-form">
+        <div class="form-group">
+            <input type="text" class="form-control" id="name" placeholder="Name" required>
+            <div id="name_error" class="error-message"></div>
+        </div>
+        <div class="form-group position-relative">
+            <input type="text" class="form-control" id="emailOtpField" placeholder="Email" required>
+            <button type="button" id="sendOtpBtn" class="btn-sm btn-secondary position-absolute" style="right: 0; top: 0;">Send OTP</button>
+            <button type="button" id="verifyOtpBtn" class="btn-sm btn-secondary d-none position-absolute" style="right: 0; top: 0;">Verify OTP</button>
+            <div id="email_error" class="error-message"></div>
+        </div>
+        <div class="form-group">
+            <input type="tel" class="form-control" id="mobile_number" placeholder="Mobile Number" required>
+            <div id="mobile_number_error" class="error-message"></div>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" id="working_status" placeholder="Working Status" required>
+            <div id="working_status_error" class="error-message"></div>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" id="position" placeholder="Position" required>
+            <div id="position_error" class="error-message"></div>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" id="present_company" placeholder="Present Company" required>
+            <div id="present_company_error" class="error-message"></div>
+        </div>
+        <div class="form-group">
+            <select id="stateSelect" name="State" class="form-control">
+                <option value="" disabled selected hidden>Select State*</option>
+            </select>
+            <small id="stateError" class="text-danger"></small>
+        </div>
+        <div class="form-group">
+            <select id="citySelect" name="City" class="form-control">
+                <option value="" disabled selected hidden>Select City*</option>
+            </select>
+            <small id="cityError" class="text-danger"></small>
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" id="password" placeholder="Create Password" required>
+            <div id="password_error" class="error-message"></div>
+        </div>
+        <button type="submit" class="btn btn-signup btn-block">Sign Up</button>
+    </form>
+</div>
+
+        <!-- Sign In Form -->
+        <div class="tab-pane fade" id="signin" role="tabpanel" aria-labelledby="signin-tab">
+            <form id="signinForm" class="signup-form">
+                <div class="form-group">
+                    <input type="email" class="form-control" id="signin_email" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" id="signin_password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn btn-signup btn-block">Sign In</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/alertifyjs/build/alertify.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs/build/css/alertify.min.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs/build/css/themes/default.min.css"/>
+<script>
+    document.getElementById('signinForm').addEventListener('submit', async function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        const formData = {
+            email: document.getElementById('signin_email').value,
+            password: document.getElementById('signin_password').value,
+        };
+
+        try {
+            const response = await fetch('/affiliate-partner-signin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                alertify.success('Sign in successful!');
+                
+                // Redirect to the partner dashboard
+                window.location.href = "/affiliate-partner-dashboard";
+            } else {
+                alertify.error(result.message); // Display error message using alertify
+            }
+        } catch (error) {
+            console.error('Error signing in:', error);
+            alertify.error('An error occurred while signing in.');
+        }
+    });
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let isOtpVerified = false; // Flag to track OTP verification status
+    let verifiedEmail = ''; // Store the email once OTP is verified
+
+    const sendOtpBtn = document.getElementById('sendOtpBtn');
+    const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+    const emailOtpField = document.getElementById('emailOtpField');
+
+    if (sendOtpBtn && emailOtpField) {
+        sendOtpBtn.addEventListener('click', async function() {
+            const email = emailOtpField.value.trim();
+
+            if (email === '') {
+                document.getElementById('email_error').textContent = 'Email is required.';
+                return;
+            }
+
+            try {
+                const response = await fetch('/send-otp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email: email })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alertify.success('OTP sent successfully to your email.');
+                    emailOtpField.value = ''; // Clear the email field
+                    emailOtpField.placeholder = 'Enter OTP';
+                    emailOtpField.type = 'text'; // Change the field to text for OTP input
+                    sendOtpBtn.classList.add('d-none');
+                    verifyOtpBtn.classList.remove('d-none');
+                    verifiedEmail = email; // Store the email for later use
+                } else {
+                    alertify.error(result.message);
+                }
+            } catch (error) {
+                console.error('Error sending OTP:', error);
+                alertify.error('An error occurred while sending OTP.');
+            }
+        });
+    }
+
+    if (verifyOtpBtn && emailOtpField) {
+        verifyOtpBtn.addEventListener('click', async function() {
+            const otp = emailOtpField.value.trim();
+
+            if (otp === '') {
+                document.getElementById('email_error').textContent = 'OTP is required.';
+                return;
+            }
+
+            try {
+                const response = await fetch('/verify-otp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ otp: otp, email: verifiedEmail })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alertify.success('OTP verified successfully.');
+                    emailOtpField.placeholder = 'OTP Verified';
+                    emailOtpField.disabled = true; // Disable the OTP field after successful verification
+                    isOtpVerified = true; // Set OTP verification status to true
+                    verifyOtpBtn.classList.add('d-none');
+
+                    // Update the email field with the verified email
+                    const emailField = document.getElementById('emailOtpField');
+                    if (emailField) {
+                        emailField.value = verifiedEmail; // Ensure this is the correct ID for your email field
+                    } else {
+                        console.error('Email field not found.');
+                    }
+                } else {
+                    document.getElementById('email_error').textContent = result.message;
+                    alertify.error(result.message);
+                }
+            } catch (error) {
+                console.error('Error verifying OTP:', error);
+                alertify.error('An error occurred while verifying OTP.');
+            }
+        });
+    }
+
+    const signupForm = document.getElementById('signupForm');
+    if (signupForm) {
+        signupForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            // Clear previous error messages
+            const errorFields = document.querySelectorAll('.error-message');
+            errorFields.forEach(field => field.textContent = '');
+
+            const name = document.getElementById('name').value.trim();
+            const email = emailOtpField.value.trim(); // Use the OTP field's value if that's correct
+            const mobileNumber = document.getElementById('mobile_number').value.trim();
+            const workingStatus = document.getElementById('working_status').value.trim();
+            const position = document.getElementById('position').value.trim();
+            const presentCompany = document.getElementById('present_company').value.trim();
+            const state = document.getElementById('stateSelect').value;
+            const city = document.getElementById('citySelect').value;
+            const password = document.getElementById('password').value.trim();
+
+            let hasError = false;
+
+            // Validate fields
+            if (name === '') {
+                document.getElementById('name_error').textContent = 'Name is required.';
+                hasError = true;
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                document.getElementById('email_error').textContent = 'Invalid email address.';
+                hasError = true;
+            }
+            if (!/^[0-9]{10}$/.test(mobileNumber)) {
+                document.getElementById('mobile_number_error').textContent = 'Invalid mobile number.';
+                hasError = true;
+            }
+            if (workingStatus === '') {
+                document.getElementById('working_status_error').textContent = 'Working status is required.';
+                hasError = true;
+            }
+            if (position === '') {
+                document.getElementById('position_error').textContent = 'Position is required.';
+                hasError = true;
+            }
+            if (presentCompany === '') {
+                document.getElementById('present_company_error').textContent = 'Present company is required.';
+                hasError = true;
+            }
+            if (state === '') {
+                document.getElementById('stateError').textContent = 'State is required.';
+                hasError = true;
+            }
+            if (city === '') {
+                document.getElementById('cityError').textContent = 'City is required.';
+                hasError = true;
+            }
+            if (password.length < 8) {
+                document.getElementById('password_error').textContent = 'Password must be at least 8 characters long.';
+                hasError = true;
+            }
+
+            if (hasError) {
+                return; // Stop form submission if there are validation errors
+            }
+
+            // Check if OTP is verified
+            if (!isOtpVerified) {
+                alertify.error('Please verify the OTP before submitting the form.');
+                return; // Stop form submission if OTP is not verified
+            }
+
+         const formData = {
+  name: name,
+  email: emailOtpField.value.trim(), // Use the emailOtpField's value
+  mobile_number: mobileNumber,
+  working_status: workingStatus,
+  position: position,
+  present_company: presentCompany,
+  state: state,
+  city: city,
+  password: password
+};
+
+            try {
+                const response = await fetch('/affiliate-partner-creation', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alertify.success('Signup successful!');
+                    const signinTab = new bootstrap.Tab(document.getElementById('signin-tab'));
+                    signinTab.show();
+                } else {
+                    alertify.error(result.message);
+                }
+            } catch (error) {
+                console.error('Error submitting the form:', error);
+                alertify.error('An error occurred while submitting the form.');
+            }
+        });
+    }
+});
+
+
+
+</script>
+
+<script src="../javascripts/statesandcities.js"></script>
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
