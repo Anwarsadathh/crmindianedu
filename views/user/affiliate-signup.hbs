@@ -6,8 +6,8 @@
     <title>Sign Up / Login</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-body {
+  <style>
+      body {
     margin: 0;
     display: flex;
     justify-content: center;
@@ -129,8 +129,7 @@ header img {
 @media (max-width: 600px) {
     .signup-container {
         max-width: 90%; /* Reduced width for mobile */
-        margin-left: 5%; /* Added margin to the left */
-        margin-right: 5%; /* Added margin to the right */
+      
     }
 
     .signup-form h2 {
@@ -147,7 +146,11 @@ header img {
         font-size: 0.9rem; /* Slightly smaller font size */
     }
 }
-
+.btn-sm{
+    font-size: 8px;
+    margin-top: 7px;
+    margin-right: 25px;
+}
     </style>
 </head>
 <body>
@@ -165,53 +168,74 @@ header img {
     </ul>
     <div class="tab-content" id="signupSigninContent">
         <!-- Sign Up Form -->
-       <div class="tab-pane fade show active" id="signup" role="tabpanel" aria-labelledby="signup-tab">
+    <div class="tab-pane fade show active" id="signup" role="tabpanel" aria-labelledby="signup-tab">
     <form id="signupForm" class="signup-form">
-        <div class="form-group">
-            <input type="text" class="form-control" id="name" placeholder="Name" required>
-            <div id="name_error" class="error-message"></div>
+        <div class="row">
+            <div class="col-md-6 col-6 form-group">
+                <input type="text" class="form-control" id="name" placeholder="Name" required>
+                <div id="name_error" class="error-message"></div>
+            </div>
+
+            <div class="col-md-6 col-6 form-group">
+                <input type="tel" class="form-control" id="mobile_number" placeholder="Mobile Number" required>
+                <div id="mobile_number_error" class="error-message"></div>
+            </div>
         </div>
-        <div class="form-group position-relative">
-            <input type="text" class="form-control" id="emailOtpField" placeholder="Email" required>
-            <button type="button" id="sendOtpBtn" class="btn-sm btn-secondary position-absolute" style="right: 0; top: 0;">Send OTP</button>
-            <button type="button" id="verifyOtpBtn" class="btn-sm btn-secondary d-none position-absolute" style="right: 0; top: 0;">Verify OTP</button>
-            <div id="email_error" class="error-message"></div>
+
+        <div class="row">
+            <div class="col-md-6 col-6 form-group">
+                <input type="text" class="form-control" id="working_status" placeholder="Working Status" required>
+                <div id="working_status_error" class="error-message"></div>
+            </div>
+
+            <div class="col-md-6 col-6 form-group">
+                <input type="text" class="form-control" id="position" placeholder="Position" required>
+                <div id="position_error" class="error-message"></div>
+            </div>
         </div>
-        <div class="form-group">
-            <input type="tel" class="form-control" id="mobile_number" placeholder="Mobile Number" required>
-            <div id="mobile_number_error" class="error-message"></div>
+
+        <div class="row">
+          
+
+            <div class="col-md-6 col-6 form-group">
+                <select id="stateSelect" name="State" class="form-control">
+                    <option value="" disabled selected hidden>Select State*</option>
+                </select>
+                <small id="stateError" class="text-danger"></small>
+            </div>
+              <div class="col-md-6 col-6 form-group">
+                <select id="citySelect" name="City" class="form-control">
+                    <option value="" disabled selected hidden>Select City*</option>
+                </select>
+                <small id="cityError" class="text-danger"></small>
+            </div>
         </div>
-        <div class="form-group">
-            <input type="text" class="form-control" id="working_status" placeholder="Working Status" required>
-            <div id="working_status_error" class="error-message"></div>
+
+        <div class="row">
+          
+  <div class="col-md-6 col-6 form-group">
+                <input type="text" class="form-control" id="present_company" placeholder="Present Company" required>
+                <div id="present_company_error" class="error-message"></div>
+            </div>
+            <div class="col-md-6 col-6 form-group">
+                <input type="password" class="form-control" id="password" placeholder="Create Password" required>
+                <div id="password_error" class="error-message"></div>
+            </div>
         </div>
-        <div class="form-group">
-            <input type="text" class="form-control" id="position" placeholder="Position" required>
-            <div id="position_error" class="error-message"></div>
+
+        <div class="row">
+            <div class="col-md-12 form-group position-relative">
+                <input type="text" class="form-control" id="emailOtpField" placeholder="Email" required>
+                <button type="button" id="sendOtpBtn" class="btn-sm btn-secondary position-absolute" style="right: 0; top: 0;">Send OTP</button>
+                <button type="button" id="verifyOtpBtn" class="btn-sm btn-secondary d-none position-absolute" style="right: 0; top: 0;">Verify OTP</button>
+                <div id="email_error" class="error-message"></div>
+            </div>
         </div>
-        <div class="form-group">
-            <input type="text" class="form-control" id="present_company" placeholder="Present Company" required>
-            <div id="present_company_error" class="error-message"></div>
-        </div>
-        <div class="form-group">
-            <select id="stateSelect" name="State" class="form-control">
-                <option value="" disabled selected hidden>Select State*</option>
-            </select>
-            <small id="stateError" class="text-danger"></small>
-        </div>
-        <div class="form-group">
-            <select id="citySelect" name="City" class="form-control">
-                <option value="" disabled selected hidden>Select City*</option>
-            </select>
-            <small id="cityError" class="text-danger"></small>
-        </div>
-        <div class="form-group">
-            <input type="password" class="form-control" id="password" placeholder="Create Password" required>
-            <div id="password_error" class="error-message"></div>
-        </div>
+
         <button type="submit" class="btn btn-signup btn-block">Sign Up</button>
     </form>
 </div>
+
 
         <!-- Sign In Form -->
         <div class="tab-pane fade" id="signin" role="tabpanel" aria-labelledby="signin-tab">
@@ -274,6 +298,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const sendOtpBtn = document.getElementById('sendOtpBtn');
     const verifyOtpBtn = document.getElementById('verifyOtpBtn');
     const emailOtpField = document.getElementById('emailOtpField');
+    const loadingIcon = document.createElement('span');
+    loadingIcon.className = 'spinner-border spinner-border-sm ms-2'; // Bootstrap spinner
+    loadingIcon.setAttribute('role', 'status');
+    loadingIcon.setAttribute('aria-hidden', 'true');
 
     if (sendOtpBtn && emailOtpField) {
         sendOtpBtn.addEventListener('click', async function() {
@@ -283,6 +311,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('email_error').textContent = 'Email is required.';
                 return;
             }
+
+            // Show loading icon
+            sendOtpBtn.appendChild(loadingIcon);
+            sendOtpBtn.disabled = true; // Disable the button to prevent multiple clicks
 
             try {
                 const response = await fetch('/send-otp', {
@@ -305,10 +337,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     verifiedEmail = email; // Store the email for later use
                 } else {
                     alertify.error(result.message);
+                    sendOtpBtn.disabled = false; // Re-enable the button if the OTP fails
                 }
             } catch (error) {
                 console.error('Error sending OTP:', error);
                 alertify.error('An error occurred while sending OTP.');
+                sendOtpBtn.disabled = false; // Re-enable the button if there's an error
+            } finally {
+                // Remove loading icon after the process
+                sendOtpBtn.removeChild(loadingIcon);
             }
         });
     }
@@ -321,6 +358,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('email_error').textContent = 'OTP is required.';
                 return;
             }
+
+            // Show loading icon on verify button
+            verifyOtpBtn.appendChild(loadingIcon);
+            verifyOtpBtn.disabled = true;
 
             try {
                 const response = await fetch('/verify-otp', {
@@ -343,17 +384,28 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Update the email field with the verified email
                     const emailField = document.getElementById('emailOtpField');
                     if (emailField) {
-                        emailField.value = verifiedEmail; // Ensure this is the correct ID for your email field
+                        emailField.value = verifiedEmail;
                     } else {
                         console.error('Email field not found.');
                     }
                 } else {
                     document.getElementById('email_error').textContent = result.message;
                     alertify.error(result.message);
+                    // Show Send OTP button again
+                    sendOtpBtn.classList.remove('d-none');
+                    verifyOtpBtn.classList.add('d-none');
+                    sendOtpBtn.disabled = false; // Re-enable the Send OTP button
                 }
             } catch (error) {
                 console.error('Error verifying OTP:', error);
                 alertify.error('An error occurred while verifying OTP.');
+                // Show Send OTP button again if there's an error
+                sendOtpBtn.classList.remove('d-none');
+                verifyOtpBtn.classList.add('d-none');
+                sendOtpBtn.disabled = false; // Re-enable the Send OTP button
+            } finally {
+                // Remove loading icon after the process
+                verifyOtpBtn.removeChild(loadingIcon);
             }
         });
     }
@@ -368,7 +420,7 @@ document.addEventListener('DOMContentLoaded', function() {
             errorFields.forEach(field => field.textContent = '');
 
             const name = document.getElementById('name').value.trim();
-            const email = emailOtpField.value.trim(); // Use the OTP field's value if that's correct
+            const email = emailOtpField.value.trim(); // Use the OTP field's value
             const mobileNumber = document.getElementById('mobile_number').value.trim();
             const workingStatus = document.getElementById('working_status').value.trim();
             const position = document.getElementById('position').value.trim();
@@ -427,17 +479,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 return; // Stop form submission if OTP is not verified
             }
 
-         const formData = {
-  name: name,
-  email: emailOtpField.value.trim(), // Use the emailOtpField's value
-  mobile_number: mobileNumber,
-  working_status: workingStatus,
-  position: position,
-  present_company: presentCompany,
-  state: state,
-  city: city,
-  password: password
-};
+            const formData = {
+                name: name,
+                email: emailOtpField.value.trim(), // Use the emailOtpField's value
+                mobile_number: mobileNumber,
+                working_status: workingStatus,
+                position: position,
+                present_company: presentCompany,
+                state: state,
+                city: city,
+                password: password
+            };
 
             try {
                 const response = await fetch('/affiliate-partner-creation', {
@@ -464,8 +516,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-
-
 
 </script>
 

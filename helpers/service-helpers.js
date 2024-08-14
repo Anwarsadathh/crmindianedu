@@ -3,7 +3,9 @@ const collection = require("../config/collection");
 const db = require("../config/connection");
 const bcrypt = require("bcrypt");
 const saltRounds = 10; // Define saltRounds
-
+const nodemailer = require("nodemailer");
+const crypto = require("crypto");
+const bodyParser = require("body-parser");
 
 
 module.exports = {
@@ -598,6 +600,104 @@ module.exports = {
       };
     }
   },
+  sendOtp: async (email, otpStore) => {
+    try {
+      const database = db.get();
+      const partnersCollection = database.collection(
+        collection.AFFILIATE_COLLECTION
+      );
+
+      // Check if the email already exists in the collection
+      const existingPartner = await partnersCollection.findOne({
+        email: email,
+      });
+
+      if (existingPartner) {
+        return { success: false, message: "Email already exists" };
+      }
+
+      // Generate OTP (for demo purposes, use a real OTP generation logic in production)
+      const otp = Math.floor(100000 + Math.random() * 900000);
+
+      // Store the OTP temporarily (consider using a more secure method in production)
+      otpStore[email] = otp;
+
+      // Send OTP via email (using nodemailer or another service)
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: "clientsupport@indianeduhub.com",
+          pass: "xeep ypij nhqg ilcd",
+        },
+      });
+
+      const mailOptions = {
+        from: "clientsupport@indianeduhub.com",
+        to: email,
+        subject: "Your OTP Code",
+        text: `Your OTP code is ${otp}`,
+      };
+
+      await transporter.sendMail(mailOptions);
+
+      return { success: true, message: "OTP sent successfully" };
+    } catch (error) {
+      console.error("Error sending OTP:", error);
+      return {
+        success: false,
+        message: "Failed to send OTP: " + error.message,
+      };
+    }
+  },
+  sendOtpPatner: async (email, otpStore) => {
+    try {
+      const database = db.get();
+      const partnersCollection = database.collection(
+        collection.PATNER_COLLECTION
+      );
+
+      // Check if the email already exists in the collection
+      const existingPartner = await partnersCollection.findOne({
+        email: email,
+      });
+
+      if (existingPartner) {
+        return { success: false, message: "Email already exists" };
+      }
+
+      // Generate OTP (for demo purposes, use a real OTP generation logic in production)
+      const otp = Math.floor(100000 + Math.random() * 900000);
+
+      // Store the OTP temporarily (consider using a more secure method in production)
+      otpStore[email] = otp;
+
+      // Send OTP via email (using nodemailer or another service)
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: "clientsupport@indianeduhub.com",
+          pass: "xeep ypij nhqg ilcd",
+        },
+      });
+
+      const mailOptions = {
+        from: "clientsupport@indianeduhub.com",
+        to: email,
+        subject: "Your OTP Code",
+        text: `Your OTP code is ${otp}`,
+      };
+
+      await transporter.sendMail(mailOptions);
+
+      return { success: true, message: "OTP sent successfully" };
+    } catch (error) {
+      console.error("Error sending OTP:", error);
+      return {
+        success: false,
+        message: "Failed to send OTP: " + error.message,
+      };
+    }
+  },
   createPartner: async (formData) => {
     try {
       const database = db.get();
@@ -663,7 +763,10 @@ module.exports = {
         city: formData.city,
         email: formData.email,
         password: hashedPassword,
-        account_details: formData.account_details,
+        account_holder_name: formData.account_holder_name,
+        account_number: formData.account_number,
+        ifsc_code: formData.ifsc_code,
+        branch: formData.branch,
       };
 
       // Insert the new partner document into the collection
@@ -682,7 +785,7 @@ module.exports = {
         message: "Internal Server Error: " + error.message,
       };
     }
-},
+  },
 
   getAllClientdashboard: () => {
     return new Promise(async (resolve, reject) => {

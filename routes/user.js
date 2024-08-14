@@ -26,40 +26,77 @@ function generateOTP() {
 
 let otpStore = {}; // In-memory store for demonstration purposes
 
-// Route to send OTP
+// // Route to send OTP
+// router.post("/send-otp", async (req, res) => {
+//   const { email } = req.body;
+
+//   // Generate OTP (for demo purposes, use a real OTP generation logic in production)
+//   const otp = Math.floor(100000 + Math.random() * 900000);
+
+//   otpStore[email] = otp;
+
+//   // Send OTP via email (using nodemailer or another service)
+//   // Example setup for nodemailer (configure with real credentials)
+//   let transporter = nodemailer.createTransport({
+//     service: "gmail",
+//     auth: {
+//       user: "clientsupport@indianeduhub.com",
+//       pass: "xeep ypij nhqg ilcd",
+//     },
+//   });
+
+//   let mailOptions = {
+//     from: "clientsupport@indianeduhub.com",
+//     to: email,
+//     subject: "Your OTP Code",
+//     text: `Your OTP code is ${otp}`,
+//   };
+
+//   try {
+//     await transporter.sendMail(mailOptions);
+//     res.json({ success: true });
+//   } catch (error) {
+//     res.status(500).json({ success: false, message: "Failed to send OTP" });
+//   }
+// });
 router.post("/send-otp", async (req, res) => {
   const { email } = req.body;
 
-  // Generate OTP (for demo purposes, use a real OTP generation logic in production)
-  const otp = Math.floor(100000 + Math.random() * 900000);
-
-  otpStore[email] = otp;
-
-  // Send OTP via email (using nodemailer or another service)
-  // Example setup for nodemailer (configure with real credentials)
-  let transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: "clientsupport@indianeduhub.com",
-      pass: "xeep ypij nhqg ilcd",
-    },
-  });
-
-  let mailOptions = {
-    from: "clientsupport@indianeduhub.com",
-    to: email,
-    subject: "Your OTP Code",
-    text: `Your OTP code is ${otp}`,
-  };
-
   try {
-    await transporter.sendMail(mailOptions);
-    res.json({ success: true });
+    const result = await serviceHelpers.sendOtp(email, otpStore);
+
+    if (result.success) {
+      res.json(result);
+    } else {
+      res.status(400).json(result);
+    }
   } catch (error) {
-    res.status(500).json({ success: false, message: "Failed to send OTP" });
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Internal Server Error: " + error.message,
+      });
   }
 });
+router.post("/send-otppartner", async (req, res) => {
+  const { email } = req.body;
 
+  try {
+    const result = await serviceHelpers.sendOtpPatner(email, otpStore);
+
+    if (result.success) {
+      res.json(result);
+    } else {
+      res.status(400).json(result);
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error: " + error.message,
+    });
+  }
+});
 // Route to verify OTP
 router.post("/verify-otp", (req, res) => {
   const { otp, email } = req.body;
@@ -1146,16 +1183,19 @@ router.post("/partner-signin", async (req, res) => {
 
     if (result.success) {
       // Store partner information in the session
-       req.session.partner = {
-         id: result.partner._id,
-         email: result.partner.email,
-         institutename: result.partner.institutename,
-         institute_place: result.partner.institute_place,
-         instituteid: result.partner.instituteid,
-         owner_name: result.partner.owner_name,
-         account_details: result.partner.account_details,
-         profilePhoto: result.partner.profilePhoto || "/images/anon.webp", // Default image if not set
-       };
+     req.session.partner = {
+       id: result.partner._id,
+       email: result.partner.email,
+       institutename: result.partner.institutename,
+       institute_place: result.partner.institute_place,
+       instituteid: result.partner.instituteid,
+       owner_name: result.partner.owner_name,
+         account_holder_name: result.partner.account_holder_name,
+         account_number: result.partner.account_number,
+         ifsc_code: result.partner.ifsc_code,
+         branch: result.partner.branch,
+       profilePhoto: result.partner.profilePhoto || "/images/anon.webp", // Default image if not set
+     };
 
       res.status(200).json({
         success: true,

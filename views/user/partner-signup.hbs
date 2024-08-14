@@ -129,8 +129,7 @@ header img {
 @media (max-width: 600px) {
     .signup-container {
         max-width: 90%; /* Reduced width for mobile */
-        margin-left: 5%; /* Added margin to the left */
-        margin-right: 5%; /* Added margin to the right */
+      
     }
 
     .signup-form h2 {
@@ -150,7 +149,7 @@ header img {
 .btn-sm{
     font-size: 8px;
     margin-top: 7px;
-    margin-right: 10px;
+    margin-right: 25px;
 }
     </style>
 </head>
@@ -169,23 +168,23 @@ header img {
         </ul>
         <div class="tab-content" id="signupSigninContent">
             <!-- Sign Up Form -->
-           <div class="tab-pane fade show active" id="signup" role="tabpanel" aria-labelledby="signup-tab">
+        <div class="tab-pane fade show active" id="signup" role="tabpanel" aria-labelledby="signup-tab">
     <form id="signupForm" class="signup-form">
         <!-- Row 1: Institute Name and Owner Name -->
         <div class="row">
-            <div class="col-md-6 form-group">
+            <div class="col-md-6 col-6 form-group">
                 <input type="text" class="form-control" id="institute_name" placeholder="Institute Name" required>
                 <div id="institute_name_error" class="error-message"></div>
             </div>
-            <div class="col-md-6 form-group">
+            <div class="col-md-6 col-6 form-group">
                 <input type="text" class="form-control" id="owner_name" placeholder="Owner Name" required>
                 <div id="owner_name_error" class="error-message"></div>
             </div>
         </div>
-        
+
         <!-- Row 2: Company Type and Established Date -->
         <div class="row">
-            <div class="col-md-6 form-group">
+            <div class="col-md-6 col-6 form-group">
                 <select class="form-control" id="company_type" required>
                     <option value="">Select Type of Company</option>
                     <option value="Pvt Ltd">Pvt Ltd</option>
@@ -195,68 +194,86 @@ header img {
                 </select>
                 <div id="company_type_error" class="error-message"></div>
             </div>
-            <div class="col-md-6 form-group">
+            <div class="col-md-6 col-6 form-group">
                 <input type="text" class="form-control bg-white" id="established_date_display" placeholder="Established Date" required readonly>
                 <input type="date" class="form-control bg-white d-none" id="established_date" required>
                 <div id="established_date_error" class="error-message"></div>
             </div>
         </div>
-        
-        <!-- Row 3: Institute Provides and State -->
+
+        <!-- Row 3: Institute Provides, State, and City -->
         <div class="row">
-          
-            <div class="col-md-6 form-group">
+      
+            <div class="col-md-6 col-6 form-group">
                 <select id="stateSelect" name="State" class="form-control" required>
                     <option value="" disabled selected hidden>Select State*</option>
                     <!-- Options for states will go here -->
                 </select>
                 <small id="stateError" class="text-danger"></small>
             </div>
-               <div class="col-md-6 form-group">
+              <div class="col-md-6 col-6 form-group">
                 <select id="citySelect" name="City" class="form-control" required>
                     <option value="" disabled selected hidden>Select City*</option>
                     <!-- Options for cities will go here -->
                 </select>
                 <small id="cityError" class="text-danger"></small>
             </div>
+               
+          
         </div>
-        
-        <!-- Row 4: City and Email -->
+     
+        <!-- Row 4: Email and Password -->
         <div class="row">
-         
-              <div class="col-md-6 form-group">
+                  <div class="col-md-6 col-6 form-group">
                 <input type="text" class="form-control" id="institute_provides" placeholder="Institute Provides" required>
                 <div id="institute_provides_error" class="error-message"></div>
             </div>
-              <div class="col-md-6 form-group">
+            <div class="col-md-6 col-6 form-group">
                 <input type="password" class="form-control" id="password" placeholder="Create Password" required>
                 <div id="password_error" class="error-message"></div>
             </div>
-          
+    
         </div>
- <div class="form-group position-relative">
-    <input type="email" class="form-control" id="emailOtpField" placeholder="Email" required>
-    <button type="button" id="sendOtpBtn" class="btn-sm btn-secondary position-absolute" style="right: 0; top: 0;">Send OTP</button>
-    <button type="button" id="verifyOtpBtn" class="btn-sm btn-secondary d-none position-absolute" style="right: 0; top: 0;">Verify OTP</button>
-    <div id="email_error" class="error-message"></div>
-</div>
-
-
-        <!-- Row 5: Password and Account Details -->
+ <div class="row">
+     <div class="col-md-12 col-12 form-group position-relative">
+                <input type="email" class="form-control" id="emailOtpField" placeholder="Email" required>
+                <button type="button" id="sendOtpBtn" class="btn-sm btn-secondary position-absolute" style="right: 0; top: 0;">
+                    <span id="sendOtpText">Send OTP</span>
+                    <span id="sendOtpSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                </button>
+                <button type="button" id="verifyOtpBtn" class="btn-sm btn-success d-none position-absolute" style="right: 0; top: 0;">Verify OTP</button>
+                <div id="email_error" class="error-message"></div>
+            </div>
+      </div>
+        <!-- Row 5: Account Holder Name and Account Number -->
         <div class="row">
-          
-            <div class="col-md-12 form-group">
-                <textarea class="form-control" id="account_details" placeholder="Account Details" required rows="2"></textarea>
-                <div id="account_details_error" class="error-message"></div>
+            <div class="col-md-6 col-6 form-group">
+                <input type="text" class="form-control" id="account_holder_name" placeholder="Account Holder Name" required>
+                <div id="account_holder_name_error" class="error-message"></div>
+            </div>
+            <div class="col-md-6 col-6 form-group">
+                <input type="text" class="form-control" id="account_number" placeholder="Account Number" required>
+                <div id="account_number_error" class="error-message"></div>
             </div>
         </div>
-        
+
+        <!-- Row 6: IFSC Code and Branch -->
+        <div class="row">
+            <div class="col-md-6 col-6 form-group">
+                <input type="text" class="form-control" id="ifsc_code" placeholder="IFSC Code" required>
+                <div id="ifsc_code_error" class="error-message"></div>
+            </div>
+            <div class="col-md-6 col-6 form-group">
+                <input type="text" class="form-control" id="branch" placeholder="Branch" required>
+                <div id="branch_error" class="error-message"></div>
+            </div>
+        </div>
+
         <!-- Submit Button -->
         <button type="submit" class="btn btn-signup btn-block">Sign Up</button>
     </form>
 </div>
 
-            <!-- Sign In Form -->
           <!-- Sign In Form -->
 <div class="tab-pane fade" id="signin" role="tabpanel" aria-labelledby="signin-tab">
     <form id="signinForm" class="signup-form">
@@ -317,6 +334,8 @@ document.addEventListener('DOMContentLoaded', function() {
   let verifiedEmail = ''; // Store the email once OTP is verified
 
   const sendOtpBtn = document.getElementById('sendOtpBtn');
+  const sendOtpText = document.getElementById('sendOtpText');
+  const sendOtpSpinner = document.getElementById('sendOtpSpinner');
   const verifyOtpBtn = document.getElementById('verifyOtpBtn');
   const emailOtpField = document.getElementById('emailOtpField');
 
@@ -329,8 +348,13 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
 
+      // Show loading spinner and disable the button
+      sendOtpText.classList.add('d-none');
+      sendOtpSpinner.classList.remove('d-none');
+      sendOtpBtn.disabled = true;
+
       try {
-        const response = await fetch('/send-otp', {
+        const response = await fetch('/send-otppartner', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -354,128 +378,187 @@ document.addEventListener('DOMContentLoaded', function() {
       } catch (error) {
         console.error('Error sending OTP:', error);
         alertify.error('An error occurred while sending OTP.');
+      } finally {
+        // Hide loading spinner and enable the button
+        sendOtpText.classList.remove('d-none');
+        sendOtpSpinner.classList.add('d-none');
+        sendOtpBtn.disabled = false;
       }
     });
   }
 
- if (verifyOtpBtn && emailOtpField) {
+  if (verifyOtpBtn && emailOtpField) {
     verifyOtpBtn.addEventListener('click', async function() {
-        const otp = emailOtpField.value.trim();
+      const otp = emailOtpField.value.trim();
 
-        if (otp === '') {
-            document.getElementById('email_error').textContent = 'OTP is required.';
-            return;
-        }
-
-        try {
-            const response = await fetch('/verify-otp', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ otp: otp, email: verifiedEmail })
-            });
-
-            const result = await response.json();
-
-            if (result.success) {
-                alertify.success('OTP verified successfully.');
-                emailOtpField.placeholder = 'OTP Verified';
-                emailOtpField.disabled = true;
-                isOtpVerified = true; // Set the flag correctly
-                verifyOtpBtn.classList.add('d-none');
-                emailOtpField.value = verifiedEmail; // Store the verified email in the field
-            } else {
-                document.getElementById('email_error').textContent = result.message;
-                alertify.error(result.message);
-            }
-        } catch (error) {
-            console.error('Error verifying OTP:', error);
-            alertify.error('An error occurred while verifying OTP.');
-        }
-    });
-}
-
- const signupForm = document.getElementById('signupForm');
-  if (signupForm) {
-    signupForm.addEventListener('submit', async function(event) {
-      event.preventDefault();
-
-      // Clear previous error messages
-      const errorFields = document.querySelectorAll('.error-message');
-      errorFields.forEach(field => field.textContent = '');
-
-      const instituteName = document.getElementById('institute_name')?.value.trim() || '';
-      const ownerName = document.getElementById('owner_name')?.value.trim() || '';
-      const companyType = document.getElementById('company_type')?.value.trim() || '';
-      const establishedDate = document.getElementById('established_date')?.value.trim() || '';
-      const instituteProvides = document.getElementById('institute_provides')?.value.trim() || '';
-      const state = document.getElementById('stateSelect')?.value.trim() || '';
-      const city = document.getElementById('citySelect')?.value.trim() || '';
-      const email = emailOtpField.value.trim();
-      const password = document.getElementById('password')?.value.trim() || '';
-      const accountDetails = document.getElementById('account_details')?.value.trim() || '';
-
-      let hasError = false;
-
-      // Validate fields
-      if (instituteName === '') {
-        document.getElementById('institute_name_error').textContent = 'Institute Name is required.';
-        hasError = true;
+      if (otp === '') {
+        document.getElementById('email_error').textContent = 'OTP is required.';
+        return;
       }
-      // Repeat similar validations for other fields...
-
-      if (hasError) {
-        return; // Stop form submission if there are validation errors
-      }
-
-      // Check if OTP is verified
-      if (!isOtpVerified) {
-        alertify.error('Please verify the OTP before submitting the form.');
-        return; // Stop form submission if OTP is not verified
-      }
-
-      const formData = {
-        institute_name: instituteName,
-        owner_name: ownerName,
-        company_type: companyType,
-        established_date: establishedDate,
-        institute_provides: instituteProvides,
-        state: state,
-        city: city,
-        email: email,
-        password: password,
-        account_details: accountDetails
-      };
 
       try {
-        const response = await fetch('/partner-creation', {
+        const response = await fetch('/verify-otp', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(formData)
+          body: JSON.stringify({ otp: otp, email: verifiedEmail })
         });
 
         const result = await response.json();
 
-        if (response.ok) {
-          if (result.success) {
-            alertify.success('Signup successful!');
-            const signinTab = new bootstrap.Tab(document.getElementById('signin-tab'));
-            signinTab.show();
-          } else {
-            alertify.error(result.message); // Display backend error message
-          }
+        if (result.success) {
+          alertify.success('OTP verified successfully.');
+          emailOtpField.placeholder = 'OTP Verified';
+          emailOtpField.disabled = true;
+          isOtpVerified = true; // Set the flag correctly
+          verifyOtpBtn.classList.add('d-none');
+          emailOtpField.value = verifiedEmail; // Store the verified email in the field
         } else {
-          alertify.error('An error occurred: ' + result.message); // Display backend error message
+          document.getElementById('email_error').textContent = result.message;
+          alertify.error(result.message);
         }
       } catch (error) {
-        console.error('Error submitting the form:', error);
-        alertify.error('An error occurred while submitting the form.');
+        console.error('Error verifying OTP:', error);
+        alertify.error('An error occurred while verifying OTP.');
       }
     });
   }
+
+  const signupForm = document.getElementById('signupForm');
+if (signupForm) {
+    signupForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        // Clear previous error messages
+        const errorFields = document.querySelectorAll('.error-message');
+        errorFields.forEach(field => field.textContent = '');
+
+        const instituteName = document.getElementById('institute_name')?.value.trim() || '';
+        const ownerName = document.getElementById('owner_name')?.value.trim() || '';
+        const companyType = document.getElementById('company_type')?.value.trim() || '';
+        const establishedDate = document.getElementById('established_date')?.value.trim() || '';
+        const instituteProvides = document.getElementById('institute_provides')?.value.trim() || '';
+        const state = document.getElementById('stateSelect')?.value.trim() || '';
+        const city = document.getElementById('citySelect')?.value.trim() || '';
+        const email = emailOtpField.value.trim();
+        const password = document.getElementById('password')?.value.trim() || '';
+        const accountHolderName = document.getElementById('account_holder_name')?.value.trim() || '';
+        const accountNumber = document.getElementById('account_number')?.value.trim() || '';
+        const ifscCode = document.getElementById('ifsc_code')?.value.trim() || '';
+        const branch = document.getElementById('branch')?.value.trim() || '';
+
+        let hasError = false;
+
+        // Validate fields
+        if (instituteName === '') {
+            document.getElementById('institute_name_error').textContent = 'Institute Name is required.';
+            hasError = true;
+        }
+        if (ownerName === '') {
+            document.getElementById('owner_name_error').textContent = 'Owner Name is required.';
+            hasError = true;
+        }
+        if (companyType === '') {
+            document.getElementById('company_type_error').textContent = 'Company Type is required.';
+            hasError = true;
+        }
+        if (establishedDate === '') {
+            document.getElementById('established_date_error').textContent = 'Established Date is required.';
+            hasError = true;
+        }
+        if (instituteProvides === '') {
+            document.getElementById('institute_provides_error').textContent = 'Institute Provides is required.';
+            hasError = true;
+        }
+        if (state === '') {
+            document.getElementById('stateError').textContent = 'State is required.';
+            hasError = true;
+        }
+        if (city === '') {
+            document.getElementById('cityError').textContent = 'City is required.';
+            hasError = true;
+        }
+        if (email === '') {
+            document.getElementById('email_error').textContent = 'Email is required.';
+            hasError = true;
+        }
+        if (password === '') {
+            document.getElementById('password_error').textContent = 'Password is required.';
+            hasError = true;
+        }
+        if (accountHolderName === '') {
+            document.getElementById('account_holder_name_error').textContent = 'Account Holder Name is required.';
+            hasError = true;
+        }
+        if (accountNumber === '') {
+            document.getElementById('account_number_error').textContent = 'Account Number is required.';
+            hasError = true;
+        }
+        if (ifscCode === '') {
+            document.getElementById('ifsc_code_error').textContent = 'IFSC Code is required.';
+            hasError = true;
+        }
+        if (branch === '') {
+            document.getElementById('branch_error').textContent = 'Branch is required.';
+            hasError = true;
+        }
+
+        if (hasError) {
+            return; // Stop form submission if there are validation errors
+        }
+
+        // Check if OTP is verified
+        if (!isOtpVerified) {
+            alertify.error('Please verify the OTP before submitting the form.');
+            return; // Stop form submission if OTP is not verified
+        }
+
+        const formData = {
+            institute_name: instituteName,
+            owner_name: ownerName,
+            company_type: companyType,
+            established_date: establishedDate,
+            institute_provides: instituteProvides,
+            state: state,
+            city: city,
+            email: email,
+            password: password,
+            account_holder_name: accountHolderName,
+            account_number: accountNumber,
+            ifsc_code: ifscCode,
+            branch: branch
+        };
+
+        try {
+            const response = await fetch('/partner-creation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                if (result.success) {
+                    alertify.success('Signup successful!');
+                    const signinTab = new bootstrap.Tab(document.getElementById('signin-tab'));
+                    signinTab.show();
+                } else {
+                    alertify.error(result.message); // Display backend error message
+                }
+            } else {
+                alertify.error('An error occurred: ' + result.message); // Display backend error message
+            }
+        } catch (error) {
+            console.error('Error submitting the form:', error);
+            alertify.error('An error occurred while submitting the form.');
+        }
+    });
+}
+
 
   // Script for Established Date placeholder logic
   const displayInput = document.getElementById('established_date_display');
@@ -500,8 +583,6 @@ document.addEventListener('DOMContentLoaded', function() {
     displayInput.classList.remove('d-none');
   });
 });
-
-
 </script>
 <script src="../javascripts/statesandcities.js"></script>
     <!-- Bootstrap JS, Popper.js, and jQuery -->
