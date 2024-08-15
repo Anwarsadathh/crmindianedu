@@ -157,6 +157,121 @@ module.exports = {
       }
     });
   },
+  getLeadStatusCounts: (sessionEmail, startDate, endDate) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        console.log("Lead Owner Email for Count:", sessionEmail);
+        console.log("Received startDate:", startDate);
+        console.log("Received endDate:", endDate);
+
+        // Convert startDate and endDate to ISO strings
+        const start = startDate
+          ? new Date(startDate).toISOString().split("T")[0]
+          : null;
+        const end = endDate
+          ? new Date(endDate).toISOString().split("T")[0]
+          : null;
+
+        console.log("Parsed startDate:", start);
+        console.log("Parsed endDate:", end);
+
+        let matchCriteria = { leadOwnerName: sessionEmail };
+
+        // Log match criteria before aggregation
+        console.log("Match Criteria:", matchCriteria);
+
+        const dateMatch =
+          start && end
+            ? {
+                $match: {
+                  "leadStatusArray.v.date": { $gte: start, $lte: end },
+                },
+              }
+            : { $match: {} }; // Avoid an empty match object
+
+        // Google Sheets Collection aggregation
+        const googleSheetsCounts = await db
+          .get()
+          .collection(collection.GOOGLESHEETS_COLLECTION)
+          .aggregate([
+            { $match: matchCriteria },
+            {
+              $project: {
+                leadStatusArray: {
+                  $objectToArray: "$leadStatus",
+                },
+              },
+            },
+            { $unwind: "$leadStatusArray" },
+            dateMatch, // Apply date filter only if startDate and endDate are provided
+            {
+              $group: {
+                _id: "$leadStatusArray.k",
+                count: { $sum: 1 },
+              },
+            },
+          ])
+          .toArray();
+
+        // Referral Collection aggregation
+        const referralCounts = await db
+          .get()
+          .collection(collection.REFERRAL_COLLECTION)
+          .aggregate([
+            { $match: matchCriteria },
+            {
+              $project: {
+                leadStatusArray: {
+                  $objectToArray: "$leadStatus",
+                },
+              },
+            },
+            { $unwind: "$leadStatusArray" },
+            dateMatch, // Apply date filter only if startDate and endDate are provided
+            {
+              $group: {
+                _id: "$leadStatusArray.k",
+                count: { $sum: 1 },
+              },
+            },
+          ])
+          .toArray();
+
+        // Combine and normalize counts for lead statuses
+        const combinedCounts = [
+          ...googleSheetsCounts,
+          ...referralCounts,
+        ].reduce((acc, curr) => {
+          const status = curr._id || "UNKNOWN";
+          acc[status] = (acc[status] || 0) + curr.count;
+          return acc;
+        }, {});
+
+        // Count the total leads in both collections
+        const totalGoogleSheetLeads = await db
+          .get()
+          .collection(collection.GOOGLESHEETS_COLLECTION)
+          .countDocuments(matchCriteria);
+
+        const totalReferralLeads = await db
+          .get()
+          .collection(collection.REFERRAL_COLLECTION)
+          .countDocuments(matchCriteria);
+
+        const totalLeads = totalGoogleSheetLeads + totalReferralLeads;
+
+        console.log("Normalized Lead Status Counts:", combinedCounts);
+        console.log("Total Leads:", totalLeads);
+
+        resolve({ combinedCounts, totalLeads });
+      } catch (error) {
+        console.error("Error in getLeadStatusCounts:", error);
+        reject(error);
+      }
+    });
+  },
+
+  
   getAllGooglsheets: () => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -185,7 +300,7 @@ module.exports = {
       }
     });
   },
-  updateLeadOwner: (id, leadOwnerName, assignLead, leadStatus) => {
+  updateLeadOwner: (id, leadOwnerName, assignLead, leadStatus, assignDate) => {
     return new Promise(async (resolve, reject) => {
       try {
         // Determine if ID should be treated as an ObjectId or not
@@ -199,6 +314,9 @@ module.exports = {
         if (leadStatus) {
           // Ensure leadStatus is an object and merge it into the update fields
           updateFields.leadStatus = leadStatus;
+        }
+        if (assignDate) {
+          updateFields.assignDate = assignDate; // Add the assignment date
         }
 
         // Get the database instance
@@ -236,14 +354,18 @@ module.exports = {
           db.get().collection(collection.REFERRAL_COLLECTION).findOne(query),
         ]);
 
-        // Prepare status object
+        // Prepare status object with updated date
+        const currentDate = new Date().toISOString().split("T")[0]; // Get current date without time
         const statusObj = {
           ...(googlesheet ? googlesheet.leadStatus : {}),
           ...(referral ? referral.leadStatus : {}),
+          [leadStage]: {
+            status: leadStatus,
+            date: currentDate, // Save only the date when the stage is updated
+          },
         };
-        statusObj[leadStage] = leadStatus;
 
-        // Update both collections
+        // Update both collections with lead status and isSaved
         await Promise.all([
           db
             .get()
@@ -261,6 +383,7 @@ module.exports = {
       }
     });
   },
+
   getLeadStatus: async (id, leadStage) => {
     try {
       const query = ObjectId.isValid(id) ? { _id: new ObjectId(id) } : { id };
@@ -271,19 +394,28 @@ module.exports = {
         db.get().collection(collection.REFERRAL_COLLECTION).findOne(query),
       ]);
 
-      // Combine lead status from both collections
+      // Combine lead status and date from both collections
       const statusFromGooglesheet =
-        googlesheetData?.leadStatus?.[leadStage] || "No Status";
-      const statusFromReferral =
-        referralData?.leadStatus?.[leadStage] || "No Status";
+        googlesheetData?.leadStatus?.[leadStage]?.status || "No Status";
+      const dateFromGooglesheet =
+        googlesheetData?.leadStatus?.[leadStage]?.date || null;
 
-      // Choose the status from the referral collection if available, otherwise from googlesheet
+      const statusFromReferral =
+        referralData?.leadStatus?.[leadStage]?.status || "No Status";
+      const dateFromReferral =
+        referralData?.leadStatus?.[leadStage]?.date || null;
+
+      // Choose the status and date from the referral collection if available, otherwise from googlesheet
       const status =
         statusFromReferral !== "No Status"
           ? statusFromReferral
           : statusFromGooglesheet;
+      const date =
+        statusFromReferral !== "No Status"
+          ? dateFromReferral
+          : dateFromGooglesheet;
 
-      return status;
+      return { status, date };
     } catch (error) {
       throw new Error("Error retrieving lead status: " + error.message);
     }

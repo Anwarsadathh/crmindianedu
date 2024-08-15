@@ -9,6 +9,7 @@ const fs = require("fs");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const bodyParser = require("body-parser");
+const { log } = require("console");
 
 // Configure the transporter
 const transporter = nodemailer.createTransport({
@@ -353,7 +354,7 @@ router.post("/crm-tl-referral-scratch", async (req, res) => {
 
 
 router.post("/update-lead-owner", async (req, res) => {
-  const { id, leadOwnerName, assignLead, leadStatus } = req.body;
+  const { id, leadOwnerName, assignLead, leadStatus, assignDate } = req.body;
 
   try {
     // Check if the ID is valid
@@ -372,7 +373,8 @@ router.post("/update-lead-owner", async (req, res) => {
       id,
       leadOwnerName,
       assignLead,
-      leadStatusObject // Pass leadStatusObject to the helper
+      leadStatusObject,
+      assignDate // Pass assignDate to the helper
     );
     res.json({ success: true });
   } catch (error) {
@@ -383,6 +385,7 @@ router.post("/update-lead-owner", async (req, res) => {
     });
   }
 });
+
 
 
 
@@ -421,9 +424,9 @@ router.post("/get-lead-status", async (req, res) => {
         .json({ success: false, message: "Invalid ID format." });
     }
 
-    // Retrieve the lead status
-    const status = await serviceHelpers.getLeadStatus(id, leadStage);
-    res.json({ success: true, status });
+    // Retrieve the lead status and date
+    const { status, date } = await serviceHelpers.getLeadStatus(id, leadStage);
+    res.json({ success: true, status, date });
   } catch (error) {
     console.error("Error fetching lead status:", error);
     res.json({
@@ -456,9 +459,69 @@ router.get("/lead-login", (req, res) => {
   res.render("user/leadlogin", { user: true });
 });
 
-router.get("/crm-lead-owner-dashboard",verifyLogin, (req, res) => {
-  res.render("user/crmleadowners-dash", { user: true });
+router.get("/crm-lead-owner-dashboard", verifyLogin, async (req, res) => {
+  const sessionEmail = req.session.user.email;
+  const { startDate, endDate } = req.query;
+
+  try {
+    // Fetch lead status counts and total leads based on session email and date range
+    const { combinedCounts, totalLeads } =
+      await serviceHelpers.getLeadStatusCounts(
+        sessionEmail,
+        startDate,
+        endDate
+      );
+
+    // Calculate specific counts from combinedCounts
+    const totalQL = combinedCounts["QL"] || 0;
+    const totalRNR = combinedCounts["RNR"] || 0;
+    const totalPQL = combinedCounts["PQL"] || 0;
+    const totalUQL = combinedCounts["UQL"] || 0;
+    const totalNextIntake = combinedCounts["Next Intake"] || 0;
+    const totalDirectUniversity = combinedCounts["Direct University"] || 0;
+
+    // Render the dashboard with the calculated counts
+    res.render("user/crmleadowners-dash", {
+      user: true,
+      totalLeads,
+      totalQL,
+      totalRNR,
+      totalPQL,
+      totalUQL,
+      totalNextIntake,
+      totalDirectUniversity,
+    });
+  } catch (error) {
+    console.error("Error fetching lead status counts:", error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
 });
+
+
+
+
+// router.post("/filter-leads", async (req, res) => {
+//   const { startDate, endDate } = req.body;
+//   const sessionEmail = req.session.user.email; // Get the session email
+
+//   try {
+//     // Fetch filtered lead status counts and total leads
+//     const { combinedCounts, totalLeads } = await serviceHelpers.getFilteredLeadCounts(
+//       sessionEmail,
+//       startDate,
+//       endDate
+//     );
+
+//     // Send the filtered data back to the frontend
+//     res.json({ combinedCounts, totalLeads });
+//   } catch (error) {
+//     console.error("Error filtering leads:", error);
+//     res.status(500).json({ success: false, message: "Internal Server Error" });
+//   }
+// });
+
+
+
 
 router.get("/crm-lead-owner-details", async (req, res) => {
   // Check if the user is logged in

@@ -17,12 +17,17 @@ const db = require("./config/connection");
 
 const app = express();
 
+
 const hbs = exphbs.create({
   extname: "hbs",
   defaultLayout: "user-layout",
   layoutsDir: path.join(__dirname, "views/layout"),
   partialsDir: path.join(__dirname, "views/partials"),
   helpers: {
+    formatDate: function (date) {
+  if (!date) return "N/A";
+  return new Date(date).toLocaleString(); // Formats the date as a readable string
+},
     incrementIndex: function (index) {
       return index + 1;
     },

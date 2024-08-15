@@ -405,9 +405,10 @@ header img {
     </div>
 </div>
 
+
 <!-- Lead Status Modal -->
 <div class="modal fade" id="leadStatusModal" tabindex="-1" aria-labelledby="leadStatusModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">  <!-- Use modal-lg or use custom CSS below -->
+    <div class="modal-dialog modal-lg">  
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="leadStatusModalLabel">Lead Status Details</h5>
@@ -423,6 +424,63 @@ header img {
     </div>
 </div>
 
+<style>
+    .modal-content {
+        border-radius: 15px; /* Rounded corners */
+        background: linear-gradient(135deg, #f5f7fa, #c3cfe2); /* Gradient background */
+    }
+
+    .modal-dialog {
+        max-width: 900px; /* Set a custom max width */
+    }
+
+    .card {
+        border: none; /* Remove card border */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Card shadow */
+        border-radius: 10px; /* Rounded corners for cards */
+    }
+
+    .card-header {
+        border-bottom: 2px solid #007bff; /* Add a blue bottom border */
+        border-top-left-radius: 10px; /* Rounded top corners */
+        border-top-right-radius: 10px; /* Rounded top corners */
+    }
+
+    .card-body {
+        padding: 20px; /* More padding for content */
+         font-size: 12px !important;
+    }
+ .card-body p{
+         font-size: 10px !important;
+    }
+    
+    .card:hover {
+        transform: scale(1.05); /* Scale effect on hover */
+        transition: transform 0.3s; /* Smooth transition */
+    }
+
+    .container {
+        
+        margin: 10px; /* Margin around the container */
+    }
+
+    .modal-header {
+         font-size: 12px !important;
+        border-bottom: 2px solid #007bff; /* Add a blue line at the bottom of header */
+    }
+
+    .modal-title {
+        font-weight: bold;
+     font-size: 12px !important;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .card {
+            margin-bottom: 15px; /* Space between cards on smaller screens */
+        }
+    }
+</style>
 
 
 <script>
@@ -432,39 +490,50 @@ document.addEventListener('DOMContentLoaded', function () {
         button.addEventListener('click', function () {
             const row = this.closest('tr');
             const leadStatusContent = row.querySelector('.leadStatusContent').textContent.trim();
-            const leadStatus = JSON.parse(leadStatusContent); // Parse the JSON string
 
-            // Define the headings
-            const headings = ['QL', 'PQL', 'HQL', 'UQL', 'RNR', 'Busy', 'Call Later', 'Next Intake'];
+            // Check if leadStatusContent exists and is not empty
+            if (leadStatusContent) {
+                try {
+                    const leadStatus = JSON.parse(leadStatusContent); // Parse the JSON string
 
-            // Build the HTML content to display the lead status details under headings
-            let leadStatusHtml = '<div class="container"><div class="row">';
-            headings.forEach((heading, index) => {
-                leadStatusHtml += `
-                    <div class="col-md-3 mb-3">
-                        <div class="card">
-                            <div class="card-header bg-primary text-white">
-                                <h6 class="m-0">${heading}</h6>
-                            </div>
-                            <div class="card-body">
-                                <p class="m-0">${leadStatus[heading] || 'N/A'}</p>
-                            </div>
-                        </div>
-                    </div>`;
-                if ((index + 1) % 4 === 0) leadStatusHtml += '</div><div class="row">';
-            });
-            leadStatusHtml += '</div></div>';
+                    // Define the headings
+                    const headings = ['QL', 'PQL', 'HQL', 'UQL', 'RNR', 'Busy', 'Call Later', 'Next Intake', 'QL to NR', 'PQL to NR', 'Not Interested', 'Just Enquiry', 'Regular', 'WhatsApp Connected', 'Direct University'];
 
-            // Insert lead status into modal
-            document.getElementById('leadStatusContent').innerHTML = leadStatusHtml;
+                    // Build the HTML content to display the lead status details under headings
+                    let leadStatusHtml = '<div class="container"><div class="row">';
+                    headings.forEach((heading, index) => {
+                        const statusDetails = leadStatus[heading] || { status: 'N/A', date: 'N/A' }; // Fallback if empty
+                        leadStatusHtml += `
+                            <div class="col-md-3 mb-3">
+                                <div class="card">
+                                    <div class="card-header bg-primary text-white">
+                                        <h6 class="m-0 mhead">${heading}</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="m-0">Status: ${statusDetails.status || 'N/A'}</p>
+                                        <p class="m-0">Date: ${statusDetails.date ? new Date(statusDetails.date).toLocaleString() : 'N/A'}</p>
+                                    </div>
+                                </div>
+                            </div>`;
+                        if ((index + 1) % 4 === 0) leadStatusHtml += '</div><div class="row">';
+                    });
+                    leadStatusHtml += '</div></div>';
 
-            // Show the modal
-            const leadStatusModal = new bootstrap.Modal(document.getElementById('leadStatusModal'));
-            leadStatusModal.show();
+                    // Insert lead status into modal
+                    document.getElementById('leadStatusContent').innerHTML = leadStatusHtml;
+
+                    // Show the modal
+                    const leadStatusModal = new bootstrap.Modal(document.getElementById('leadStatusModal'));
+                    leadStatusModal.show();
+                } catch (error) {
+                    console.error('Invalid JSON or error parsing lead status content:', error);
+                }
+            } else {
+                console.error('No lead status content available.');
+            }
         });
     });
 });
-
 </script>
 
 

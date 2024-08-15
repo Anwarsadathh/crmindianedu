@@ -36,244 +36,176 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
-<style>
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: #f0f2f5;
-            margin: 0;
-            padding: 0;
-            font-size: 14px;
-        }
+   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
 
-        header {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            background-color: #f8f9fa;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-        }
+.search{
+  
+  top:6px;
+  left:10px;
+}
 
-        header img {
-            height: 35px;
-            margin-left: 15px;
-        }
+.form-control{
+    
+    border:none;
+    padding-left:32px;
+}
+.tt {
+    margin-top: 20px;
+    padding: 70px;
+    border-radius: 10px;background-color: #f2f9f6; /* Very pale mint green */
 
-        .dashboard-container {
-            margin-top: 80px;
-            width: 90%;
-            max-width: 1200px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            transition: box-shadow 0.3s ease, transform 0.3s ease;
-        }
+}
+.btn-primary{
+    font-size: 10px;
+    background-color: #007bff !important;
+}
+select,textarea{
+       font-size: 13px !important;
+}
+.table-responsive{
+    padding: 10px;
+}
+.form-control:focus{
+    
+    border:none;
+    box-shadow:none;
+}
 
-        .dashboard-container:hover {
-            transform: scale(1.02);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-        }
+.green{
+    
+    color:green;
+}
+/* Button styles */
+.btn-status {
+    font-size: 10px; /* Smaller font size for buttons */
+    padding: 4px 8px; /* Smaller padding for buttons */
+    transition: background-color 0.3s ease;
+}
 
-        .btn-custom {
-            background-color: #007BFF;
-            color: #fff;
-            border-radius: 5px;
-            font-size: 14px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
+.btn-not-paid {
+    background-color: #e8172c; /* Red */
+    color: #fff;
+}
 
-        .btn-custom:hover {
-            background-color: #0056b3;
-            transform: scale(1.05);
-        }
+.btn-paid {
+    background-color: #28a745; /* Green */
+    color: #fff;
+}
 
-        .table {
-            border-radius: 8px;
-            overflow: hidden;
-            font-size: 12px;
-            /* Smaller font size for the table */
-        }
+.btn-not-approved {
+    background-color: #ffc107; /* Yellow */
+    color: #000;
+}
 
-        .table thead th {
-            background-color: #232f65;
-            color: #fff;
-            text-align: center;
-        }
+.btn-approved {
+    background-color: #17a2b8; /* Teal */
+    color: #fff;
+}
 
-        .table tbody tr {
-            transition: background-color 0.3s ease, border 0.3s ease;
-            /* Add transition for border */
-        }
+.btn-not-done {
+    background-color: #ffc107; /* Yellow */
+    color: #000;
+}
 
-        .table tbody tr:hover {
-            background-color: #e9ecef;
-            cursor: pointer;
-            border: 1px solid #007BFF;
-            /* Add border on hover */
-        }
+.btn-done {
+    background-color: #28a745; /* Green */
+    color: #fff;
+}
 
-        .table tbody td {
-            text-align: center;
-            background-color: white;
-        }
+.btn-status.active-paid {
+    background-color: #28a745 !important; /* Green */
+    color: #fff;
+}
 
-        .btn-status {
-            font-size: 12px;
-            padding: 5px 10px;
-            transition: background-color 0.3s ease;
-        }
+.btn-status.active-not-paid {
+    background-color: #dc3545 !important; /* Red */
+    color: #fff;
+}
 
-        .btn-not-paid {
-            background-color: #e8172c;
-            /* Red */
-            color: #fff;
-        }
+.btn-status.active-not-approved {
+    background-color: #ffc107 !important; /* Yellow */
+    color: #000;
+}
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10px; /* Smaller font size for table content */
+    table-layout: fixed; /* Ensures fixed widths are respected */
+}
 
-        .btn-paid {
-            background-color: #28a745;
-            /* Green */
-            color: #fff;
-        }
+.table thead th,
+.table tbody td {
+    text-align: left;
+    padding: 6px; /* Reduced padding for a smaller appearance */
+    border: 1px solid #dee2e6;
+    font-size: 12px; /* Consistent smaller font size */
+    width: 120px; /* Fixed width for consistency */
+    font-family: Arial, Helvetica, sans-serif;
+    overflow: hidden; /* Prevent overflow for fixed-width cells */
+    text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+    white-space: nowrap; /* Prevent text wrapping */
+}
 
-        .btn-not-approved {
-            background-color: #ffc107;
-            /* Yellow */
-            color: #000;
-        }
+.table thead th {
+    background-color: #232f65;
+    color: #ffffff;
+}
 
-        .btn-approved {
-            background-color: #17a2b8;
-            /* Teal */
-            color: #fff;
-        }
+.table tbody tr:hover {
+    background-color: #d0e3ff; /* Use your chosen color here */
+}
 
-        .btn-not-done {
-            background-color: #ffc107;
-            /* Yellow */
-            color: #000;
-        }
 
-        .btn-done {
-            background-color: #28a745;
-            /* Green */
-            color: #fff;
-        }
+/* Adjust other table-related styles if necessary */
 
-        
 
-        .image-stack {
-            position: relative;
-            display: flex;
-        }
+.btn-status.active-approved {
+    background-color: #17a2b8 !important; /* Teal */
+    color: #fff;
+}
 
-        .profile-img {
-            border-radius: 50%;
-            position: relative;
-            z-index: 1;
-            margin-left: -20px;
-            transition: transform 0.3s, z-index 0.3s;
-        }
+.btn-status.active-not-done {
+    background-color: #ffc107 !important; /* Yellow */
+    color: #000;
+}
 
-        .profile-img:hover {
-            transform: translateX(-20px);
-            z-index: 10;
-        }
+.btn-status.active-done {
+    background-color: #28a745 !important; /* Green */
+    color: #fff;
+}
+/* DataTables styles */
+.dataTables_wrapper .dataTables_filter {
+    float: right;
+    text-align: right;
+    margin-bottom: 10px; /* Add margin below the search bar */
+}
 
-        .image-stack .bg-success {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            border-radius: 50%;
-            border: 2px solid white;
-            padding: 1px;
-        }
+.dataTables_wrapper .dataTables_filter input {
+    margin-left: 0.5em;
+    display: inline-block;
+    width: auto;
+    margin-bottom: 10px; /* Add margin below the search bar */
+        position: sticky !important;
+}
 
-        /* Custom styles for DataTables */
-        .dataTables_wrapper .dataTables_filter {
-            float: right;
-            text-align: right;
-            margin-bottom: 10px;
-        }
+.dataTables_wrapper .dataTables_length {
+    float: left;
+    margin-bottom: 10px; /* Add margin below the length dropdown */
+}
 
-        .dataTables_wrapper .dataTables_filter input {
-            margin-left: 0.5em;
-            display: inline-block;
-            width: auto;
-            margin-bottom: 10px;
-        }
+.dataTables_wrapper .dataTables_info {
+    float: left;
+    margin-top: 10px; /* Add margin above the info text */
+}
 
-        .dataTables_wrapper .dataTables_length {
-            float: left;
-            margin-bottom: 10px;
-        }
+.dataTables_wrapper .dataTables_paginate {
+    float: right;
+    margin-top: 10px; /* Add margin above the pagination controls */
 
-        .dataTables_wrapper .dataTables_info {
-            float: left;
-            margin-top: 10px;
-        }
+}
+</style>
 
-        .dataTables_wrapper .dataTables_paginate {
-            float: right;
-            margin-top: 10px;
-        }
-
-        input,
-        select {
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            box-sizing: border-box;
-            background-color: #eeeeee;
-            color: #000000;
-            transition: background-color 0.3s, transform 0.3s, width 0.3s;
-        }
-
-        .dotted-spinner {
-            width: 2rem;
-            height: 2rem;
-            border-radius: 50%;
-            border: 3px dotted white;
-            /* White dotted border */
-            border-top: 3px solid white;
-            /* Solid top border to create spinner effect */
-            animation: dotted-spinner 1.5s linear infinite;
-        }
-
-        @keyframes dotted-spinner {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        .loading {
-            background-color: #6c757d;
-            /* Change to a different color for the loading state */
-            color: #ffffff;
-            /* Change text color if needed */
-        }
-
-        /* Added CSS for smaller form width */
-        .lead-stage-select,
-        .lead-status-textarea {
-            width: 100px;
-            /* Set smaller width for select and textarea */
-        }
-
-        .lead-status-textarea {
-            width: 250px;
-            /* Set smaller width for textarea */
-        }
-
-    </style>
 </head>
 
 <body>
@@ -404,12 +336,13 @@
                                 <th>Lead Stage</th>
                                 <th>Lead Status</th>
                                 <th>Action</th>
+                                <th>Lead Status</th>
                                 <th>SE</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody style="width: 300px !important;">
                             {{#each googlesheets}}
-                            <tr>
+                            <tr style="width: 300px !important;">
                                  <td class="font-weight-bold" data-id="{{this._id}}" data-source="{{this.source}}" hidden>{{this._id}}</td>
                                 <td class="font-weight-bold">{{this.id}}</td>
                                 <td>{{this.timeStamp}}</td>
@@ -439,27 +372,53 @@
                                 <td>{{this.role}}</td>
                                 <td><a href="{{this.pdfLink}}" target="_blank">Link</a></td>
                                 <td>{{this.password}}</td>
-                          <td>
-    <select class="form-select lead-stage-select" style="width: 100px;" onchange="updateLeadStatus(this)">
-        <option value="">Select</option>
-        <option value="QL" {{#ifEquals this.leadStage "QL"}}selected{{/ifEquals}}>QL</option>
-        <option value="PQL" {{#ifEquals this.leadStage "PQL"}}selected{{/ifEquals}}>PQL</option>
-        <option value="HQL" {{#ifEquals this.leadStage "HQL"}}selected{{/ifEquals}}>HQL</option>
-        <option value="UQL" {{#ifEquals this.leadStage "UQL"}}selected{{/ifEquals}}>UQL</option>
-        <option value="RNR" {{#ifEquals this.leadStage "RNR"}}selected{{/ifEquals}}>RNR</option>
-        <option value="Busy" {{#ifEquals this.leadStage "Busy"}}selected{{/ifEquals}}>Busy</option>
-        <option value="Call Later" {{#ifEquals this.leadStage "Call Later"}}selected{{/ifEquals}}>Call Later</option>
-        <option value="Next Intake" {{#ifEquals this.leadStage "Next Intake"}}selected{{/ifEquals}}>Next Intake</option>
-    </select>
-</td>
+                         <td>
+        <!-- Dropdown for selecting lead stage -->
+        <select class="form-select lead-stage-select" style="width: 100px;" onchange="updateLeadStatus(this)">
+            <option value="">Select</option>
+            <option value="QL" {{#ifEquals leadStage "QL"}}selected{{/ifEquals}}>QL</option>
+            <option value="PQL" {{#ifEquals leadStage "PQL"}}selected{{/ifEquals}}>PQL</option>
+            <option value="HQL" {{#ifEquals leadStage "HQL"}}selected{{/ifEquals}}>HQL</option>
+            <option value="UQL" {{#ifEquals leadStage "UQL"}}selected{{/ifEquals}}>UQL</option>
+            <option value="RNR" {{#ifEquals leadStage "RNR"}}selected{{/ifEquals}}>RNR</option>
+            <option value="Busy" {{#ifEquals leadStage "Busy"}}selected{{/ifEquals}}>Busy</option>
+            <option value="Call Later" {{#ifEquals leadStage "Call Later"}}selected{{/ifEquals}}>Call Later</option>
+            <option value="Next Intake" {{#ifEquals leadStage "Next Intake"}}selected{{/ifEquals}}>Next Intake</option>
+            <option value="QL to NR" {{#ifEquals leadStage "QL to NR"}}selected{{/ifEquals}}>QL to NR</option>
+            <option value="PQL to NR" {{#ifEquals leadStage "PQL to NR"}}selected{{/ifEquals}}>PQL to NR</option>
+            <option value="Not Interested" {{#ifEquals leadStage "Not Interested"}}selected{{/ifEquals}}>Not Interested</option>
+            <option value="Just Enquiry" {{#ifEquals leadStage "Just Enquiry"}}selected{{/ifEquals}}>Just Enquiry</option>
+            <option value="Regular" {{#ifEquals leadStage "Regular"}}selected{{/ifEquals}}>Regular</option>
+            <option value="WhatsApp Connected" {{#ifEquals leadStage "WhatsApp Connected"}}selected{{/ifEquals}}>WhatsApp Connected</option>
+            <option value="Direct University" {{#ifEquals leadStage "Direct University"}}selected{{/ifEquals}}>Direct University</option>
+        </select>
+    </td>
 <td>
+    <!-- Textarea to display lead status without date -->
+    <textarea  class="form-control lead-status-textarea" rows="3" style="width: 250px;">
+        {{#if this.leadStatus.[this.leadStage]}}
+            {{this.leadStatus.[this.leadStage]}}
+        {{else}}
+            No Status
+        {{/if}}
+    </textarea>
+</td>
+
+
+{{!-- <td>
     <textarea class="form-control lead-status-textarea" rows="3" style="width: 250px;">{{#if this.leadStatus.[this.leadStage]}}{{this.leadStatus.[this.leadStage]}}{{else}}No Status{{/if}}</textarea>
-</td>
+</td> --}}
 <td>
-    <button class="btn btn-primary" onclick="saveLeadStatus(this)">Save</button>
+    <button class="btn-sm btn-primary" onclick="saveLeadStatus(this)">Save</button>
 </td>
+ <td>
+            <button class="btn btn-info ms-2 show-lead-status-btn" style=" font-size: 10px !important;">Status</button>
+            <div class="leadStatusContent" style="display:none;">
+                {{json this.leadStatus}}
+            </div>
+        </td>
 <td>
-    <button class="btn btn-primary" onclick="redirectToSEForm(this)">SE FORM</button>
+    <button class="btn-sm btn-primary" onclick="redirectToSEForm(this)">SE FORM</button>
 </td>
 
                             </tr>
@@ -475,6 +434,136 @@
         </div>
 </div>
 
+
+<!-- Lead Status Modal -->
+<div class="modal fade" id="leadStatusModal" tabindex="-1" aria-labelledby="leadStatusModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">  
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="leadStatusModalLabel">Lead Status Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="leadStatusContent">
+                <!-- Lead status content will be inserted here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .modal-content {
+        border-radius: 15px; /* Rounded corners */
+        background: linear-gradient(135deg, #f5f7fa, #c3cfe2); /* Gradient background */
+    }
+
+    .modal-dialog {
+        max-width: 900px; /* Set a custom max width */
+    }
+
+    .card {
+        border: none; /* Remove card border */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Card shadow */
+        border-radius: 10px; /* Rounded corners for cards */
+    }
+
+    .card-header {
+        border-bottom: 2px solid #007bff; /* Add a blue bottom border */
+        border-top-left-radius: 10px; /* Rounded top corners */
+        border-top-right-radius: 10px; /* Rounded top corners */
+    }
+
+    .card-body {
+        padding: 20px; /* More padding for content */
+         font-size: 12px !important;
+    }
+ .card-body p{
+         font-size: 10px !important;
+    }
+    
+    .card:hover {
+        transform: scale(1.05); /* Scale effect on hover */
+        transition: transform 0.3s; /* Smooth transition */
+    }
+
+    .container {
+        
+        margin: 10px; /* Margin around the container */
+    }
+
+    .modal-header {
+         font-size: 12px !important;
+        border-bottom: 2px solid #007bff; /* Add a blue line at the bottom of header */
+    }
+
+    .modal-title {
+        font-weight: bold;
+     font-size: 12px !important;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .card {
+            margin-bottom: 15px; /* Space between cards on smaller screens */
+        }
+    }
+</style>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Add click event listener for 'Show Lead Status' buttons
+    document.querySelectorAll('.show-lead-status-btn').forEach(function (button) {
+        button.addEventListener('click', function () {
+            const row = this.closest('tr');
+            const leadStatusContent = row.querySelector('.leadStatusContent').textContent.trim();
+
+            // Check if leadStatusContent exists and is not empty
+            if (leadStatusContent) {
+                try {
+                    const leadStatus = JSON.parse(leadStatusContent); // Parse the JSON string
+
+                    // Define the headings
+                    const headings = ['QL', 'PQL', 'HQL', 'UQL', 'RNR', 'Busy', 'Call Later', 'Next Intake', 'QL to NR', 'PQL to NR', 'Not Interested', 'Just Enquiry', 'Regular', 'WhatsApp Connected', 'Direct University'];
+
+                    // Build the HTML content to display the lead status details under headings
+                    let leadStatusHtml = '<div class="container"><div class="row">';
+                    headings.forEach((heading, index) => {
+                        const statusDetails = leadStatus[heading] || { status: 'N/A', date: 'N/A' }; // Fallback if empty
+                        leadStatusHtml += `
+                            <div class="col-md-3 mb-3">
+                                <div class="card">
+                                    <div class="card-header bg-primary text-white">
+                                        <h6 class="m-0 mhead">${heading}</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="m-0">Status: ${statusDetails.status || 'N/A'}</p>
+                                        <p class="m-0">Date: ${statusDetails.date ? new Date(statusDetails.date).toLocaleString() : 'N/A'}</p>
+                                    </div>
+                                </div>
+                            </div>`;
+                        if ((index + 1) % 4 === 0) leadStatusHtml += '</div><div class="row">';
+                    });
+                    leadStatusHtml += '</div></div>';
+
+                    // Insert lead status into modal
+                    document.getElementById('leadStatusContent').innerHTML = leadStatusHtml;
+
+                    // Show the modal
+                    const leadStatusModal = new bootstrap.Modal(document.getElementById('leadStatusModal'));
+                    leadStatusModal.show();
+                } catch (error) {
+                    console.error('Invalid JSON or error parsing lead status content:', error);
+                }
+            } else {
+                console.error('No lead status content available.');
+            }
+        });
+    });
+});
+</script>
 <script>
 
 function redirectToSEForm(button) {
@@ -507,7 +596,13 @@ async function updateLeadStatus(select) {
     const row = select.closest('tr');
     const leadStatusTextarea = row.querySelector('.lead-status-textarea');
     const leadStage = select.value;
-    const id = row.querySelector('.font-weight-bold').dataset.id; // Use dataset attribute
+    const id = row.querySelector('.font-weight-bold')?.dataset.id; // Ensure `id` is fetched safely
+
+    // Ensure elements exist before proceeding
+    if (!leadStatusTextarea) {
+        console.error('Textarea not found in the row.');
+        return;
+    }
 
     if (leadStage) {
         try {
@@ -520,23 +615,20 @@ async function updateLeadStatus(select) {
             });
 
             const result = await response.json();
-
-            console.log('Fetch result:', result); // Log the fetch result for debugging
+            console.log('Fetch result:', result);
 
             if (result.success) {
                 if (result.status && result.status.trim() !== '' && result.status !== 'No Status') {
-                    console.log('Status found:', result.status); // Log status for debugging
                     leadStatusTextarea.value = result.status;
-                    leadStatusTextarea.disabled = true; // Disable if valid status is found
+                    leadStatusTextarea.disabled = true; // Disable textarea if status is found
                 } else {
-                    console.log('No valid status found'); // Log when no valid status is found
                     leadStatusTextarea.value = 'No Status';
-                    leadStatusTextarea.disabled = false; // Enable if no valid status is found
+                    leadStatusTextarea.disabled = false; // Enable textarea if no valid status is found
                 }
             } else {
-                console.log('Fetch failed:', result.message); // Log failure message for debugging
+                console.log('Fetch failed:', result.message);
                 leadStatusTextarea.value = 'No Status';
-                leadStatusTextarea.disabled = false; // Enable if fetch fails
+                leadStatusTextarea.disabled = false; // Enable textarea on failure
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -544,9 +636,9 @@ async function updateLeadStatus(select) {
                 });
             }
         } catch (error) {
-            console.error('Error:', error); // Log the error for debugging
+            console.error('Error:', error);
             leadStatusTextarea.value = 'No Status';
-            leadStatusTextarea.disabled = false; // Enable if an error occurs
+            leadStatusTextarea.disabled = false; // Enable textarea if error occurs
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
@@ -554,9 +646,8 @@ async function updateLeadStatus(select) {
             });
         }
     } else {
-        console.log('No lead stage selected'); // Log when no lead stage is selected
         leadStatusTextarea.value = 'No Status';
-        leadStatusTextarea.disabled = false; // Enable if no lead stage is selected
+        leadStatusTextarea.disabled = false; // Enable textarea if no lead stage is selected
     }
 }
 

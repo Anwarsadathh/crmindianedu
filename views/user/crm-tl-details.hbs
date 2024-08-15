@@ -39,6 +39,9 @@
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
      <style>
+
+
+ @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
 body {
     font-family: 'Montserrat', sans-serif;
     background-color: #f0f2f5;
@@ -46,121 +49,168 @@ body {
     padding: 0;
     font-size: 14px;
 }
-
-header {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    padding: 15px;
-    background-color: #f8f9fa;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
+.search{
+  
+  top:6px;
+  left:10px;
 }
 
-header img {
-    height: 35px;
-    margin-left: 15px;
+.form-control{
+    
+    border:none;
+    padding-left:32px;
 }
-
-.dashboard-container {
-    margin-top: 80px;
-    width: 90%;
-    max-width: 1200px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-}
-
-.dashboard-container:hover {
-    transform: scale(1.02);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-}
-
-.btn-custom {
-    background-color: #007BFF;
-    color: #fff;
-    border-radius: 5px;
-    font-size: 14px;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.btn-custom:hover {
-    background-color: #0056b3;
-    transform: scale(1.05);
-}
-
-.table-responsive {
+.tt {
     margin-top: 20px;
+    padding: 70px;
+    border-radius: 10px;background-color: #f2f9f6; /* Very pale mint green */
+
+}
+.btn-primary{
+    font-size: 10px;
+    background-color: #007bff !important;
 }
 
-.table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.table thead th {
-    background-color: #232f65;
-    border-bottom: 2px solid #dee2e6;
-    color: #ffffff;
-    text-align: left;
+.table-responsive{
     padding: 10px;
-    width: auto !important;
-    font-size: 10px; /* Smaller font size for table headers */
+}
+.form-control:focus{
+    
+    border:none;
+    box-shadow:none;
 }
 
-.table tbody td {
-    border-bottom: 1px solid #dee2e6;
-    padding: 8px;
-    font-size: 10px !important; /* Smaller font size for table content */
+.green{
+    
+    color:green;
 }
-
-
-
+/* Button styles */
 .btn-status {
-    font-size: 10px !important;
-    padding: 5px 10px;
+    font-size: 10px; /* Smaller font size for buttons */
+    padding: 4px 8px; /* Smaller padding for buttons */
     transition: background-color 0.3s ease;
 }
 
 .btn-not-paid {
     background-color: #e8172c; /* Red */
     color: #fff;
-     font-size: 10px !important;
 }
 
 .btn-paid {
     background-color: #28a745; /* Green */
-     font-size: 10px !important;
     color: #fff;
 }
 
 .btn-not-approved {
     background-color: #ffc107; /* Yellow */
     color: #000;
-     font-size: 10px !important;
 }
 
 .btn-approved {
     background-color: #17a2b8; /* Teal */
     color: #fff;
-     font-size: 10px !important;
 }
 
 .btn-not-done {
     background-color: #ffc107; /* Yellow */
     color: #000;
-     font-size: 10px !important;
 }
 
 .btn-done {
     background-color: #28a745; /* Green */
     color: #fff;
-     font-size: 10px !important;
+}
+
+.btn-status.active-paid {
+    background-color: #28a745 !important; /* Green */
+    color: #fff;
+}
+
+.btn-status.active-not-paid {
+    background-color: #dc3545 !important; /* Red */
+    color: #fff;
+}
+
+.btn-status.active-not-approved {
+    background-color: #ffc107 !important; /* Yellow */
+    color: #000;
+}
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10px; /* Smaller font size for table content */
+    table-layout: fixed; /* Ensures fixed widths are respected */
+}
+
+.table thead th,
+.table tbody td {
+    text-align: left;
+    padding: 6px; /* Reduced padding for a smaller appearance */
+    border: 1px solid #dee2e6;
+    font-size: 12px; /* Consistent smaller font size */
+    width: 120px; /* Fixed width for consistency */
+    font-family: Arial, Helvetica, sans-serif;
+    overflow: hidden; /* Prevent overflow for fixed-width cells */
+    text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+.table thead th {
+    background-color: #232f65;
+    color: #ffffff;
+}
+
+.table tbody tr:hover {
+    background-color: #d0e3ff; /* Use your chosen color here */
+}
+
+
+/* Adjust other table-related styles if necessary */
+
+
+.btn-status.active-approved {
+    background-color: #17a2b8 !important; /* Teal */
+    color: #fff;
+}
+
+.btn-status.active-not-done {
+    background-color: #ffc107 !important; /* Yellow */
+    color: #000;
+}
+
+.btn-status.active-done {
+    background-color: #28a745 !important; /* Green */
+    color: #fff;
+}
+/* DataTables styles */
+.dataTables_wrapper .dataTables_filter {
+    float: right;
+    text-align: right;
+    margin-bottom: 10px; /* Add margin below the search bar */
+}
+
+.dataTables_wrapper .dataTables_filter input {
+    margin-left: 0.5em;
+    display: inline-block;
+    width: auto;
+    margin-bottom: 10px; /* Add margin below the search bar */
+        position: sticky !important;
+}
+
+.dataTables_wrapper .dataTables_length {
+    float: left;
+    margin-bottom: 10px; /* Add margin below the length dropdown */
+}
+
+.dataTables_wrapper .dataTables_info {
+    float: left;
+    margin-top: 10px; /* Add margin above the info text */
+}
+
+.dataTables_wrapper .dataTables_paginate {
+    float: right;
+    margin-top: 10px; /* Add margin above the pagination controls */
+
 }
 
 
@@ -192,50 +242,7 @@ header img {
     padding: 1px;
 }
 
-/* Custom styles for DataTables */
-.dataTables_wrapper .dataTables_filter {
-    float: right;
-    text-align: right;
-    margin-bottom: 10px;
-     font-size: 10px !important;
-}
 
-.dataTables_wrapper .dataTables_filter input {
-    margin-left: 0.5em;
-    display: inline-block;
-    width: auto;
-    margin-bottom: 10px;
-     font-size: 10px !important;
-}
-
-.dataTables_wrapper .dataTables_length {
-    float: left;
-    margin-bottom: 10px;
-     font-size: 10px !important;
-}
-
-.dataTables_wrapper .dataTables_info {
-    float: left;
-    margin-top: 10px;
-     font-size: 10px !important;
-}
-
-.dataTables_wrapper .dataTables_paginate {
-    float: right;
-    margin-top: 10px;
-     font-size: 10px !important;
-}
-
-input, select {
-    padding: 10px;
-     font-size: 10px !important;
-    border: none;
-    border-radius: 5px;
-    box-sizing: border-box;
-    background-color: #eeeeee;
-    color: #000000;
-    transition: background-color 0.3s, transform 0.3s, width 0.3s;
-}
 
 
  .dotted-spinner {
@@ -478,7 +485,7 @@ input, select {
 
 <!-- Lead Status Modal -->
 <div class="modal fade" id="leadStatusModal" tabindex="-1" aria-labelledby="leadStatusModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">  <!-- Use modal-lg or use custom CSS below -->
+    <div class="modal-dialog modal-lg">  
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="leadStatusModalLabel">Lead Status Details</h5>
@@ -520,7 +527,7 @@ input, select {
         padding: 20px; /* More padding for content */
          font-size: 12px !important;
     }
- .card-body p, h6{
+ .card-body p{
          font-size: 10px !important;
     }
     
@@ -552,6 +559,7 @@ input, select {
     }
 </style>
 
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     // Add click event listener for 'Show Lead Status' buttons
@@ -559,40 +567,53 @@ document.addEventListener('DOMContentLoaded', function () {
         button.addEventListener('click', function () {
             const row = this.closest('tr');
             const leadStatusContent = row.querySelector('.leadStatusContent').textContent.trim();
-            const leadStatus = JSON.parse(leadStatusContent); // Parse the JSON string
 
-            // Define the headings
-            const headings = ['QL', 'PQL', 'HQL', 'UQL', 'RNR', 'Busy', 'Call Later', 'Next Intake'];
+            // Check if leadStatusContent exists and is not empty
+            if (leadStatusContent) {
+                try {
+                    const leadStatus = JSON.parse(leadStatusContent); // Parse the JSON string
 
-            // Build the HTML content to display the lead status details under headings
-            let leadStatusHtml = '<div class="container"><div class="row">';
-            headings.forEach((heading, index) => {
-                leadStatusHtml += `
-                    <div class="col-md-3 mb-3">
-                        <div class="card">
-                            <div class="card-header bg-primary text-white">
-                                <h6 class="m-0">${heading}</h6>
-                            </div>
-                            <div class="card-body">
-                                <p class="m-0">${leadStatus[heading] || 'N/A'}</p>
-                            </div>
-                        </div>
-                    </div>`;
-                if ((index + 1) % 4 === 0) leadStatusHtml += '</div><div class="row">';
-            });
-            leadStatusHtml += '</div></div>';
+                    // Define the headings
+                    const headings = ['QL', 'PQL', 'HQL', 'UQL', 'RNR', 'Busy', 'Call Later', 'Next Intake', 'QL to NR', 'PQL to NR', 'Not Interested', 'Just Enquiry', 'Regular', 'WhatsApp Connected', 'Direct University'];
 
-            // Insert lead status into modal
-            document.getElementById('leadStatusContent').innerHTML = leadStatusHtml;
+                    // Build the HTML content to display the lead status details under headings
+                    let leadStatusHtml = '<div class="container"><div class="row">';
+                    headings.forEach((heading, index) => {
+                        const statusDetails = leadStatus[heading] || { status: 'N/A', date: 'N/A' }; // Fallback if empty
+                        leadStatusHtml += `
+                            <div class="col-md-3 mb-3">
+                                <div class="card">
+                                    <div class="card-header bg-primary text-white">
+                                        <h6 class="m-0 mhead">${heading}</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="m-0">Status: ${statusDetails.status || 'N/A'}</p>
+                                        <p class="m-0">Date: ${statusDetails.date ? new Date(statusDetails.date).toLocaleString() : 'N/A'}</p>
+                                    </div>
+                                </div>
+                            </div>`;
+                        if ((index + 1) % 4 === 0) leadStatusHtml += '</div><div class="row">';
+                    });
+                    leadStatusHtml += '</div></div>';
 
-            // Show the modal
-            const leadStatusModal = new bootstrap.Modal(document.getElementById('leadStatusModal'));
-            leadStatusModal.show();
+                    // Insert lead status into modal
+                    document.getElementById('leadStatusContent').innerHTML = leadStatusHtml;
+
+                    // Show the modal
+                    const leadStatusModal = new bootstrap.Modal(document.getElementById('leadStatusModal'));
+                    leadStatusModal.show();
+                } catch (error) {
+                    console.error('Invalid JSON or error parsing lead status content:', error);
+                }
+            } else {
+                console.error('No lead status content available.');
+            }
         });
     });
 });
+</script>
 
-
+<script>
 
 async function toggleAssignment(button) {
     const row = button.closest('tr');
@@ -602,8 +623,8 @@ async function toggleAssignment(button) {
     const leadOwnerSelect = row.querySelector('select');
     const leadOwnerName = leadOwnerSelect.value;
     const assignLead = button.classList.contains('btn-paid') ? null : 'assigned';
-    const leadStatusTextarea = row.querySelector('.lead-status-textarea'); // Add this line
-    const leadStatus = leadStatusTextarea ? leadStatusTextarea.value : ''; // Add this line
+    const leadStatusTextarea = row.querySelector('.lead-status-textarea');
+    const leadStatus = leadStatusTextarea ? leadStatusTextarea.value : '';
 
     if (!id || !source) {
         console.error('Invalid or missing ID or source');
@@ -615,13 +636,15 @@ async function toggleAssignment(button) {
         return;
     }
 
+    const assignDate = assignLead ? new Date().toISOString() : null;
+
     try {
         const response = await fetch('/update-lead-owner', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ id, source, leadOwnerName, assignLead, leadStatus }) // Include leadStatus here
+            body: JSON.stringify({ id, source, leadOwnerName, assignLead, leadStatus, assignDate }), // Send assignDate
         });
 
         const result = await response.json();
@@ -652,6 +675,7 @@ async function toggleAssignment(button) {
         });
     }
 }
+
 
 
 

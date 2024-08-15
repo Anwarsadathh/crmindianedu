@@ -151,48 +151,83 @@
             <!-- Navbar End -->
 
 
-            <!-- Sale & Revenue Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="row g-4">
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-line fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Today Sale</p>
-                                <h6 class="mb-0">$1234</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-bar fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Total Sale</p>
-                                <h6 class="mb-0">$1234</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-area fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Today Revenue</p>
-                                <h6 class="mb-0">$1234</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-pie fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Total Revenue</p>
-                                <h6 class="mb-0">$1234</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Sale & Revenue End -->
+          <div class="container-fluid pt-4 px-4">
+  <div class="row g-4">
+      <div class="col-md-6">
+      <div class="bg-light rounded p-4">
+        <h6 class="mb-2">Filter by Date Range</h6>
+        <input type="text" id="dateRange" class="form-control" placeholder="Select Date Range">
+      </div>
+    </div>
+    <div class="col-md-6 text-end">
+      <button class="btn btn-primary mt-4" id="filterBtn">Filter</button>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+        <i class="fa fa-chart-line fa-3x text-primary"></i>
+        <div class="ms-3">
+          <p class="mb-2">Total Leads</p>
+          <h6 class="mb-0">{{totalLeads}}</h6>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+        <i class="fa fa-chart-bar fa-3x text-primary"></i>
+        <div class="ms-3">
+          <p class="mb-2">Total QL</p>
+          <h6 class="mb-0">{{totalQL}}</h6>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+        <i class="fa fa-chart-area fa-3x text-primary"></i>
+        <div class="ms-3">
+          <p class="mb-2">Total RNR</p>
+          <h6 class="mb-0">{{totalRNR}}</h6>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+        <i class="fa fa-chart-pie fa-3x text-primary"></i>
+        <div class="ms-3">
+          <p class="mb-2">Total PQL</p>
+          <h6 class="mb-0">{{totalPQL}}</h6>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+        <i class="fa fa-chart-pie fa-3x text-primary"></i>
+        <div class="ms-3">
+          <p class="mb-2">Total UQL</p>
+          <h6 class="mb-0">{{totalUQL}}</h6>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+        <i class="fa fa-chart-pie fa-3x text-primary"></i>
+        <div class="ms-3">
+          <p class="mb-2">Total Next Intake</p>
+          <h6 class="mb-0">{{totalNextIntake}}</h6>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+        <i class="fa fa-chart-pie fa-3x text-primary"></i>
+        <div class="ms-3">
+          <p class="mb-2">Total Direct University</p>
+          <h6 class="mb-0">{{totalDirectUniversity}}</h6>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 
 
@@ -209,6 +244,28 @@
         <!-- Back to Top -->
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+  flatpickr("#dateRange", {
+    mode: "range",
+    dateFormat: "Y-m-d", // Adjust the date format if needed
+    onChange: function(selectedDates, dateStr, instance) {
+      // Optional: you can add logic here to handle date changes
+    }
+  });
+</script>
+
+<script>
+  document.getElementById('filterBtn').addEventListener('click', function() {
+    const dateRange = document.getElementById('dateRange').value;
+    // Date range will be in format 'YYYY-MM-DD to YYYY-MM-DD' or similar, depending on your Flatpickr settings
+    const [startDate, endDate] = dateRange.split(' to ');
+
+    const url = `/crm-lead-owner-dashboard?startDate=${startDate}&endDate=${endDate}`;
+    window.location.href = url;
+  });
+</script>
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

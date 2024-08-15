@@ -260,14 +260,24 @@ td {
     border-bottom-color: var(--primary);
 }
 
-
+select {
+    font-size: 13px !important;
+}
 /*** Testimonial ***/
 .progress .progress-bar {
     width: 0px;
     transition: 2s;
 }
-
-
+body {
+    font-family: 'Montserrat', sans-serif !important;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 0;
+    font-size: 14px !important;
+}
+.mhead{
+    font-size: 12px !important;
+}
 /*** Testimonial ***/
 .testimonial-carousel .owl-dots {
     margin-top: 24px;
