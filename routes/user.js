@@ -218,6 +218,10 @@ router.get("/login", (req, res) => {
   res.render("user/logins", { user: true });
 });
 
+router.get("/end-to-end-membership", (req, res) => {
+  res.render("user/Proftfolio", { user: true });
+});
+
 router.get("/accounts", (req, res) => {
   res.render("user/accounts-login", { user: true });
 });

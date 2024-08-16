@@ -374,6 +374,7 @@ body {
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">Total Leads</h6>
                 <!-- Update Button -->
+                <div class="col-md-12">
                 <button id="updateButton" class="btn btn-primary mb-3">
                     Fetch Data From Googlesheet
                     <span id="loadingIcon" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
@@ -381,6 +382,7 @@ body {
                 <button id="bulkAssignButton" class="btn btn-secondary mb-3">
     Assign Selected Leads
 </button>
+</div>
                 <div class="table-responsive">
                     <table class="table" id="dataTable">
                     <thead>
@@ -564,6 +566,40 @@ body {
     }
 </style>
 
+<script>
+// Your existing code for bulk assignment
+
+// Drag to select checkboxes
+document.addEventListener('DOMContentLoaded', function() {
+    let isDragging = false;
+    let isChecked = false;
+
+    const checkboxes = document.querySelectorAll('.select-lead');
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('mousedown', function(event) {
+            isDragging = true;
+            isChecked = !checkbox.checked;
+            checkbox.checked = isChecked;
+            event.preventDefault();
+        });
+
+        checkbox.addEventListener('mousemove', function(event) {
+            if (isDragging) {
+                checkbox.checked = isChecked;
+            }
+        });
+
+        checkbox.addEventListener('mouseup', function() {
+            isDragging = false;
+        });
+    });
+
+    document.addEventListener('mouseup', function() {
+        isDragging = false;
+    });
+});
+</script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
