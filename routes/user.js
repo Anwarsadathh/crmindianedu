@@ -354,37 +354,49 @@ router.post("/crm-tl-referral-scratch", async (req, res) => {
 
 
 router.post("/update-lead-owner", async (req, res) => {
-  const { id, leadOwnerName, assignLead, leadStatus, assignDate } = req.body;
+  const { leads, leadOwnerName, assignLead, leadStatus, assignDate } = req.body;
 
   try {
-    // Check if the ID is valid
-    if (!id || typeof id !== "string") {
-      console.error("Invalid ID format:", id);
+    if (!leads || !Array.isArray(leads) || leads.length === 0) {
+      console.error("No leads provided or invalid format.");
       return res
         .status(400)
-        .json({ success: false, message: "Invalid ID format." });
+        .json({
+          success: false,
+          message: "No leads provided or invalid format.",
+        });
     }
 
-    // Ensure leadStatus is either a valid object or an empty object
     const leadStatusObject =
       leadStatus && typeof leadStatus === "object" ? leadStatus : {};
 
-    await serviceHelpers.updateLeadOwner(
-      id,
-      leadOwnerName,
-      assignLead,
-      leadStatusObject,
-      assignDate // Pass assignDate to the helper
-    );
+    // Perform the update for each lead
+    for (const lead of leads) {
+      const { id, source } = lead;
+      if (!id || typeof id !== "string") {
+        console.error("Invalid ID format:", id);
+        continue;
+      }
+
+      await serviceHelpers.updateLeadOwner(
+        id,
+        leadOwnerName,
+        assignLead,
+        leadStatusObject,
+        assignDate
+      );
+    }
+
     res.json({ success: true });
   } catch (error) {
-    console.error("Error updating lead owner:", error);
+    console.error("Error updating lead owners:", error);
     res.json({
       success: false,
-      message: "An error occurred while updating the lead owner.",
+      message: "An error occurred while updating the lead owners.",
     });
   }
 });
+
 
 
 

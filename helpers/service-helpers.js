@@ -407,31 +407,25 @@ module.exports = {
   updateLeadOwner: (id, leadOwnerName, assignLead, leadStatus, assignDate) => {
     return new Promise(async (resolve, reject) => {
       try {
-        // Determine if ID should be treated as an ObjectId or not
         const query = ObjectId.isValid(id) ? { _id: new ObjectId(id) } : { id };
 
-        // Prepare the fields to be updated
         const updateFields = { leadOwnerName };
         if (assignLead !== undefined) {
           updateFields.assignLead = assignLead;
         }
         if (leadStatus) {
-          // Ensure leadStatus is an object and merge it into the update fields
           updateFields.leadStatus = leadStatus;
         }
         if (assignDate) {
-          updateFields.assignDate = assignDate; // Add the assignment date
+          updateFields.assignDate = assignDate;
         }
 
-        // Get the database instance
         const dbInstance = db.get();
 
-        // Update the GOOGLESHEETS_COLLECTION
         await dbInstance
           .collection(collection.GOOGLESHEETS_COLLECTION)
           .updateOne(query, { $set: updateFields });
 
-        // Update the REFERRAL_COLLECTION
         await dbInstance
           .collection(collection.REFERRAL_COLLECTION)
           .updateOne(query, { $set: updateFields });

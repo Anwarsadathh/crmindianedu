@@ -65,7 +65,10 @@ body {
     font-size: 10px;
     background-color: #007bff !important;
 }
-
+.btn-secondary{
+    font-size: 10px;
+    background-color: #160070 !important;
+}
 .table-responsive{
     padding: 10px;
 }
@@ -375,54 +378,59 @@ body {
                     Fetch Data From Googlesheet
                     <span id="loadingIcon" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
                 </button>
+                <button id="bulkAssignButton" class="btn btn-secondary mb-3">
+    Assign Selected Leads
+</button>
                 <div class="table-responsive">
                     <table class="table" id="dataTable">
-                        <thead>
-                            <tr>
-                                <th hidden>d</th>
-                                <th>ID</th>
-                                <th>Time Stamp</th>
-                                <th>ReferredBy</th>
-                                <th>Source</th>
-                                <th>State</th>
-                                <th>Name</th>
-                                <th>WhatsApp</th>
-                                <th>Mobile</th>
-                                <th>Uni 1</th>
-                                <th>Uni 2</th>
-                                <th>Uni 3</th>
-                                <th>Uni 4</th>
-                                <th>Budget</th>
-                                <th>City</th>
-                                <th>Course</th>
-                                <th>Current Salary</th>
-                                <th>Description</th>
-                                <th>Email</th>
-                                <th>Employee Location</th>
-                                <th>Expected Salary</th>
-                                <th>Experience</th>
-                                <th>Exposure</th>
-                                <th>Previous Qualification</th>
-                                <th>Previous University</th>
-                                <th>Sector</th>
-                                <th>Specialization</th>
-                                <th>Role</th>
-                                <th>PDF Link</th>
-                                <th>Password</th>
-                                <th>Lead Owners</th>
-                                <th>Lead Stage & Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                      <tbody>
+                    <thead>
+    <tr>
+        <th><input type="checkbox" id="selectAll"></th> <!-- Select All Checkbox -->
+        <th hidden>d</th>
+        <th>ID</th>
+        <th>Time Stamp</th>
+        <th>ReferredBy</th>
+        <th>Source</th>
+        <th>State</th>
+        <th>Name</th>
+        <th>WhatsApp</th>
+        <th>Mobile</th>
+        <th>Uni 1</th>
+        <th>Uni 2</th>
+        <th>Uni 3</th>
+        <th>Uni 4</th>
+        <th>Budget</th>
+        <th>City</th>
+        <th>Course</th>
+        <th>Current Salary</th>
+        <th>Description</th>
+        <th>Email</th>
+        <th>Employee Location</th>
+        <th>Expected Salary</th>
+        <th>Experience</th>
+        <th>Exposure</th>
+        <th>Previous Qualification</th>
+        <th>Previous University</th>
+        <th>Sector</th>
+        <th>Specialization</th>
+        <th>Role</th>
+        <th>PDF Link</th>
+        <th>Password</th>
+        <th>Lead Owners</th>
+        <th>Lead Stage & Status</th>
+        <th>Action</th>
+    </tr>
+</thead>
+
+                    <tbody>
     {{#each googlesheets}}
     <tr>
+        <td><input type="checkbox" class="select-lead" data-id="{{this._id}}" data-source="{{this.source}}"></td>
         <td class="font-weight-bold" data-id="{{this._id}}" data-source="{{this.source}}" hidden>{{this._id}}</td>
-
         <td class="font-weight-bold">{{this.id}}</td>
         <td>{{this.timeStamp}}</td>
         <td>{{this.ReferredBy}}</td>
-        <td>{{#if this.source}}{{this.source}}{{else}}N/A{{/if}}</td> <!-- Conditional source display -->
+        <td>{{#if this.source}}{{this.source}}{{else}}N/A{{/if}}</td>
         <td>{{this.state}}</td>
         <td>{{this.name}}</td>
         <td>{{this.whatsapp}}</td>
@@ -478,6 +486,7 @@ body {
         </div>
     </div>
 </div>
+
 
 <!-- Lead Status Modal -->
 <div class="modal fade" id="leadStatusModal" tabindex="-1" aria-labelledby="leadStatusModalLabel" aria-hidden="true">
@@ -611,68 +620,96 @@ document.addEventListener('DOMContentLoaded', function () {
 
 <script>
 
-async function toggleAssignment(button) {
-    const row = button.closest('tr');
-    const idElement = row.querySelector('.font-weight-bold');
-    const id = idElement.getAttribute('data-id').trim();
-    const source = idElement.getAttribute('data-source').trim();
-    const leadOwnerSelect = row.querySelector('select');
-    const leadOwnerName = leadOwnerSelect.value;
-    const assignLead = button.classList.contains('btn-paid') ? null : 'assigned';
-    const leadStatusTextarea = row.querySelector('.lead-status-textarea');
-    const leadStatus = leadStatusTextarea ? leadStatusTextarea.value : '';
+// Handle Select All Checkbox
+document.getElementById('selectAll').addEventListener('change', function() {
+    const checkboxes = document.querySelectorAll('.select-lead');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = this.checked;
+    });
+});
 
-    if (!id || !source) {
-        console.error('Invalid or missing ID or source');
+// Bulk Assignment Button Handler
+document.getElementById('bulkAssignButton').addEventListener('click', async function() {
+    const selectedCheckboxes = Array.from(document.querySelectorAll('.select-lead:checked'));
+    const selectedLeads = selectedCheckboxes.map(cb => ({
+        id: cb.getAttribute('data-id'),
+        source: cb.getAttribute('data-source')
+    }));
+
+    // Check for invalid IDs
+    const invalidLeads = selectedLeads.filter(lead => !lead.id || !lead.source);
+    if (invalidLeads.length > 0) {
         Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'Invalid or missing ID or source.',
+            text: 'One or more selected leads have invalid or missing ID/source.',
         });
         return;
     }
 
-     const assignDate = assignLead ? new Date().toISOString().split("T")[0] : null;
-
-    try {
-        const response = await fetch('/update-lead-owner', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ id, source, leadOwnerName, assignLead, leadStatus, assignDate }), // Send assignDate
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Updated',
-                text: 'Lead owner has been updated successfully!',
-            }).then(() => {
-                button.classList.toggle('btn-paid');
-                button.classList.toggle('btn-not-paid');
-                button.textContent = assignLead ? 'Assigned to lead owner' : 'Assign to lead owner';
-            });
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: result.message || 'An error occurred while updating the lead owner.',
-            });
-        }
-    } catch (error) {
-        console.error('Error:', error);
+    if (selectedLeads.length === 0) {
         Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'An error occurred while updating the lead owner.',
+            text: 'Please select at least one lead to assign.',
         });
+        return;
     }
-}
 
+    const { value: leadOwnerName } = await Swal.fire({
+        title: 'Assign to User',
+        input: 'select',
+        inputOptions: {
+            {{#each leadOwners}}
+            '{{this.email}}': '{{this.email}}',
+            {{/each}}
+        },
+        inputPlaceholder: 'Select a user',
+        showCancelButton: true,
+    });
 
+    if (leadOwnerName) {
+        try {
+            const response = await fetch('/update-lead-owner', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    leads: selectedLeads,
+                    leadOwnerName,
+                    assignLead: 'assigned',
+                    assignDate: new Date().toISOString().split("T")[0]
+                }),
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Updated',
+                    text: 'Leads have been assigned successfully!',
+                }).then(() => {
+                    location.reload(); // Refresh the page to show updates
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: result.message || 'An error occurred while assigning leads.',
+                });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An error occurred while assigning leads.',
+            });
+        }
+    }
+});
 
 
 </script>
