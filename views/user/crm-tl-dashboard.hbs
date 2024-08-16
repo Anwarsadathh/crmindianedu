@@ -38,7 +38,7 @@
             font-size: 14px; /* Smaller font size for overall content */
         }
 
-     
+       
     .image-stack {
   position: relative;
   display: flex;
@@ -89,34 +89,19 @@
                       
                     <div class="ms-3" >
                         <h6 class="mb-0 text-white">Indianeduhub</h6>
-                        <span style="color: rgb(209, 211, 212);">Team Lead</span>
+                        <span style="color: rgb(209, 211, 212);">Lead owner</span>
                     </div>
                 </div>
                 <div class="navbar-nav w-100" style="background-color: #232f65;">
-                    <a href="/crm-tl-dashboard" class="nav-item nav-link text-dark active"><i class="fa fa-tachometer-alt me-2 text-dark"></i>Dashboard</a>
+                    <a href="/crm-lead-owner-dashboard" class="nav-item nav-link text-dark active"><i class="fa fa-tachometer-alt me-2 text-dark"></i>Dashboard</a>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2 text-dark"></i>Leads</a>
                         <div class="dropdown-menu bg-transparent border-0">
-                            <a href="/crm-tl-details" class="dropdown-item text-white">Spreadsheet-leads</a>
-                           
-                        </div>
-                           
+                            <a href="/crm-lead-owner-details" class="dropdown-item active">Spreadsheet Leads</a>
+                            
+                      
                     </div>
-                        <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown"><i class="fa fa-user text-dark me-2"></i>Create-Lead</a>
-                       
-                            <div class="dropdown-menu bg-transparent border-0">
-                            <a href="/crm-create-lead" class="dropdown-item ">Create-Lead-owner</a>
-                        </div>
-                    </div>
-                      <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown"><i class="fa fa-user text-dark me-2"></i>Referral</a>
-                       
-                            <div class="dropdown-menu bg-transparent border-0">
-                            <a href="/crm-tl-referral" class="dropdown-item text-white">lead Owner</a>
-                            <a href="/crm-tl-referral-all" class="dropdown-item text-white">All Category</a>
-                        </div>
-                    </div>
+                  
                 </div>
             </nav>
         </div>
@@ -165,65 +150,115 @@
             </nav>
             <!-- Navbar End -->
 
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <!-- Unique Date Range Filter and Button -->
+        <div class="col-12 col-md-12 d-flex ">
+            <div class="filter-card glassmorphism p-4 shadow-lg d-flex">
+                <div class="floating-label-wrapper">
+                    <label for="dateRange" class="floating-label">Date Range</label>
+                    <input type="text" id="dateRange" class="form-control shadow-sm circular-input" placeholder="Select Date Range">
+                </div>
+                <button class="btn btn-glass shadow-sm circular-btn ms-3" id="filterBtn">
+                    <i class="bi bi-filter-circle"></i>
+                </button>
+            </div>
+        </div>
 
-            <!-- Sale & Revenue Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="row g-4">
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-line fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Today Sale</p>
-                                <h6 class="mb-0">$1234</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-bar fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Total Sale</p>
-                                <h6 class="mb-0">$1234</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-area fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Today Revenue</p>
-                                <h6 class="mb-0">$1234</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-pie fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Total Revenue</p>
-                                <h6 class="mb-0">$1234</h6>
-                            </div>
-                        </div>
-                    </div>
+        <!-- Lead Statistics -->
+        <div class="col-6 col-xl-3">
+            <div class="stat-card bg-gradient-primary text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+                <i class="fa fa-chart-line fa-3x neon-icon"></i>
+                <div class="ms-3">
+                    <p class="mb-2 counts">Total Leads</p>
+                    <h6 class="mb-0">{{totalLeads}}</h6>
                 </div>
             </div>
-            <!-- Sale & Revenue End -->
-
-
-
-     
-
-
-          
-
-
         </div>
-        <!-- Content End -->
-
-
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+        <div class="col-6 col-xl-3">
+            <div class="stat-card bg-gradient-success text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+                <i class="fa fa-chart-bar fa-3x neon-icon"></i>
+                <div class="ms-3">
+                    <p class="mb-2 counts">Total QL</p>
+                    <h6 class="mb-0">{{totalQL}}</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xl-3">
+            <div class="stat-card bg-gradient-info text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+                <i class="fa fa-chart-area fa-3x neon-icon"></i>
+                <div class="ms-3">
+                    <p class="mb-2 counts">Total RNR</p>
+                    <h6 class="mb-0">{{totalRNR}}</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xl-3">
+            <div class="stat-card bg-gradient-warning text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+                <i class="fa fa-chart-pie fa-3x neon-icon"></i>
+                <div class="ms-3">
+                    <p class="mb-2 counts">Total PQL</p>
+                    <h6 class="mb-0">{{totalPQL}}</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xl-3">
+            <div class="stat-card bg-gradient-danger text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+                <i class="fa fa-chart-pie fa-3x neon-icon"></i>
+                <div class="ms-3">
+                    <p class="mb-2 counts">Total UQL</p>
+                    <h6 class="mb-0">{{totalUQL}}</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xl-3">
+            <div class="stat-card bg-gradient-secondary text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+                <i class="fa fa-chart-pie fa-3x neon-icon"></i>
+                <div class="ms-3">
+                    <p class="mb-2 counts">Total Next Intake</p>
+                    <h6 class="mb-0">{{totalNextIntake}}</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xl-3">
+            <div class="stat-card bg-gradient-dark text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+                <i class="fa fa-university fa-3x neon-icon"></i>
+                <div class="ms-3">
+                    <p class="mb-2 counts">Total Direct University</p>
+                    <h6 class="mb-0">{{totalDirectUniversity}}</h6>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
+
+<!-- Back to Top -->
+<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top neon-btn"><i class="bi bi-arrow-up"></i></a>
+
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+  flatpickr("#dateRange", {
+    mode: "range",
+    dateFormat: "Y-m-d", // Adjust the date format if needed
+    onChange: function(selectedDates, dateStr, instance) {
+      // Optional: you can add logic here to handle date changes
+    }
+  });
+</script>
+
+<script>
+  document.getElementById('filterBtn').addEventListener('click', function() {
+    const dateRange = document.getElementById('dateRange').value;
+    // Date range will be in format 'YYYY-MM-DD to YYYY-MM-DD' or similar, depending on your Flatpickr settings
+    const [startDate, endDate] = dateRange.split(' to ');
+
+    const url = `/crm-lead-owner-dashboard?startDate=${startDate}&endDate=${endDate}`;
+    window.location.href = url;
+  });
+</script>
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

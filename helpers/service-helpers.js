@@ -164,7 +164,7 @@ module.exports = {
         console.log("Received startDate:", startDate);
         console.log("Received endDate:", endDate);
 
-        // Convert startDate and endDate to ISO strings
+        // Convert startDate and endDate to ISO strings (dates only)
         const start = startDate
           ? new Date(startDate).toISOString().split("T")[0]
           : null;
@@ -177,9 +177,7 @@ module.exports = {
 
         let matchCriteria = { leadOwnerName: sessionEmail };
 
-        // Log match criteria before aggregation
-        console.log("Match Criteria:", matchCriteria);
-
+        // Date range filter for leadStatus
         const dateMatch =
           start && end
             ? {
@@ -189,7 +187,7 @@ module.exports = {
               }
             : { $match: {} }; // Avoid an empty match object
 
-        // Google Sheets Collection aggregation
+        // Google Sheets Collection aggregation for lead status counts
         const googleSheetsCounts = await db
           .get()
           .collection(collection.GOOGLESHEETS_COLLECTION)
@@ -213,7 +211,7 @@ module.exports = {
           ])
           .toArray();
 
-        // Referral Collection aggregation
+        // Referral Collection aggregation for lead status counts
         const referralCounts = await db
           .get()
           .collection(collection.REFERRAL_COLLECTION)
@@ -247,16 +245,19 @@ module.exports = {
           return acc;
         }, {});
 
-        // Count the total leads in both collections
+        // Total lead count based on assignDate
+        const assignDateMatch =
+          start && end ? { assignDate: { $gte: start, $lte: end } } : {};
+
         const totalGoogleSheetLeads = await db
           .get()
           .collection(collection.GOOGLESHEETS_COLLECTION)
-          .countDocuments(matchCriteria);
+          .countDocuments({ ...matchCriteria, ...assignDateMatch });
 
         const totalReferralLeads = await db
           .get()
           .collection(collection.REFERRAL_COLLECTION)
-          .countDocuments(matchCriteria);
+          .countDocuments({ ...matchCriteria, ...assignDateMatch });
 
         const totalLeads = totalGoogleSheetLeads + totalReferralLeads;
 
@@ -271,7 +272,110 @@ module.exports = {
     });
   },
 
-  
+  getFilteredLeadCounts: (sessionEmail, startDate, endDate) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        console.log("Start Date:", startDate);
+        console.log("End Date:", endDate);
+        console.log("Lead Owner Email:", sessionEmail);
+
+        // Convert startDate and endDate to Date objects with only the date portion
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+
+        // Set the time portion of 'end' to the end of the day
+        end.setHours(23, 59, 59, 999);
+
+        console.log("Parsed Start Date:", start);
+        console.log("Parsed End Date:", end);
+
+        // Function to aggregate lead statuses and counts
+        const aggregateLeadStatus = async (collectionName) => {
+          return db
+            .get()
+            .collection(collectionName)
+            .aggregate([
+              {
+                $match: {
+                  leadOwnerName: sessionEmail,
+                  assignDate: {
+                    $gte: start,
+                    $lt: end,
+                  },
+                },
+              },
+              { $project: { leadStatus: 1, assignDate: 1 } },
+              {
+                $unwind: {
+                  path: "$leadStatus",
+                  preserveNullAndEmptyArrays: true,
+                },
+              },
+              {
+                $group: {
+                  _id: { $ifNull: ["$leadStatus.status", "UNKNOWN"] },
+                  count: { $sum: 1 },
+                  latestDate: { $max: "$leadStatus.date" }, // Include the latest date (date only)
+                },
+              },
+            ])
+            .toArray();
+        };
+
+        // Aggregate and log Google Sheets counts
+        const googleSheetsCounts = await aggregateLeadStatus(
+          collection.GOOGLESHEETS_COLLECTION
+        );
+        console.log("Google Sheets Counts:", googleSheetsCounts);
+
+        // Count and log total Google Sheets leads
+        const totalGoogleSheetLeads = await db
+          .get()
+          .collection(collection.GOOGLESHEETS_COLLECTION)
+          .countDocuments({
+            leadOwnerName: sessionEmail,
+            assignDate: { $gte: start, $lt: end },
+          });
+        console.log("Total Google Sheets Leads:", totalGoogleSheetLeads);
+
+        // Aggregate and log Referral counts
+        const referralCounts = await aggregateLeadStatus(
+          collection.REFERRAL_COLLECTION
+        );
+        console.log("Referral Counts:", referralCounts);
+
+        // Count and log total Referral leads
+        const totalReferralLeads = await db
+          .get()
+          .collection(collection.REFERRAL_COLLECTION)
+          .countDocuments({
+            leadOwnerName: sessionEmail,
+            assignDate: { $gte: start, $lt: end },
+          });
+        console.log("Total Referral Leads:", totalReferralLeads);
+
+        // Combine and normalize counts for lead statuses
+        const combinedCounts = [
+          ...googleSheetsCounts,
+          ...referralCounts,
+        ].reduce((acc, curr) => {
+          acc[curr._id] = (acc[curr._id] || 0) + curr.count;
+          return acc;
+        }, {});
+
+        // Calculate the total leads by summing the document counts from both collections
+        const totalLeads = totalGoogleSheetLeads + totalReferralLeads;
+        console.log("Total Leads:", totalLeads);
+
+        // Resolve with combined counts and total leads
+        resolve({ combinedCounts, totalLeads });
+      } catch (error) {
+        console.error("Error filtering leads:", error);
+        reject(error);
+      }
+    });
+  },
+
   getAllGooglsheets: () => {
     return new Promise(async (resolve, reject) => {
       try {

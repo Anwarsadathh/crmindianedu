@@ -632,7 +632,7 @@ async function toggleAssignment(button) {
         return;
     }
 
-    const assignDate = assignLead ? new Date().toISOString() : null;
+     const assignDate = assignLead ? new Date().toISOString().split("T")[0] : null;
 
     try {
         const response = await fetch('/update-lead-owner', {

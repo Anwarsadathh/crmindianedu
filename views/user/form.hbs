@@ -233,22 +233,7 @@
                             <input type="text" class="form-control" id="mobile" name="mobile" required>
                         </div>
                         
-           <div class="form-row ">
-                            <div class="form-group col-md-6">
-                            <label for="role">Counselor or Institute</label>
-                            <select id="role" name="role" class="form-control" onchange="updateOptions()">
-                                <option value="">Select Role</option>
-                                <option value="counselor">Counselor</option>
-                                <option value="institute">Institute</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label id="specificNameLabel" for="specificName">Select Name</label>
-                            <select id="specificName" name="specificName" class="form-control" required>
-                                <!-- Options will be populated by JavaScript -->
-                            </select>
-                        </div>
-                         </div>
+         
                         <div class="form-row ">
                             <div class="form-group col-md-6">
                                 <label for="state">State</label>
@@ -259,7 +244,32 @@
                                 <input type="text" class="form-control" id="city" name="city" required>
                             </div>
                         </div>
-                        
+                          <!-- New fields -->
+                    <div class="form-group ">
+                        <label for="purpose">Purpose of Doing</label>
+                        <textarea class="form-control" id="purpose" name="purpose" rows="2" required></textarea>
+                    </div>
+ <div class="form-row">
+
+                    <div class="form-group col-md-6">
+                        <label for="budget">Budget</label>
+                        <select id="budget" name="budget" class="form-control" required>
+                            <option value="">Select Budget</option>
+                            <option value="50,000 80,000">50,000 80,000</option>
+                             <option value="50,000 1,00,000">50,000 1,00,000</option>
+                              <option value="80,000 1,00,000">80,000 1,00,000</option>
+                                <option value="1,00,000 1,20,000">1,00,000 1,20,000</option>
+                                 <option value="1,00,000 1,50,000">1,00,000 1,50,000</option>
+                            <option value="1,00,000 - 1,50,000">1,00,000 - 1,50,000</option>
+                            <option value="1,50,000 - 2,00,000">1,50,000 - 2,00,000</option>
+                            <option value="2,00,000 - 2,50,000">2,00,000 - 2,50,000</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="domain">Present Domain</label>
+                        <input type="text" class="form-control" id="domain" name="domain" required>
+                    </div>
+                    </div>
                            <div class="form-row ">
                             <div class="form-group col-md-6 col-md-6">
                             <label for="date">Date of Admission</label>
@@ -290,7 +300,28 @@
                         </div>
                         <div class="form-group col-md-6">
                             <label for="scholarship">Scholarship Applied</label>
-                            <input type="text" class="form-control" id="scholarship" name="scholarship" required>
+                             <select id="scholarship" name="scholarship" class="form-control">
+                                <option value="">Select Scholarship</option>
+                                <option value="Done">Done</option>
+                                <option value="Not Done">Not Done</option>
+                            </select>
+                        </div>
+                         
+                         </div>
+                           <div class="form-row ">
+                            <div class="form-group col-md-6">
+                            <label for="role">Counselor or Institute</label>
+                            <select id="role" name="role" class="form-control" onchange="updateOptions()">
+                                <option value="">Select Role</option>
+                                <option value="counselor">Counselor</option>
+                                <option value="institute">Institute</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label id="specificNameLabel" for="specificName">Select Name</label>
+                            <select id="specificName" name="specificName" class="form-control" required>
+                                <!-- Options will be populated by JavaScript -->
+                            </select>
                         </div>
                          </div>
                     <div class="form-group">
