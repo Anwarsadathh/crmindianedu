@@ -575,6 +575,7 @@ function redirectToSEForm(button) {
     const specialization = row.querySelector('td:nth-child(26)').textContent.trim();
     const city = row.querySelector('td:nth-child(14)').textContent.trim();
     const state = row.querySelector('td:nth-child(5)').textContent.trim();
+     const budget = row.querySelector('td:nth-child(13)').textContent.trim();
 
     // Construct URL with query parameters
     const url = new URL('/se-form', window.location.origin);
@@ -585,7 +586,7 @@ function redirectToSEForm(button) {
     url.searchParams.append('specialization', encodeURIComponent(specialization));
     url.searchParams.append('city', encodeURIComponent(city)); // Add city
     url.searchParams.append('state', encodeURIComponent(state)); // Add state
-
+    url.searchParams.append('budget', encodeURIComponent(budget));
     // Redirect to SE Form page
     window.location.href = url.toString();
 }

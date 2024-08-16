@@ -255,11 +255,11 @@
                         <label for="budget">Budget</label>
                         <select id="budget" name="budget" class="form-control" required>
                             <option value="">Select Budget</option>
-                            <option value="50,000 80,000">50,000 80,000</option>
-                             <option value="50,000 1,00,000">50,000 1,00,000</option>
-                              <option value="80,000 1,00,000">80,000 1,00,000</option>
-                                <option value="1,00,000 1,20,000">1,00,000 1,20,000</option>
-                                 <option value="1,00,000 1,50,000">1,00,000 1,50,000</option>
+                            <option value="50,000 - 80,000">50,000 - 80,000</option>
+                             <option value="50,000 - 1,00,000">50,000 - 1,00,000</option>
+                              <option value="80,000 - 1,00,000">80,000 - 1,00,000</option>
+                                <option value="1,00,000 - 1,20,000">1,00,000 - 1,20,000</option>
+                                 <option value="1,00,000 - 1,50,000">1,00,000 - 1,50,000</option>
                             <option value="1,00,000 - 1,50,000">1,00,000 - 1,50,000</option>
                             <option value="1,50,000 - 2,00,000">1,50,000 - 2,00,000</option>
                             <option value="2,00,000 - 2,50,000">2,00,000 - 2,50,000</option>
@@ -368,6 +368,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const mobile = decodeURIComponent(urlParams.get('mobile') || '');
         const city = decodeURIComponent(urlParams.get('city') || '');
         const state = decodeURIComponent(urlParams.get('state') || '');
+   const budget = decodeURIComponent(urlParams.get('budget') || '');
 
         // Log the extracted values for debugging
         console.log('Extracted URL Parameters:', {
@@ -377,7 +378,8 @@ document.addEventListener('DOMContentLoaded', function () {
             email,
             mobile,
             city,
-            state
+            state,
+            budget
         });
 
         // Set form values
@@ -388,6 +390,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('mobile').value = mobile;
         document.getElementById('city').value = city;
         document.getElementById('state').value = state;
+        document.getElementById('budget').value = budget;
     } catch (error) {
         console.error('Error populating form:', error);
         Swal.fire({
