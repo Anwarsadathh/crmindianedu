@@ -49,11 +49,6 @@ body {
     padding: 0;
     font-size: 14px;
 }
-.search{
-  
-  top:6px;
-  left:10px;
-}
 
 .form-control{
     
@@ -267,6 +262,7 @@ body {
         background-color: #6c757d; /* Change to a different color for the loading state */
         color: #ffffff; /* Change text color if needed */
     }
+    
     </style>
     
 </head>
@@ -331,7 +327,7 @@ body {
             <!-- Navbar Start -->
             <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
                 <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
-                    <h2 class="text-primary mb-0"><i class="fa fa-hashtag"></i></h2>
+                    <h2 class="text-primary mb-0"><img src="/img/ie.png" alt="Indian Edu Hub Logo" style="height: 30px;"></h2>
                 </a>
                 <a href="#" class="sidebar-toggler flex-shrink-0">
                     <i class="fa fa-bars"></i>
@@ -376,7 +372,7 @@ body {
                 <h6 class="mb-4">Total Leads</h6>
                 <!-- Update Button -->
                 <button id="updateButton" class="btn btn-primary mb-3">
-                    Fetch Data
+                    Fetch Data From Googlesheet
                     <span id="loadingIcon" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
                 </button>
                 <div class="table-responsive">

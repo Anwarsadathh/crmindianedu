@@ -112,7 +112,7 @@
             <!-- Navbar Start -->
             <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
                 <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
-                    <h2 class="text-primary mb-0"><i class="fa fa-hashtag"></i></h2>
+                    <h2 class="text-primary mb-0"><img src="/img/ie.png" alt="Indian Edu Hub Logo" style="height: 30px;"></h2>
                 </a>
                 <a href="#" class="sidebar-toggler flex-shrink-0">
                     <i class="fa fa-bars"></i>
@@ -150,100 +150,210 @@
             </nav>
             <!-- Navbar End -->
 
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <!-- Unique Date Range Filter and Button -->
+        <div class="col-12 col-md-12 d-flex ">
+            <div class="filter-card glassmorphism p-4 shadow-lg d-flex">
+                <div class="floating-label-wrapper">
+                    <label for="dateRange" class="floating-label">Date Range</label>
+                    <input type="text" id="dateRange" class="form-control shadow-sm circular-input" placeholder="Select Date Range">
+                </div>
+                <button class="btn btn-glass shadow-sm circular-btn ms-3" id="filterBtn">
+                    <i class="bi bi-filter-circle"></i>
+                </button>
+            </div>
+        </div>
 
-          <div class="container-fluid pt-4 px-4">
-  <div class="row g-4">
-      <div class="col-md-6">
-      <div class="bg-light rounded p-4">
-        <h6 class="mb-2">Filter by Date Range</h6>
-        <input type="text" id="dateRange" class="form-control" placeholder="Select Date Range">
-      </div>
-    </div>
-    <div class="col-md-6 text-end">
-      <button class="btn btn-primary mt-4" id="filterBtn">Filter</button>
-    </div>
-    <div class="col-sm-6 col-xl-3">
-      <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-        <i class="fa fa-chart-line fa-3x text-primary"></i>
-        <div class="ms-3">
-          <p class="mb-2">Total Leads</p>
-          <h6 class="mb-0">{{totalLeads}}</h6>
+        <!-- Lead Statistics -->
+        <div class="col-6 col-xl-3">
+            <div class="stat-card bg-gradient-primary text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+                <i class="fa fa-chart-line fa-3x neon-icon"></i>
+                <div class="ms-3">
+                    <p class="mb-2 counts">Total Leads</p>
+                    <h6 class="mb-0">{{totalLeads}}</h6>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="col-sm-6 col-xl-3">
-      <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-        <i class="fa fa-chart-bar fa-3x text-primary"></i>
-        <div class="ms-3">
-          <p class="mb-2">Total QL</p>
-          <h6 class="mb-0">{{totalQL}}</h6>
+        <div class="col-6 col-xl-3">
+            <div class="stat-card bg-gradient-success text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+                <i class="fa fa-chart-bar fa-3x neon-icon"></i>
+                <div class="ms-3">
+                    <p class="mb-2 counts">Total QL</p>
+                    <h6 class="mb-0">{{totalQL}}</h6>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="col-sm-6 col-xl-3">
-      <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-        <i class="fa fa-chart-area fa-3x text-primary"></i>
-        <div class="ms-3">
-          <p class="mb-2">Total RNR</p>
-          <h6 class="mb-0">{{totalRNR}}</h6>
+        <div class="col-6 col-xl-3">
+            <div class="stat-card bg-gradient-info text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+                <i class="fa fa-chart-area fa-3x neon-icon"></i>
+                <div class="ms-3">
+                    <p class="mb-2 counts">Total RNR</p>
+                    <h6 class="mb-0">{{totalRNR}}</h6>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="col-sm-6 col-xl-3">
-      <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-        <i class="fa fa-chart-pie fa-3x text-primary"></i>
-        <div class="ms-3">
-          <p class="mb-2">Total PQL</p>
-          <h6 class="mb-0">{{totalPQL}}</h6>
+        <div class="col-6 col-xl-3">
+            <div class="stat-card bg-gradient-warning text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+                <i class="fa fa-chart-pie fa-3x neon-icon"></i>
+                <div class="ms-3">
+                    <p class="mb-2 counts">Total PQL</p>
+                    <h6 class="mb-0">{{totalPQL}}</h6>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="col-sm-6 col-xl-3">
-      <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-        <i class="fa fa-chart-pie fa-3x text-primary"></i>
-        <div class="ms-3">
-          <p class="mb-2">Total UQL</p>
-          <h6 class="mb-0">{{totalUQL}}</h6>
+        <div class="col-6 col-xl-3">
+            <div class="stat-card bg-gradient-danger text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+                <i class="fa fa-chart-pie fa-3x neon-icon"></i>
+                <div class="ms-3">
+                    <p class="mb-2 counts">Total UQL</p>
+                    <h6 class="mb-0">{{totalUQL}}</h6>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="col-sm-6 col-xl-3">
-      <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-        <i class="fa fa-chart-pie fa-3x text-primary"></i>
-        <div class="ms-3">
-          <p class="mb-2">Total Next Intake</p>
-          <h6 class="mb-0">{{totalNextIntake}}</h6>
+        <div class="col-6 col-xl-3">
+            <div class="stat-card bg-gradient-secondary text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+                <i class="fa fa-chart-pie fa-3x neon-icon"></i>
+                <div class="ms-3">
+                    <p class="mb-2 counts">Total Next Intake</p>
+                    <h6 class="mb-0">{{totalNextIntake}}</h6>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="col-sm-6 col-xl-3">
-      <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-        <i class="fa fa-chart-pie fa-3x text-primary"></i>
-        <div class="ms-3">
-          <p class="mb-2">Total Direct University</p>
-          <h6 class="mb-0">{{totalDirectUniversity}}</h6>
+        <div class="col-6 col-xl-3">
+            <div class="stat-card bg-gradient-dark text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+                <i class="fa fa-university fa-3x neon-icon"></i>
+                <div class="ms-3">
+                    <p class="mb-2 counts">Total Direct University</p>
+                    <h6 class="mb-0">{{totalDirectUniversity}}</h6>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
 
+<!-- Back to Top -->
+<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top neon-btn"><i class="bi bi-arrow-up"></i></a>
 
+<style>
+    .filter-card {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .floating-label-wrapper {
+        position: relative;
+        width: 100%;
+    }
+    .floating-label {
+        position: absolute;
+        top: -12px;
+        left: 12px;
+        background-color: rgba(255, 255, 255, 0.7);
+        padding: 0 5px;
+        font-size: 12px;
+        color: #555;
+    }
+    .circular-input {
+        border-radius: 50px;
+        padding: 10px 20px;
+        border: 2px solid #ccc;
+        width: 100%;
+    }
+    .btn-glass {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50px;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .circular-btn {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+    .btn-glass:hover {
+        background: rgba(255, 255, 255, 0.4);
+        border-color: rgba(255, 255, 255, 0.8);
+    }
+    .glassmorphism {
+        box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.1);
+    }
+    .input-group {
+        display: flex;
+        align-items: center;
+    }
 
+    /* Stat Cards */
+    .stat-card {
+        height: 120px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        text-align: center;
+        border-radius: 20px;
+    }
+    .stat-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.2);
+    }
+    .stat-card i {
+        opacity: 0.9;
+    }
+  
+    .shadow-xl {
+        box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.3);
+    }
 
-     
+    /* Gradient Backgrounds */
+    .bg-gradient-primary { background: linear-gradient(45deg, #007bff, #6610f2); }
+    .bg-gradient-success { background: linear-gradient(45deg, #28a745, #218838); }
+    .bg-gradient-info { background: linear-gradient(45deg, #17a2b8, #138496); }
+    .bg-gradient-warning { background: linear-gradient(45deg, #ffc107, #e0a800); }
+    .bg-gradient-danger { background: linear-gradient(45deg, #dc3545, #bd2130); }
+    .bg-gradient-secondary { background: linear-gradient(45deg, #6c757d, #495057); }
+    .bg-gradient-dark { background: linear-gradient(45deg, #343a40, #23272b); }
 
+    /* Back to Top Button */
+    .btn-lg-square {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        text-align: center;
+    }
+    .btn-lg-square:hover {
+        transform: scale(1.1);
+        background-color: #003f7f;
+    }
 
-          
+    /* Responsive Adjustments */
+    @media (max-width: 767px) {
+        .floating-label-wrapper {
+            width: 100%;
+        }
+        .circular-input {
+            width: 100%;
+        }
+        .circular-btn {
+            width: 40px;
+            height: 40px;
+        }
+        .counts {
+            font-size: 12px !important;
+        }
+    }
+</style>
 
-
-        </div>
-        <!-- Content End -->
-
-
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-    </div>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
