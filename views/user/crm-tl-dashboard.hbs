@@ -169,7 +169,8 @@
         </div>
         <div class="floating-label-wrapper ms-3">
           <label for="dateRange" class="floating-label">Date Range</label>
-          <input type="text" id="dateRange" class="form-control shadow-sm circular-input" placeholder="Select Date Range">
+         <input type="text" id="dateRange" class="form-control shadow-sm circular-input" placeholder="Select Date Range">
+
         </div>
         <button class="btn btn-glass shadow-sm circular-btn ms-3" id="filterBtn">
           <i class="bi bi-filter-circle"></i>
@@ -509,33 +510,43 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 <script>
-  flatpickr("#dateRange", {
-    mode: "range",
-    dateFormat: "Y-m-d", // Adjust the date format if needed
-    onChange: function(selectedDates, dateStr, instance) {
-      // Optional: you can add logic here to handle date changes
-    }
-  });
-document.getElementById("filterBtn").addEventListener("click", function() {
-    const leadOwner = document.getElementById("leadOwner").value;
-    const dateRange = document.getElementById("dateRange").value;
-
-    let [startDate, endDate] = dateRange.split(" - ");
-
-    if (!startDate || !endDate) {
-        startDate = '';
-        endDate = '';
-    }
-
-    const query = new URLSearchParams({
-        leadOwnerEmail: leadOwner,
-        startDate: startDate,
-        endDate: endDate
-    }).toString();
-
-    window.location.href = `/crm-tl-dashboard?${query}`;
+flatpickr("#dateRange", {
+  mode: "range",
+  dateFormat: "Y-m-d", // Ensure this matches your expected format
+  onChange: function(selectedDates, dateStr, instance) {
+    console.log("Flatpickr Date Range:", dateStr); // Log the dateStr
+  }
 });
+
+
+</script>
+<script>
+document.getElementById("filterBtn").addEventListener("click", function() {
+  const leadOwner = document.getElementById("leadOwner").value;
+  const dateRange = document.getElementById("dateRange").value;
+
+  // Check if dateRange contains 'to' and split accordingly
+  let [startDate, endDate] = dateRange.split(" to ").map(date => date.trim());
+
+  // Debugging logs
+  console.log("Selected Lead Owner:", leadOwner);
+  console.log("Selected Date Range:", dateRange);
+  console.log("Parsed Start Date:", startDate);
+  console.log("Parsed End Date:", endDate);
+
+  const query = new URLSearchParams({
+    leadOwnerEmail: leadOwner,
+    startDate: startDate,
+    endDate: endDate
+  }).toString();
+
+  console.log("Query String:", query);
+
+  window.location.href = `/crm-tl-dashboard?${query}`;
+});
+
 
 </script>
 
