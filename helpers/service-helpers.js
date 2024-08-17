@@ -271,6 +271,120 @@ module.exports = {
       }
     });
   },
+  getLeadStatusCountsok: (sessionEmail, startDate, endDate) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        console.log(
+          "Lead Owner Email for Count:",
+          sessionEmail || "All Lead Owners"
+        );
+        console.log("Received startDate:", startDate);
+        console.log("Received endDate:", endDate);
+
+        const start =
+          startDate && !isNaN(Date.parse(startDate))
+            ? new Date(startDate).toISOString().split("T")[0]
+            : null;
+        const end =
+          endDate && !isNaN(Date.parse(endDate))
+            ? new Date(endDate).toISOString().split("T")[0]
+            : null;
+
+        console.log("Parsed startDate:", start);
+        console.log("Parsed endDate:", end);
+
+        // Match criteria - if sessionEmail is null, don't filter by lead owner
+        let matchCriteria = sessionEmail ? { leadOwnerName: sessionEmail } : {};
+
+        const dateMatch =
+          start && end
+            ? {
+                $match: {
+                  "leadStatusArray.v.date": { $gte: start, $lte: end },
+                },
+              }
+            : { $match: {} };
+
+        const googleSheetsCounts = await db
+          .get()
+          .collection(collection.GOOGLESHEETS_COLLECTION)
+          .aggregate([
+            { $match: matchCriteria },
+            {
+              $project: {
+                leadStatusArray: {
+                  $objectToArray: "$leadStatus",
+                },
+              },
+            },
+            { $unwind: "$leadStatusArray" },
+            dateMatch,
+            {
+              $group: {
+                _id: "$leadStatusArray.k",
+                count: { $sum: 1 },
+              },
+            },
+          ])
+          .toArray();
+
+        const referralCounts = await db
+          .get()
+          .collection(collection.REFERRAL_COLLECTION)
+          .aggregate([
+            { $match: matchCriteria },
+            {
+              $project: {
+                leadStatusArray: {
+                  $objectToArray: "$leadStatus",
+                },
+              },
+            },
+            { $unwind: "$leadStatusArray" },
+            dateMatch,
+            {
+              $group: {
+                _id: "$leadStatusArray.k",
+                count: { $sum: 1 },
+              },
+            },
+          ])
+          .toArray();
+
+        const combinedCounts = [
+          ...googleSheetsCounts,
+          ...referralCounts,
+        ].reduce((acc, curr) => {
+          const status = curr._id || "UNKNOWN";
+          acc[status] = (acc[status] || 0) + curr.count;
+          return acc;
+        }, {});
+
+        const assignDateMatch =
+          start && end ? { assignDate: { $gte: start, $lte: end } } : {};
+
+        const totalGoogleSheetLeads = await db
+          .get()
+          .collection(collection.GOOGLESHEETS_COLLECTION)
+          .countDocuments({ ...matchCriteria, ...assignDateMatch });
+
+        const totalReferralLeads = await db
+          .get()
+          .collection(collection.REFERRAL_COLLECTION)
+          .countDocuments({ ...matchCriteria, ...assignDateMatch });
+
+        const totalLeads = totalGoogleSheetLeads + totalReferralLeads;
+
+        console.log("Normalized Lead Status Counts:", combinedCounts);
+        console.log("Total Leads:", totalLeads);
+
+        resolve({ combinedCounts, totalLeads });
+      } catch (error) {
+        console.error("Error in getLeadStatusCounts:", error);
+        reject(error);
+      }
+    });
+  },
 
   getFilteredLeadCounts: (sessionEmail, startDate, endDate) => {
     return new Promise(async (resolve, reject) => {

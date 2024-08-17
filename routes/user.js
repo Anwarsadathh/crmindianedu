@@ -226,9 +226,68 @@ router.get("/accounts", (req, res) => {
   res.render("user/accounts-login", { user: true });
 });
 
-router.get("/crm-tl-dashboard", (req, res) => {
-  res.render("user/crm-tl-dashboard", { user: true });
+router.get("/crm-tl-dashboard", async (req, res) => {
+  const { leadOwnerEmail, startDate, endDate } = req.query;
+
+  // Fetch all lead owners
+  const leadOwners = await serviceHelpers.getAllLeadOwners();
+
+  // Use the selected leadOwnerEmail from the query, or null for all lead owners
+  const sessionEmail = leadOwnerEmail || null;
+
+  try {
+    const { combinedCounts, totalLeads } =
+      await serviceHelpers.getLeadStatusCountsok(
+        sessionEmail,
+        startDate,
+        endDate
+      );
+
+    // Calculate specific counts from combinedCounts
+    const totalQL = combinedCounts["QL"] || 0;
+    const totalRNR = combinedCounts["RNR"] || 0;
+    const totalPQL = combinedCounts["PQL"] || 0;
+    const totalUQL = combinedCounts["UQL"] || 0;
+    const totalNextIntake = combinedCounts["Next Intake"] || 0;
+    const totalDirectUniversity = combinedCounts["Direct University"] || 0;
+    const totalHQL = combinedCounts["HQL"] || 0;
+    const totalBusy = combinedCounts["Busy"] || 0;
+    const totalCallLater = combinedCounts["Call Later"] || 0;
+    const totalQLToNR = combinedCounts["QL to NR"] || 0;
+    const totalPQLToNR = combinedCounts["PQL to NR"] || 0;
+    const totalNotInterested = combinedCounts["Not Interested"] || 0;
+    const totalJustEnquiry = combinedCounts["Just Enquiry"] || 0;
+    const totalRegular = combinedCounts["Regular"] || 0;
+    const totalWhatsAppConnected = combinedCounts["WhatsApp Connected"] || 0;
+
+    // Render the dashboard with the calculated counts
+    res.render("user/crm-tl-dashboard", {
+      user: true,
+      totalLeads,
+      totalQL,
+      totalRNR,
+      totalPQL,
+      totalUQL,
+      totalNextIntake,
+      totalDirectUniversity,
+      totalHQL,
+      totalBusy,
+      totalCallLater,
+      totalQLToNR,
+      totalPQLToNR,
+      totalNotInterested,
+      totalJustEnquiry,
+      totalRegular,
+      totalWhatsAppConnected,
+      leadOwners,
+      selectedLeadOwner: sessionEmail || "", // Pass the selected lead owner or empty string
+    });
+  } catch (error) {
+    console.error("Error fetching lead status counts:", error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
 });
+
 
 router.get("/crm-tl-details", async (req, res) => {
   try {

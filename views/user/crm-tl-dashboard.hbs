@@ -149,22 +149,44 @@
                     </div>
                 </div>
             </nav>
-            <!-- Navbar End -->
 
+
+
+
+            <div class="container-fluid pt-4 px-4">
+  <div class="row g-4">
+    <!-- Lead Owner Dropdown -->
+    <div class="col-12 col-md-12 d-flex">
+      <div class="filter-card glassmorphism p-4 shadow-lg d-flex">
+        <div class="floating-label-wrapper">
+          <label for="leadOwner" class="floating-label">Select Lead Owner</label>
+          <select id="leadOwner" class="form-control shadow-sm circular-input">
+            <option value="">Select Lead Owner</option>
+            {{#each leadOwners}}
+              <option value="{{this.email}}" {{#if (eq this.email ../selectedLeadOwner)}}selected{{/if}}>{{this.email}}</option>
+            {{/each}}
+          </select>
+        </div>
+        <div class="floating-label-wrapper ms-3">
+          <label for="dateRange" class="floating-label">Date Range</label>
+          <input type="text" id="dateRange" class="form-control shadow-sm circular-input" placeholder="Select Date Range">
+        </div>
+        <button class="btn btn-glass shadow-sm circular-btn ms-3" id="filterBtn">
+          <i class="bi bi-filter-circle"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  
+
+  
 <div class="container-fluid pt-4 px-4">
     <div class="row g-4">
-        <!-- Unique Date Range Filter and Button -->
-        <div class="col-12 col-md-12 d-flex ">
-            <div class="filter-card glassmorphism p-4 shadow-lg d-flex">
-                <div class="floating-label-wrapper">
-                    <label for="dateRange" class="floating-label">Date Range</label>
-                    <input type="text" id="dateRange" class="form-control shadow-sm circular-input" placeholder="Select Date Range">
-                </div>
-                <button class="btn btn-glass shadow-sm circular-btn ms-3" id="filterBtn">
-                    <i class="bi bi-filter-circle"></i>
-                </button>
-            </div>
-        </div>
+     
 
         <!-- Lead Statistics -->
         <div class="col-6 col-xl-3">
@@ -499,17 +521,26 @@
       // Optional: you can add logic here to handle date changes
     }
   });
-</script>
+document.getElementById("filterBtn").addEventListener("click", function() {
+    const leadOwner = document.getElementById("leadOwner").value;
+    const dateRange = document.getElementById("dateRange").value;
 
-<script>
-  document.getElementById('filterBtn').addEventListener('click', function() {
-    const dateRange = document.getElementById('dateRange').value;
-    // Date range will be in format 'YYYY-MM-DD to YYYY-MM-DD' or similar, depending on your Flatpickr settings
-    const [startDate, endDate] = dateRange.split(' to ');
+    let [startDate, endDate] = dateRange.split(" - ");
 
-    const url = `/crm-lead-owner-dashboard?startDate=${startDate}&endDate=${endDate}`;
-    window.location.href = url;
-  });
+    if (!startDate || !endDate) {
+        startDate = '';
+        endDate = '';
+    }
+
+    const query = new URLSearchParams({
+        leadOwnerEmail: leadOwner,
+        startDate: startDate,
+        endDate: endDate
+    }).toString();
+
+    window.location.href = `/crm-tl-dashboard?${query}`;
+});
+
 </script>
 
     <!-- JavaScript Libraries -->
