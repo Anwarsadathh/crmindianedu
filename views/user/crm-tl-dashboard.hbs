@@ -171,27 +171,30 @@
             <div class="container-fluid pt-4 px-4">
   <div class="row g-4">
     <!-- Lead Owner Dropdown -->
-    <div class="col-12 col-md-12 d-flex">
-      <div class="filter-card glassmorphism p-4 shadow-lg d-flex">
-        <div class="floating-label-wrapper">
-          <label for="leadOwner" class="floating-label">Select Lead Owner</label>
-          <select id="leadOwner" class="form-control shadow-sm circular-input">
-            <option value="">Select Lead Owner</option>
-            {{#each leadOwners}}
-              <option value="{{this.email}}" {{#if (eq this.email ../selectedLeadOwner)}}selected{{/if}}>{{this.email}}</option>
-            {{/each}}
-          </select>
-        </div>
-        <div class="floating-label-wrapper ms-3">
-          <label for="dateRange" class="floating-label">Date Range</label>
-         <input type="text" id="dateRange" class="form-control shadow-sm circular-input" placeholder="Select Date Range">
-
-        </div>
-        <button class="btn btn-glass shadow-sm circular-btn ms-3" id="filterBtn">
-          <i class="bi bi-filter-circle"></i>
-        </button>
-      </div>
+  <div class="col-12 col-md-12 d-flex">
+  <div class="filter-card glassmorphism p-4 shadow-lg d-flex">
+    <div class="floating-label-wrapper">
+      <label for="leadOwner" class="floating-label">Select Lead Owner</label>
+      <select id="leadOwner" class="form-control shadow-sm circular-input">
+        <option value="">Select Lead Owner</option>
+        {{#each leadOwners}}
+          <option value="{{this.email}}" {{#if (eq this.email ../selectedLeadOwner)}}selected{{/if}}>{{this.email}}</option>
+        {{/each}}
+      </select>
     </div>
+    <div class="floating-label-wrapper ms-3">
+      <label for="dateRange" class="floating-label">Date Range</label>
+      <input type="text" id="dateRange" class="form-control shadow-sm circular-input" placeholder="Select Date Range">
+    </div>
+    <button class="btn btn-glass shadow-sm circular-btn ms-3" id="filterBtn">
+      <i class="bi bi-filter-circle"></i>
+    </button>
+    <button class="btn btn-danger shadow-sm circular-btn ms-3" id="clearBtn">
+      <i class="bi bi-x-circle"></i>
+    </button>
+  </div>
+</div>
+
 
 
 
@@ -535,9 +538,6 @@ flatpickr("#dateRange", {
   }
 });
 
-
-</script>
-<script>
 document.getElementById("filterBtn").addEventListener("click", function() {
   const leadOwner = document.getElementById("leadOwner").value;
   const dateRange = document.getElementById("dateRange").value;
@@ -562,8 +562,16 @@ document.getElementById("filterBtn").addEventListener("click", function() {
   window.location.href = `/crm-tl-dashboard?${query}`;
 });
 
+document.getElementById("clearBtn").addEventListener("click", function() {
+  // Reset the filters
+  document.getElementById("leadOwner").value = "";
+  document.getElementById("dateRange").value = "";
 
+  // Redirect to the dashboard without query parameters
+  window.location.href = "/crm-tl-dashboard";
+});
 </script>
+
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
