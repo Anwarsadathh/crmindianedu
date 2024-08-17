@@ -10,6 +10,7 @@
 
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -175,61 +176,158 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-xl-3">
+      <div class="col-6 col-xl-3">
             <div class="stat-card bg-gradient-success text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-chart-bar fa-3x neon-icon"></i>
+                <i class="fa fa-star fa-3x neon-icon"></i>
                 <div class="ms-3">
-                    <p class="mb-2 counts">Total QL</p>
-                    <h6 class="mb-0">{{totalQL}}</h6>
+                    <p class="mb-2 counts">Total HQL</p>
+                    <h6 class="mb-0">{{totalHQL}}</h6>
                 </div>
             </div>
         </div>
-        <div class="col-6 col-xl-3">
+           <div class="col-6 col-xl-3">
             <div class="stat-card bg-gradient-info text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-chart-area fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total RNR</p>
-                    <h6 class="mb-0">{{totalRNR}}</h6>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-xl-3">
-            <div class="stat-card bg-gradient-warning text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-chart-pie fa-3x neon-icon"></i>
+                <i class="fa fa-phone fa-3x neon-icon"></i>
                 <div class="ms-3">
                     <p class="mb-2 counts">Total PQL</p>
                     <h6 class="mb-0">{{totalPQL}}</h6>
                 </div>
             </div>
         </div>
+
         <div class="col-6 col-xl-3">
-            <div class="stat-card bg-gradient-danger text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-chart-pie fa-3x neon-icon"></i>
+            <div class="stat-card bg-gradient-primarys text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+                <i class="fa fa-chart-line fa-3x neon-icon"></i>
+                <div class="ms-3">
+                    <p class="mb-2 counts">Total QL</p>
+                    <h6 class="mb-0">{{totalQL}}</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-xl-3">
+            <div class="stat-card bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+                <i class="fa fa-clock fa-3x neon-icon"></i>
+                <div class="ms-3">
+                    <p class="mb-2 counts">Total RNR</p>
+                    <h6 class="mb-0 black">{{totalRNR}}</h6>
+                </div>
+            </div>
+        </div>
+
+     
+        <div class="col-6 col-xl-3">
+            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+                <i class="fa fa-times fa-3x neon-icon"></i>
                 <div class="ms-3">
                     <p class="mb-2 counts">Total UQL</p>
-                    <h6 class="mb-0">{{totalUQL}}</h6>
+                    <h6 class="mb-0 black">{{totalUQL}}</h6>
                 </div>
             </div>
         </div>
+
         <div class="col-6 col-xl-3">
-            <div class="stat-card bg-gradient-secondary text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-chart-pie fa-3x neon-icon"></i>
+            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+                <i class="fa fa-calendar fa-3x neon-icon"></i>
                 <div class="ms-3">
                     <p class="mb-2 counts">Total Next Intake</p>
-                    <h6 class="mb-0">{{totalNextIntake}}</h6>
+                    <h6 class="mb-0 black">{{totalNextIntake}}</h6>
                 </div>
             </div>
         </div>
+
         <div class="col-6 col-xl-3">
-            <div class="stat-card bg-gradient-dark text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
                 <i class="fa fa-university fa-3x neon-icon"></i>
                 <div class="ms-3">
                     <p class="mb-2 counts">Total Direct University</p>
-                    <h6 class="mb-0">{{totalDirectUniversity}}</h6>
+                    <h6 class="mb-0 black">{{totalDirectUniversity}}</h6>
                 </div>
             </div>
         </div>
-    </div>
+
+  
+
+        <div class="col-6 col-xl-3">
+            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+                <i class="fa fa-check fa-3x neon-icon"></i>
+                <div class="ms-3">
+                    <p class="mb-2 counts">Total Busy</p>
+                    <h6 class="mb-0 black">{{totalBusy}}</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-xl-3">
+            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+                <i class="fa fa-clock fa-3x neon-icon"></i>
+                <div class="ms-3">
+                    <p class="mb-2 counts">Total Call Later</p>
+                    <h6 class="mb-0 black">{{totalCallLater}}</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-xl-3">
+            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+                <i class="fa fa-times fa-3x neon-icon"></i>
+                <div class="ms-3">
+                    <p class="mb-2 counts">Total QL to NR</p>
+                    <h6 class="mb-0 black">{{totalQLToNR}}</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-xl-3">
+            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+                <i class="fa fa-times fa-3x neon-icon"></i>
+                <div class="ms-3">
+                    <p class="mb-2 counts">Total PQL to NR</p>
+                    <h6 class="mb-0 black">{{totalPQLToNR}}</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-xl-3">
+            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+                <i class="fa fa-ban fa-3x neon-icon"></i>
+                <div class="ms-3">
+                    <p class="mb-2 counts">Total Not Interested</p>
+                    <h6 class="mb-0 black">{{totalNotInterested}}</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-xl-3">
+            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+                <i class="fa fa-question fa-3x neon-icon"></i>
+                <div class="ms-3">
+                    <p class="mb-2 counts">Total Just Enquiry</p>
+                    <h6 class="mb-0 black">{{totalJustEnquiry}}</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-xl-3">
+            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+                <i class="fa fa-check fa-3x neon-icon"></i>
+                <div class="ms-3">
+                    <p class="mb-2 counts">Total Regular</p>
+                    <h6 class="mb-0 black">{{totalRegular}}</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-xl-3">
+            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+                <i class="fa-brands fa-whatsapp fa-3x neon-icon"></i>
+                <div class="ms-3">
+                    <p class="mb-2 counts">Total WhatsApp Connected</p>
+                    <h6 class="mb-0 black">{{totalWhatsAppConnected}}</h6>
+                </div>
+            </div>
+        </div>
+    </div>  
 </div>
 
 <!-- Back to Top -->
@@ -237,15 +335,19 @@
 
 <style>
     .filter-card {
-      background: rgba(255, 255, 255, 0.2) !important;
+      background: rgba(245, 245, 245, 0.2) !important;
       border-radius: 20px !important;
       backdrop-filter: blur(10px) !important;
-      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      border: 1px solid rgba(245, 245, 245, 0.2) !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
   }
-
+.black{
+    color: black !important;
+    background-color:#232f65 !important;
+    border-radius: 20px;
+}
   .floating-label-wrapper {
       position: relative !important;
       width: 100% !important;
@@ -255,7 +357,7 @@
       position: absolute !important;
       top: -12px !important;
       left: 12px !important;
-      background-color: rgba(255, 255, 255, 0.7) !important;
+      background-color: rgba(245, 245, 245, 0.7) !important;
       padding: 0 5px !important;
       font-size: 12px !important;
       color: #555 !important;
@@ -269,9 +371,9 @@
   }
 
   .btn-glass {
-      background: rgba(255, 255, 255, 0.2) !important;
+      background: rgba(245, 245, 245, 0.2) !important;
       border-radius: 50px !important;
-      border: 2px solid rgba(255, 255, 255, 0.5) !important;
+      border: 2px solid rgba(245, 245, 245, 0.5) !important;
       padding: 10px !important;
       display: flex !important;
       align-items: center !important;
@@ -288,8 +390,8 @@
   }
 
   .btn-glass:hover {
-      background: rgba(255, 255, 255, 0.4) !important;
-      border-color: rgba(255, 255, 255, 0.8) !important;
+      background: rgba(245, 245, 245, 0.4) !important;
+      border-color: rgba(245, 245, 245, 0.8) !important;
   }
 
   .glassmorphism {
@@ -301,33 +403,38 @@
       align-items: center !important; 
   }
 
-  /* Stat Cards */
-  .stat-card {
-      height: 120px !important;
-      transition: transform 0.3s ease, box-shadow 0.3s ease !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      text-align: center !important;
-      border-radius: 20px !important;
-  }
+.stat-card {
+    height: 100px !important;
+    width: 100% !important; /* Ensure the cards are responsive */
+    max-width: 180px !important; /* Set the maximum width of each card */
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    text-align: center !important;
+    border-radius: 20px !important;
+    margin: auto !important; /* Center the cards */
+}
 
-  .stat-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.2) !important;
-  }
+.stat-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.2) !important;
+}
+
+
 
   .stat-card i {
       opacity: 0.9 !important;
+      font-size: 25px;
   }
 
   .shadow-xl {
       box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.3) !important;
   }
 
-  /* Gradient Backgrounds */
+  /* Gradient Colors */
   .bg-gradient-primary {
-      background: linear-gradient(45deg, #007bff, #6610f2) !important;
+      background: linear-gradient(45deg, #1e3c72, #2a5298) !important;
   }
 
   .bg-gradient-success {
@@ -338,58 +445,48 @@
       background: linear-gradient(45deg, #17a2b8, #138496) !important;
   }
 
+
+.bg-gradient-white {
+    color: black !important;
+    background: linear-gradient(45deg, #ffffff, #f0f0f0) !important;
+}
+
   .bg-gradient-warning {
       background: linear-gradient(45deg, #ffc107, #e0a800) !important;
   }
 
   .bg-gradient-danger {
-      background: linear-gradient(45deg, #dc3545, #bd2130) !important;
+      background: linear-gradient(45deg, #dc3545, #c82333) !important;
   }
 
   .bg-gradient-secondary {
-      background: linear-gradient(45deg, #6c757d, #495057) !important;
+      background: linear-gradient(45deg, #6c757d, #5a6268) !important;
   }
 
   .bg-gradient-dark {
       background: linear-gradient(45deg, #343a40, #23272b) !important;
   }
-
-  /* Back to Top Button */
-  .btn-lg-square {
-      width: 60px !important;
-      height: 60px !important;
-      border-radius: 50% !important;
-      text-align: center !important;
+ /* Gradient Backgrounds */
+  .bg-gradient-primarys {
+      background: linear-gradient(45deg, #007bff, #6610f2) !important;
   }
 
-  .btn-lg-square:hover {
-      transform: scale(1.1) !important;
-      background-color: #003f7f;
+  .neon-icon {
+      filter: drop-shadow(0px 0px 10px rgba(255, 255, 255, 0.5)) !important;
   }
 
-  .stat-card h6 {
+  .neon-btn {
+      background: linear-gradient(45deg, #007bff, #0056b3) !important;
       color: white !important;
   }
 
-  /* Responsive Adjustments */
-  @media (max-width: 767px) {
-      .floating-label-wrapper {
-          width: 100% !important;
-      }
-
-      .circular-input {
-          width: 100% !important;
-      }
-
-      .circular-btn {
-          width: 40px !important;
-          height: 40px !important;
-      }
-
-      .counts {
-          font-size: 12px !important;
-      }
+  .back-to-top {
+      position: fixed !important;
+      bottom: 20px !important;
+      right: 20px !important;
+      z-index: 9999 !important;
   }
+
 </style>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">

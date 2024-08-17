@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>CRM TL Spreadsheet Leads</title>
+    <title>end to end service</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -12,7 +12,7 @@
     <link href="img/favicon.ico" rel="icon">
 
     <!-- Google Web Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 
@@ -20,212 +20,338 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
-  
-
-    <!-- Libraries Stylesheet -->
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
-
-    <!-- Customized Bootstrap Stylesheet -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Template Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
-
-    <style>
-       body {
-    font-family: 'Heebo', sans-serif;
-    background-color: #f7f8fc;
+   <style>
+/* General body styles */
+body {
+    font-family: 'Montserrat', sans-serif;
+    color: #333;
     margin: 0;
     padding: 0;
-    font-size: 14px;
-    color: #232f65;
     overflow-x: hidden;
+    font-size: 0.85rem; /* Reduce base font size */
 }
 
-header {
-    padding-block: 0.5%;
-    background-color: #FFFFFF;
-}
-
-header .headerContent {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-}
-
-header .headerContent .logoWrapper {
-    width: 8vw;
-    height: auto;
-}
-
-header .headerContent .logoWrapper .header-logo {
-    width: 100%;
-    height: auto;
-}
-
-header .headerContent .suggestDiv {
-    width: max-content;
-    border: 1px solid #2A5DCE;
-    padding: 10px;
-    border-radius: 3px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-}
-
-header .headerContent .suggestDiv:active {
-    background-color: rgba(42, 162, 206, 0.286);
-}
-
-header .headerContent .suggestDiv i {
-    color: #2A5DCE;
-    fill: #2A5DCE;
-    font-size: 12px;
-}
-
-header .headerContent .suggestDiv span {
-    color: #2A5DCE;
-    fill: #2A5DCE;
-    font-size: 12px;
-    width: max-content;
-    font-weight: 500;
-}
-
-@media only screen and (max-width: 1199px) {
+  
     header {
-        padding-top: 5%;
-        padding-bottom: 5%;
+        padding-block: 0.5%;
+        background-color: #FFFFFF;
     }
-
-    header .headerContent .logoWrapper {
-        width: 25vw;
+    
+    header .headerContent{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    header .headerContent .logoWrapper{
+        width: 8vw;
         height: auto;
     }
-
-    header .headerContent .suggestDiv span {
-        font-size: 10px;
+    
+    header .headerContent .logoWrapper .header-logo{
+        width: 100%;
+        height: auto;
     }
-}
+    
+    header .headerContent .suggestDiv {
+        width: max-content;
+        border: 1px solid #2A5DCE;
+        padding: 10px;
+        border-radius: 3px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+    }
+    
+    header .headerContent .suggestDiv:active{
+    }
+    
+    header .headerContent .suggestDiv i{
+        color: #2A5DCE;
+        fill: #2A5DCE;
+        font-size: 12px;
+    }
+    
+    header .headerContent .suggestDiv span{
+        color: #2A5DCE;
+        fill: #2A5DCE;
+        font-size: 12px;
+        width: max-content;
+        font-weight: 500;
+    }
+    
+  @media only screen and (max-width: 1199px) {
+        /* CSS rules for mobile & tablet devices */
+        *{
+            font-family: "Poppins", sans-serif;
+        }
+    
+        header {
+            padding-top: 5%;
+            padding-bottom: 5%;
+        }
+    
+        header .headerContent .logoWrapper{
+            width: 25vw;
+            height: auto;
+        }
+    
+    
+        header .headerContent .suggestDiv span{
+            font-size: 10px;
+        }
+    
+      
+    }
+        
 
-.main-title-row {
-    margin-top: 120px;
-    opacity: 0;
-    animation: fadeInUp 1s ease forwards 0.3s;
-}
+        .main-title-row {
+            margin-top: 100px;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.3s;
+        }
 
-.structure-right-image video {
-    width: 100%;
-    max-width: 500px;
-    right: 0;
-    position: relative;
-    transform: scale(0.9);
-    animation: bounceIn 1s ease forwards 0.5s;
-}
+        .structure-right-image video {
+            width: 100%;
+            max-width: 500px;
+            transform: scale(0.9);
+            animation: bounceIn 1s ease forwards 0.5s;
+        }
 
-.structure-bond-title {
-    font-size: 2.5rem;
-    font-weight: 600;
-    line-height: 1.2;
-    color: #232f65;
-    margin-bottom: 20px;
-    animation: fadeInUp 1s ease forwards 0.5s;
-}
+        .structure-bond-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            line-height: 1.3;
+            color: #000000;
+            margin-bottom: 20px;
+            text-align: center;
+            animation: fadeInUp 1s ease forwards 0.5s;
+        }
 
-.font-purple {
-    color: #7D3C98;
-    animation: pulse 2s infinite;
-}
+        .font-purple {
+            color: #7D3C98;
+            animation: pulse 2s infinite;
+        }
 
+        .color-div {
+            background-color: #FFFFFF;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .structure-bond-color-div {
+            background: linear-gradient(135deg, #4A5CC2, #BCC7F2);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            color: #000000;
+        }
+
+        @media only screen and (max-width: 767px) {
+            .main-title-row {
+                flex-direction: column-reverse;
+            }
+
+            .structure-bond-title {
+                font-size: 1.5rem;
+            }
+
+          
+        }
+
+        @keyframes fadeInUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounceIn {
+            from {
+                transform: scale(0.7);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+/* Color-div styles */
 .color-div {
-    background-color: #FFFFFF;
-    padding: 50px 0;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, #f5f5f5 0%, #e9ecef 100%);
+    position: relative;
 }
 
 .structure-bond-color-div {
-    background: linear-gradient(135deg, #4A5CC2, #BCC7F2); /* Lighter gradient from darker to lighter blue */
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    color: #ffffff;
+    padding: 30px 15px; /* Reduce padding */
+   
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1);
 }
 
-@media only screen and (max-width: 767px) {
+.main-title-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+
+
+/* Responsive styles */
+@media (max-width: 991px) {
     .structure-bond-title {
-        font-size: 1.8rem;
+        font-size: 1.5rem; /* Smaller title on medium screens */
     }
 
-    .color-div {
-        padding: 20px 0;
-    }
-
-    /* Reorder the video and text for mobile screens */
-    .main-title-row {
-        display: flex;
-        flex-direction: column-reverse;
+    .structure-right-image {
+        margin-top: 20px;
     }
 }
 
-@keyframes fadeInUp {
-    from {
-        transform: translateY(30px);
-        opacity: 0;
+@media (max-width: 767px) {
+    .structure-bond-title {
+        font-size: 1.2rem; /* Smaller title on small screens */
     }
-    to {
-        transform: translateY(0);
-        opacity: 1;
+
+ 
+    .structure-right-image {
+        padding: 10px; /* Reduce padding on small screens */
+        margin-top: -120px;
     }
 }
 
-@keyframes bounceIn {
-    from {
-        transform: scale(0.7);
-        opacity: 0;
-    }
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
+.extreme-section {
+    padding: 70px 15px; /* Reduce padding */
+
+    border-radius: 15px; /* Smaller border radius */
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+
+.extreme-section::before {
+    content: '';
+    position: absolute;
+    width: 400%;
+    height: 400%;
+   
+    z-index: -1;
+    animation: rotate 10s linear infinite;
+    top: -150%;
+    left: -150%;
+    opacity: 0.05;
+}
+
+.extreme-container {
+    max-width: 1000px; /* Smaller container */
+    margin: 0 auto;
+    text-align: center;
+}
+
+.extreme-heading h2 {
+    font-size: 2rem; /* Smaller heading */
+    margin-bottom: 30px; /* Reduce margin */
+    color: #000000;
+    text-transform: uppercase;
+    letter-spacing: 1.5px; /* Reduce letter spacing */
+    animation: glow 1s ease-in-out infinite alternate;
+}
+
+
+
+.extreme-day-learn {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.extreme-day-wrap {
+    width: 28%; /* Smaller width */
+    background: #dee2e6;
+    border-radius: 10px; /* Smaller border radius */
+    margin-bottom: 25px; /* Reduce margin */
+    padding: 15px; /* Reduce padding */
+    transform: scale(1);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.extreme-day-wrap:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(33, 37, 41, 0.1);
+}
+
+.extreme-day-title {
+    font-size: 1.5rem; /* Smaller title */
+    font-weight: bold;
+    color: #232f65;
+    margin-bottom: 10px; /* Reduce margin */
+    animation: pulse 2s infinite;
 }
 
 @keyframes pulse {
-    0%, 100% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.05);
-    }
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
 }
-.structure-bond-title {
-    font-size: 1.8rem; /* Reduced font size */
-    font-weight: 700; /* Slightly lighter weight */
-    line-height: 1.3; /* Adjusted line-height for better spacing */
-    color: #232f65;
-    margin-bottom: 20px;
-    text-align: left; /* Align the text to the left */
-    animation: fadeInUp 1s ease forwards 0.5s;
+
+.extreme-day-content h3 {
+    font-size: 1.2rem; /* Smaller subheading */
+    margin-bottom: 10px; /* Reduce margin */
+    color: #343a40;
+}
+
+.extreme-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.extreme-list li {
+    margin-bottom: 8px; /* Reduce margin */
+    color: #343a40;
+}
+
+.extreme-detail {
+    display: flex;
+    align-items: center;
+    margin-top: 15px; /* Reduce margin */
+}
+
+.extreme-icon {
+    width: 40px; /* Smaller icon */
+    height: 40px; /* Smaller icon */
+    margin-right: 15px; /* Reduce margin */
+    filter: drop-shadow(0 0 8px #232f65);
+}
+
+.extreme-detail p {
+    font-size: 1rem; /* Smaller font size */
+    color: #495057;
 }
 
 @media only screen and (max-width: 767px) {
-    .structure-bond-title {
-        font-size: 1.5rem; /* Even smaller font size for mobile */
-        text-align: center; /* Center-align the text on mobile for better appearance */
+    .extreme-day-wrap {
+        width: 100%;
     }
 }
-.structure-bond-title {
-    font-size: 1.5rem; /* Adjust the size as needed */
-    font-weight: 600;
-    line-height: 1.3;
-    color: #ffffff;
-    text-align: center; /* Center align the text */
-    margin-bottom: 20px;
-    animation: fadeInUp 1s ease forwards 0.5s;
+header{
+    position: sticky !important;
 }
-
-    </style>
+</style>
 
 </head>
 
@@ -243,19 +369,18 @@ header .headerContent .suggestDiv span {
             </div>
         </div>
     </header>
-<div class="color-div">
+
+  <div class="container-fluid color-div d-flex justify-content-center align-items-center vh-100">
     <div class="structure-bond-color-div">
         <div class="container">
-            <div class="row main-title-row">
-                <div class="col-md-6 col-lg-8">
-                        <h1 class="structure-bond-title">
-    Establish your career with 
-    <br><span> our exclusive membership.</span>
-</h1>
-
-                        
+            <div class="row main-title-row d-flex justify-content-center align-items-center">
+                <div class="col-md-12 col-lg-12">
+                    <h1 class="structure-bond-title text-center">
+                        Establish your career with 
+                        <br><span>our exclusive membership.</span>
+                    </h1>
                 </div>
-                <div class="col-md-6 col-lg-4">
+                <div class="col-md-12 col-lg-12  d-flex justify-content-center">
                     <div class="structure-right-image">
                         <video preload="none" class="md-video" src="/img/referal-main-page.webm" autoplay muted loop></video>
                     </div>
@@ -264,80 +389,125 @@ header .headerContent .suggestDiv span {
         </div>
     </div>
 </div>
- <div class="hero__content-wrapper">
-                        <div class="hero__content">
-                            <span class="subheading-lg hero__pretitle"></span>
-                            
-                                <h1>Advance Your Career and Build Better Workplaces with SHRM</h1>
-                            
-                            
-                            <p>Be part of a powerful HR network with 325,000&#43; professionals like you, all united in the mission to create a world of work that truly works for all. As a SHRM Member®, you’ll pave the path of your success with invaluable resources, world-class educational opportunities and premier events. Join us in shaping a brighter, inclusive tomorrow.</p>
 
-                            <span class="hero__border"></span>
-                            
-                                <div class="hero__button-wrapper">
-
-                                    
-                                        <div class="button button__light__fill large icon__right btn-comp">
-                                            <a class="button__bdl" href="/in/membership/membership-purchase" role="button" aria-label="button" title="Join Now" target="_self" data-cmp-clickable data-cmp-data-layer="{&#34;hero-3f3ef0dff71&#34;:{&#34;ctaText&#34;:&#34;Join Now&#34;,&#34;previousPageURL&#34;:&#34;https://www.shrm.org/in/membership&#34;,&#34;@type&#34;:&#34;shrm/components/hero&#34;,&#34;linkType&#34;:&#34;Custom Link&#34;,&#34;componentName&#34;:&#34;hero_copy&#34;,&#34;destinationURL&#34;:&#34;https://www.shrm.org/in/membership/membership-purchase&#34;}}">
-                                                <span class="icon icon-circle_left" aria-hidden="true">
-                                                </span>
-                                                <span class="button__text">Join Now</span>
-                                                <span class="icon icon-circle_right" aria-hidden="true">
-                                                </span>
-                                                <span class="icon icon-angle_right" aria-hidden="true">
-                                                </span>
-                                            </a>
-                                        </div>
-                                    
-                                    
-                                        <div class="button button__light__nofill large icon__right btn-comp">
-                                            <a class="button__bdl" href="/content/dam/en/shrm/membership/2024-SHRM-Membership-Benefits-Guide.pdf" role="button" aria-label="button" title="View All Member Benefits" target="_self" data-cmp-clickable data-cmp-data-layer="{&#34;hero-3f3ef0dff72&#34;:{&#34;ctaText&#34;:&#34;View All Member Benefits&#34;,&#34;previousPageURL&#34;:&#34;https://www.shrm.org/in/membership&#34;,&#34;@type&#34;:&#34;shrm/components/hero&#34;,&#34;linkType&#34;:&#34;Custom Link&#34;,&#34;componentName&#34;:&#34;hero_copy&#34;,&#34;destinationURL&#34;:&#34;https://www.shrm.org/content/dam/en/shrm/membership/2024-SHRM-Membership-Benefits-Guide.pdf&#34;}}">
-                                                <span class="icon icon-circle_left" aria-hidden="true">
-                                                </span>
-                                                <span class="button__text">View All Member Benefits</span>
-                                                <span class="icon icon-circle_right" aria-hidden="true">
-                                                </span>
-                                                <span class="icon icon-angle_right" aria-hidden="true">
-                                                </span>
-                                            </a>
-                                        </div>
-                                    
-
-                                    
-                                </div>
-                            
+    <section class="extreme-section">
+        <div class="extreme-container">
+            <div class="extreme-heading">
+                <h2>That was just the beginning, you will also learn</h2>
+            </div>
+            <div class="extreme-day-learn">
+                <!-- DAY 1 -->
+                <div class="extreme-day-wrap">
+                    <div class="extreme-day">
+                        <div class="extreme-day-title">DAY 1</div>
+                        <div class="extreme-day-content">
+                            <h3>Find your Objective & TG</h3>
+                            <ul class="extreme-list">
+                                <li>Steal your competitors’ leads and customers using growth hacking.</li>
+                            </ul>
+                            <div class="extreme-detail">
+                                <img src="icon.svg" alt="Icon" class="extreme-icon">
+                                <p>Generated my client 40M in revenue using this technique.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-            
-            
+                <!-- DAY 2 -->
+                <div class="extreme-day-wrap">
+                    <div class="extreme-day">
+                        <div class="extreme-day-title">DAY 2</div>
+                        <div class="extreme-day-content">
+                            <h3>Profile Optimisation</h3>
+                            <ul class="extreme-list">
+                                <li>Will help you rank your profile on LinkedIn search and generate inbound leads like clockwork.</li>
+                            </ul>
+                            <div class="extreme-detail">
+                                <img src="icon.svg" alt="Icon" class="extreme-icon">
+                                <p>Resulted in a 300% increase in profile views.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- DAY 3 -->
+                <div class="extreme-day-wrap">
+                    <div class="extreme-day">
+                        <div class="extreme-day-title">DAY 3</div>
+                        <div class="extreme-day-content">
+                            <h3>Advanced Lead Generation</h3>
+                            <ul class="extreme-list">
+                                <li>How to consistently generate quality leads using innovative methods.</li>
+                            </ul>
+                            <div class="extreme-detail">
+                                <img src="icon.svg" alt="Icon" class="extreme-icon">
+                                <p>Increased lead quality by 50% while reducing costs.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    
-</div>
+    </section>
+   <!-- Cards Section -->
+    <section class="cards-section">
+        <div class="cards-container">
+            <div class="card">
+                <div class="day">DAY 1</div>
+                <div class="title">Profile Optimisation</div>
+                <ul>
+                    <li>Will help you rank your profile on the LinkedIn search and generate you inbound leads like clockwork.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="day">DAY 2</div>
+                <div class="title">Connection Loop</div>
+                <ul>
+                    <li>Strategy to get accepted by top CXOs on LinkedIn.</li>
+                    <li class="highlight">76% increase in acceptance rate on average</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="day">DAY 3</div>
+                <div class="title">Content Magic</div>
+                <ul>
+                    <li>The exact blueprint to create and post content on LinkedIn from starter to pro.</li>
+                    <li class="highlight">Led to 240,000+ page views on my website just via LinkedIn</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="day">DAY 4</div>
+                <div class="title">The Outbound Game</div>
+                <ul>
+                    <li>Nurture connections by engaging with them before you start your outbound approach.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
 
-    
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 
-</div>
+    <!-- Custom JS -->
+    <script>
+        document.addEventListener('scroll', function () {
+            const cards = document.querySelectorAll('.card');
+            const triggerBottom = window.innerHeight * 0.85;
 
-    
-</div>
+            cards.forEach((card, index) => {
+                const cardTop = card.getBoundingClientRect().top;
 
-    
+                if (cardTop < triggerBottom) {
+                    setTimeout(() => {
+                        card.classList.add('visible');
+                    }, index * 200); // Staggered appearance
+                } else {
+                    card.classList.remove('visible');
+                }
+            });
+        });
 
-    <!-- Additional JavaScript Libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/chart/chart.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/waypoints/waypoints.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-    <script src="lib/tempusdominus/js/moment.min.js"></script>
-    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
-    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
-
-    <!-- Template Javascript -->
-    <script src="js/main.js"></script>
+        // Trigger scroll event on page load
+        document.dispatchEvent(new Event('scroll'));
+    </script>
 </body>
 
 </html>

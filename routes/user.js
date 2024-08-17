@@ -495,7 +495,17 @@ router.get("/crm-lead-owner-dashboard", verifyLogin, async (req, res) => {
     const totalUQL = combinedCounts["UQL"] || 0;
     const totalNextIntake = combinedCounts["Next Intake"] || 0;
     const totalDirectUniversity = combinedCounts["Direct University"] || 0;
-
+    const totalHQL = combinedCounts["HQL"] || 0;
+    const totalBusy = combinedCounts["Busy"] || 0;
+    const totalCallLater = combinedCounts["Call Later"] || 0;
+const totalQLToNR = combinedCounts["QL to NR"] || 0;
+const totalPQLToNR = combinedCounts["PQL to NR"] || 0;
+    const totalNotInterested = combinedCounts["Not Interested"] || 0;
+    const totalJustEnquiry = combinedCounts["Just Enquiry"] || 0;
+    const totalRegular = combinedCounts["Regular"] || 0;
+    const totalWhatsAppConnected = combinedCounts["WhatsApp Connected"] || 0;
+console.log("QL to NR count: ", combinedCounts["QL to NR"]);
+console.log("PQL to NR count: ", combinedCounts["PQL to NR"]);
     // Render the dashboard with the calculated counts
     res.render("user/crmleadowners-dash", {
       user: true,
@@ -506,6 +516,15 @@ router.get("/crm-lead-owner-dashboard", verifyLogin, async (req, res) => {
       totalUQL,
       totalNextIntake,
       totalDirectUniversity,
+      totalHQL,
+      totalBusy,
+      totalCallLater,
+      totalQLToNR,
+      totalPQLToNR,
+      totalNotInterested,
+      totalJustEnquiry,
+      totalRegular,
+      totalWhatsAppConnected,
     });
   } catch (error) {
     console.error("Error fetching lead status counts:", error);
