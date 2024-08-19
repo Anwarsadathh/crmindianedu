@@ -129,6 +129,10 @@ body {
     color: #fff;
 }
 
+.btn-glass:hover{
+color: #ffffff;
+background-color: #1c008b !important;
+}
 .btn-status.active-not-approved {
     background-color: #ffc107 !important; /* Yellow */
     color: #000;
@@ -383,107 +387,152 @@ body {
     Assign Selected Leads
 </button>
 </div>
-                <div class="table-responsive">
-                    <table class="table" id="dataTable">
-                    <thead>
-    <tr>
-        <th><input type="checkbox" id="selectAll">Select All</th> <!-- Select All Checkbox -->
-        <th hidden>d</th>
-        <th>ID</th>
-        <th>Time Stamp</th>
-        <th>ReferredBy</th>
-        <th>Source</th>
-        <th>State</th>
-        <th>Name</th>
-        <th>WhatsApp</th>
-        <th>Mobile</th>
-        <th>Uni 1</th>
-        <th>Uni 2</th>
-        <th>Uni 3</th>
-        <th>Uni 4</th>
-        <th>Budget</th>
-        <th>City</th>
-        <th>Course</th>
-        <th>Current Salary</th>
-        <th>Description</th>
-        <th>Email</th>
-        <th>Employee Location</th>
-        <th>Expected Salary</th>
-        <th>Experience</th>
-        <th>Exposure</th>
-        <th>Previous Qualification</th>
-        <th>Previous University</th>
-        <th>Sector</th>
-        <th>Specialization</th>
-        <th>Role</th>
-        <th>PDF Link</th>
-        <th>Password</th>
-        <th>Lead Owners</th>
-        <th>Lead Stage & Status</th>
-        <th>Action</th>
-    </tr>
-</thead>
+ 
+            <div class="col-12 col-md-12 d-flex">
+                <div class="filter-card glassmorphism p-4 shadow-lg d-flex">
+                    <div class="floating-label-wrapper">
+                        <label for="leadOwner" class="floating-label"> Lead Owner</label>
+                        <select id="leadOwner" class="form-control shadow-sm circular-input">
+                            <option value="">Select Lead Owner</option>
+                            {{#each leadOwners}}
+                              <option value="{{this.email}}">{{this.email}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
 
-                    <tbody>
-    {{#each googlesheets}}
-    <tr>
-        <td><input type="checkbox" class="select-lead" data-id="{{this._id}}" data-source="{{this.source}}"></td>
-        <td class="font-weight-bold" data-id="{{this._id}}" data-source="{{this.source}}" hidden>{{this._id}}</td>
-        <td class="font-weight-bold">{{this.id}}</td>
-        <td>{{this.timeStamp}}</td>
-        <td>{{this.ReferredBy}}</td>
-        <td>{{#if this.source}}{{this.source}}{{else}}N/A{{/if}}</td>
-        <td>{{this.state}}</td>
-        <td>{{this.name}}</td>
-        <td>{{this.whatsapp}}</td>
-        <td>{{this.mobile}}</td>
-        <td>{{this.uni1}}</td>
-        <td>{{this.uni2}}</td>
-        <td>{{this.uni3}}</td>
-        <td>{{this.uni4}}</td>
-        <td>{{this.budget}}</td>
-        <td>{{this.city}}</td>
-        <td>{{this.course}}</td>
-        <td>{{this.currSalary}}</td>
-        <td>{{this.description}}</td>
-        <td>{{this.email}}</td>
-        <td>{{this.empLocation}}</td>
-        <td>{{this.expSalary}}</td>
-        <td>{{this.experience}}</td>
-        <td>{{this.exposure}}</td>
-        <td>{{this.prevQualification}}</td>
-        <td>{{this.prevUniversity}}</td>
-        <td>{{this.sector}}</td>
-        <td>{{this.specialization}}</td>
-        <td>{{this.role}}</td>
-        <td><a href="{{this.pdfLink}}" target="_blank">Link</a></td>
-        <td>{{this.password}}</td>
-        <td>
-            <select class="form-control lead-owner-select" data-id="{{this.id}}">
-                <option value="">Select</option> <!-- Default option -->
-                {{#each ../leadOwners}}
-                <option value="{{this.email}}" {{#if (eq this.email ../this.leadOwnerName)}}selected{{/if}}>{{this.email}}</option>
-                {{/each}}
-            </select>
-        </td>
-        <td>
-            <button class="btn btn-info ms-2 show-lead-status-btn" style=" font-size: 10px !important;">Status</button>
-            <div class="leadStatusContent" style="display:none;">
-                {{json this.leadStatus}}
-            </div>
-        </td>
-        <td>
-            <button class="btn btn-status {{#if (eq this.assignLead "assigned")}}btn-paid{{else}}btn-not-paid{{/if}}" 
-                    onclick="toggleAssignment(this)" >
-                {{#if (eq this.assignLead "assigned")}}Assigned to lead owner{{else}}Assign to lead owner{{/if}}
-            </button>
-        </td>
-    </tr>
-    {{/each}}
-</tbody>
+                    <div class="floating-label-wrapper ms-3">
+                        <label for="dateRange" class="floating-label">Date Range</label>
+                        <input type="text" id="dateRange" class="form-control shadow-sm circular-input" placeholder="Select Date Range">
+                    </div>
 
-                    </table>
+                    <div class="floating-label-wrapper ms-3">
+                        <label for="state" class="floating-label">State</label>
+                        <input type="text" id="state" class="form-control shadow-sm circular-input" placeholder="Enter State">
+                    </div>
+
+                    <div class="floating-label-wrapper ms-3">
+                        <label for="city" class="floating-label">City</label>
+                        <input type="text" id="city" class="form-control shadow-sm circular-input" placeholder="Enter City">
+                    </div>
+
+                    <div class="floating-label-wrapper ms-3">
+                        <label for="course" class="floating-label">Course</label>
+                        <input type="text" id="course" class="form-control shadow-sm circular-input" placeholder="Enter Course">
+                    </div>
+
+                    <button class="btn btn-glass shadow-sm circular-btn ms-3" id="filterBtn">
+                        <i class="bi bi-filter-circle"></i>
+                    </button>
+
+                    <button class="btn btn-danger shadow-sm circular-btn ms-3" id="clearFiltersBtn">
+                        <i class="fas fa-times-circle"></i> 
+                    </button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table" id="dataTable">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="selectAll"> Select All</th> <!-- Select All Checkbox -->
+                    <th hidden>d</th>
+                    <th>ID</th>
+                    <th>Time Stamp</th>
+                    <th hidden>Assign date</th>
+                    <th>ReferredBy</th>
+                    <th>Source</th>
+                    <th>State</th>
+                    <th>Name</th>
+                    <th>WhatsApp</th>
+                    <th>Mobile</th>
+                    <th>Uni 1</th>
+                    <th>Uni 2</th>
+                    <th>Uni 3</th>
+                    <th>Uni 4</th>
+                    <th>Budget</th>
+                    <th>City</th>
+                    <th>Course</th>
+                    <th>Current Salary</th>
+                    <th>Description</th>
+                    <th>Email</th>
+                    <th>Employee Location</th>
+                    <th>Expected Salary</th>
+                    <th>Experience</th>
+                    <th>Exposure</th>
+                    <th>Previous Qualification</th>
+                    <th>Previous University</th>
+                    <th>Sector</th>
+                    <th>Specialization</th>
+                    <th>Role</th>
+                    <th>PDF Link</th>
+                    <th>Password</th>
+                    <th>Lead Owners</th>
+                    <th>Lead Stage & Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each googlesheets}}
+                <tr>
+                    <td><input type="checkbox" class="select-lead" data-id="{{this._id}}" data-source="{{this.source}}"></td>
+                    <td class="font-weight-bold" data-id="{{this._id}}" data-source="{{this.source}}" hidden>{{this._id}}</td>
+                    <td class="font-weight-bold">{{this.id}}</td>
+                    <td>{{this.timeStamp}}</td>
+                    <td hidden>{{this.assignDate}}</td>
+                    <td>{{this.ReferredBy}}</td>
+                    <td>{{#if this.source}}{{this.source}}{{else}}N/A{{/if}}</td>
+                    <td>{{this.state}}</td>
+                    <td>{{this.name}}</td>
+                    <td>{{this.whatsapp}}</td>
+                    <td>{{this.mobile}}</td>
+                    <td>{{this.uni1}}</td>
+                    <td>{{this.uni2}}</td>
+                    <td>{{this.uni3}}</td>
+                    <td>{{this.uni4}}</td>
+                    <td>{{this.budget}}</td>
+                    <td>{{this.city}}</td>
+                    <td>{{this.course}}</td>
+                    <td>{{this.currSalary}}</td>
+                    <td>{{this.description}}</td>
+                    <td>{{this.email}}</td>
+                    <td>{{this.empLocation}}</td>
+                    <td>{{this.expSalary}}</td>
+                    <td>{{this.experience}}</td>
+                    <td>{{this.exposure}}</td>
+                    <td>{{this.prevQualification}}</td>
+                    <td>{{this.prevUniversity}}</td>
+                    <td>{{this.sector}}</td>
+                    <td>{{this.specialization}}</td>
+                    <td>{{this.role}}</td>
+                    <td><a href="{{this.pdfLink}}" target="_blank">Link</a></td>
+                    <td>{{this.password}}</td>
+                    <td>
+                        <select class="form-control lead-owner-select" data-id="{{this.id}}">
+                            <option value="">Select</option> <!-- Default option -->
+                            {{#each ../leadOwners}}
+                            <option value="{{this.email}}" {{#if (eq this.email ../this.leadOwnerName)}}selected{{/if}}>{{this.email}}</option>
+                            {{/each}}
+                        </select>
+                    </td>
+                    <td>
+                        <button class="btn btn-info ms-2 show-lead-status-btn" style=" font-size: 10px !important;">Status</button>
+                        <div class="leadStatusContent" style="display:none;">
+                            {{json this.leadStatus}}
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-status {{#if (eq this.assignLead "assigned")}}btn-paid{{else}}btn-not-paid{{/if}}" 
+                                onclick="toggleAssignment(this)" >
+                            {{#if (eq this.assignLead "assigned")}}Assigned to lead owner{{else}}Assign to lead owner{{/if}}
+                        </button>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
             </div>
         </div>
     </div>
@@ -507,7 +556,7 @@ body {
         </div>
     </div>
 </div>
-
+    
 <style>
     .modal-content {
         border-radius: 15px; /* Rounded corners */
@@ -754,18 +803,7 @@ document.getElementById('bulkAssignButton').addEventListener('click', async func
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    $(document).ready(function() {
-    $('#dataTable').DataTable();
-
-    // Change header background on scroll
-    $(window).scroll(function() {
-        if ($(this).scrollTop() > 50) {
-            $('header').addClass('scrolled');
-        } else {
-            $('header').removeClass('scrolled');
-        }
-    });
-});
+ 
 document.getElementById('updateButton').addEventListener('click', function() {
     const button = document.getElementById('updateButton');
     const loadingIcon = document.getElementById('loadingIcon');
@@ -822,6 +860,88 @@ document.getElementById('updateButton').addEventListener('click', function() {
 
 </script>
 
+<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<script>
+    $(document).ready(function() {
+        // Initialize DataTable
+        const table = $('#dataTable').DataTable();
+
+        // Initialize Flatpickr for date range
+        flatpickr("#dateRange", {
+            mode: "range",
+            dateFormat: "Y-m-d"
+        });
+
+        // Filter Button Event Listener
+        document.getElementById('filterBtn').addEventListener('click', function() {
+            const leadOwner = document.getElementById('leadOwner').value;
+            const dateRange = document.getElementById('dateRange').value;
+            const state = document.getElementById('state').value.toLowerCase();
+            const city = document.getElementById('city').value.toLowerCase();
+            const course = document.getElementById('course').value.toLowerCase();
+
+            filterAndDisplayData(leadOwner, dateRange, state, city, course);
+        });
+
+        // Clear Filters Button Event Listener
+        document.getElementById('clearFiltersBtn').addEventListener('click', function() {
+            document.getElementById('leadOwner').value = '';
+            document.getElementById('dateRange').value = '';
+            document.getElementById('state').value = '';
+            document.getElementById('city').value = '';
+            document.getElementById('course').value = '';
+
+            filterAndDisplayData('', '', '', '', '');
+        });
+
+        function filterAndDisplayData(leadOwner, dateRange, state, city, course) {
+            // Parse date range
+            const dates = dateRange.split(' to ');
+            const startDate = dates.length > 1 ? new Date(dates[0]) : null;
+            const endDate = dates.length > 1 ? new Date(dates[1]) : null;
+
+            // Clear existing custom filters
+            $.fn.dataTable.ext.search.pop();
+
+            // Add custom filter
+            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                const rowLeadOwner = $(table.row(dataIndex).node()).find('.lead-owner-select').val().toLowerCase();
+                const rowState = data[7].toLowerCase(); // Column index for State
+                const rowCity = data[16].toLowerCase(); // Column index for City
+                const rowCourse = data[17].toLowerCase(); // Column index for Course
+                const assignDateText = data[4]; // Column index for Assign Date
+                const rowDate = new Date(assignDateText);
+
+                // Apply filters
+                let showRow = true;
+
+                if (leadOwner && rowLeadOwner !== leadOwner.toLowerCase()) showRow = false;
+                if (state && rowState !== state) showRow = false;
+                if (city && rowCity !== city) showRow = false;
+                if (course && rowCourse !== course) showRow = false;
+                if (startDate && endDate && (rowDate < startDate || rowDate > endDate || isNaN(rowDate))) showRow = false;
+
+                return showRow;
+            });
+
+            // Redraw the table to reflect changes
+            table.draw();
+
+            // Scroll to the first visible row
+            const firstVisibleRow = $('#dataTable tbody tr:visible').first();
+            if (firstVisibleRow.length) {
+                $('html, body').animate({
+                    scrollTop: firstVisibleRow.offset().top
+                }, 500);
+            }
+        }
+    });
+</script>
 
 
 

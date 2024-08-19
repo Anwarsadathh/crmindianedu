@@ -291,27 +291,43 @@ router.get("/crm-tl-dashboard", async (req, res) => {
 
 router.get("/crm-tl-details", async (req, res) => {
   try {
-    // Fetch data from both collections
-    const googlesheets = await serviceHelpers.getAllGooglsheets();
-    const referrals = await serviceHelpers.getAllReferral(); // Assuming this is the function to get data from REFERRAL_COLLECTION
+    // Destructure query parameters from the request
+    const { leadOwnerEmail, startDate, endDate, state, city, course } =
+      req.query;
 
-    // Exclude the first item from the googlesheets array
-    const filteredGooglesheets = googlesheets
-      .slice(1)
-      .map((item) => ({ ...item, source: item.source || "N/A" })); // Handle missing source values
-    const referralsWithSource = referrals.map((item) => ({
-      ...item,
-      source: item.source || "N/A", // Handle missing source values
-    }));
+    // Initialize match criteria object
+    let matchCriteria = {};
 
-    // Combine data as needed
-    const combinedData = [...filteredGooglesheets, ...referralsWithSource];
+    // Apply filtering based on query parameters
+    if (leadOwnerEmail) matchCriteria.leadOwnerName = leadOwnerEmail;
+    if (state) matchCriteria.state = state;
+    if (city) matchCriteria.city = city;
+    if (course) matchCriteria.course = course;
+
+    // Date range filtering
+    if (startDate && endDate) {
+      matchCriteria.assignDate = {
+        $gte: new Date(startDate),
+        $lte: new Date(endDate),
+      };
+    }
+
+    // Log received query parameters
+    console.log("Received query parameters:", req.query);
+
+    // Log the constructed match criteria
+    console.log("Constructed match criteria:", matchCriteria);
+
+    // Fetch filtered data from both collections
+    const googlesheets = await serviceHelpers.getAllGooglsheets(matchCriteria);
+    const referrals = await serviceHelpers.getAllReferral(matchCriteria);
+
+    // Combine the data
+    const combinedData = [...googlesheets, ...referrals];
 
     // Fetch lead owners
     const leadOwners = await serviceHelpers.getAllLeadOwners();
-
-    // Log the combined data to the console (for debugging purposes)
-    console.log(combinedData);
+console.log("Filtered and Combined Data:", combinedData);
 
     // Render the view with the combined data
     res.render("user/crm-tl-details", {
@@ -324,6 +340,8 @@ router.get("/crm-tl-details", async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
+
 
 // router.get("/crm-lead-rewards", (req, res) => {
 //   serviceHelpers.getAllReferral().then((referral) => {

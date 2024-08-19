@@ -37,6 +37,36 @@ module.exports = {
       }
     });
   },
+  getFilteredGooglsheets: (filterCriteria) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let googlsheets = await db
+          .get()
+          .collection(collection.GOOGLESHEETS_COLLECTION)
+          .find(filterCriteria)
+          .toArray();
+        resolve(googlsheets);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+
+  getFilteredReferrals: (filterCriteria) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let referrals = await db
+          .get()
+          .collection(collection.REFERRAL_COLLECTION)
+          .find(filterCriteria)
+          .toArray();
+        resolve(referrals);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+
   scratchReward: (rewardId) => {
     return new Promise(async (resolve, reject) => {
       try {
