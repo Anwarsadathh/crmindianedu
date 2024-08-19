@@ -334,6 +334,7 @@ select,textarea{
                                 <th>PDF Link</th>
                                 <th>Password</th>
                                 <th>Lead Stage</th>
+                                <th>Follow Up</th>
                                 <th>Lead Status</th>
                                 <th>Action</th>
                                 <th>Lead Status</th>
@@ -393,6 +394,23 @@ select,textarea{
             <option value="Direct University" {{#ifEquals leadStage "Direct University"}}selected{{/ifEquals}}>Direct University</option>
         </select>
     </td>
+    <td>
+    {{#if (shouldShowFollowUp this.leadStage)}}
+    <div class="follow-up-container">
+        <!-- Date Input for Follow Up -->
+        <input type="date" class="form-control follow-up-date" style="width: 150px; display: inline-block;">
+        
+        <!-- Time Input for Follow Up -->
+        <input type="time" class="form-control follow-up-time" style="width: 120px; display: inline-block;">
+        
+        <!-- Description Input for Follow Up -->
+        <input type="text" class="form-control follow-up-description" placeholder="Description" style="width: 200px; display: inline-block; margin-top: 5px;">
+    </div>
+    {{else}}
+    <span>No Follow Up Needed</span>
+    {{/if}}
+</td>
+
 <td>
     <!-- Textarea to display lead status without date -->
     <textarea  class="form-control lead-status-textarea" rows="3" style="width: 250px;">
@@ -663,10 +681,13 @@ async function saveLeadStatus(button) {
     const leadStatus = leadStatusTextarea.value;
     const isSaved = leadStatus ? "saved" : null;
 
-    console.log("ID:", id); // Debugging output
-    console.log("Lead Stage:", leadStage); // Debugging output
-    console.log("Lead Status:", leadStatus); // Debugging output
-    console.log("Is Saved:", isSaved); // Debugging output
+    const followUpDate = row.querySelector('.follow-up-date')?.value || null;
+    const followUpTime = row.querySelector('.follow-up-time')?.value || null;
+    const followUpDescription = row.querySelector('.follow-up-description')?.value || null;
+
+    console.log("Follow Up Date:", followUpDate); // Debugging output
+    console.log("Follow Up Time:", followUpTime); // Debugging output
+    console.log("Follow Up Description:", followUpDescription); // Debugging output
 
     try {
         const response = await fetch('/update-lead-status', {
@@ -674,7 +695,7 @@ async function saveLeadStatus(button) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ id, leadStage, leadStatus, isSaved })
+            body: JSON.stringify({ id, leadStage, leadStatus, isSaved, followUpDate, followUpTime, followUpDescription })
         });
 
         const result = await response.json();
@@ -701,6 +722,7 @@ async function saveLeadStatus(button) {
         });
     }
 }
+
 
 
 </script>

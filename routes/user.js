@@ -291,43 +291,51 @@ router.get("/crm-tl-dashboard", async (req, res) => {
 
 router.get("/crm-tl-details", async (req, res) => {
   try {
-    // Destructure query parameters from the request
     const { leadOwnerEmail, startDate, endDate, state, city, course } =
       req.query;
 
-    // Initialize match criteria object
     let matchCriteria = {};
-
-    // Apply filtering based on query parameters
     if (leadOwnerEmail) matchCriteria.leadOwnerName = leadOwnerEmail;
     if (state) matchCriteria.state = state;
     if (city) matchCriteria.city = city;
     if (course) matchCriteria.course = course;
-
-    // Date range filtering
     if (startDate && endDate) {
-      matchCriteria.assignDate = {
-        $gte: new Date(startDate),
-        $lte: new Date(endDate),
-      };
+      matchCriteria.assignDate = { $gte: startDate, $lte: endDate };
     }
 
-    // Log received query parameters
-    console.log("Received query parameters:", req.query);
-
-    // Log the constructed match criteria
-    console.log("Constructed match criteria:", matchCriteria);
-
-    // Fetch filtered data from both collections
+    // Fetch data from both collections based on match criteria
     const googlesheets = await serviceHelpers.getAllGooglsheets(matchCriteria);
     const referrals = await serviceHelpers.getAllReferral(matchCriteria);
 
-    // Combine the data
-    const combinedData = [...googlesheets, ...referrals];
+    // Handle missing source values
+    const filteredGooglesheets = googlesheets.map((item) => ({
+      ...item,
+      source: item.source || "N/A",
+    }));
+    const referralsWithSource = referrals.map((item) => ({
+      ...item,
+      source: item.source || "N/A",
+    }));
+
+    // Combine data
+    const combinedData = [...filteredGooglesheets, ...referralsWithSource];
+
+    // Validate combined data for missing or invalid ID/source
+    const invalidData = combinedData.filter(
+      (item) => !item._id || !item.source
+    );
+    if (invalidData.length > 0) {
+      console.error("Invalid data found:", invalidData);
+      return res
+        .status(400)
+        .json({
+          message:
+            "One or more selected leads have invalid or missing ID/source.",
+        });
+    }
 
     // Fetch lead owners
     const leadOwners = await serviceHelpers.getAllLeadOwners();
-console.log("Filtered and Combined Data:", combinedData);
 
     // Render the view with the combined data
     res.render("user/crm-tl-details", {
@@ -340,7 +348,6 @@ console.log("Filtered and Combined Data:", combinedData);
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
-
 
 
 // router.get("/crm-lead-rewards", (req, res) => {

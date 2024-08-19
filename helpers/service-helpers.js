@@ -582,7 +582,7 @@ module.exports = {
     });
   },
 
-  updateLeadStatus: (id, leadStage, leadStatus, isSaved) => {
+  updateLeadStatus: (id, leadStage, leadStatus, isSaved, followUp) => {
     return new Promise(async (resolve, reject) => {
       try {
         const query = ObjectId.isValid(id) ? { _id: new ObjectId(id) } : { id };
@@ -604,10 +604,11 @@ module.exports = {
           [leadStage]: {
             status: leadStatus,
             date: currentDate, // Save only the date when the stage is updated
+            followUp: followUp || null, // Include follow-up if provided
           },
         };
 
-        // Update both collections with lead status and isSaved
+        // Update both collections with lead status, isSaved, and follow-up
         await Promise.all([
           db
             .get()

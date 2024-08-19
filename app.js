@@ -25,9 +25,9 @@ const hbs = exphbs.create({
   partialsDir: path.join(__dirname, "views/partials"),
   helpers: {
     formatDate: function (date) {
-  if (!date) return "N/A";
-  return new Date(date).toLocaleString(); // Formats the date as a readable string
-},
+      if (!date) return "N/A";
+      return new Date(date).toLocaleString(); // Formats the date as a readable string
+    },
     incrementIndex: function (index) {
       return index + 1;
     },
@@ -69,7 +69,6 @@ const hbs = exphbs.create({
     defaultImage: function (imageUrl, defaultImage) {
       return imageUrl || defaultImage;
     },
-   
     hidePartial: function (value) {
       if (value && value.length > 3) {
         const halfLength = Math.floor(value.length / 3);
@@ -77,8 +76,19 @@ const hbs = exphbs.create({
       }
       return value;
     },
+    shouldShowFollowUp: function (leadStage) {
+      const stagesWithoutFollowUp = [
+        "HQL",
+        "UQL",
+        "Not Interested",
+        "Just Enquiry",
+        "Regular",
+      ];
+      return !stagesWithoutFollowUp.includes(leadStage);
+    },
   },
 });
+
 
 
 app.engine("hbs", hbs.engine);
