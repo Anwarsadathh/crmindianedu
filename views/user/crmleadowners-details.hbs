@@ -296,7 +296,6 @@ select,textarea{
 <div class="container-fluid pt-4 px-4">
     <div class="row g-4">
         <div class="col-12">
-            
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">Leads</h6>
                 <!-- Update Button -->
@@ -304,7 +303,8 @@ select,textarea{
                     <table class="table" id="dataTable">
                         <thead>
                             <tr>
-                                <th hidden>d</th>
+                                <!-- Define table headers -->
+                                <th hidden>ID</th>
                                 <th>ID</th>
                                 <th>Time Stamp</th>
                                 <th>Source</th>
@@ -334,6 +334,7 @@ select,textarea{
                                 <th>PDF Link</th>
                                 <th>Password</th>
                                 <th>Lead Stage</th>
+                                <th>Lead Sub-Stage</th>
                                 <th>Follow Up</th>
                                 <th>Lead Status</th>
                                 <th>Action</th>
@@ -341,11 +342,11 @@ select,textarea{
                                 <th>SE</th>
                             </tr>
                         </thead>
-                        <tbody style="width: 300px !important;">
+                        <tbody>
                             {{#each googlesheets}}
-                            <tr style="width: 300px !important;">
-                                 <td class="font-weight-bold" data-id="{{this._id}}" data-source="{{this.source}}" hidden>{{this._id}}</td>
-                                <td class="font-weight-bold">{{this.id}}</td>
+                            <tr>
+                                <td hidden>{{this._id}}</td>
+                                <td>{{this.id}}</td>
                                 <td>{{this.timeStamp}}</td>
                                 <td>{{this.source}}</td>
                                 <td>{{this.state}}</td>
@@ -373,38 +374,24 @@ select,textarea{
                                 <td>{{this.role}}</td>
                                 <td><a href="{{this.pdfLink}}" target="_blank">Link</a></td>
                                 <td>{{this.password}}</td>
-                         <td>
-        <!-- Dropdown for selecting lead stage -->
-        <select class="form-select lead-stage-select" style="width: 100px;" onchange="updateLeadStatus(this)">
-            <option value="">Select</option>
-            <option value="QL" {{#ifEquals leadStage "QL"}}selected{{/ifEquals}}>QL</option>
-            <option value="PQL" {{#ifEquals leadStage "PQL"}}selected{{/ifEquals}}>PQL</option>
-            <option value="HQL" {{#ifEquals leadStage "HQL"}}selected{{/ifEquals}}>HQL</option>
-            <option value="UQL" {{#ifEquals leadStage "UQL"}}selected{{/ifEquals}}>UQL</option>
-            <option value="RNR" {{#ifEquals leadStage "RNR"}}selected{{/ifEquals}}>RNR</option>
-            <option value="Busy" {{#ifEquals leadStage "Busy"}}selected{{/ifEquals}}>Busy</option>
-            <option value="Call Later" {{#ifEquals leadStage "Call Later"}}selected{{/ifEquals}}>Call Later</option>
-            <option value="Next Intake" {{#ifEquals leadStage "Next Intake"}}selected{{/ifEquals}}>Next Intake</option>
-            <option value="QL to NR" {{#ifEquals leadStage "QL to NR"}}selected{{/ifEquals}}>QL to NR</option>
-            <option value="PQL to NR" {{#ifEquals leadStage "PQL to NR"}}selected{{/ifEquals}}>PQL to NR</option>
-            <option value="Not Interested" {{#ifEquals leadStage "Not Interested"}}selected{{/ifEquals}}>Not Interested</option>
-            <option value="Just Enquiry" {{#ifEquals leadStage "Just Enquiry"}}selected{{/ifEquals}}>Just Enquiry</option>
-            <option value="Regular" {{#ifEquals leadStage "Regular"}}selected{{/ifEquals}}>Regular</option>
-            <option value="WhatsApp Connected" {{#ifEquals leadStage "WhatsApp Connected"}}selected{{/ifEquals}}>WhatsApp Connected</option>
-            <option value="Direct University" {{#ifEquals leadStage "Direct University"}}selected{{/ifEquals}}>Direct University</option>
-        </select>
-    </td>
-    <td>
+      <td>
+  <select class="form-select lead-stage-select" style="width: 150px;" onchange="updateSubStageOptions(this)">
+    <option value="">Select Stage</option>
+    {{#each ../leadStage}}
+      <option value="{{this.stage}}">{{this.stage}}</option>
+    {{/each}}
+  </select>
+</td>
+<td>
+  <select class="form-select sub-stage-select" style="width: 150px;">
+    <option value="">Select Sub-Stage</option>
+  </select>
+</td>
+<td>
     {{#if (shouldShowFollowUp this.leadStage)}}
     <div class="follow-up-container">
-        <!-- Date Input for Follow Up -->
         <input type="date" class="form-control follow-up-date" style="width: 150px; display: inline-block;">
-        
-        <!-- Time Input for Follow Up -->
         <input type="time" class="form-control follow-up-time" style="width: 120px; display: inline-block;">
-        
-        <!-- Description Input for Follow Up -->
-        <input type="text" class="form-control follow-up-description" placeholder="Description" style="width: 200px; display: inline-block; margin-top: 5px;">
     </div>
     {{else}}
     <span>No Follow Up Needed</span>
@@ -412,33 +399,27 @@ select,textarea{
 </td>
 
 <td>
-    <!-- Textarea to display lead status without date -->
-    <textarea  class="form-control lead-status-textarea" rows="3" style="width: 250px;">
+    <textarea class="form-control lead-status-textarea" rows="3" style="width: 250px;">
         {{#if this.leadStatus.[this.leadStage]}}
             {{this.leadStatus.[this.leadStage]}}
-        {{else}}
-            No Status
+    
         {{/if}}
     </textarea>
 </td>
 
-
-{{!-- <td>
-    <textarea class="form-control lead-status-textarea" rows="3" style="width: 250px;">{{#if this.leadStatus.[this.leadStage]}}{{this.leadStatus.[this.leadStage]}}{{else}}No Status{{/if}}</textarea>
-</td> --}}
-<td>
-    <button class="btn-sm btn-primary" onclick="saveLeadStatus(this)">Save</button>
-</td>
- <td>
-            <button class="btn btn-info ms-2 show-lead-status-btn" style=" font-size: 10px !important;">Status</button>
-            <div class="leadStatusContent" style="display:none;">
-                {{json this.leadStatus}}
-            </div>
-        </td>
-<td>
-    <button class="btn-sm btn-primary" onclick="redirectToSEForm(this)">SE FORM</button>
+                                <td>
+                                    <button class="btn-sm btn-primary" onclick="saveLeadStatus(this)">Save</button>
+                                </td>
+                              <td>
+  <button class="btn btn-info ms-2 show-lead-status-btn" style="font-size: 10px !important;" data-bs-toggle="modal" data-bs-target="#leadStatusModal" onclick="showLeadStatus(this)">Status</button>
+  <div class="leadStatusContent" style="display:none;">
+    {{json this.leadStatus}}
+  </div>
 </td>
 
+                                <td>
+                                    <button class="btn-sm btn-primary" onclick="redirectToSEForm(this)">SE FORM</button>
+                                </td>
                             </tr>
                             {{/each}}
                         </tbody>
@@ -447,138 +428,191 @@ select,textarea{
             </div>
         </div>
     </div>
-      <div class="alert alert-warning my-3" role="alert" id="alertMessage">
-            Please save each stage of the lead form as you progress.
-        </div>
-</div>
-
-
-<!-- Lead Status Modal -->
-<div class="modal fade" id="leadStatusModal" tabindex="-1" aria-labelledby="leadStatusModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">  
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="leadStatusModalLabel">Lead Status Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="leadStatusContent">
-                <!-- Lead status content will be inserted here -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
+    <div class="alert alert-warning my-3" role="alert" id="alertMessage">
+        Please save each stage of the lead form as you progress.
     </div>
 </div>
 
+
+<!-- Modal -->
+<div class="modal fade" id="leadStatusModal" tabindex="-1" aria-labelledby="leadStatusModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="leadStatusModalLabel">Lead Status Timeline</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="timeline-container"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <style>
+  /* Modal and header styling */
+  .modal-content {
+    border-radius: 15px;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2); /* Gradient background */
+    color: #333; /* Darker text for contrast */
+  }
+  
+  .modal-header {
+    border-bottom: 2px solid #007bff; /* Blue bottom border */
+    background: #f5f7fa; /* Lighter background for header */
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 15px;
+  }
+
+  .modal-title {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  /* Timeline container */
+  .timeline-container {
+    position: relative;
+    padding: 20px;
+    border-left: 3px solid #007bff; /* Thicker vertical line for timeline */
+    overflow-x: hidden;
+  }
+
+  /* Timeline items */
+  .timeline-item {
+    position: relative;
+    padding: 15px 0;
+    margin-left: 80px; /* Increased space for date and line */
+    display: flex;
+    align-items: flex-start;
+    flex-direction: row;
+  }
+
+  /* Date styling */
+  .timeline-item .timeline-date {
+    position: absolute;
+    left: -100px; /* Adjusted to fit within modal */
+    top: 0;
+    width: 80px;
+    text-align: center;
+    font-size: 14px;
+     color: #232f65; /* Change this to your desired color */
+    font-weight: bold;
+  }
+
+  /* Item content styling */
+  .timeline-item-content {
+    background: #f9f9f9;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-left: 30px; /* Increased space between date and content */
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: calc(100% - 110px); /* Adjust width to fit within modal */
+    max-width: 600px; /* Increased max-width for readability */
+    border-left: 3px solid #007bff; /* Thicker vertical line after the date */
+  }
+
+  /* Vertical line and circle */
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -10px; /* Adjust to ensure circle is visible */
+    top: 15px;
+    width: 12px;
+    height: 12px;
+    background: #007bff;
+    border-radius: 50%;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
     .modal-content {
-        border-radius: 15px; /* Rounded corners */
-        background: linear-gradient(135deg, #f5f7fa, #c3cfe2); /* Gradient background */
+      font-size: 10px; /* Font size for mobile screens */
     }
 
-    .modal-dialog {
-        max-width: 900px; /* Set a custom max width */
+    .timeline-item {
+      margin-left: 30px; /* Adjust for smaller screens */
     }
 
-    .card {
-        border: none; /* Remove card border */
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Card shadow */
-        border-radius: 10px; /* Rounded corners for cards */
+    .timeline-item-content {
+      width: calc(100% - 40px); /* Adjust width for smaller screens */
+      padding: 10px;
     }
 
-    .card-header {
-        border-bottom: 2px solid #007bff; /* Add a blue bottom border */
-        border-top-left-radius: 10px; /* Rounded top corners */
-        border-top-right-radius: 10px; /* Rounded top corners */
+    .timeline-item .timeline-date {
+      left: -50px; /* Adjust date position for mobile */
+      width: 50px;
     }
 
-    .card-body {
-        padding: 20px; /* More padding for content */
-         font-size: 12px !important;
+    .timeline-item::before {
+      left: -6px; /* Adjust circle position for mobile */
     }
- .card-body p{
-         font-size: 10px !important;
-    }
-    
-    .card:hover {
-        transform: scale(1.05); /* Scale effect on hover */
-        transition: transform 0.3s; /* Smooth transition */
-    }
-
-    .container {
-        
-        margin: 10px; /* Margin around the container */
-    }
-
-    .modal-header {
-         font-size: 12px !important;
-        border-bottom: 2px solid #007bff; /* Add a blue line at the bottom of header */
-    }
-
-    .modal-title {
-        font-weight: bold;
-     font-size: 12px !important;
-    }
-
-    /* Responsive design */
-    @media (max-width: 768px) {
-        .card {
-            margin-bottom: 15px; /* Space between cards on smaller screens */
-        }
-    }
+  }
 </style>
 
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Add click event listener for 'Show Lead Status' buttons
-    document.querySelectorAll('.show-lead-status-btn').forEach(function (button) {
-        button.addEventListener('click', function () {
-            const row = this.closest('tr');
-            const leadStatusContent = row.querySelector('.leadStatusContent').textContent.trim();
+async function showLeadStatus(button) {
+    const row = button.closest('tr');
+    const leadStatusContent = row.querySelector('.leadStatusContent').textContent.trim();
 
-            // Check if leadStatusContent exists and is not empty
-            if (leadStatusContent) {
-                try {
-                    const leadStatus = JSON.parse(leadStatusContent); // Parse the JSON string
+    if (!leadStatusContent) {
+        alert('No lead status available.');
+        return;
+    }
 
-                    // Define the headings
-                    const headings = ['QL', 'PQL', 'HQL', 'UQL', 'RNR', 'Busy', 'Call Later', 'Next Intake', 'QL to NR', 'PQL to NR', 'Not Interested', 'Just Enquiry', 'Regular', 'WhatsApp Connected', 'Direct University'];
+    const timelineContainer = document.querySelector('.timeline-container');
+    timelineContainer.innerHTML = '';
 
-                    // Build the HTML content to display the lead status details under headings
-                    let leadStatusHtml = '<div class="container"><div class="row">';
-                    headings.forEach((heading, index) => {
-                        const statusDetails = leadStatus[heading] || { status: 'N/A', date: 'N/A' }; // Fallback if empty
-                        leadStatusHtml += `
-                            <div class="col-md-3 mb-3">
-                                <div class="card">
-                                    <div class="card-header bg-primary text-white">
-                                        <h6 class="m-0 mhead">${heading}</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <p class="m-0">Status: ${statusDetails.status || 'N/A'}</p>
-                                        <p class="m-0">Date: ${statusDetails.date ? new Date(statusDetails.date).toLocaleString() : 'N/A'}</p>
-                                    </div>
-                                </div>
-                            </div>`;
-                        if ((index + 1) % 4 === 0) leadStatusHtml += '</div><div class="row">';
-                    });
-                    leadStatusHtml += '</div></div>';
+    try {
+        const leadStatus = JSON.parse(leadStatusContent);
 
-                    // Insert lead status into modal
-                    document.getElementById('leadStatusContent').innerHTML = leadStatusHtml;
+        // Iterate through each stage in leadStatus
+        Object.keys(leadStatus).forEach(stage => {
+            const stages = leadStatus[stage];
+            
+            if (Array.isArray(stages)) {
+                stages.forEach((stageDetail, index) => {
+                    const timelineItem = document.createElement('div');
+                    timelineItem.className = `timeline-item ${index % 2 === 0 ? 'left' : 'right'}`;
 
-                    // Show the modal
-                    const leadStatusModal = new bootstrap.Modal(document.getElementById('leadStatusModal'));
-                    leadStatusModal.show();
-                } catch (error) {
-                    console.error('Invalid JSON or error parsing lead status content:', error);
-                }
+                    // Create date element
+                    const dateElement = document.createElement('div');
+                    dateElement.className = 'timeline-date';
+                    dateElement.textContent = stageDetail.date || 'N/A';
+
+                    // Create content element
+                    const contentElement = document.createElement('div');
+                    contentElement.className = 'timeline-item-content';
+                    contentElement.innerHTML = `
+                        <h6>${stage} - ${stageDetail.subStage || 'N/A'}</h6>
+                        <p>Status: ${stageDetail.status || 'N/A'}</p>
+                        ${stageDetail.followUp ? `<p>Follow-Up Date: ${stageDetail.followUp.date} ${stageDetail.followUp.time}</p>` : ''}
+                    `;
+
+                    timelineItem.appendChild(dateElement);
+                    timelineItem.appendChild(contentElement);
+                    timelineContainer.appendChild(timelineItem);
+                });
             } else {
-                console.error('No lead status content available.');
+                console.error(`Invalid data format for stage "${stage}". Expected an array, but got:`, stages);
             }
         });
+    } catch (error) {
+        console.error('Error parsing lead status:', error);
+    }
+}
+
+// Attach event listener to modal show event
+document.addEventListener('DOMContentLoaded', function () {
+    const leadStatusModal = document.getElementById('leadStatusModal');
+
+    leadStatusModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget; // Button that triggered the modal
+        showLeadStatus(button);
     });
 });
 </script>
@@ -609,85 +643,149 @@ function redirectToSEForm(button) {
     window.location.href = url.toString();
 }
 </script>
+<script>document.addEventListener('DOMContentLoaded', () => {
+    // Event listener for the follow-up date input
+    document.querySelectorAll('.follow-up-date').forEach(input => {
+        input.addEventListener('change', function () {
+            if (this.value) {
+                const followUpTime = this.closest('.follow-up-container').querySelector('.follow-up-time');
+                followUpTime.focus();
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Select Time',
+                    text: 'Please select a follow-up time.',
+                });
+            }
+        });
+    });
 
+    // Event listener for the follow-up time input
+    document.querySelectorAll('.follow-up-time').forEach(input => {
+        input.addEventListener('change', function () {
+            if (this.value) {
+                const followUpDescription = this.closest('.follow-up-container').querySelector('.follow-up-description');
+                followUpDescription.focus();
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Enter Description',
+                    text: 'Please enter a follow-up description.',
+                });
+            }
+        });
+    });
+});
+</script>
 <script>
-async function updateLeadStatus(select) {
-    const row = select.closest('tr');
-    const leadStatusTextarea = row.querySelector('.lead-status-textarea');
-    const leadStage = select.value;
-    const id = row.querySelector('.font-weight-bold')?.dataset.id; // Ensure `id` is fetched safely
-
-    // Ensure elements exist before proceeding
-    if (!leadStatusTextarea) {
-        console.error('Textarea not found in the row.');
+async function updateSubStageOptions(select) {
+    const stage = select.value;
+    const subStageSelect = select.closest('tr').querySelector('.sub-stage-select');
+    
+    if (!stage) {
+        // Clear the sub-stage dropdown if no stage is selected
+        subStageSelect.innerHTML = '<option value="">Select Sub-Stage</option>';
         return;
     }
 
-    if (leadStage) {
-        try {
-            const response = await fetch('/get-lead-status', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ id, leadStage })
-            });
+    try {
+        const response = await fetch('/get-sub-stages', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ stage })
+        });
 
-            const result = await response.json();
-            console.log('Fetch result:', result);
+        const result = await response.json();
 
-            if (result.success) {
-                if (result.status && result.status.trim() !== '' && result.status !== 'No Status') {
-                    leadStatusTextarea.value = result.status;
-                    leadStatusTextarea.disabled = true; // Disable textarea if status is found
-                } else {
-                    leadStatusTextarea.value = 'No Status';
-                    leadStatusTextarea.disabled = false; // Enable textarea if no valid status is found
-                }
-            } else {
-                console.log('Fetch failed:', result.message);
-                leadStatusTextarea.value = 'No Status';
-                leadStatusTextarea.disabled = false; // Enable textarea on failure
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: result.message || 'Failed to fetch lead status.',
-                });
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            leadStatusTextarea.value = 'No Status';
-            leadStatusTextarea.disabled = false; // Enable textarea if error occurs
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'An error occurred while fetching the lead status.',
+        if (result.success) {
+            const subStages = result.subStages;
+            subStageSelect.innerHTML = '<option value="">Select Sub-Stage</option>';
+
+            subStages.forEach(subStage => {
+                const option = document.createElement('option');
+                option.value = subStage.name; // Adjust this if you need a different value
+                option.textContent = subStage.name;
+                // Add a data attribute to check if this sub-stage is mandatory
+                option.dataset.mandatory = subStage.mandatory;
+                subStageSelect.appendChild(option);
             });
+        } else {
+            console.error('Failed to fetch sub-stages:', result.message);
+            subStageSelect.innerHTML = '<option value="">No Sub-Stages Available</option>';
         }
-    } else {
-        leadStatusTextarea.value = 'No Status';
-        leadStatusTextarea.disabled = false; // Enable textarea if no lead stage is selected
+    } catch (error) {
+        console.error('Error fetching sub-stages:', error);
+        subStageSelect.innerHTML = '<option value="">Error Loading Sub-Stages</option>';
     }
 }
 
 
-
 async function saveLeadStatus(button) {
     const row = button.closest('tr');
-    const id = row.querySelector('.font-weight-bold').textContent.trim();
+    const id = row.querySelector('td[hidden]').textContent.trim();
     const leadStageSelect = row.querySelector('.lead-stage-select');
+    const subStageSelect = row.querySelector('.sub-stage-select');
     const leadStatusTextarea = row.querySelector('.lead-status-textarea');
     const leadStage = leadStageSelect.value;
-    const leadStatus = leadStatusTextarea.value;
-    const isSaved = leadStatus ? "saved" : null;
+    const subStage = subStageSelect.value;
+    const leadStatus = leadStatusTextarea.value.trim(); // Trim to handle leading/trailing spaces
 
+    // Ensure lead-status-textarea is filled
+    if (!leadStatus) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Lead Status Required',
+            text: 'Please provide a lead status before saving.',
+        });
+        return;
+    }
+
+    // Fetch the mandatory status of the selected sub-stage from the server
+    let isMandatory = false;
+    if (subStage) {
+        try {
+            const response = await fetch('/get-sub-stage-mandatory', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ stage: leadStage, subStage })
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                isMandatory = result.isMandatory;
+                console.log(`Sub-Stage "${subStage}" is mandatory: ${isMandatory}`);
+            } else {
+                console.error('Failed to fetch sub-stage mandatory status:', result.message);
+                return;
+            }
+        } catch (error) {
+            console.error('Error fetching sub-stage mandatory status:', error);
+            return;
+        }
+    }
+
+    // Validate mandatory sub-stage
+    if (isMandatory && !subStage) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Mandatory Field Missing',
+            text: 'Please select a mandatory sub-stage before saving.',
+        });
+        return;
+    }
+
+    // Check if follow-up is needed based on lead stage
+    const followUpContainer = row.querySelector('.follow-up-container');
     const followUpDate = row.querySelector('.follow-up-date')?.value || null;
     const followUpTime = row.querySelector('.follow-up-time')?.value || null;
-    const followUpDescription = row.querySelector('.follow-up-description')?.value || null;
 
-    console.log("Follow Up Date:", followUpDate); // Debugging output
-    console.log("Follow Up Time:", followUpTime); // Debugging output
-    console.log("Follow Up Description:", followUpDescription); // Debugging output
+    // Show warning if follow-up is needed (mandatory sub-stage) and not provided
+    if (isMandatory && followUpContainer && (!followUpDate || !followUpTime)) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Follow-Up Missing',
+            text: 'Please fill in both the follow-up date and time before saving.',
+        });
+        return;
+    }
 
     try {
         const response = await fetch('/update-lead-status', {
@@ -695,7 +793,14 @@ async function saveLeadStatus(button) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ id, leadStage, leadStatus, isSaved, followUpDate, followUpTime, followUpDescription })
+            body: JSON.stringify({
+                id,
+                leadStage,
+                subStage,
+                leadStatus,
+                followUpDate,
+                followUpTime
+            })
         });
 
         const result = await response.json();
@@ -706,6 +811,17 @@ async function saveLeadStatus(button) {
                 title: 'Saved',
                 text: 'Lead status has been updated successfully!',
             });
+
+            // Clear fields after successful save
+            leadStatusTextarea.value = '';
+            subStageSelect.value = '';
+            row.querySelector('.follow-up-date').value = '';
+            row.querySelector('.follow-up-time').value = '';
+
+            // Hide follow-up container if follow-up is not needed
+            if (!isMandatory) {
+                followUpContainer.style.display = 'none';
+            }
         } else {
             Swal.fire({
                 icon: 'error',
@@ -722,7 +838,6 @@ async function saveLeadStatus(button) {
         });
     }
 }
-
 
 
 </script>

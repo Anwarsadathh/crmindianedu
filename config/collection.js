@@ -6,4 +6,5 @@ module.exports = {
   REFERRAL_COLLECTION: "referral",
   PATNER_COLLECTION: "patner",
   AFFILIATE_COLLECTION: "affiliate",
+  LEADSTAGE_COLLECTION: "leadstage",
 };

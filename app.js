@@ -77,13 +77,7 @@ const hbs = exphbs.create({
       return value;
     },
     shouldShowFollowUp: function (leadStage) {
-      const stagesWithoutFollowUp = [
-        "HQL",
-        "UQL",
-        "Not Interested",
-        "Just Enquiry",
-        "Regular",
-      ];
+      const stagesWithoutFollowUp = ["HQL", "UQL", "Not Interested", "Just Enquiry", "Regular"];
       return !stagesWithoutFollowUp.includes(leadStage);
     },
   },

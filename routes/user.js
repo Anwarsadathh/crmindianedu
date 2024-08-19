@@ -491,23 +491,65 @@ router.post("/update-lead-owner", async (req, res) => {
 
 
 
-// router.js or similar file
 router.post("/update-lead-status", async (req, res) => {
-  const { id, leadStage, leadStatus, isSaved } = req.body;
+  const {
+    id,
+    leadStage,
+    subStage,
+    leadStatus,
+    isSaved,
+    followUpDate,
+    followUpTime,
+  } = req.body;
 
   try {
     if (!id || typeof id !== "string") {
       console.error("Invalid ID format:", id);
-      return res.status(400).json({ success: false, message: "Invalid ID format." });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid ID format." });
     }
 
-    // Use the helper function to update lead status
-    await serviceHelpers.updateLeadStatus(id, leadStage, leadStatus, isSaved);
+    // Prepare the follow-up object
+    const followUp =
+      followUpDate || followUpTime
+        ? {
+            date: followUpDate,
+            time: followUpTime,
+          }
+        : null;
+
+    // Create the status object
+    const statusObj = {
+      status: leadStatus,
+      subStage,
+      date: new Date().toISOString().split("T")[0], // Current date
+      followUp: followUp || null, // Include follow-up if provided
+    };
+
+    // Update lead status using the helper function
+    await serviceHelpers.updateLeadStatus(id, leadStage, statusObj, isSaved);
 
     res.json({ success: true });
   } catch (error) {
     console.error("Error updating lead status:", error);
-    res.json({ success: false, message: "An error occurred while updating the lead status." });
+    res.json({
+      success: false,
+      message: "An error occurred while updating the lead status.",
+    });
+  }
+});
+
+
+router.post("/get-sub-stage-mandatory", async (req, res) => {
+  const { stage, subStage } = req.body;
+
+  const result = await serviceHelpers.getSubStageMandatoryStatus(stage, subStage);
+
+  if (result.success) {
+    res.json(result);
+  } else {
+    res.status(404).json(result);
   }
 });
 
@@ -516,17 +558,22 @@ router.post("/get-lead-status", async (req, res) => {
   const { id, leadStage } = req.body;
 
   try {
-    // Validate the ID format
+    // Log the incoming request body for debugging
+    console.log("Incoming request:", { id, leadStage });
+
     if (!id || typeof id !== "string") {
-      console.error("Invalid ID format:", id);
       return res
         .status(400)
         .json({ success: false, message: "Invalid ID format." });
     }
 
-    // Retrieve the lead status and date
-    const { status, date } = await serviceHelpers.getLeadStatus(id, leadStage);
-    res.json({ success: true, status, date });
+    // Fetch lead status
+    const leadStatus = await serviceHelpers.getLeadStatus(id, leadStage);
+
+    // Log the result before sending the response
+    console.log("Lead status fetched:", leadStatus);
+
+    res.json({ success: true, leadStatus });
   } catch (error) {
     console.error("Error fetching lead status:", error);
     res.json({
@@ -535,6 +582,9 @@ router.post("/get-lead-status", async (req, res) => {
     });
   }
 });
+
+
+
 
 
 
@@ -647,7 +697,8 @@ router.get("/crm-lead-owner-details", async (req, res) => {
   if (!req.session.user) {
     return res.redirect("/lead-login");
   }
-
+  // Fetch all lead owners
+  const leadStage = await serviceHelpers.getAllLeadStage();
   const leadOwnerName = req.session.user.email;
 
   try {
@@ -674,12 +725,36 @@ router.get("/crm-lead-owner-details", async (req, res) => {
       admin: true,
       googlesheets: filteredData,
       leadOwners,
+      leadStage,
     });
   } catch (error) {
     console.error("Error fetching data:", error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 });
+
+router.post("/get-sub-stages", async (req, res) => {
+  const { stage } = req.body;
+
+  try {
+    if (!stage || typeof stage !== "string") {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid stage value." });
+    }
+
+    const subStages = await serviceHelpers.getSubStagesFromDatabase(stage);
+    res.json({ success: true, subStages });
+  } catch (error) {
+    console.error("Error fetching sub-stages:", error);
+    res.json({
+      success: false,
+      message: "An error occurred while fetching sub-stages.",
+    });
+  }
+});
+
+
 
 
 router.get("/crm-lead-owner-rewards", async (req, res) => {
@@ -999,6 +1074,29 @@ router.post("/crm-create-lead", async (req, res) => {
     res.json({ success: false, message: error.message || "An error occurred while creating the lead owner." });
   }
 });
+
+router.get("/crm-leadstage", (req, res) => {
+  serviceHelpers.getAllLeadStage().then((leadStage) => {
+    console.log(leadStage);
+
+    res.render("user/crm-tl-leadstage", { user: true, leadStage });
+  });
+});
+
+
+router.post("/crm-leadstage", async (req, res) => {
+  const { stage, substage } = req.body;
+
+  try {
+    await serviceHelpers.createLeadStage({ stage, substage });
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error creating lead stage:", error);
+    res.json({ success: false, message: error.message || "An error occurred while creating the lead stage." });
+  }
+});
+
+
 
 router.get("/mentor-dashboard", async function (req, res, next) {
   try {
