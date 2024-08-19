@@ -537,81 +537,188 @@ background-color: #1c008b !important;
 </div>
 
 
-<!-- Lead Status Modal -->
+<!-- Modal -->
 <div class="modal fade" id="leadStatusModal" tabindex="-1" aria-labelledby="leadStatusModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">  
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="leadStatusModalLabel">Lead Status Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="leadStatusContent">
-                <!-- Lead status content will be inserted here -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="leadStatusModalLabel">Lead Status Timeline</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="timeline-container"></div>
+      </div>
     </div>
+  </div>
 </div>
-    
+
+
 <style>
+  /* Modal and header styling */
+  .modal-content {
+    border-radius: 15px;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2); /* Gradient background */
+    color: #333; /* Darker text for contrast */
+  }
+  
+  .modal-header {
+    border-bottom: 2px solid #007bff; /* Blue bottom border */
+    background: #f5f7fa; /* Lighter background for header */
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 15px;
+  }
+
+  .modal-title {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  /* Timeline container */
+  .timeline-container {
+    position: relative;
+    padding: 20px;
+    border-left: 3px solid #007bff; /* Thicker vertical line for timeline */
+    overflow-x: hidden;
+  }
+
+  /* Timeline items */
+  .timeline-item {
+    position: relative;
+    padding: 15px 0;
+    margin-left: 80px; /* Increased space for date and line */
+    display: flex;
+    align-items: flex-start;
+    flex-direction: row;
+  }
+
+  /* Date styling */
+  .timeline-item .timeline-date {
+    position: absolute;
+    left: -100px; /* Adjusted to fit within modal */
+    top: 0;
+    width: 80px;
+    text-align: center;
+    font-size: 14px;
+     color: #232f65; /* Change this to your desired color */
+    font-weight: bold;
+  }
+
+  /* Item content styling */
+  .timeline-item-content {
+    background: #f9f9f9;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-left: 30px; /* Increased space between date and content */
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: calc(100% - 110px); /* Adjust width to fit within modal */
+    max-width: 600px; /* Increased max-width for readability */
+    border-left: 3px solid #007bff; /* Thicker vertical line after the date */
+  }
+
+  /* Vertical line and circle */
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -10px; /* Adjust to ensure circle is visible */
+    top: 15px;
+    width: 12px;
+    height: 12px;
+    background: #007bff;
+    border-radius: 50%;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
     .modal-content {
-        border-radius: 15px; /* Rounded corners */
-        background: linear-gradient(135deg, #f5f7fa, #c3cfe2); /* Gradient background */
+      font-size: 10px; /* Font size for mobile screens */
     }
 
-    .modal-dialog {
-        max-width: 900px; /* Set a custom max width */
+    .timeline-item {
+      margin-left: 30px; /* Adjust for smaller screens */
     }
 
-    .card {
-        border: none; /* Remove card border */
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Card shadow */
-        border-radius: 10px; /* Rounded corners for cards */
+    .timeline-item-content {
+      width: calc(100% - 40px); /* Adjust width for smaller screens */
+      padding: 10px;
     }
 
-    .card-header {
-        border-bottom: 2px solid #007bff; /* Add a blue bottom border */
-        border-top-left-radius: 10px; /* Rounded top corners */
-        border-top-right-radius: 10px; /* Rounded top corners */
+    .timeline-item .timeline-date {
+      left: -50px; /* Adjust date position for mobile */
+      width: 50px;
     }
 
-    .card-body {
-        padding: 20px; /* More padding for content */
-         font-size: 12px !important;
+    .timeline-item::before {
+      left: -6px; /* Adjust circle position for mobile */
     }
- .card-body p{
-         font-size: 10px !important;
-    }
-    
-    .card:hover {
-        transform: scale(1.05); /* Scale effect on hover */
-        transition: transform 0.3s; /* Smooth transition */
-    }
-
-    .container {
-        
-        margin: 10px; /* Margin around the container */
-    }
-
-    .modal-header {
-         font-size: 12px !important;
-        border-bottom: 2px solid #007bff; /* Add a blue line at the bottom of header */
-    }
-
-    .modal-title {
-        font-weight: bold;
-     font-size: 12px !important;
-    }
-
-    /* Responsive design */
-    @media (max-width: 768px) {
-        .card {
-            margin-bottom: 15px; /* Space between cards on smaller screens */
-        }
-    }
+  }
 </style>
+
+
+<script>
+async function showLeadStatus(button) {
+    const row = button.closest('tr');
+    const leadStatusContent = row.querySelector('.leadStatusContent').textContent.trim();
+
+    if (!leadStatusContent) {
+        alert('No lead status available.');
+        return;
+    }
+
+    const timelineContainer = document.querySelector('.timeline-container');
+    timelineContainer.innerHTML = '';
+
+    try {
+        const leadStatus = JSON.parse(leadStatusContent);
+
+        // Iterate through each stage in leadStatus
+        Object.keys(leadStatus).forEach(stage => {
+            const stages = leadStatus[stage];
+            
+            if (Array.isArray(stages)) {
+                stages.forEach((stageDetail, index) => {
+                    const timelineItem = document.createElement('div');
+                    timelineItem.className = `timeline-item ${index % 2 === 0 ? 'left' : 'right'}`;
+
+                    // Create date element
+                    const dateElement = document.createElement('div');
+                    dateElement.className = 'timeline-date';
+                    dateElement.textContent = stageDetail.date || 'N/A';
+
+                    // Create content element
+                    const contentElement = document.createElement('div');
+                    contentElement.className = 'timeline-item-content';
+                    contentElement.innerHTML = `
+                        <h6>${stage} - ${stageDetail.subStage || 'N/A'}</h6>
+                        <p>Status: ${stageDetail.status || 'N/A'}</p>
+                        ${stageDetail.followUp ? `<p>Follow-Up Date: ${stageDetail.followUp.date} ${stageDetail.followUp.time}</p>` : ''}
+                    `;
+
+                    timelineItem.appendChild(dateElement);
+                    timelineItem.appendChild(contentElement);
+                    timelineContainer.appendChild(timelineItem);
+                });
+            } else {
+                console.error(`Invalid data format for stage "${stage}". Expected an array, but got:`, stages);
+            }
+        });
+    } catch (error) {
+        console.error('Error parsing lead status:', error);
+    }
+}
+
+// Attach event listener to modal show event
+document.addEventListener('DOMContentLoaded', function () {
+    const leadStatusModal = document.getElementById('leadStatusModal');
+
+    leadStatusModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget; // Button that triggered the modal
+        showLeadStatus(button);
+    });
+});
+</script>
 
 <script>
 // Your existing code for bulk assignment
@@ -648,58 +755,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Add click event listener for 'Show Lead Status' buttons
-    document.querySelectorAll('.show-lead-status-btn').forEach(function (button) {
-        button.addEventListener('click', function () {
-            const row = this.closest('tr');
-            const leadStatusContent = row.querySelector('.leadStatusContent').textContent.trim();
 
-            // Check if leadStatusContent exists and is not empty
-            if (leadStatusContent) {
-                try {
-                    const leadStatus = JSON.parse(leadStatusContent); // Parse the JSON string
-
-                    // Define the headings
-                    const headings = ['QL', 'PQL', 'HQL', 'UQL', 'RNR', 'Busy', 'Call Later', 'Next Intake', 'QL to NR', 'PQL to NR', 'Not Interested', 'Just Enquiry', 'Regular', 'WhatsApp Connected', 'Direct University'];
-
-                    // Build the HTML content to display the lead status details under headings
-                    let leadStatusHtml = '<div class="container"><div class="row">';
-                    headings.forEach((heading, index) => {
-                        const statusDetails = leadStatus[heading] || { status: 'N/A', date: 'N/A' }; // Fallback if empty
-                        leadStatusHtml += `
-                            <div class="col-md-3 mb-3">
-                                <div class="card">
-                                    <div class="card-header bg-primary text-white">
-                                        <h6 class="m-0 mhead">${heading}</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <p class="m-0">Status: ${statusDetails.status || 'N/A'}</p>
-                                        <p class="m-0">Date: ${statusDetails.date ? new Date(statusDetails.date).toLocaleString() : 'N/A'}</p>
-                                    </div>
-                                </div>
-                            </div>`;
-                        if ((index + 1) % 4 === 0) leadStatusHtml += '</div><div class="row">';
-                    });
-                    leadStatusHtml += '</div></div>';
-
-                    // Insert lead status into modal
-                    document.getElementById('leadStatusContent').innerHTML = leadStatusHtml;
-
-                    // Show the modal
-                    const leadStatusModal = new bootstrap.Modal(document.getElementById('leadStatusModal'));
-                    leadStatusModal.show();
-                } catch (error) {
-                    console.error('Invalid JSON or error parsing lead status content:', error);
-                }
-            } else {
-                console.error('No lead status content available.');
-            }
-        });
-    });
-});
-</script>
 
 <script>
 
