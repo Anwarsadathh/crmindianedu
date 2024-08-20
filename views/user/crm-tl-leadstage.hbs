@@ -327,39 +327,20 @@ header img {
             </nav>
             <!-- Navbar End -->
 
-<!-- Form Start -->
 <div class="container-fluid pt-4 px-4">
     <div class="row g-4">
         <div class="col-sm-12 col-xl-6">
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">Create Lead Stage</h6>
                 <form id="createLeadStage">
+                    <input type="hidden" id="leadStageId" name="leadStageId"> <!-- Hidden ID field for edit -->
                     <div class="mb-3">
                         <label for="stage" class="form-label">Lead Stage</label>
                         <input type="text" class="form-control" id="stage" name="stage" required>
                     </div>
 
                     <div id="substageContainer">
-                        <div class="substage-item mb-3">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-grow-1">
-                                    <label for="substage" class="form-label">Sub Stage</label>
-                                    <input type="text" class="form-control" name="substage[]" required>
-                                </div>
-                                <button type="button" class="btn btn-success add-substage-btn btn-sm mx-2">
-                                    <i class="fas fa-plus-circle"></i>
-                                </button>
-                                <button type="button" class="btn btn-danger remove-substage-btn btn-sm">
-                                    <i class="fas fa-minus-circle"></i>
-                                </button>
-                            </div>
-                            <div class="form-check mt-2">
-                                <input class="form-check-input" type="checkbox" name="mandatory[]" value="1">
-                                <label class="form-check-label">
-                                    Mandatory
-                                </label>
-                            </div>
-                        </div>
+                        <!-- Substage items will be dynamically added here -->
                     </div>
 
                     <button type="submit" class="btn btn-primary mt-3">Submit</button>
@@ -367,64 +348,57 @@ header img {
             </div>
         </div>
 
-<!-- Lead Stages Table -->
-<div class="col-sm-12 col-xl-6">
-    <div class="bg-light rounded h-100 p-4">
-        <h6 class="mb-4">Lead Stages</h6>
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>No.</th>
-                        <th>Stage</th>
-                        <th>Sub Stages</th>
-                        <th>Mandatory</th>
-                        <th>Edit</th> <!-- Added Edit Column -->
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each leadStage}}
-                    <tr>
-                        <td class="font-weight-bold">{{incrementIndex @index}}</td>
-                        <td>{{this.stage}}</td>
-                        <td>{{#each this.substage}}{{this.name}}<br>{{/each}}</td>
-                        <td>{{#each this.substage}}{{#if this.mandatory}}Yes{{else}}No{{/if}}<br>{{/each}}</td>
-                        <td>
-                            <button type="button" class="btn btn-warning btn-sm edit-stage-btn" data-id="{{this._id}}">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    {{/each}}
-                </tbody>
-            </table>
+        <!-- Lead Stages Table -->
+        <div class="col-sm-12 col-xl-6">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">Lead Stages</h6>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Stage</th>
+                                <th>Sub Stages</th>
+                                <th>Mandatory</th>
+                                <th>Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each leadStage}}
+                            <tr>
+                                <td class="font-weight-bold">{{incrementIndex @index}}</td>
+                                <td>{{this.stage}}</td>
+                                <td>{{#each this.substage}}{{this.name}}<br>{{/each}}</td>
+                                <td>{{#each this.substage}}{{#if this.mandatory}}Yes{{else}}No{{/if}}<br>{{/each}}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning edit-lead-stage-btn" data-id="{{this._id}}">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
-    </div>
-</div>
-<!-- Form End -->
-
-
-
-
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const substageContainer = document.getElementById('substageContainer');
     const form = document.getElementById('createLeadStage');
-    let editMode = false;
-    let editId = null;
 
-    function createSubstageItem(substage = {}) {
+    // Function to create a substage item
+    function createSubstageItem(substage = {name: '', mandatory: false}) {
         const substageItem = document.createElement('div');
         substageItem.classList.add('substage-item', 'mb-3');
         substageItem.innerHTML = `
             <div class="d-flex align-items-center">
                 <div class="flex-grow-1">
                     <label for="substage" class="form-label">Sub Stage</label>
-                    <input type="text" class="form-control" name="substage[]" value="${substage.name || ''}" required>
+                    <input type="text" class="form-control" name="substage[]" value="${substage.name}" required>
                 </div>
                 <button type="button" class="btn btn-success add-substage-btn btn-sm mx-2">
                     <i class="fas fa-plus-circle"></i>
@@ -435,12 +409,9 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="form-check mt-2">
                 <input class="form-check-input" type="checkbox" name="mandatory[]" value="1" ${substage.mandatory ? 'checked' : ''}>
-                <label class="form-check-label">
-                    Mandatory
-                </label>
+                <label class="form-check-label">Mandatory</label>
             </div>
         `;
-
         return substageItem;
     }
 
@@ -457,24 +428,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Handle form submission
+    // Handle form submission for both add and edit
     form.addEventListener('submit', async function(event) {
         event.preventDefault();
 
-        const formData = new FormData(form);
-        const substages = formData.getAll('substage[]').map((substage, index) => ({
-            name: substage,
-            mandatory: formData.getAll('mandatory[]')[index] === '1'
-        }));
+        const substageItems = document.querySelectorAll('.substage-item');
+        const substages = [];
+
+        substageItems.forEach((substageItem) => {
+            const substageName = substageItem.querySelector('input[name="substage[]"]').value;
+            const isMandatory = substageItem.querySelector('input[name="mandatory[]"]').checked;
+
+            substages.push({
+                name: substageName,
+                mandatory: isMandatory
+            });
+        });
 
         const data = {
-            stage: formData.get('stage'),
+            stage: form.stage.value,
             substage: substages
         };
 
+        const leadStageId = form.leadStageId.value;
+        const url = leadStageId ? `/crm-leadstage/${leadStageId}` : '/crm-leadstage';
+        const method = leadStageId ? 'PUT' : 'POST';
+
         try {
-            const response = await fetch(editMode ? `/crm-leadstage/${editId}` : '/crm-leadstage', {
-                method: editMode ? 'PUT' : 'POST',
+            const response = await fetch(url, {
+                method: method,
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -486,8 +468,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (result.success) {
                 Swal.fire({
                     icon: 'success',
-                    title: editMode ? 'Lead Stage Updated' : 'Lead Stage Created',
-                    text: `The lead stage has been ${editMode ? 'updated' : 'created'} successfully!`,
+                    title: leadStageId ? 'Lead Stage Updated' : 'Lead Stage Created',
+                    text: leadStageId ? 'The lead stage has been updated successfully!' : 'The lead stage has been created successfully!',
                 }).then(() => {
                     location.reload();
                 });
@@ -495,7 +477,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: result.message || `An error occurred while ${editMode ? 'updating' : 'creating'} the lead stage.`,
+                    text: result.message || 'An error occurred while processing the request.',
                 });
             }
         } catch (error) {
@@ -503,45 +485,41 @@ document.addEventListener('DOMContentLoaded', () => {
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: `An error occurred while ${editMode ? 'updating' : 'creating'} the lead stage.`,
+                text: 'An error occurred while processing the request.',
             });
         }
     });
 
-    // Handle edit button click
-    document.querySelectorAll('.edit-stage-btn').forEach(button => {
+    // Edit button click event
+    document.querySelectorAll('.edit-lead-stage-btn').forEach(button => {
         button.addEventListener('click', async function() {
-            editMode = true;
-            editId = this.getAttribute('data-id');
-
+            const leadStageId = this.dataset.id;
             try {
-                const response = await fetch(`/crm-leadstage/${editId}`);
+                const response = await fetch(`/crm-leadstage/${leadStageId}`);
                 const leadStage = await response.json();
 
                 if (leadStage) {
-                    document.getElementById('stage').value = leadStage.stage;
+                    form.leadStageId.value = leadStage._id;
+                    form.stage.value = leadStage.stage;
+
+                    // Clear existing substage items
                     substageContainer.innerHTML = '';
                     leadStage.substage.forEach(substage => {
                         substageContainer.appendChild(createSubstageItem(substage));
                     });
-
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
             } catch (error) {
                 console.error('Error fetching lead stage data:', error);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'An error occurred while fetching the lead stage data.',
+                    text: 'An error occurred while fetching lead stage data.',
                 });
             }
         });
     });
 });
-
 </script>
-
-
 
 
 
