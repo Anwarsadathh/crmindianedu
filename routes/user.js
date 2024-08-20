@@ -609,56 +609,30 @@ router.get("/lead-login", (req, res) => {
   res.render("user/leadlogin", { user: true });
 });
 
+ // Backend Route Handler
 router.get("/crm-lead-owner-dashboard", verifyLogin, async (req, res) => {
   const sessionEmail = req.session.user.email;
   const { startDate, endDate } = req.query;
 
   try {
     // Fetch lead status counts and total leads based on session email and date range
-    const { combinedCounts, totalLeads } =
+    const { combinedCounts, totalLeads, stagesAndSubStages } =
       await serviceHelpers.getLeadStatusCounts(
         sessionEmail,
         startDate,
         endDate
       );
 
-    // Calculate specific counts from combinedCounts
-    const totalQL = combinedCounts["QL"] || 0;
-    const totalRNR = combinedCounts["RNR"] || 0;
-    const totalPQL = combinedCounts["PQL"] || 0;
-    const totalUQL = combinedCounts["UQL"] || 0;
-    const totalNextIntake = combinedCounts["Next Intake"] || 0;
-    const totalDirectUniversity = combinedCounts["Direct University"] || 0;
-    const totalHQL = combinedCounts["HQL"] || 0;
-    const totalBusy = combinedCounts["Busy"] || 0;
-    const totalCallLater = combinedCounts["Call Later"] || 0;
-const totalQLToNR = combinedCounts["QL to NR"] || 0;
-const totalPQLToNR = combinedCounts["PQL to NR"] || 0;
-    const totalNotInterested = combinedCounts["Not Interested"] || 0;
-    const totalJustEnquiry = combinedCounts["Just Enquiry"] || 0;
-    const totalRegular = combinedCounts["Regular"] || 0;
-    const totalWhatsAppConnected = combinedCounts["WhatsApp Connected"] || 0;
-console.log("QL to NR count: ", combinedCounts["QL to NR"]);
-console.log("PQL to NR count: ", combinedCounts["PQL to NR"]);
+    console.log(combinedCounts, "comb");
+    console.log(totalLeads, "totalLeads");
+    console.log(stagesAndSubStages, "stagesAndSubStages");
+
     // Render the dashboard with the calculated counts
     res.render("user/crmleadowners-dash", {
       user: true,
       totalLeads,
-      totalQL,
-      totalRNR,
-      totalPQL,
-      totalUQL,
-      totalNextIntake,
-      totalDirectUniversity,
-      totalHQL,
-      totalBusy,
-      totalCallLater,
-      totalQLToNR,
-      totalPQLToNR,
-      totalNotInterested,
-      totalJustEnquiry,
-      totalRegular,
-      totalWhatsAppConnected,
+      combinedCounts,
+      stagesAndSubStages, // Pass the stages and sub-stages to the template
     });
   } catch (error) {
     console.error("Error fetching lead status counts:", error);
@@ -1081,6 +1055,30 @@ router.get("/crm-leadstage", (req, res) => {
 
     res.render("user/crm-tl-leadstage", { user: true, leadStage });
   });
+});
+router.get("/crm-leadstage/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const leadStage = await serviceHelpers.getLeadStageById(id);
+    res.json(leadStage);
+  } catch (error) {
+    console.error("Error fetching lead stage:", error);
+    res.status(500).json({ message: "Error fetching lead stage" });
+  }
+});
+
+router.put('/crm-leadstage/:id', async (req, res) => {
+  const { id } = req.params;
+  const { stage, substage } = req.body;
+
+  try {
+    await serviceHelpers.updateLeadStage(id, { stage, substage });
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error updating lead stage:', error);
+    res.json({ success: false, message: error.message || 'An error occurred while updating the lead stage.' });
+  }
 });
 
 

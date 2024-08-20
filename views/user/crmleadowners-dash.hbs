@@ -176,6 +176,45 @@
                 </div>
             </div>
         </div>
+        <!-- Lead Statistics -->
+<div class="row">
+  <!-- Total Leads Card -->
+  <div class="col-6 col-xl-3">
+    <div class="stat-card bg-gradient-primary text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+      <i class="fa fa-chart-line fa-3x neon-icon"></i>
+      <div class="ms-3">
+        <p class="mb-2 counts">Total Leads</p>
+        <h6 class="mb-0">{{totalLeads}}</h6>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stage and Sub-stage Cards -->
+  {{#each stagesAndSubStages}}
+    <div class="col-6 col-xl-3">
+      <div class="stat-card bg-gradient-secondary text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+        <i class="fa fa-tachometer-alt fa-3x neon-icon"></i>
+        <div class="ms-3">
+          <p class="mb-2 counts">{{stage}} (Stage)</p>
+          <h6 class="mb-0">{{lookup ../combinedCounts stage}}</h6>
+        </div>
+      </div>
+      <!-- Display sub-stage counts -->
+      {{#each substage}}
+        <div class="col-6 col-xl-3">
+          <div class="stat-card bg-gradient-success text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+            <i class="fa fa-tachometer-alt fa-3x neon-icon"></i>
+            <div class="ms-3">
+              <p class="mb-2 counts">{{this.name}} (Sub-stage)</p>
+              <h6 class="mb-0">{{lookup ../combinedCounts stage}}</h6>
+            </div>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  {{/each}}
+</div>
+
       <div class="col-6 col-xl-3">
             <div class="stat-card bg-gradient-success text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
                 <i class="fa fa-star fa-3x neon-icon"></i>

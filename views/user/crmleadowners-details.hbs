@@ -833,10 +833,10 @@ async function saveLeadStatus(button) {
             row.querySelector('.follow-up-date').value = '';
             row.querySelector('.follow-up-time').value = '';
 
-            // Hide follow-up container if follow-up is not needed
-            if (!isMandatory) {
-                followUpContainer.style.display = 'none';
-            }
+            // Remove this part to keep the follow-up container visible
+            // if (!isMandatory) {
+            //     followUpContainer.style.display = 'none';
+            // }
         } else {
             Swal.fire({
                 icon: 'error',

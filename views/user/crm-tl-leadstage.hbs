@@ -367,34 +367,41 @@ header img {
             </div>
         </div>
 
-        <!-- Lead Stages Table -->
-        <div class="col-sm-12 col-xl-6">
-            <div class="bg-light rounded h-100 p-4">
-                <h6 class="mb-4">Lead Stages</h6>
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>No.</th>
-                                <th>Stage</th>
-                                <th>Sub Stages</th>
-                                <th>Mandatory</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#each leadStage}}
-                            <tr>
-                                <td class="font-weight-bold">{{incrementIndex @index}}</td>
-                                <td>{{this.stage}}</td>
-                                <td>{{#each this.substage}}{{this.name}}<br>{{/each}}</td>
-                                <td>{{#each this.substage}}{{#if this.mandatory}}Yes{{else}}No{{/if}}<br>{{/each}}</td>
-                            </tr>
-                            {{/each}}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+<!-- Lead Stages Table -->
+<div class="col-sm-12 col-xl-6">
+    <div class="bg-light rounded h-100 p-4">
+        <h6 class="mb-4">Lead Stages</h6>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Stage</th>
+                        <th>Sub Stages</th>
+                        <th>Mandatory</th>
+                        <th>Edit</th> <!-- Added Edit Column -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each leadStage}}
+                    <tr>
+                        <td class="font-weight-bold">{{incrementIndex @index}}</td>
+                        <td>{{this.stage}}</td>
+                        <td>{{#each this.substage}}{{this.name}}<br>{{/each}}</td>
+                        <td>{{#each this.substage}}{{#if this.mandatory}}Yes{{else}}No{{/if}}<br>{{/each}}</td>
+                        <td>
+                            <button type="button" class="btn btn-warning btn-sm edit-stage-btn" data-id="{{this._id}}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
         </div>
+    </div>
+</div>
+
     </div>
 </div>
 <!-- Form End -->
@@ -406,15 +413,18 @@ header img {
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const substageContainer = document.getElementById('substageContainer');
+    const form = document.getElementById('createLeadStage');
+    let editMode = false;
+    let editId = null;
 
-    function createSubstageItem() {
+    function createSubstageItem(substage = {}) {
         const substageItem = document.createElement('div');
         substageItem.classList.add('substage-item', 'mb-3');
         substageItem.innerHTML = `
             <div class="d-flex align-items-center">
                 <div class="flex-grow-1">
                     <label for="substage" class="form-label">Sub Stage</label>
-                    <input type="text" class="form-control" name="substage[]" required>
+                    <input type="text" class="form-control" name="substage[]" value="${substage.name || ''}" required>
                 </div>
                 <button type="button" class="btn btn-success add-substage-btn btn-sm mx-2">
                     <i class="fas fa-plus-circle"></i>
@@ -424,7 +434,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </button>
             </div>
             <div class="form-check mt-2">
-                <input class="form-check-input" type="checkbox" name="mandatory[]" value="1">
+                <input class="form-check-input" type="checkbox" name="mandatory[]" value="1" ${substage.mandatory ? 'checked' : ''}>
                 <label class="form-check-label">
                     Mandatory
                 </label>
@@ -448,12 +458,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Handle form submission
-    document.getElementById('createLeadStage').addEventListener('submit', async function(event) {
+    form.addEventListener('submit', async function(event) {
         event.preventDefault();
 
-        const form = event.target;
         const formData = new FormData(form);
-
         const substages = formData.getAll('substage[]').map((substage, index) => ({
             name: substage,
             mandatory: formData.getAll('mandatory[]')[index] === '1'
@@ -465,8 +473,8 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-            const response = await fetch('/crm-leadstage', {
-                method: 'POST',
+            const response = await fetch(editMode ? `/crm-leadstage/${editId}` : '/crm-leadstage', {
+                method: editMode ? 'PUT' : 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -478,8 +486,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (result.success) {
                 Swal.fire({
                     icon: 'success',
-                    title: 'Lead Stage Created',
-                    text: 'The lead stage has been created successfully!',
+                    title: editMode ? 'Lead Stage Updated' : 'Lead Stage Created',
+                    text: `The lead stage has been ${editMode ? 'updated' : 'created'} successfully!`,
                 }).then(() => {
                     location.reload();
                 });
@@ -487,7 +495,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: result.message || 'An error occurred while creating the lead stage.',
+                    text: result.message || `An error occurred while ${editMode ? 'updating' : 'creating'} the lead stage.`,
                 });
             }
         } catch (error) {
@@ -495,9 +503,39 @@ document.addEventListener('DOMContentLoaded', () => {
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'An error occurred while creating the lead stage.',
+                text: `An error occurred while ${editMode ? 'updating' : 'creating'} the lead stage.`,
             });
         }
+    });
+
+    // Handle edit button click
+    document.querySelectorAll('.edit-stage-btn').forEach(button => {
+        button.addEventListener('click', async function() {
+            editMode = true;
+            editId = this.getAttribute('data-id');
+
+            try {
+                const response = await fetch(`/crm-leadstage/${editId}`);
+                const leadStage = await response.json();
+
+                if (leadStage) {
+                    document.getElementById('stage').value = leadStage.stage;
+                    substageContainer.innerHTML = '';
+                    leadStage.substage.forEach(substage => {
+                        substageContainer.appendChild(createSubstageItem(substage));
+                    });
+
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            } catch (error) {
+                console.error('Error fetching lead stage data:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An error occurred while fetching the lead stage data.',
+                });
+            }
+        });
     });
 });
 

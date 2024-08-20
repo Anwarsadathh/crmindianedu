@@ -61,6 +61,33 @@ module.exports = {
       }
     });
   },
+  getLeadStageById: (id) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const leadStage = await db
+          .get()
+          .collection(collection.LEADSTAGE_COLLECTION)
+          .findOne({ _id: ObjectId(id) });
+        resolve(leadStage);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+
+  updateLeadStage: (id, updatedData) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        await db
+          .get()
+          .collection(collection.LEADSTAGE_COLLECTION)
+          .updateOne({ _id: ObjectId(id) }, { $set: updatedData });
+        resolve();
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
 
   getAllLeadStage: () => {
     return new Promise(async (resolve, reject) => {
@@ -251,7 +278,8 @@ module.exports = {
       }
     });
   },
-  getLeadStatusCounts: (sessionEmail, startDate, endDate) => {
+
+  getLeadStatusCounts: async (sessionEmail, startDate, endDate) => {
     return new Promise(async (resolve, reject) => {
       try {
         console.log("Lead Owner Email for Count:", sessionEmail);
@@ -274,12 +302,8 @@ module.exports = {
         // Date range filter for leadStatus
         const dateMatch =
           start && end
-            ? {
-                $match: {
-                  "leadStatusArray.v.date": { $gte: start, $lte: end },
-                },
-              }
-            : { $match: {} }; // Avoid an empty match object
+            ? { "leadStatusArray.v.date": { $gte: start, $lte: end } }
+            : {};
 
         // Google Sheets Collection aggregation for lead status counts
         const googleSheetsCounts = await db
@@ -288,20 +312,11 @@ module.exports = {
           .aggregate([
             { $match: matchCriteria },
             {
-              $project: {
-                leadStatusArray: {
-                  $objectToArray: "$leadStatus",
-                },
-              },
+              $project: { leadStatusArray: { $objectToArray: "$leadStatus" } },
             },
             { $unwind: "$leadStatusArray" },
-            dateMatch, // Apply date filter only if startDate and endDate are provided
-            {
-              $group: {
-                _id: "$leadStatusArray.k",
-                count: { $sum: 1 },
-              },
-            },
+            { $match: dateMatch },
+            { $group: { _id: "$leadStatusArray.k", count: { $sum: 1 } } },
           ])
           .toArray();
 
@@ -312,20 +327,11 @@ module.exports = {
           .aggregate([
             { $match: matchCriteria },
             {
-              $project: {
-                leadStatusArray: {
-                  $objectToArray: "$leadStatus",
-                },
-              },
+              $project: { leadStatusArray: { $objectToArray: "$leadStatus" } },
             },
             { $unwind: "$leadStatusArray" },
-            dateMatch, // Apply date filter only if startDate and endDate are provided
-            {
-              $group: {
-                _id: "$leadStatusArray.k",
-                count: { $sum: 1 },
-              },
-            },
+            { $match: dateMatch },
+            { $group: { _id: "$leadStatusArray.k", count: { $sum: 1 } } },
           ])
           .toArray();
 
@@ -355,16 +361,25 @@ module.exports = {
 
         const totalLeads = totalGoogleSheetLeads + totalReferralLeads;
 
+        // Fetch stages and sub-stages
+        const stagesAndSubStages = await db
+          .get()
+          .collection(collection.LEADSTAGE_COLLECTION)
+          .find({})
+          .toArray();
+
         console.log("Normalized Lead Status Counts:", combinedCounts);
         console.log("Total Leads:", totalLeads);
+        console.log("Stages and Sub-Stages:", stagesAndSubStages);
 
-        resolve({ combinedCounts, totalLeads });
+        resolve({ combinedCounts, totalLeads, stagesAndSubStages });
       } catch (error) {
         console.error("Error in getLeadStatusCounts:", error);
         reject(error);
       }
     });
   },
+
   getLeadStatusCountsok: (sessionEmail, startDate, endDate) => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -646,42 +661,55 @@ module.exports = {
     });
   },
 
- updateLeadStatus: async (id, leadStage, statusObj, isSaved) => {
+  updateLeadStatus: async (id, leadStage, statusObj, isSaved) => {
     return new Promise(async (resolve, reject) => {
-        try {
-            const query = ObjectId.isValid(id) ? { _id: new ObjectId(id) } : { id };
+      try {
+        const query = ObjectId.isValid(id) ? { _id: new ObjectId(id) } : { id };
 
-            // Fetch existing lead data and lead stages
-            const [googlesheet, referral, leadStageData] = await Promise.all([
-                db.get().collection(collection.GOOGLESHEETS_COLLECTION).findOne(query),
-                db.get().collection(collection.REFERRAL_COLLECTION).findOne(query),
-                db.get().collection(collection.LEADSTAGE_COLLECTION).findOne({ stage: leadStage }) // Get lead stage data
-            ]);
+        // Fetch existing lead data and lead stages
+        const [googlesheet, referral, leadStageData] = await Promise.all([
+          db
+            .get()
+            .collection(collection.GOOGLESHEETS_COLLECTION)
+            .findOne(query),
+          db.get().collection(collection.REFERRAL_COLLECTION).findOne(query),
+          db
+            .get()
+            .collection(collection.LEADSTAGE_COLLECTION)
+            .findOne({ stage: leadStage }), // Get lead stage data
+        ]);
 
-            // Merge existing statuses and update with the new status
-            const currentStatus = googlesheet?.leadStatus || referral?.leadStatus || {};
-            const stagesArray = currentStatus[leadStage] || [];
+        // Merge existing statuses and update with the new status
+        const currentStatus =
+          googlesheet?.leadStatus || referral?.leadStatus || {};
+        const stagesArray = currentStatus[leadStage] || [];
 
-            // Append the new status object to the array of stages
-            stagesArray.push(statusObj);
+        // Append the new status object to the array of stages
+        stagesArray.push(statusObj);
 
-            // Update the collections with the new status structure
-            await Promise.all([
-                db.get().collection(collection.GOOGLESHEETS_COLLECTION).updateOne(query, {
-                    $set: { [`leadStatus.${leadStage}`]: stagesArray, isSaved },
-                }),
-                db.get().collection(collection.REFERRAL_COLLECTION).updateOne(query, {
-                    $set: { [`leadStatus.${leadStage}`]: stagesArray, isSaved },
-                }),
-            ]);
+        // Update the collections with the new status structure
+        await Promise.all([
+          db
+            .get()
+            .collection(collection.GOOGLESHEETS_COLLECTION)
+            .updateOne(query, {
+              $set: { [`leadStatus.${leadStage}`]: stagesArray, isSaved },
+            }),
+          db
+            .get()
+            .collection(collection.REFERRAL_COLLECTION)
+            .updateOne(query, {
+              $set: { [`leadStatus.${leadStage}`]: stagesArray, isSaved },
+            }),
+        ]);
 
-            resolve();
-        } catch (error) {
-            reject(error);
-        }
+        resolve();
+      } catch (error) {
+        reject(error);
+      }
     });
-},
-  getSubStageMandatoryStatus : async (stage, subStage) => {
+  },
+  getSubStageMandatoryStatus: async (stage, subStage) => {
     try {
       const leadStage = await db
         .get()
@@ -689,15 +717,17 @@ module.exports = {
         .findOne({ stage });
 
       if (leadStage) {
-        const subStageInfo = leadStage.substage.find(s => s.name === subStage);
+        const subStageInfo = leadStage.substage.find(
+          (s) => s.name === subStage
+        );
         const isMandatory = subStageInfo ? subStageInfo.mandatory : false;
         return { success: true, isMandatory };
       } else {
-        return { success: false, message: 'Lead stage not found' };
+        return { success: false, message: "Lead stage not found" };
       }
     } catch (error) {
-      console.error('Error fetching sub-stage mandatory status:', error);
-      return { success: false, message: 'An error occurred' };
+      console.error("Error fetching sub-stage mandatory status:", error);
+      return { success: false, message: "An error occurred" };
     }
   },
 
