@@ -74,6 +74,20 @@ module.exports = {
       }
     });
   },
+deleteLeadStage: (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            await db
+                .get()
+                .collection(collection.LEADSTAGE_COLLECTION)
+                .deleteOne({ _id: new ObjectId(id) });
+
+            resolve();
+        } catch (error) {
+            reject(error);
+        }
+    });
+},
 
   updateLeadStage: (id, updatedData) => {
     return new Promise(async (resolve, reject) => {

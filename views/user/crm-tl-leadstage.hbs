@@ -348,44 +348,103 @@ header img {
             </div>
         </div>
 
-        <!-- Lead Stages Table -->
-        <div class="col-sm-12 col-xl-6">
-            <div class="bg-light rounded h-100 p-4">
-                <h6 class="mb-4">Lead Stages</h6>
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>No.</th>
-                                <th>Stage</th>
-                                <th>Sub Stages</th>
-                                <th>Mandatory</th>
-                                <th>Edit</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#each leadStage}}
-                            <tr>
-                                <td class="font-weight-bold">{{incrementIndex @index}}</td>
-                                <td>{{this.stage}}</td>
-                                <td>{{#each this.substage}}{{this.name}}<br>{{/each}}</td>
-                                <td>{{#each this.substage}}{{#if this.mandatory}}Yes{{else}}No{{/if}}<br>{{/each}}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-warning edit-lead-stage-btn" data-id="{{this._id}}">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            {{/each}}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+     <!-- Lead Stages Table -->
+<div class="col-sm-12 col-xl-6">
+    <div class="bg-light rounded h-100 p-4">
+        <h6 class="mb-4">Lead Stages</h6>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Stage</th>
+                        <th>Sub Stages</th>
+                        <th>Mandatory</th>
+                        <th>Edit</th>
+                        <th>Delete</th> <!-- New delete column -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each leadStage}}
+                    <tr>
+                        <td class="font-weight-bold">{{incrementIndex @index}}</td>
+                        <td>{{this.stage}}</td>
+                        <td>{{#each this.substage}}{{this.name}}<br>{{/each}}</td>
+                        <td>{{#each this.substage}}{{#if this.mandatory}}Yes{{else}}No{{/if}}<br>{{/each}}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning edit-lead-stage-btn" data-id="{{this._id}}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-danger delete-lead-stage-btn" data-id="{{this._id}}">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
         </div>
+    </div>
+</div>
+
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    document.querySelectorAll('.delete-lead-stage-btn').forEach(button => {
+    button.addEventListener('click', async function() {
+        const leadStageId = this.dataset.id;
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const response = await fetch(`/crm-leadstage/${leadStageId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        Swal.fire(
+                            'Deleted!',
+                            'The lead stage has been deleted.',
+                            'success'
+                        ).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: result.message || 'An error occurred while deleting the lead stage.',
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An error occurred while deleting the lead stage.',
+                    });
+                }
+            }
+        });
+    });
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     const substageContainer = document.getElementById('substageContainer');
     const form = document.getElementById('createLeadStage');

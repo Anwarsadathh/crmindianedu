@@ -1068,6 +1068,18 @@ router.get("/crm-leadstage/:id", async (req, res) => {
   }
 });
 
+router.delete('/crm-leadstage/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        await serviceHelpers.deleteLeadStage(id);
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error deleting lead stage:', error);
+        res.json({ success: false, message: error.message || 'An error occurred while deleting the lead stage.' });
+    }
+});
+
 router.put('/crm-leadstage/:id', async (req, res) => {
   const { id } = req.params;
   const { stage, substage } = req.body;
