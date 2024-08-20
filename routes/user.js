@@ -519,11 +519,11 @@ router.post("/update-lead-status", async (req, res) => {
           }
         : null;
 
-    // Create the status object
+    // Create the status object with both date and time
     const statusObj = {
       status: leadStatus,
       subStage,
-      date: new Date().toISOString().split("T")[0], // Current date
+      date: new Date().toISOString(), // Current date and time in ISO format
       followUp: followUp || null, // Include follow-up if provided
     };
 

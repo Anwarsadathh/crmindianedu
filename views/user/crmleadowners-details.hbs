@@ -570,6 +570,15 @@ async function showLeadStatus(button) {
     try {
         const leadStatus = JSON.parse(leadStatusContent);
 
+        // Function to format time in IST
+        function formatTimeInIST(dateString) {
+            const date = new Date(dateString);
+            // Offset IST (UTC+5:30)
+            date.setHours(date.getHours() + 5);
+            date.setMinutes(date.getMinutes() + 30);
+            return date.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+        }
+
         // Iterate through each stage in leadStatus
         Object.keys(leadStatus).forEach(stage => {
             const stages = leadStatus[stage];
@@ -579,10 +588,14 @@ async function showLeadStatus(button) {
                     const timelineItem = document.createElement('div');
                     timelineItem.className = `timeline-item ${index % 2 === 0 ? 'left' : 'right'}`;
 
-                    // Create date element
+                    // Format date and time separately
+                    const date = stageDetail.date ? new Date(stageDetail.date).toLocaleDateString() : 'N/A';
+                    const time = stageDetail.date ? formatTimeInIST(stageDetail.date) : '';
+
+                    // Create date element with time in a smaller font
                     const dateElement = document.createElement('div');
                     dateElement.className = 'timeline-date';
-                    dateElement.textContent = stageDetail.date || 'N/A';
+                    dateElement.innerHTML = `${date} <span style="font-size: 0.8em; color: #666;">${time}</span>`;
 
                     // Create content element
                     const contentElement = document.createElement('div');
@@ -590,7 +603,7 @@ async function showLeadStatus(button) {
                     contentElement.innerHTML = `
                         <h6>${stage} - ${stageDetail.subStage || 'N/A'}</h6>
                         <p>Status: ${stageDetail.status || 'N/A'}</p>
-                        ${stageDetail.followUp ? `<p>Follow-Up Date: ${stageDetail.followUp.date} ${stageDetail.followUp.time}</p>` : ''}
+                        ${stageDetail.followUp ? `<p>Follow-Up Date: ${stageDetail.followUp.date} ${formatTimeInIST(stageDetail.followUp.date)}</p>` : ''}
                     `;
 
                     timelineItem.appendChild(dateElement);
@@ -615,6 +628,8 @@ document.addEventListener('DOMContentLoaded', function () {
         showLeadStatus(button);
     });
 });
+
+
 </script>
 <script>
 
