@@ -67,26 +67,43 @@
                            
                     </div>
                         <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle text-dark active" data-bs-toggle="dropdown"><i class="fa fa-user text-dark me-2"></i>Academic Status</a>
+                        <a href="#" class="nav-link dropdown-toggle text-white " data-bs-toggle="dropdown"><i class="fa fa-user text-dark me-2"></i>Academic Status</a>
                        
                             <div class="dropdown-menu bg-transparent border-0">
                             <a href="/student-academicstatus" class="dropdown-item active">My Academic</a>
                         </div>
                     </div>
                       <div class="nav-item dropdown">
-                        <a href="/student-wallet" class="nav-link  text-white" data-bs-toggle="dropdown"><i class="fa fa-user text-dark me-2"></i>My Wallet</a>
+                        <a href="/student-wallet" class="nav-link  text-dark active" class="nav-item nav-link text-dark active"><i class="fa fa-user text-dark me-2"></i>My Wallet</a>
                        
-                     
                     </div>
-                     <div class="nav-item dropdown">
-                        <a href="/student-achieversclub" class="nav-link  text-white" data-bs-toggle="dropdown"><i class="fa fa-user text-dark me-2"></i>Achievers Club</a>
-                       
-                     
-                    </div>
+                    <div class="nav-item dropdown">
+    <a href="#" class="nav-link text-white" data-bs-toggle="modal" data-bs-target="#accessModal">
+        <i class="fa fa-user text-dark me-2"></i>Achievers Club
+    </a>
+</div>
+
                 </div>
             </nav>
         </div>
         <!-- Sidebar End -->
+<!-- Modal -->
+<div class="modal fade" id="accessModal" tabindex="-1" aria-labelledby="accessModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="accessModalLabel">Access Restricted</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Currently, you are not accessible to this feature.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
         <!-- Content Start -->
         <div class="content">
