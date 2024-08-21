@@ -37,24 +37,54 @@ module.exports = {
       }
     });
   },
-  getSubStagesFromDatabase: (stage) => {
+  getSubStagesFromDatabase: (stage, mainStage) => {
     return new Promise(async (resolve, reject) => {
       try {
-        if (!stage || typeof stage !== "string") {
-          return reject({ message: "Invalid stage value." });
+        if (
+          !stage ||
+          typeof stage !== "string" ||
+          !mainStage ||
+          typeof mainStage !== "string"
+        ) {
+          return reject({ message: "Invalid stage or main stage value." });
         }
 
         // Retrieve the stage document
         const stageDocument = await db
           .get()
           .collection(collection.LEADSTAGE_COLLECTION)
-          .findOne({ stage });
+          .findOne({ stage, mainStage });
 
         // If stage document exists, return the sub-stages
         if (stageDocument && stageDocument.substage) {
           resolve(stageDocument.substage);
         } else {
           resolve([]); // No sub-stages available for the given stage
+        }
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+
+  getStagesFromDatabase: (mainStage) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        if (!mainStage || typeof mainStage !== "string") {
+          return reject({ message: "Invalid main stage value." });
+        }
+
+        // Retrieve stages that belong to the specified main stage
+        const stages = await db
+          .get()
+          .collection(collection.LEADSTAGE_COLLECTION)
+          .find({ mainStage })
+          .toArray();
+
+        if (stages) {
+          resolve(stages.map((stage) => stage.stage));
+        } else {
+          resolve([]); // No stages available for the given main stage
         }
       } catch (error) {
         reject(error);
@@ -74,20 +104,20 @@ module.exports = {
       }
     });
   },
-deleteLeadStage: (id) => {
+  deleteLeadStage: (id) => {
     return new Promise(async (resolve, reject) => {
-        try {
-            await db
-                .get()
-                .collection(collection.LEADSTAGE_COLLECTION)
-                .deleteOne({ _id: new ObjectId(id) });
+      try {
+        await db
+          .get()
+          .collection(collection.LEADSTAGE_COLLECTION)
+          .deleteOne({ _id: new ObjectId(id) });
 
-            resolve();
-        } catch (error) {
-            reject(error);
-        }
+        resolve();
+      } catch (error) {
+        reject(error);
+      }
     });
-},
+  },
 
   updateLeadStage: (id, updatedData) => {
     return new Promise(async (resolve, reject) => {
@@ -120,17 +150,18 @@ deleteLeadStage: (id) => {
   createLeadStage: (leadStageData) => {
     return new Promise(async (resolve, reject) => {
       try {
-        // Check if the stage already exists
         const existingLeadStage = await db
           .get()
           .collection(collection.LEADSTAGE_COLLECTION)
-          .findOne({ stage: leadStageData.stage });
+          .findOne({
+            mainStage: leadStageData.mainStage,
+            stage: leadStageData.stage,
+          });
 
         if (existingLeadStage) {
           return reject({ message: "Lead Stage already exists" });
         }
 
-        // Save the lead stage details into the database
         await db
           .get()
           .collection(collection.LEADSTAGE_COLLECTION)
@@ -293,106 +324,799 @@ deleteLeadStage: (id) => {
     });
   },
 
-  getLeadStatusCounts: async (sessionEmail, startDate, endDate) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        console.log("Lead Owner Email for Count:", sessionEmail);
-        console.log("Received startDate:", startDate);
-        console.log("Received endDate:", endDate);
+  // getLeadStatusCounts: async (
+  //   sessionEmail,
+  //   startDate,
+  //   endDate,
+  //   filterType,
+  //   selectedStage
+  // ) => {
+  //   return new Promise(async (resolve, reject) => {
+  //     try {
+  //       console.log("Lead Owner Email for Count:", sessionEmail);
+  //       console.log("Received startDate:", startDate);
+  //       console.log("Received endDate:", endDate);
+  //       console.log("Received filterType:", filterType);
+  //       console.log("Received stage:", selectedStage); // Log the selected stage
 
-        // Convert startDate and endDate to ISO strings (dates only)
-        const start = startDate
-          ? new Date(startDate).toISOString().split("T")[0]
-          : null;
-        const end = endDate
-          ? new Date(endDate).toISOString().split("T")[0]
-          : null;
+  //       const start = startDate
+  //         ? new Date(startDate).toISOString().split("T")[0]
+  //         : null;
+  //       const end = endDate
+  //         ? new Date(endDate).toISOString().split("T")[0]
+  //         : null;
 
-        console.log("Parsed startDate:", start);
-        console.log("Parsed endDate:", end);
+  //       console.log("Parsed startDate:", start);
+  //       console.log("Parsed endDate:", end);
 
+  //       let matchCriteria = { leadOwnerName: sessionEmail };
+
+  //       const [googleSheetData, referralData, stages] = await Promise.all([
+  //         db
+  //           .get()
+  //           .collection(collection.GOOGLESHEETS_COLLECTION)
+  //           .find(matchCriteria)
+  //           .toArray(),
+  //         db
+  //           .get()
+  //           .collection(collection.REFERRAL_COLLECTION)
+  //           .find(matchCriteria)
+  //           .toArray(),
+  //         db
+  //           .get()
+  //           .collection(collection.LEADSTAGE_COLLECTION)
+  //           .find({})
+  //           .toArray(),
+  //       ]);
+
+  //       const allData = [...googleSheetData, ...referralData];
+
+  //       const leadStatusCounts = {};
+  //       const stageCounts = {};
+  //       const subStageCounts = {};
+
+  //       allData.forEach((doc) => {
+  //         for (const [mainStage, stages] of Object.entries(
+  //           doc.leadStatus || {}
+  //         )) {
+  //           if (filterType && filterType !== mainStage) continue;
+
+  //           if (!leadStatusCounts[mainStage]) {
+  //             leadStatusCounts[mainStage] = { count: 0, stages: {} };
+  //           }
+
+  //           for (const [stage, entries] of Object.entries(stages)) {
+  //             if (selectedStage && selectedStage !== stage) continue; // Filter by stage
+
+  //             if (!leadStatusCounts[mainStage].stages[stage]) {
+  //               leadStatusCounts[mainStage].stages[stage] = {
+  //                 count: 0,
+  //                 subStages: {},
+  //               };
+  //             }
+
+  //             if (!stageCounts[mainStage]) {
+  //               stageCounts[mainStage] = {};
+  //             }
+  //             if (!stageCounts[mainStage][stage]) {
+  //               stageCounts[mainStage][stage] = 0;
+  //             }
+
+  //             entries.forEach((entry) => {
+  //               const entryDate = entry.date ? entry.date.split("T")[0] : null;
+
+  //               if (
+  //                 entryDate &&
+  //                 (!start || entryDate >= start) &&
+  //                 (!end || entryDate <= end)
+  //               ) {
+  //                 leadStatusCounts[mainStage].count += 1;
+  //                 leadStatusCounts[mainStage].stages[stage].count += 1;
+  //                 stageCounts[mainStage][stage] += 1;
+
+  //                 if (!subStageCounts[mainStage]) {
+  //                   subStageCounts[mainStage] = {};
+  //                 }
+  //                 if (!subStageCounts[mainStage][stage]) {
+  //                   subStageCounts[mainStage][stage] = {};
+  //                 }
+  //                 if (!subStageCounts[mainStage][stage][entry.subStage]) {
+  //                   subStageCounts[mainStage][stage][entry.subStage] = 0;
+  //                 }
+  //                 subStageCounts[mainStage][stage][entry.subStage] += 1;
+  //               }
+  //             });
+  //           }
+  //         }
+  //       });
+
+  //       const stagesAndSubStages = stages.reduce((acc, stage) => {
+  //         if (Array.isArray(stage.substage)) {
+  //           acc.push({
+  //             mainStage: stage.mainStage,
+  //             stage: stage.stage,
+  //             substage: stage.substage,
+  //           });
+  //         } else {
+  //           console.error(
+  //             `Stages data for main stage "${stage.mainStage}" is not an array:`,
+  //             stage
+  //           );
+  //         }
+  //         return acc;
+  //       }, []);
+
+  //       const totalLeads = allData.length;
+
+  //       const mainStageCounts = Object.entries(leadStatusCounts).map(
+  //         ([mainStage, { count }]) => ({ mainStage, count })
+  //       );
+
+  //       const stageCountsFlat = Object.entries(stageCounts).flatMap(
+  //         ([mainStage, stages]) =>
+  //           Object.entries(stages).map(([stage, count]) => ({
+  //             mainStage,
+  //             stage,
+  //             count,
+  //           }))
+  //       );
+
+  //       const subStageCountsFlat = Object.entries(subStageCounts).flatMap(
+  //         ([mainStage, stages]) =>
+  //           Object.entries(stages).flatMap(([stage, subStages]) =>
+  //             Object.entries(subStages).map(([subStage, count]) => ({
+  //               mainStage,
+  //               stage,
+  //               subStage,
+  //               count,
+  //             }))
+  //           )
+  //       );
+
+  //       console.log("Main Stage Counts:", mainStageCounts);
+  //       console.log("Stage Counts:", stageCountsFlat);
+  //       console.log("Sub-Stage Counts:", subStageCountsFlat);
+  //       console.log("Total Leads:", totalLeads);
+  //       console.log(
+  //         "Stages and Sub-Stages Data:",
+  //         JSON.stringify(stagesAndSubStages, null, 2)
+  //       );
+
+  //       resolve({
+  //         mainStageCounts,
+  //         stageCounts: stageCountsFlat,
+  //         subStageCounts: subStageCountsFlat,
+  //         totalLeads,
+  //         stagesAndSubStages,
+  //       });
+  //     } catch (error) {
+  //       console.error("Error in getLeadStatusCounts:", error);
+  //       reject(error);
+  //     }
+  //   });
+  // },
+  // getLeadStatusCounts: async (
+  //   sessionEmail,
+  //   startDate,
+  //   endDate,
+  //   filterType,
+  //   selectedStage,
+  //   showLatestSubstage = false // Add a new parameter to control showing latest substage
+  // ) => {
+  //   return new Promise(async (resolve, reject) => {
+  //     try {
+  //       console.log("Lead Owner Email for Count:", sessionEmail);
+  //       console.log("Received startDate:", startDate);
+  //       console.log("Received endDate:", endDate);
+  //       console.log("Received filterType:", filterType);
+  //       console.log("Received stage:", selectedStage);
+  //       console.log("Show Latest Substage:", showLatestSubstage); // Log the showLatestSubstage flag
+
+  //       const start = startDate
+  //         ? new Date(startDate).toISOString().split("T")[0]
+  //         : null;
+  //       const end = endDate
+  //         ? new Date(endDate).toISOString().split("T")[0]
+  //         : null;
+
+  //       console.log("Parsed startDate:", start);
+  //       console.log("Parsed endDate:", end);
+
+  //       let matchCriteria = { leadOwnerName: sessionEmail };
+
+  //       const [googleSheetData, referralData, stages] = await Promise.all([
+  //         db
+  //           .get()
+  //           .collection(collection.GOOGLESHEETS_COLLECTION)
+  //           .find(matchCriteria)
+  //           .toArray(),
+  //         db
+  //           .get()
+  //           .collection(collection.REFERRAL_COLLECTION)
+  //           .find(matchCriteria)
+  //           .toArray(),
+  //         db
+  //           .get()
+  //           .collection(collection.LEADSTAGE_COLLECTION)
+  //           .find({})
+  //           .toArray(),
+  //       ]);
+
+  //       const allData = [...googleSheetData, ...referralData];
+
+  //       const leadStatusCounts = {};
+  //       const stageCounts = {};
+  //       const subStageCounts = {};
+
+  //       allData.forEach((doc) => {
+  //         for (const [mainStage, stages] of Object.entries(
+  //           doc.leadStatus || {}
+  //         )) {
+  //           if (filterType && filterType !== mainStage) continue;
+
+  //           if (!leadStatusCounts[mainStage]) {
+  //             leadStatusCounts[mainStage] = { count: 0, stages: {} };
+  //           }
+
+  //           for (const [stage, entries] of Object.entries(stages)) {
+  //             if (selectedStage && selectedStage !== stage) continue;
+
+  //             // Find the latest substage if showLatestSubstage is true
+  //             let filteredEntries = entries;
+  //             if (showLatestSubstage) {
+  //               filteredEntries = [
+  //                 entries.reduce((latest, entry) => {
+  //                   return !latest ||
+  //                     new Date(entry.date) > new Date(latest.date)
+  //                     ? entry
+  //                     : latest;
+  //                 }, null),
+  //               ];
+  //             }
+
+  //             if (!leadStatusCounts[mainStage].stages[stage]) {
+  //               leadStatusCounts[mainStage].stages[stage] = {
+  //                 count: 0,
+  //                 subStages: {},
+  //               };
+  //             }
+
+  //             if (!stageCounts[mainStage]) {
+  //               stageCounts[mainStage] = {};
+  //             }
+  //             if (!stageCounts[mainStage][stage]) {
+  //               stageCounts[mainStage][stage] = 0;
+  //             }
+
+  //             filteredEntries.forEach((entry) => {
+  //               const entryDate = entry.date ? entry.date.split("T")[0] : null;
+
+  //               if (
+  //                 entryDate &&
+  //                 (!start || entryDate >= start) &&
+  //                 (!end || entryDate <= end)
+  //               ) {
+  //                 leadStatusCounts[mainStage].count += 1;
+  //                 leadStatusCounts[mainStage].stages[stage].count += 1;
+  //                 stageCounts[mainStage][stage] += 1;
+
+  //                 if (!subStageCounts[mainStage]) {
+  //                   subStageCounts[mainStage] = {};
+  //                 }
+  //                 if (!subStageCounts[mainStage][stage]) {
+  //                   subStageCounts[mainStage][stage] = {};
+  //                 }
+  //                 if (!subStageCounts[mainStage][stage][entry.subStage]) {
+  //                   subStageCounts[mainStage][stage][entry.subStage] = 0;
+  //                 }
+  //                 subStageCounts[mainStage][stage][entry.subStage] += 1;
+  //               }
+  //             });
+  //           }
+  //         }
+  //       });
+
+  //       const stagesAndSubStages = stages.reduce((acc, stage) => {
+  //         if (Array.isArray(stage.substage)) {
+  //           acc.push({
+  //             mainStage: stage.mainStage,
+  //             stage: stage.stage,
+  //             substage: stage.substage,
+  //           });
+  //         } else {
+  //           console.error(
+  //             `Stages data for main stage "${stage.mainStage}" is not an array:`,
+  //             stage
+  //           );
+  //         }
+  //         return acc;
+  //       }, []);
+
+  //       const totalLeads = allData.length;
+
+  //       const mainStageCounts = Object.entries(leadStatusCounts).map(
+  //         ([mainStage, { count }]) => ({ mainStage, count })
+  //       );
+
+  //       const stageCountsFlat = Object.entries(stageCounts).flatMap(
+  //         ([mainStage, stages]) =>
+  //           Object.entries(stages).map(([stage, count]) => ({
+  //             mainStage,
+  //             stage,
+  //             count,
+  //           }))
+  //       );
+
+  //       const subStageCountsFlat = Object.entries(subStageCounts).flatMap(
+  //         ([mainStage, stages]) =>
+  //           Object.entries(stages).flatMap(([stage, subStages]) =>
+  //             Object.entries(subStages).map(([subStage, count]) => ({
+  //               mainStage,
+  //               stage,
+  //               subStage,
+  //               count,
+  //             }))
+  //           )
+  //       );
+
+  //       console.log("Main Stage Counts:", mainStageCounts);
+  //       console.log("Stage Counts:", stageCountsFlat);
+  //       console.log("Sub-Stage Counts:", subStageCountsFlat);
+  //       console.log("Total Leads:", totalLeads);
+  //       console.log(
+  //         "Stages and Sub-Stages Data:",
+  //         JSON.stringify(stagesAndSubStages, null, 2)
+  //       );
+
+  //       resolve({
+  //         mainStageCounts,
+  //         stageCounts: stageCountsFlat,
+  //         subStageCounts: subStageCountsFlat,
+  //         totalLeads,
+  //         stagesAndSubStages,
+  //       });
+  //     } catch (error) {
+  //       console.error("Error in getLeadStatusCounts:", error);
+  //       reject(error);
+  //     }
+  //   });
+  // },
+getLeadStatusCounts: async (sessionEmail, startDate, endDate, filterType, stage, showLatestSubstage) => {
+    try {
         let matchCriteria = { leadOwnerName: sessionEmail };
 
-        // Date range filter for leadStatus
-        const dateMatch =
-          start && end
-            ? { "leadStatusArray.v.date": { $gte: start, $lte: end } }
-            : {};
+        // Add date filtering if startDate and endDate are provided
+        if (startDate && endDate) {
+            matchCriteria['history.date'] = {
+                $gte: new Date(startDate),
+                $lte: new Date(endDate),
+            };
+        }
 
-        // Google Sheets Collection aggregation for lead status counts
-        const googleSheetsCounts = await db
-          .get()
-          .collection(collection.GOOGLESHEETS_COLLECTION)
-          .aggregate([
-            { $match: matchCriteria },
-            {
-              $project: { leadStatusArray: { $objectToArray: "$leadStatus" } },
-            },
-            { $unwind: "$leadStatusArray" },
-            { $match: dateMatch },
-            { $group: { _id: "$leadStatusArray.k", count: { $sum: 1 } } },
-          ])
-          .toArray();
+        const collections = [
+            db.get().collection(collection.GOOGLESHEETS_COLLECTION),
+            db.get().collection(collection.REFERRAL_COLLECTION)
+        ];
 
-        // Referral Collection aggregation for lead status counts
-        const referralCounts = await db
-          .get()
-          .collection(collection.REFERRAL_COLLECTION)
-          .aggregate([
-            { $match: matchCriteria },
-            {
-              $project: { leadStatusArray: { $objectToArray: "$leadStatus" } },
-            },
-            { $unwind: "$leadStatusArray" },
-            { $match: dateMatch },
-            { $group: { _id: "$leadStatusArray.k", count: { $sum: 1 } } },
-          ])
-          .toArray();
+        const results = await Promise.all(collections.map(col =>
+            col.aggregate([
+                { $match: matchCriteria },
+                { $project: { leadStatus: 1, history: 1 } },
+                { $unwind: { path: "$leadStatus", preserveNullAndEmptyArrays: true } },
+                { $unwind: { path: "$leadStatus", preserveNullAndEmptyArrays: true } },
+                { $project: { mainStage: { k: "$leadStatus.mainStage", v: "$leadStatus" } } },
+                { $unwind: "$mainStage.v" },
+                { $group: {
+                    _id: {
+                        mainStage: "$mainStage.k",
+                        stage: "$mainStage.v.status",
+                        subStage: "$mainStage.v.subStage"
+                    },
+                    count: { $sum: 1 }
+                }},
+                { $project: {
+                    _id: 0,
+                    mainStage: "$_id.mainStage",
+                    stage: "$_id.stage",
+                    subStage: "$_id.subStage",
+                    count: 1
+                }}
+            ]).toArray()
+        ));
 
-        // Combine and normalize counts for lead statuses
-        const combinedCounts = [
-          ...googleSheetsCounts,
-          ...referralCounts,
-        ].reduce((acc, curr) => {
-          const status = curr._id || "UNKNOWN";
-          acc[status] = (acc[status] || 0) + curr.count;
-          return acc;
-        }, {});
+        // Flatten the results from multiple collections
+        const flattenedResults = results.flat();
 
-        // Total lead count based on assignDate
-        const assignDateMatch =
-          start && end ? { assignDate: { $gte: start, $lte: end } } : {};
-
-        const totalGoogleSheetLeads = await db
-          .get()
-          .collection(collection.GOOGLESHEETS_COLLECTION)
-          .countDocuments({ ...matchCriteria, ...assignDateMatch });
-
-        const totalReferralLeads = await db
-          .get()
-          .collection(collection.REFERRAL_COLLECTION)
-          .countDocuments({ ...matchCriteria, ...assignDateMatch });
-
-        const totalLeads = totalGoogleSheetLeads + totalReferralLeads;
-
-        // Fetch stages and sub-stages
-        const stagesAndSubStages = await db
-          .get()
-          .collection(collection.LEADSTAGE_COLLECTION)
-          .find({})
-          .toArray();
-
-        console.log("Normalized Lead Status Counts:", combinedCounts);
-        console.log("Total Leads:", totalLeads);
-        console.log("Stages and Sub-Stages:", stagesAndSubStages);
-
-        resolve({ combinedCounts, totalLeads, stagesAndSubStages });
-      } catch (error) {
+        return flattenedResults;
+    } catch (error) {
         console.error("Error in getLeadStatusCounts:", error);
-        reject(error);
-      }
-    });
-  },
+        throw error;
+    }
+},
+
+  // getLeadStatusCounts: async (sessionEmail, startDate, endDate, filterType) => {
+  //   return new Promise(async (resolve, reject) => {
+  //     try {
+  //       console.log("Lead Owner Email for Count:", sessionEmail);
+  //       console.log("Received startDate:", startDate);
+  //       console.log("Received endDate:", endDate);
+  //       console.log("Received filterType:", filterType);
+
+  //       // Parse the start and end dates
+  //       const start = startDate
+  //         ? new Date(startDate).toISOString().split("T")[0]
+  //         : null;
+  //       const end = endDate
+  //         ? new Date(endDate).toISOString().split("T")[0]
+  //         : null;
+
+  //       console.log("Parsed startDate:", start);
+  //       console.log("Parsed endDate:", end);
+
+  //       let matchCriteria = { leadOwnerName: sessionEmail };
+
+  //       const [googleSheetData, referralData, stages] = await Promise.all([
+  //         db
+  //           .get()
+  //           .collection(collection.GOOGLESHEETS_COLLECTION)
+  //           .find(matchCriteria)
+  //           .toArray(),
+  //         db
+  //           .get()
+  //           .collection(collection.REFERRAL_COLLECTION)
+  //           .find(matchCriteria)
+  //           .toArray(),
+  //         db
+  //           .get()
+  //           .collection(collection.LEADSTAGE_COLLECTION)
+  //           .find({})
+  //           .toArray(),
+  //       ]);
+
+  //       const allData = [...googleSheetData, ...referralData];
+
+  //       const leadStatusCounts = {};
+  //       const stageCounts = {};
+  //       const subStageCounts = {};
+
+  //       allData.forEach((doc) => {
+  //         for (const [mainStage, stages] of Object.entries(
+  //           doc.leadStatus || {}
+  //         )) {
+  //           if (
+  //             filterType &&
+  //             filterType !== mainStage &&
+  //             filterType !== "Unique"
+  //           )
+  //             continue;
+
+  //           Object.entries(stages).forEach(([stage, entries]) => {
+  //             if (!leadStatusCounts[mainStage]) {
+  //               leadStatusCounts[mainStage] = { count: 0, stages: {} };
+  //             }
+  //             if (!leadStatusCounts[mainStage].stages[stage]) {
+  //               leadStatusCounts[mainStage].stages[stage] = {
+  //                 count: 0,
+  //                 subStages: {},
+  //               };
+  //             }
+
+  //             let latestEntry = entries.reduce((latest, current) => {
+  //               const currentDate = new Date(current.date);
+  //               return currentDate > new Date(latest.date) ? current : latest;
+  //             });
+
+  //             if (!stageCounts[mainStage]) {
+  //               stageCounts[mainStage] = {};
+  //             }
+  //             if (!stageCounts[mainStage][stage]) {
+  //               stageCounts[mainStage][stage] = 0;
+  //             }
+
+  //             const entryDate = latestEntry.date
+  //               ? latestEntry.date.split("T")[0]
+  //               : null;
+  //             if (
+  //               entryDate &&
+  //               (!start || entryDate >= start) &&
+  //               (!end || entryDate <= end)
+  //             ) {
+  //               leadStatusCounts[mainStage].count += 1;
+  //               leadStatusCounts[mainStage].stages[stage].count += 1;
+  //               stageCounts[mainStage][stage] += 1;
+
+  //               if (!subStageCounts[mainStage]) {
+  //                 subStageCounts[mainStage] = {};
+  //               }
+  //               if (!subStageCounts[mainStage][stage]) {
+  //                 subStageCounts[mainStage][stage] = {};
+  //               }
+  //               if (!subStageCounts[mainStage][stage][latestEntry.subStage]) {
+  //                 subStageCounts[mainStage][stage][latestEntry.subStage] = 0;
+  //               }
+  //               subStageCounts[mainStage][stage][latestEntry.subStage] += 1;
+  //             }
+  //           });
+  //         }
+  //       });
+
+  //       const stagesAndSubStages = stages.reduce((acc, stage) => {
+  //         if (Array.isArray(stage.substage)) {
+  //           acc.push({
+  //             mainStage: stage.mainStage,
+  //             stage: stage.stage,
+  //             substage: stage.substage,
+  //           });
+  //         } else {
+  //           console.error(
+  //             `Stages data for main stage "${stage.mainStage}" is not an array:`,
+  //             stage
+  //           );
+  //         }
+  //         return acc;
+  //       }, []);
+
+  //       const totalLeads = allData.length;
+
+  //       const mainStageCounts = Object.entries(leadStatusCounts).map(
+  //         ([mainStage, { count }]) => ({ mainStage, count })
+  //       );
+
+  //       const stageCountsFlat = Object.entries(stageCounts).flatMap(
+  //         ([mainStage, stages]) =>
+  //           Object.entries(stages).map(([stage, count]) => ({
+  //             mainStage,
+  //             stage,
+  //             count,
+  //           }))
+  //       );
+
+  //       const subStageCountsFlat = Object.entries(subStageCounts).flatMap(
+  //         ([mainStage, stages]) =>
+  //           Object.entries(stages).flatMap(([stage, subStages]) =>
+  //             Object.entries(subStages).map(([subStage, count]) => ({
+  //               mainStage,
+  //               stage,
+  //               subStage,
+  //               count,
+  //             }))
+  //           )
+  //       );
+
+  //       console.log("Main Stage Counts:", mainStageCounts);
+  //       console.log("Stage Counts:", stageCountsFlat);
+  //       console.log("Sub-Stage Counts:", subStageCountsFlat);
+  //       console.log("Total Leads:", totalLeads);
+  //       console.log(
+  //         "Stages and Sub-Stages Data:",
+  //         JSON.stringify(stagesAndSubStages, null, 2)
+  //       );
+
+  //       resolve({
+  //         mainStageCounts,
+  //         stageCounts: stageCountsFlat,
+  //         subStageCounts: subStageCountsFlat,
+  //         totalLeads,
+  //         stagesAndSubStages,
+  //       });
+  //     } catch (error) {
+  //       console.error("Error in getLeadStatusCounts:", error);
+  //       reject(error);
+  //     }
+  //   });
+  // },
+  // getLeadStatusCounts: async (sessionEmail, startDate, endDate, filterType) => {
+  //   return new Promise(async (resolve, reject) => {
+  //     try {
+  //       console.log("Lead Owner Email for Count:", sessionEmail);
+  //       console.log("Received startDate:", startDate);
+  //       console.log("Received endDate:", endDate);
+  //       console.log("Received filterType:", filterType);
+
+  //       const start = startDate
+  //         ? new Date(startDate).toISOString().split("T")[0]
+  //         : null;
+  //       const end = endDate
+  //         ? new Date(endDate).toISOString().split("T")[0]
+  //         : null;
+
+  //       let matchCriteria = { leadOwnerName: sessionEmail };
+
+  //       const [googleSheetData, referralData, stages] = await Promise.all([
+  //         db
+  //           .get()
+  //           .collection(collection.GOOGLESHEETS_COLLECTION)
+  //           .find(matchCriteria)
+  //           .toArray(),
+  //         db
+  //           .get()
+  //           .collection(collection.REFERRAL_COLLECTION)
+  //           .find(matchCriteria)
+  //           .toArray(),
+  //         db
+  //           .get()
+  //           .collection(collection.LEADSTAGE_COLLECTION)
+  //           .find({})
+  //           .toArray(),
+  //       ]);
+
+  //       const allData = [...googleSheetData, ...referralData];
+
+  //       const leadStatusCounts = {};
+  //       const stageCounts = {};
+  //       const subStageCounts = {};
+  //       const uniqueCounts = {}; // New object for unique counts
+
+  //       allData.forEach((doc) => {
+  //         for (const [mainStage, stages] of Object.entries(
+  //           doc.leadStatus || {}
+  //         )) {
+  //           if (filterType && filterType !== mainStage) continue;
+
+  //           if (!leadStatusCounts[mainStage]) {
+  //             leadStatusCounts[mainStage] = { count: 0, stages: {} };
+  //           }
+
+  //           for (const [stage, entries] of Object.entries(stages)) {
+  //             if (!leadStatusCounts[mainStage].stages[stage]) {
+  //               leadStatusCounts[mainStage].stages[stage] = {
+  //                 count: 0,
+  //                 subStages: {},
+  //               };
+  //             }
+
+  //             if (!stageCounts[mainStage]) {
+  //               stageCounts[mainStage] = {};
+  //             }
+  //             if (!stageCounts[mainStage][stage]) {
+  //               stageCounts[mainStage][stage] = 0;
+  //             }
+
+  //             // Sort entries by date and pick the latest one
+  //             const latestEntry = entries.reduce((latest, current) => {
+  //               const currentDate = new Date(current.date);
+  //               return currentDate > new Date(latest.date) ? current : latest;
+  //             }, entries[0]);
+
+  //             const entryDate = latestEntry.date
+  //               ? latestEntry.date.split("T")[0]
+  //               : null;
+
+  //             if (
+  //               entryDate &&
+  //               (!start || entryDate >= start) &&
+  //               (!end || entryDate <= end)
+  //             ) {
+  //               leadStatusCounts[mainStage].count += 1;
+  //               leadStatusCounts[mainStage].stages[stage].count += 1;
+  //               stageCounts[mainStage][stage] += 1;
+
+  //               if (!subStageCounts[mainStage]) {
+  //                 subStageCounts[mainStage] = {};
+  //               }
+  //               if (!subStageCounts[mainStage][stage]) {
+  //                 subStageCounts[mainStage][stage] = {};
+  //               }
+  //               if (!subStageCounts[mainStage][stage][latestEntry.subStage]) {
+  //                 subStageCounts[mainStage][stage][latestEntry.subStage] = 0;
+  //               }
+  //               subStageCounts[mainStage][stage][latestEntry.subStage] += 1;
+
+  //               // For unique count, only count the latest entry
+  //               if (!uniqueCounts[mainStage]) {
+  //                 uniqueCounts[mainStage] = { count: 0, stages: {} };
+  //               }
+  //               if (!uniqueCounts[mainStage].stages[stage]) {
+  //                 uniqueCounts[mainStage].stages[stage] = {
+  //                   count: 0,
+  //                   subStages: {},
+  //                 };
+  //               }
+  //               uniqueCounts[mainStage].count += 1;
+  //               uniqueCounts[mainStage].stages[stage].count += 1;
+  //               if (
+  //                 !uniqueCounts[mainStage].stages[stage].subStages[
+  //                   latestEntry.subStage
+  //                 ]
+  //               ) {
+  //                 uniqueCounts[mainStage].stages[stage].subStages[
+  //                   latestEntry.subStage
+  //                 ] = 0;
+  //               }
+  //               uniqueCounts[mainStage].stages[stage].subStages[
+  //                 latestEntry.subStage
+  //               ] += 1;
+  //             }
+  //           }
+  //         }
+  //       });
+
+  //       const stagesAndSubStages = stages.reduce((acc, stage) => {
+  //         if (Array.isArray(stage.substage)) {
+  //           acc.push({
+  //             mainStage: stage.mainStage,
+  //             stage: stage.stage,
+  //             substage: stage.substage,
+  //           });
+  //         } else {
+  //           console.error(
+  //             `Stages data for main stage "${stage.mainStage}" is not an array:`,
+  //             stage
+  //           );
+  //         }
+  //         return acc;
+  //       }, []);
+
+  //       const totalLeads = allData.length;
+
+  //       const mainStageCounts = Object.entries(leadStatusCounts).map(
+  //         ([mainStage, { count }]) => ({ mainStage, count })
+  //       );
+
+  //       const stageCountsFlat = Object.entries(stageCounts).flatMap(
+  //         ([mainStage, stages]) =>
+  //           Object.entries(stages).map(([stage, count]) => ({
+  //             mainStage,
+  //             stage,
+  //             count,
+  //           }))
+  //       );
+
+  //       const subStageCountsFlat = Object.entries(subStageCounts).flatMap(
+  //         ([mainStage, stages]) =>
+  //           Object.entries(stages).flatMap(([stage, subStages]) =>
+  //             Object.entries(subStages).map(([subStage, count]) => ({
+  //               mainStage,
+  //               stage,
+  //               subStage,
+  //               count,
+  //             }))
+  //           )
+  //       );
+
+  //       const uniqueCountsFlat = Object.entries(uniqueCounts).flatMap(
+  //         ([mainStage, { count, stages }]) => ({
+  //           mainStage,
+  //           count,
+  //           stages: Object.entries(stages).flatMap(
+  //             ([stage, { count, subStages }]) => ({
+  //               stage,
+  //               count,
+  //               subStages: Object.entries(subStages).map(
+  //                 ([subStage, count]) => ({
+  //                   subStage,
+  //                   count,
+  //                 })
+  //               ),
+  //             })
+  //           ),
+  //         })
+  //       );
+
+  //       console.log("Main Stage Counts:", mainStageCounts);
+  //       console.log("Stage Counts:", stageCountsFlat);
+  //       console.log("Sub-Stage Counts:", subStageCountsFlat);
+  //       console.log("Unique Counts:", uniqueCountsFlat); // Log unique counts
+  //       console.log("Total Leads:", totalLeads);
+  //       console.log(
+  //         "Stages and Sub-Stages Data:",
+  //         JSON.stringify(stagesAndSubStages, null, 2)
+  //       );
+
+  //       resolve({
+  //         mainStageCounts,
+  //         stageCounts: stageCountsFlat,
+  //         subStageCounts: subStageCountsFlat,
+  //         uniqueCounts: uniqueCountsFlat, // Return unique counts
+  //         totalLeads,
+  //         stagesAndSubStages,
+  //       });
+  //     } catch (error) {
+  //       console.error("Error in getLeadStatusCounts:", error);
+  //       reject(error);
+  //     }
+  //   });
+  // },
 
   getLeadStatusCountsok: (sessionEmail, startDate, endDate) => {
     return new Promise(async (resolve, reject) => {
@@ -675,45 +1399,63 @@ deleteLeadStage: (id) => {
     });
   },
 
-  updateLeadStatus: async (id, leadStage, statusObj, isSaved) => {
+  updateLeadStatus: async (id, mainStage, leadStage, statusObj) => {
     return new Promise(async (resolve, reject) => {
       try {
         const query = ObjectId.isValid(id) ? { _id: new ObjectId(id) } : { id };
 
-        // Fetch existing lead data and lead stages
-        const [googlesheet, referral, leadStageData] = await Promise.all([
+        // Fetch existing lead data
+        const [googlesheet, referral] = await Promise.all([
           db
             .get()
             .collection(collection.GOOGLESHEETS_COLLECTION)
             .findOne(query),
           db.get().collection(collection.REFERRAL_COLLECTION).findOne(query),
-          db
-            .get()
-            .collection(collection.LEADSTAGE_COLLECTION)
-            .findOne({ stage: leadStage }), // Get lead stage data
         ]);
 
         // Merge existing statuses and update with the new status
         const currentStatus =
           googlesheet?.leadStatus || referral?.leadStatus || {};
-        const stagesArray = currentStatus[leadStage] || [];
+        const mainStageData = currentStatus[mainStage] || {};
+        const stagesArray = mainStageData[leadStage] || [];
 
         // Append the new status object to the array of stages
         stagesArray.push(statusObj);
 
-        // Update the collections with the new status structure
+        // Update the mainStage data structure with the updated lead stage
+        mainStageData[leadStage] = stagesArray;
+
+        // Prepare history object
+        const historyEntry = {
+          status: statusObj.status,
+          subStage: statusObj.subStage,
+          date: statusObj.date,
+          followUp: statusObj.followUp || null,
+        };
+
+        const historyData = googlesheet?.history || referral?.history || {};
+        const historyArray = historyData[leadStage] || [];
+        historyArray.push(historyEntry);
+
+        // Update the collections with the new leadStatus and history
         await Promise.all([
           db
             .get()
             .collection(collection.GOOGLESHEETS_COLLECTION)
             .updateOne(query, {
-              $set: { [`leadStatus.${leadStage}`]: stagesArray, isSaved },
+              $set: {
+                [`leadStatus.${mainStage}`]: mainStageData,
+                [`history.${leadStage}`]: historyArray,
+              },
             }),
           db
             .get()
             .collection(collection.REFERRAL_COLLECTION)
             .updateOne(query, {
-              $set: { [`leadStatus.${leadStage}`]: stagesArray, isSaved },
+              $set: {
+                [`leadStatus.${mainStage}`]: mainStageData,
+                [`history.${leadStage}`]: historyArray,
+              },
             }),
         ]);
 
@@ -723,6 +1465,7 @@ deleteLeadStage: (id) => {
       }
     });
   },
+
   getSubStageMandatoryStatus: async (stage, subStage) => {
     try {
       const leadStage = await db

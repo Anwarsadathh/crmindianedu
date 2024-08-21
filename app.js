@@ -80,6 +80,16 @@ const hbs = exphbs.create({
       const stagesWithoutFollowUp = ["HQL", "UQL", "Not Interested", "Just Enquiry", "Regular"];
       return !stagesWithoutFollowUp.includes(leadStage);
     },
+    keyValue: function (obj) {
+  return Object.keys(obj).map(key => ({ key, value: obj[key] }));
+    },
+    unlessEqual: function (value1, value2, options) {
+      if (value1 !== value2) {
+        return options.fn(this);
+      } else {
+        return options.inverse(this);
+      }
+    }
   },
 });
 

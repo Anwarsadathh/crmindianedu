@@ -334,6 +334,13 @@ header img {
                 <h6 class="mb-4">Create Lead Stage</h6>
                 <form id="createLeadStage">
                     <input type="hidden" id="leadStageId" name="leadStageId"> <!-- Hidden ID field for edit -->
+                    
+                    <!-- New Main Stage field -->
+                    <div class="mb-3">
+                        <label for="mainStage" class="form-label">Main Stage</label>
+                        <input type="text" class="form-control" id="mainStage" name="mainStage" required>
+                    </div>
+
                     <div class="mb-3">
                         <label for="stage" class="form-label">Lead Stage</label>
                         <input type="text" class="form-control" id="stage" name="stage" required>
@@ -348,49 +355,51 @@ header img {
             </div>
         </div>
 
-     <!-- Lead Stages Table -->
-<div class="col-sm-12 col-xl-6">
-    <div class="bg-light rounded h-100 p-4">
-        <h6 class="mb-4">Lead Stages</h6>
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>No.</th>
-                        <th>Stage</th>
-                        <th>Sub Stages</th>
-                        <th>Mandatory</th>
-                        <th>Edit</th>
-                        <th>Delete</th> <!-- New delete column -->
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each leadStage}}
-                    <tr>
-                        <td class="font-weight-bold">{{incrementIndex @index}}</td>
-                        <td>{{this.stage}}</td>
-                        <td>{{#each this.substage}}{{this.name}}<br>{{/each}}</td>
-                        <td>{{#each this.substage}}{{#if this.mandatory}}Yes{{else}}No{{/if}}<br>{{/each}}</td>
-                        <td>
-                            <button class="btn btn-sm btn-warning edit-lead-stage-btn" data-id="{{this._id}}">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                        </td>
-                        <td>
-                            <button class="btn btn-sm btn-danger delete-lead-stage-btn" data-id="{{this._id}}">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    {{/each}}
-                </tbody>
-            </table>
+        <!-- Lead Stages Table -->
+        <div class="col-sm-12 col-xl-6">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">Lead Stages</h6>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Main Stage</th> <!-- New Main Stage column -->
+                                <th>Stage</th>
+                                <th>Sub Stages</th>
+                                <th>Mandatory</th>
+                                <th>Edit</th>
+                                <th>Delete</th> <!-- New delete column -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each leadStage}}
+                            <tr>
+                                <td class="font-weight-bold">{{incrementIndex @index}}</td>
+                                <td>{{this.mainStage}}</td> <!-- Display Main Stage -->
+                                <td>{{this.stage}}</td>
+                                <td>{{#each this.substage}}{{this.name}}<br>{{/each}}</td>
+                                <td>{{#each this.substage}}{{#if this.mandatory}}Yes{{else}}No{{/if}}<br>{{/each}}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning edit-lead-stage-btn" data-id="{{this._id}}">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-danger delete-lead-stage-btn" data-id="{{this._id}}">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-    </div>
-</div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.querySelectorAll('.delete-lead-stage-btn').forEach(button => {
@@ -505,6 +514,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const data = {
+            mainStage: form.mainStage.value, // Include Main Stage
             stage: form.stage.value,
             substage: substages
         };
@@ -559,6 +569,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (leadStage) {
                     form.leadStageId.value = leadStage._id;
+                    form.mainStage.value = leadStage.mainStage; // Set Main Stage value
                     form.stage.value = leadStage.stage;
 
                     // Clear existing substage items
@@ -578,6 +589,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
 </script>
 
 

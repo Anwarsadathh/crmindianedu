@@ -333,6 +333,7 @@ select,textarea{
                                 <th>Role</th>
                                 <th>PDF Link</th>
                                 <th>Password</th>
+                                <th>Main Stage</th>
                                 <th>Lead Stage</th>
                                 <th>Lead Sub-Stage</th>
                                 <th>Follow Up</th>
@@ -374,12 +375,18 @@ select,textarea{
                                 <td>{{this.role}}</td>
                                 <td><a href="{{this.pdfLink}}" target="_blank">Link</a></td>
                                 <td>{{this.password}}</td>
-      <td>
+    <td>
+  <select class="form-select main-stage-select" style="width: 150px;" onchange="updateStageOptions(this)">
+    <option value="">Select Main Stage</option>
+    {{#each ../leadStage}}
+      <option value="{{this.mainStage}}">{{this.mainStage}}</option>
+    {{/each}}
+  </select>
+</td>
+<td>
   <select class="form-select lead-stage-select" style="width: 150px;" onchange="updateSubStageOptions(this)">
     <option value="">Select Stage</option>
-    {{#each ../leadStage}}
-      <option value="{{this.stage}}">{{this.stage}}</option>
-    {{/each}}
+    <!-- Stages will be populated dynamically based on Main Stage selection -->
   </select>
 </td>
 <td>
@@ -387,42 +394,39 @@ select,textarea{
     <option value="">Select Sub-Stage</option>
   </select>
 </td>
-<td>
-    {{#if (shouldShowFollowUp this.leadStage)}}
-    <div class="follow-up-container">
-        <input type="date" class="form-control follow-up-date" style="width: 150px; display: inline-block;">
-        <input type="time" class="form-control follow-up-time" style="width: 120px; display: inline-block;">
-    </div>
-    {{else}}
-    <span>No Follow Up Needed</span>
-    {{/if}}
-</td>
 
-<td>
-    <textarea class="form-control lead-status-textarea" rows="3" style="width: 250px;">
-        {{#if this.leadStatus.[this.leadStage]}}
-            {{this.leadStatus.[this.leadStage]}}
-    
-        {{/if}}
-    </textarea>
-</td>
-
-                                <td>
-                                    <button class="btn-sm btn-primary" onclick="saveLeadStatus(this)">Save</button>
-                                </td>
-                              <td>
-  <button class="btn btn-info ms-2 show-lead-status-btn" style="font-size: 10px !important;" data-bs-toggle="modal" data-bs-target="#leadStatusModal" onclick="showLeadStatus(this)">Status</button>
-  <div class="leadStatusContent" style="display:none;">
-    {{json this.leadStatus}}
-  </div>
-</td>
-
-                                <td>
-                                    <button class="btn-sm btn-primary" onclick="redirectToSEForm(this)">SE FORM</button>
-                                </td>
-                            </tr>
-                            {{/each}}
-                        </tbody>
+        <td>
+            {{#if (shouldShowFollowUp this.leadStage)}}
+            <div class="follow-up-container">
+                <input type="date" class="form-control follow-up-date" style="width: 150px; display: inline-block;">
+                <input type="time" class="form-control follow-up-time" style="width: 120px; display: inline-block;">
+            </div>
+            {{else}}
+            <span>No Follow Up Needed</span>
+            {{/if}}
+        </td>
+        <td>
+            <textarea class="form-control lead-status-textarea" rows="3" style="width: 250px;">
+                {{#if this.leadStatus.[this.leadStage]}}
+                    {{this.leadStatus.[this.leadStage]}}
+                {{/if}}
+            </textarea>
+        </td>
+        <td>
+            <button class="btn-sm btn-primary" onclick="saveLeadStatus(this)">Save</button>
+        </td>
+        <td>
+            <button class="btn btn-info ms-2 show-lead-status-btn" style="font-size: 10px !important;" data-bs-toggle="modal" data-bs-target="#leadStatusModal" onclick="showLeadStatus(this)">Status</button>
+            <div class="leadStatusContent" style="display:none;">
+                {{json this.leadStatus}}
+            </div>
+        </td>
+        <td>
+            <button class="btn-sm btn-primary" onclick="redirectToSEForm(this)">SE FORM</button>
+        </td>
+    </tr>
+    {{/each}}
+</tbody>
                     </table>
                 </div>
             </div>
@@ -582,7 +586,7 @@ async function showLeadStatus(button) {
         // Iterate through each stage in leadStatus
         Object.keys(leadStatus).forEach(stage => {
             const stages = leadStatus[stage];
-            
+
             if (Array.isArray(stages)) {
                 stages.forEach((stageDetail, index) => {
                     const timelineItem = document.createElement('div');
@@ -628,9 +632,10 @@ document.addEventListener('DOMContentLoaded', function () {
         showLeadStatus(button);
     });
 });
-
-
 </script>
+<style>
+    
+</style>
 <script>
 
 function redirectToSEForm(button) {
@@ -691,12 +696,56 @@ function redirectToSEForm(button) {
 });
 </script>
 <script>
-async function updateSubStageOptions(select) {
-    const stage = select.value;
-    const subStageSelect = select.closest('tr').querySelector('.sub-stage-select');
-    
-    if (!stage) {
-        // Clear the sub-stage dropdown if no stage is selected
+async function updateStageOptions(mainStageSelect) {
+    const mainStage = mainStageSelect.value;
+    const row = mainStageSelect.closest('tr');
+    const stageSelect = row.querySelector('.lead-stage-select');
+    const subStageSelect = row.querySelector('.sub-stage-select');
+
+    // Clear the stage and sub-stage dropdowns if no main stage is selected
+    if (!mainStage) {
+        stageSelect.innerHTML = '<option value="">Select Stage</option>';
+        subStageSelect.innerHTML = '<option value="">Select Sub-Stage</option>';
+        return;
+    }
+
+    try {
+        const response = await fetch('/get-stages', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mainStage })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            const stages = result.stages;
+            stageSelect.innerHTML = '<option value="">Select Stage</option>';
+            subStageSelect.innerHTML = '<option value="">Select Sub-Stage</option>';
+
+            stages.forEach(stage => {
+                const option = document.createElement('option');
+                option.value = stage;
+                option.textContent = stage;
+                stageSelect.appendChild(option);
+            });
+        } else {
+            console.error('Failed to fetch stages:', result.message);
+            stageSelect.innerHTML = '<option value="">No Stages Available</option>';
+        }
+    } catch (error) {
+        console.error('Error fetching stages:', error);
+        stageSelect.innerHTML = '<option value="">Error Loading Stages</option>';
+    }
+}
+
+async function updateSubStageOptions(stageSelect) {
+    const stage = stageSelect.value;
+    const row = stageSelect.closest('tr');
+    const subStageSelect = row.querySelector('.sub-stage-select');
+    const mainStage = row.querySelector('.main-stage-select').value;
+
+    if (!stage || !mainStage) {
         subStageSelect.innerHTML = '<option value="">Select Sub-Stage</option>';
         return;
     }
@@ -705,7 +754,7 @@ async function updateSubStageOptions(select) {
         const response = await fetch('/get-sub-stages', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ stage })
+            body: JSON.stringify({ stage, mainStage })
         });
 
         const result = await response.json();
@@ -716,9 +765,8 @@ async function updateSubStageOptions(select) {
 
             subStages.forEach(subStage => {
                 const option = document.createElement('option');
-                option.value = subStage.name; // Adjust this if you need a different value
+                option.value = subStage.name;
                 option.textContent = subStage.name;
-                // Add a data attribute to check if this sub-stage is mandatory
                 option.dataset.mandatory = subStage.mandatory;
                 subStageSelect.appendChild(option);
             });
@@ -733,15 +781,18 @@ async function updateSubStageOptions(select) {
 }
 
 
+
 async function saveLeadStatus(button) {
     const row = button.closest('tr');
     const id = row.querySelector('td[hidden]').textContent.trim();
+    const mainStageSelect = row.querySelector('.main-stage-select');
     const leadStageSelect = row.querySelector('.lead-stage-select');
     const subStageSelect = row.querySelector('.sub-stage-select');
     const leadStatusTextarea = row.querySelector('.lead-status-textarea');
+    const mainStage = mainStageSelect.value;
     const leadStage = leadStageSelect.value;
     const subStage = subStageSelect.value;
-    const leadStatus = leadStatusTextarea.value.trim(); // Trim to handle leading/trailing spaces
+    const leadStatus = leadStatusTextarea.value.trim();
 
     // Ensure lead-status-textarea is filled
     if (!leadStatus) {
@@ -792,7 +843,6 @@ async function saveLeadStatus(button) {
     const followUpDate = row.querySelector('.follow-up-date')?.value || null;
     const followUpTime = row.querySelector('.follow-up-time')?.value || null;
 
-    // Show warning if follow-up is needed (mandatory sub-stage) and not provided
     if (isMandatory && followUpContainer && (!followUpDate || !followUpTime)) {
         Swal.fire({
             icon: 'warning',
@@ -802,6 +852,20 @@ async function saveLeadStatus(button) {
         return;
     }
 
+    // Create the nested structure for the lead status update
+    const statusObj = {
+        status: leadStatus,
+        subStage,
+        date: new Date().toISOString(),
+        followUp: followUpDate || followUpTime ? { date: followUpDate, time: followUpTime } : null
+    };
+
+    const leadStatusUpdate = {
+        mainStage,
+        leadStage,
+        statusObj
+    };
+
     try {
         const response = await fetch('/update-lead-status', {
             method: 'POST',
@@ -810,11 +874,7 @@ async function saveLeadStatus(button) {
             },
             body: JSON.stringify({
                 id,
-                leadStage,
-                subStage,
-                leadStatus,
-                followUpDate,
-                followUpTime
+                leadStatusUpdate // Send the nested structure to the server
             })
         });
 
@@ -833,10 +893,6 @@ async function saveLeadStatus(button) {
             row.querySelector('.follow-up-date').value = '';
             row.querySelector('.follow-up-time').value = '';
 
-            // Remove this part to keep the follow-up container visible
-            // if (!isMandatory) {
-            //     followUpContainer.style.display = 'none';
-            // }
         } else {
             Swal.fire({
                 icon: 'error',

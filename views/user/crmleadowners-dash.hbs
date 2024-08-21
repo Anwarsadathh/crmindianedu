@@ -151,17 +151,53 @@
             </nav>
             <!-- Navbar End -->
 
-<div class="container-fluid pt-4 px-4">
-    <div class="row g-4">
-        <!-- Unique Date Range Filter and Button -->
-        <div class="col-12 col-md-12 d-flex ">
+ <div class="container">
+        <h1>CRM Lead Owner Dashboard</h1>
+
+        {{#if user}}
             <div class="filter-card glassmorphism p-4 shadow-lg d-flex">
                 <div class="floating-label-wrapper">
                     <label for="dateRange" class="floating-label">Date Range</label>
                     <input type="text" id="dateRange" class="form-control shadow-sm circular-input" placeholder="Select Date Range">
                 </div>
                 <button class="btn btn-glass shadow-sm circular-btn ms-3" id="filterBtn">
-                    <i class="bi bi-filter-circle"></i>
+                    <i class="bi bi-filter-circle"></i> Filter
+                </button>
+                <button class="btn btn-glass shadow-sm circular-btn ms-3" id="latestBtn">
+                    <i class="bi bi-clock-history"></i> Show Latest Substage
+                </button>
+            </div>
+
+            <div class="lead-status-counts">
+                {{#each data}}
+                    <div class="lead-status">
+                        <h3>Main Stage: {{mainStage}}</h3>
+                        <p>Stage: {{#if stage}}{{stage}}{{else}}N/A{{/if}}</p>
+                        <p>SubStage: {{#if subStage}}{{subStage}}{{else}}N/A{{/if}}</p>
+                        <p>Count: {{count}}</p>
+                    </div>
+                {{/each}}
+            </div>
+        {{else}}
+            <p>You do not have permission to view this page.</p>
+        {{/if}}
+    </div>
+
+        
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <!-- Unique Date Range Filter and Button -->
+        <div class="col-12 col-md-12 d-flex">
+            <div class="filter-card glassmorphism p-4 shadow-lg d-flex">
+                <div class="floating-label-wrapper">
+                    <label for="dateRange" class="floating-label">Date Range</label>
+                    <input type="text" id="dateRange" class="form-control shadow-sm circular-input" placeholder="Select Date Range">
+                </div>
+                <button class="btn btn-glass shadow-sm circular-btn ms-3" id="filterBtn">
+                    <i class="bi bi-filter-circle"></i> Filter
+                </button>
+                <button class="btn btn-glass shadow-sm circular-btn ms-3" id="latestBtn">
+                    <i class="bi bi-clock-history"></i> Show Latest Substage
                 </button>
             </div>
         </div>
@@ -176,199 +212,77 @@
                 </div>
             </div>
         </div>
-        <!-- Lead Statistics -->
-<div class="row">
-  <!-- Total Leads Card -->
-  <div class="col-6 col-xl-3">
-    <div class="stat-card bg-gradient-primary text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-      <i class="fa fa-chart-line fa-3x neon-icon"></i>
-      <div class="ms-3">
-        <p class="mb-2 counts">Total Leads</p>
-        <h6 class="mb-0">{{totalLeads}}</h6>
-      </div>
-    </div>
-  </div>
 
-  <!-- Stage and Sub-stage Cards -->
-  {{#each stagesAndSubStages}}
-    <div class="col-6 col-xl-3">
-      <div class="stat-card bg-gradient-secondary text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-        <i class="fa fa-tachometer-alt fa-3x neon-icon"></i>
-        <div class="ms-3">
-          <p class="mb-2 counts">{{stage}} (Stage)</p>
-          <h6 class="mb-0">{{lookup ../combinedCounts stage}}</h6>
-        </div>
-      </div>
-      <!-- Display sub-stage counts -->
-      {{#each substage}}
-        <div class="col-6 col-xl-3">
-          <div class="stat-card bg-gradient-success text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-            <i class="fa fa-tachometer-alt fa-3x neon-icon"></i>
-            <div class="ms-3">
-              <p class="mb-2 counts">{{this.name}} (Sub-stage)</p>
-              <h6 class="mb-0">{{lookup ../combinedCounts stage}}</h6>
+        <!-- Main Stage Cards -->
+        {{#each mainStageCounts}}
+            <div class="col-6 col-xl-3">
+                <div class="stat-card bg-gradient-neon text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl main-stage-card" data-stage="{{mainStage}}">
+                    <i class="fa fa-briefcase fa-3x neon-icon"></i>
+                    <div class="ms-3">
+                        <p class="mb-2 counts">Main Stage: {{mainStage}}</p>
+                        <h6 class="mb-0">{{count}}</h6>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      {{/each}}
+        {{/each}}
+
+        <!-- Stage Cards -->
+        {{#each stageCounts}}
+            <div class="col-6 col-xl-3">
+                <div class="stat-card bg-gradient-info text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl stage-card" data-stage="{{stage}}" data-main-stage="{{mainStage}}">
+                    <i class="fa fa-layer-group fa-3x neon-icon"></i>
+                    <div class="ms-3">
+                        <p class="mb-2 counts">Stage: {{stage}}</p>
+                        <h6 class="mb-0">{{count}}</h6>
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+
+        <!-- Sub-Stage Cards -->
+        {{#each subStageCounts}}
+            <div class="col-6 col-xl-3">
+                <div class="stat-card bg-gradient-success text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl sub-stage-card" data-sub-stage="{{subStage}}" data-stage="{{stage}}" data-main-stage="{{mainStage}}">
+                    <i class="fa fa-tags fa-3x neon-icon"></i>
+                    <div class="ms-3">
+                        <p class="mb-2 counts">Sub-Stage: {{subStage}}</p>
+                        <h6 class="mb-0">{{count}}</h6>
+                    </div>
+                </div>
+            </div>
+        {{/each}}
     </div>
-  {{/each}}
 </div>
 
-      <div class="col-6 col-xl-3">
-            <div class="stat-card bg-gradient-success text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-star fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total HQL</p>
-                    <h6 class="mb-0">{{totalHQL}}</h6>
-                </div>
-            </div>
-        </div>
-           <div class="col-6 col-xl-3">
-            <div class="stat-card bg-gradient-info text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-phone fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total PQL</p>
-                    <h6 class="mb-0">{{totalPQL}}</h6>
-                </div>
-            </div>
-        </div>
+<script>
+    document.getElementById('filterBtn').addEventListener('click', function() {
+        const dateRange = document.getElementById('dateRange').value;
+        const [startDate, endDate] = dateRange.split(' to ');
+        const url = `/crm-lead-owner-dashboard?startDate=${startDate}&endDate=${endDate}`;
+        window.location.href = url;
+    });
 
-        <div class="col-6 col-xl-3">
-            <div class="stat-card bg-gradient-primarys text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-chart-line fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total QL</p>
-                    <h6 class="mb-0">{{totalQL}}</h6>
-                </div>
-            </div>
-        </div>
+    document.getElementById('latestBtn').addEventListener('click', function() {
+        const dateRange = document.getElementById('dateRange').value;
+        const [startDate, endDate] = dateRange.split(' to ');
+        const url = `/crm-lead-owner-dashboard?startDate=${startDate}&endDate=${endDate}&showLatestSubstage=true`;
+        window.location.href = url;
+    });
 
-        <div class="col-6 col-xl-3">
-            <div class="stat-card bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-clock fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total RNR</p>
-                    <h6 class="mb-0 black">{{totalRNR}}</h6>
-                </div>
-            </div>
-        </div>
+    // Add event listener for each card to show more details on click
+    document.querySelectorAll('.stat-card').forEach(function(card) {
+        card.addEventListener('click', function() {
+            const mainStage = this.dataset.mainStage || '';
+            const stage = this.dataset.stage || '';
+            const subStage = this.dataset.subStage || '';
+            
+            alert(`Main Stage: ${mainStage}\nStage: ${stage}\nSub-Stage: ${subStage}`);
+        });
+    });
+</script>
 
+       
      
-        <div class="col-6 col-xl-3">
-            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-times fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total UQL</p>
-                    <h6 class="mb-0 black">{{totalUQL}}</h6>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-6 col-xl-3">
-            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-calendar fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total Next Intake</p>
-                    <h6 class="mb-0 black">{{totalNextIntake}}</h6>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-6 col-xl-3">
-            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-university fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total Direct University</p>
-                    <h6 class="mb-0 black">{{totalDirectUniversity}}</h6>
-                </div>
-            </div>
-        </div>
-
-  
-
-        <div class="col-6 col-xl-3">
-            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-check fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total Busy</p>
-                    <h6 class="mb-0 black">{{totalBusy}}</h6>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-6 col-xl-3">
-            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-clock fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total Call Later</p>
-                    <h6 class="mb-0 black">{{totalCallLater}}</h6>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-6 col-xl-3">
-            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-times fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total QL to NR</p>
-                    <h6 class="mb-0 black">{{totalQLToNR}}</h6>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-6 col-xl-3">
-            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-times fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total PQL to NR</p>
-                    <h6 class="mb-0 black">{{totalPQLToNR}}</h6>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-6 col-xl-3">
-            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-ban fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total Not Interested</p>
-                    <h6 class="mb-0 black">{{totalNotInterested}}</h6>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-6 col-xl-3">
-            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-question fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total Just Enquiry</p>
-                    <h6 class="mb-0 black">{{totalJustEnquiry}}</h6>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-6 col-xl-3">
-            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-check fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total Regular</p>
-                    <h6 class="mb-0 black">{{totalRegular}}</h6>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-6 col-xl-3">
-            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa-brands fa-whatsapp fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total WhatsApp Connected</p>
-                    <h6 class="mb-0 black">{{totalWhatsAppConnected}}</h6>
-                </div>
-            </div>
-        </div>
-    </div>  
-</div>
-
 <!-- Back to Top -->
 <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top neon-btn"><i class="bi bi-arrow-up"></i></a>
 
@@ -514,7 +428,7 @@
       filter: drop-shadow(0px 0px 10px rgba(255, 255, 255, 0.5)) !important;
   }
 
-  .neon-btn {
+  .bg-gradient-neon {
       background: linear-gradient(45deg, #007bff, #0056b3) !important;
       color: white !important;
   }
@@ -540,16 +454,24 @@
   });
 </script>
 
+
 <script>
   document.getElementById('filterBtn').addEventListener('click', function() {
     const dateRange = document.getElementById('dateRange').value;
-    // Date range will be in format 'YYYY-MM-DD to YYYY-MM-DD' or similar, depending on your Flatpickr settings
     const [startDate, endDate] = dateRange.split(' to ');
-
     const url = `/crm-lead-owner-dashboard?startDate=${startDate}&endDate=${endDate}`;
     window.location.href = url;
   });
+
+  document.getElementById('latestBtn').addEventListener('click', function() {
+    const dateRange = document.getElementById('dateRange').value;
+    const [startDate, endDate] = dateRange.split(' to ');
+    const url = `/crm-lead-owner-dashboard?startDate=${startDate}&endDate=${endDate}&showLatestSubstage=true`;
+    window.location.href = url;
+  });
 </script>
+
+
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

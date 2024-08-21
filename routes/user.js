@@ -219,7 +219,7 @@ router.get("/login", (req, res) => {
 });
 
 router.get("/end-to-end-membership", (req, res) => {
-  res.render("user/Proftfolio", { user: true });
+  res.render("user/m", { user: true });
 });
 
 router.get("/accounts", (req, res) => {
@@ -492,15 +492,8 @@ router.post("/update-lead-owner", async (req, res) => {
 
 
 router.post("/update-lead-status", async (req, res) => {
-  const {
-    id,
-    leadStage,
-    subStage,
-    leadStatus,
-    isSaved,
-    followUpDate,
-    followUpTime,
-  } = req.body;
+  const { id, leadStatusUpdate } = req.body;
+  const { mainStage, leadStage, statusObj } = leadStatusUpdate;
 
   try {
     if (!id || typeof id !== "string") {
@@ -510,25 +503,8 @@ router.post("/update-lead-status", async (req, res) => {
         .json({ success: false, message: "Invalid ID format." });
     }
 
-    // Prepare the follow-up object
-    const followUp =
-      followUpDate || followUpTime
-        ? {
-            date: followUpDate,
-            time: followUpTime,
-          }
-        : null;
-
-    // Create the status object with both date and time
-    const statusObj = {
-      status: leadStatus,
-      subStage,
-      date: new Date().toISOString(), // Current date and time in ISO format
-      followUp: followUp || null, // Include follow-up if provided
-    };
-
     // Update lead status using the helper function
-    await serviceHelpers.updateLeadStatus(id, leadStage, statusObj, isSaved);
+    await serviceHelpers.updateLeadStatus(id, mainStage, leadStage, statusObj);
 
     res.json({ success: true });
   } catch (error) {
@@ -539,6 +515,7 @@ router.post("/update-lead-status", async (req, res) => {
     });
   }
 });
+
 
 
 router.post("/get-sub-stage-mandatory", async (req, res) => {
@@ -609,39 +586,85 @@ router.get("/lead-login", (req, res) => {
   res.render("user/leadlogin", { user: true });
 });
 
- // Backend Route Handler
+// router.get("/crm-lead-owner-dashboard", verifyLogin, async (req, res) => {
+//   const sessionEmail = req.session.user.email;
+//   const { startDate, endDate, filterType, stage, showLatestSubstage } = req.query;
+
+//   try {
+//     const {
+//       mainStageCounts,
+//       stageCounts,
+//       subStageCounts,
+//       totalLeads,
+//       stagesAndSubStages,
+//     } = await serviceHelpers.getLeadStatusCounts(
+//       sessionEmail,
+//       startDate,
+//       endDate,
+//       filterType,
+//       stage,
+//       showLatestSubstage === 'true' // Pass boolean value
+//     );
+
+//     res.render("user/crmleadowners-dash", {
+//       user: true,
+//       totalLeads,
+//       stage,
+//       mainStageCounts,
+//       stageCounts,
+//       subStageCounts,
+//       stagesAndSubStages,
+//       showLatestSubstage: showLatestSubstage === 'true',
+//     });
+//   } catch (error) {
+//     console.error("Error fetching lead status counts:", error);
+//     res.status(500).json({ success: false, message: "Internal Server Error" });
+//   }
+// });
+
+
 router.get("/crm-lead-owner-dashboard", verifyLogin, async (req, res) => {
   const sessionEmail = req.session.user.email;
-  const { startDate, endDate } = req.query;
+  const { startDate, endDate, filterType, stage, showLatestSubstage } =
+    req.query;
 
   try {
-    // Fetch lead status counts and total leads based on session email and date range
-    const { combinedCounts, totalLeads, stagesAndSubStages } =
-      await serviceHelpers.getLeadStatusCounts(
-        sessionEmail,
-        startDate,
-        endDate
-      );
+    // Log the incoming request details
+    console.log("Request received with the following parameters:");
+    console.log("Session Email:", sessionEmail);
+    console.log("Start Date:", startDate);
+    console.log("End Date:", endDate);
+    console.log("Filter Type:", filterType);
+    console.log("Stage:", stage);
+    console.log("Show Latest Substage:", showLatestSubstage);
 
-    console.log(combinedCounts, "comb");
-    console.log(totalLeads, "totalLeads");
-    console.log(stagesAndSubStages, "stagesAndSubStages");
+    // Call the helper function to fetch the lead status counts
+    const results = await serviceHelpers.getLeadStatusCounts(
+      sessionEmail,
+      startDate,
+      endDate,
+      filterType,
+      stage,
+      showLatestSubstage
+    );
 
-    // Render the dashboard with the calculated counts
+    // Log the results from the helper function
+    console.log(
+      "Lead Status Counts Results:",
+      JSON.stringify(results, null, 2)
+    );
+
+    // Render the HBS template with the fetched data
     res.render("user/crmleadowners-dash", {
       user: true,
-      totalLeads,
-      combinedCounts,
-      stagesAndSubStages, // Pass the stages and sub-stages to the template
+      data: results, // Pass the results to the template
     });
   } catch (error) {
+    // Log the error if something goes wrong
     console.error("Error fetching lead status counts:", error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 });
-
-
-
 
 // router.post("/filter-leads", async (req, res) => {
 //   const { startDate, endDate } = req.body;
@@ -708,27 +731,41 @@ router.get("/crm-lead-owner-details", async (req, res) => {
 });
 
 router.post("/get-sub-stages", async (req, res) => {
-  const { stage } = req.body;
+  const { stage, mainStage } = req.body;
 
   try {
-    if (!stage || typeof stage !== "string") {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid stage value." });
+    if (!stage || typeof stage !== "string" || !mainStage || typeof mainStage !== "string") {
+      return res.status(400).json({ success: false, message: "Invalid stage or main stage value." });
     }
 
-    const subStages = await serviceHelpers.getSubStagesFromDatabase(stage);
+    const subStages = await serviceHelpers.getSubStagesFromDatabase(stage, mainStage);
     res.json({ success: true, subStages });
   } catch (error) {
     console.error("Error fetching sub-stages:", error);
-    res.json({
-      success: false,
-      message: "An error occurred while fetching sub-stages.",
-    });
+    res.json({ success: false, message: "An error occurred while fetching sub-stages." });
   }
 });
 
+router.post("/get-stages", async (req, res) => {
+  const { mainStage } = req.body;
 
+  try {
+    if (!mainStage || typeof mainStage !== "string") {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid main stage value." });
+    }
+
+    const stages = await serviceHelpers.getStagesFromDatabase(mainStage);
+    res.json({ success: true, stages });
+  } catch (error) {
+    console.error("Error fetching stages:", error);
+    res.json({
+      success: false,
+      message: "An error occurred while fetching stages.",
+    });
+  }
+});
 
 
 router.get("/crm-lead-owner-rewards", async (req, res) => {
@@ -783,7 +820,18 @@ router.get("/student-dashboard", verifyLoginStudent, (req, res) => {
   res.render("user/student-dash", { student: req.session.student });
 });
 
+router.get("/student-wallet", verifyLoginStudent, (req, res) => {
+  res.render("user/wallet", { student: req.session.student });
+});
 
+router.get("/student-academicstatus", verifyLoginStudent, (req, res) => {
+  res.render("user/student-academicstatus", { student: req.session.student });
+});
+
+
+router.get("/sample-report", (req, res) => {
+  res.render("user/br", );
+});
 
 router.get("/partner-dashboard", verifyPartner, async (req, res) => {
   try {
@@ -1095,14 +1143,18 @@ router.put('/crm-leadstage/:id', async (req, res) => {
 
 
 router.post("/crm-leadstage", async (req, res) => {
-  const { stage, substage } = req.body;
+  const { mainStage, stage, substage } = req.body;
 
   try {
-    await serviceHelpers.createLeadStage({ stage, substage });
+    await serviceHelpers.createLeadStage({ mainStage, stage, substage });
     res.json({ success: true });
   } catch (error) {
     console.error("Error creating lead stage:", error);
-    res.json({ success: false, message: error.message || "An error occurred while creating the lead stage." });
+    res.json({
+      success: false,
+      message:
+        error.message || "An error occurred while creating the lead stage.",
+    });
   }
 });
 
