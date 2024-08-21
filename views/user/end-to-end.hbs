@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exclusive Membership - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Montserrat', sans-serif;
+            background: url('/img/pngtree-classroom-university-classroom-background-image_1951731.jpg') no-repeat center center/cover;
+            color: white;
+        }
+
+        .overlay {
+            background: rgba(0, 0, 0, 0.7);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+        }
+
+        .logo img {
+            max-width: 150px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 0;
+            padding: 0 20px;
+            text-transform: uppercase;
+        }
+
+        p {
+            font-size: 1.5rem;
+            margin: 20px 0;
+            max-width: 600px;
+        }
+
+        .button {
+            padding: 15px 30px;
+            background: #ff0000;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            text-decoration: none;
+        }
+
+        .button:hover {
+            background: #ff5c5c;
+        }
+
+    .bg-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 50px 0;
+    position: relative; /* Needed for the absolute positioning of the overlay */
+    overflow: hidden; /* Ensures content does not spill over */
+}
+
+.bg-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent color overlay */
+    backdrop-filter: blur(10px); /* Apply blur effect */
+}
+
+.bg-container .content {
+    position: relative; /* Ensure the content is above the overlay */
+    z-index: 2; /* Make sure the content is above the blur effect */
+}
+
+
+
+        .bg-img {
+            width: 200px;
+            height: 150px;
+            margin: 10px;
+            object-fit: cover;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .bg-img:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+.card-container {
+    position: fixed;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+    color: #333;
+    width: 90%;
+    max-width: 300px;
+    border-radius: 10px;
+    opacity: 0; /* Start as invisible */
+    visibility: hidden; /* Ensure it's not visible */
+    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+    animation: bounceInOut 2s ease-in-out infinite;
+}
+
+.card-container.show {
+    opacity: 1; /* Make visible */
+    visibility: visible;
+}
+
+.card-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 2rem;
+    color: #333;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.card-close-btn:hover {
+    color: #ff0000; /* Change color on hover */
+}
+
+@keyframes bounceInOut {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+}
+
+.card {
+    padding: 2rem;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+    color: #333;
+    text-align: center;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.congratulations-text {
+    font-size: 0.7rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.price-text {
+    font-size: 0.8rem !important;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.original-price {
+    text-decoration: line-through; /* Add strike-through */
+    color: #ff3636; /* Optional: Change color for the original price */
+    font-weight: bold;
+}
+
+.btn-pay-now {
+    display: block;
+    width: 100%;
+    font-size: 0.6rem !important;
+}
+
+
+
+        /* Lightbox Styles */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Responsive Font Sizes */
+        @media (max-width: 767px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            p {
+                font-size: 1.2rem;
+            }
+
+            .price-text, .congratulations-text {
+                font-size: 1.2rem;
+            }
+
+            .btn-pay-now {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="overlay"></div>
+
+<div class="container">
+    <div class="logo">
+        <img src="images/indian-hub-logo-vert-white-e1662813826792.png" alt="Logo">
+    </div>
+    <h1>Establish Your Career With Our Exclusive Membership</h1>
+    <p>Achieve success in your higher education with us.</p>
+    <a href="#learn-more" class="button">Learn More</a>
+</div>
+
+<div class="bg-container container">
+    <div class="row justify-content-center">
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
+            <img src="/img/1.jpg" class="bg-img img-fluid" alt="Background Image 1" onclick="openLightbox('/img/1.jpg')">
+        </div>
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
+            <img src="/img/2.jpg" class="bg-img img-fluid" alt="Background Image 2" onclick="openLightbox('/img/2.jpg')">
+        </div>
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
+            <img src="/img/3.jpg" class="bg-img img-fluid" alt="Background Image 3" onclick="openLightbox('/img/3.jpg')">
+        </div>
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
+            <img src="/img/4.jpg" class="bg-img img-fluid" alt="Background Image 4" onclick="openLightbox('/img/4.jpg')">
+        </div>
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
+            <img src="/img/5.jpg" class="bg-img img-fluid" alt="Background Image 5" onclick="openLightbox('/img/5.jpg')">
+        </div>
+    </div>
+</div>
+
+<div class="card-container hidden">
+    <button class="card-close-btn" onclick="closeCard()">×</button>
+    <div class="card p-4 shadow-lg">
+        <div class="congratulations-text">Congratulations!</div>
+        <div class="price-text">
+            <span class="original-price">67,000</span> 
+        </div>
+        <div class="price-text">
+            Complete Suite now <b>@8,999</b>
+        </div>
+        <a href="https://www.instamojo.com/@indianeduhub/ldbb057bf82e14b69871607595bb23504/" class="btn btn-warning btn-pay-now">Pay Now</a>
+    </div>
+</div>
+
+
+<!-- Lightbox Modal -->
+<div id="lightbox" class="lightbox">
+    <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+    <img id="lightbox-img" src="" alt="Full Image">
+</div>
+
+<script>
+    let cardVisible = false;
+
+    function openLightbox(src) {
+        document.getElementById('lightbox-img').src = src;
+        document.getElementById('lightbox').classList.add('active');
+        document.querySelector('.card-container').style.display = 'none';  // Hide the card-container
+        cardVisible = false;
+    }
+
+    function closeLightbox() {
+        document.getElementById('lightbox').classList.remove('active');
+        if (!cardVisible) {
+            document.querySelector('.card-container').style.display = 'block';  // Show the card-container again
+            cardVisible = true;
+        }
+    }
+
+    document.addEventListener('scroll', function() {
+        const cardContainer = document.querySelector('.card-container');
+        const scrollPosition = window.scrollY || document.documentElement.scrollTop;
+
+        if (scrollPosition > 500 && !cardVisible) { // Show card only if it is not visible
+            cardContainer.classList.add('show');
+            cardVisible = true;
+        }
+    });
+</script>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
