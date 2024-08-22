@@ -74,25 +74,38 @@
             background: #ff5c5c;
         }
 
-        .images-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 50px 0;
-        }
+       .images-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
 
-        .images-section img {
-            max-width: 80%;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-        }
+.images-section img {
+    width: 30%; /* Each image will take 30% of the container width */
+    height: 500px; /* Adjust this as needed */
+    margin: 10px; /* Space between images */
+    border-radius: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
 
-        .images-section img:hover {
-            transform: scale(1.1);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-        }
+
+
+@media (max-width: 768px) {
+    .images-section {
+        flex-direction: column;
+        align-items: center;
+    }
+.images-section img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+    .images-section img {
+        width: 95%; /* Make images take most of the screen width */
+        margin: 10px 0; /* Space between images */
+    }
+}
+
 
         /* Lightbox Styles */
         .lightbox {
@@ -244,16 +257,20 @@
     </div>
     <h1>Establish Your Career With Our Exclusive Membership</h1>
     <p>Achieve success in your higher education with us.</p>
-    <a href="#learn-more" class="button">Learn More</a>
+    <a href="https://www.instamojo.com/@indianeduhub/ldbb057bf82e14b69871607595bb23504/" class="button">Become a Member</a>
 </div>
 
 <!-- Images Section -->
 <div class="images-section">
-    <img src="/img/1.jpg" alt="Image 1" onclick="openLightbox('/img/1.jpg')">
+   
     <img src="/img/2.jpg" alt="Image 2" onclick="openLightbox('/img/2.jpg')">
     <img src="/img/3.jpg" alt="Image 3" onclick="openLightbox('/img/3.jpg')">
     <img src="/img/4.jpg" alt="Image 4" onclick="openLightbox('/img/4.jpg')">
     <img src="/img/5.jpg" alt="Image 5" onclick="openLightbox('/img/5.jpg')">
+     <img src="/img/6.jpg" alt="Image 1" onclick="openLightbox('/img/1.jpg')">
+      <img src="/img/7.jpg" alt="Image 1" onclick="openLightbox('/img/1.jpg')">
+       <img src="/img/8.jpg" alt="Image 1" onclick="openLightbox('/img/1.jpg')">
+        <img src="/img/9.jpg" alt="Image 1" onclick="openLightbox('/img/1.jpg')">
 </div>
 
 <!-- Lightbox Modal -->
