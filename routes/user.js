@@ -10,6 +10,8 @@ const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const bodyParser = require("body-parser");
 const { log } = require("console");
+const collection = require("../config/collection");
+const db = require("../config/connection");
 
 // Configure the transporter
 const transporter = nodemailer.createTransport({
@@ -586,85 +588,129 @@ router.get("/lead-login", (req, res) => {
   res.render("user/leadlogin", { user: true });
 });
 
-// router.get("/crm-lead-owner-dashboard", verifyLogin, async (req, res) => {
-//   const sessionEmail = req.session.user.email;
-//   const { startDate, endDate, filterType, stage, showLatestSubstage } = req.query;
+router.get("/crm-lead-owner-dashboard-details", (req, res) => {
+  res.render("user/crm-tp-dashboard-details", { user: true });
+});
 
-//   try {
-//     const {
-//       mainStageCounts,
-//       stageCounts,
-//       subStageCounts,
-//       totalLeads,
-//       stagesAndSubStages,
-//     } = await serviceHelpers.getLeadStatusCounts(
-//       sessionEmail,
-//       startDate,
-//       endDate,
-//       filterType,
-//       stage,
-//       showLatestSubstage === 'true' // Pass boolean value
-//     );
+router.get("/get-lead-details", async (req, res) => {
+  const { mainStage, stage, subStage } = req.query;
 
-//     res.render("user/crmleadowners-dash", {
-//       user: true,
-//       totalLeads,
-//       stage,
-//       mainStageCounts,
-//       stageCounts,
-//       subStageCounts,
-//       stagesAndSubStages,
-//       showLatestSubstage: showLatestSubstage === 'true',
-//     });
-//   } catch (error) {
-//     console.error("Error fetching lead status counts:", error);
-//     res.status(500).json({ success: false, message: "Internal Server Error" });
-//   }
-// });
+  if (!mainStage || !stage || !subStage) {
+    return res
+      .status(400)
+      .json({
+        success: false,
+        message: "Missing or empty required parameters",
+      });
+  }
+
+  try {
+    const leadDetails = await fetchLeadDetails(mainStage, stage, subStage);
+    res.json(leadDetails);
+  } catch (error) {
+    console.error("Error fetching lead details:", error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+});
+
 
 
 router.get("/crm-lead-owner-dashboard", verifyLogin, async (req, res) => {
   const sessionEmail = req.session.user.email;
-  const { startDate, endDate, filterType, stage, showLatestSubstage } =
-    req.query;
+  const { startDate, endDate, filterType, stage, showLatestSubstage } = req.query;
 
   try {
-    // Log the incoming request details
-    console.log("Request received with the following parameters:");
-    console.log("Session Email:", sessionEmail);
-    console.log("Start Date:", startDate);
-    console.log("End Date:", endDate);
-    console.log("Filter Type:", filterType);
-    console.log("Stage:", stage);
-    console.log("Show Latest Substage:", showLatestSubstage);
-
-    // Call the helper function to fetch the lead status counts
-    const results = await serviceHelpers.getLeadStatusCounts(
+    const {
+      mainStageCounts,
+      stageCounts,
+      subStageCounts,
+      totalLeads,
+      stagesAndSubStages,
+    } = await serviceHelpers.getLeadStatusCounts(
       sessionEmail,
       startDate,
       endDate,
       filterType,
       stage,
-      showLatestSubstage
+      showLatestSubstage === 'true' // Convert the query string to a boolean
     );
 
-    // Log the results from the helper function
-    console.log(
-      "Lead Status Counts Results:",
-      JSON.stringify(results, null, 2)
-    );
-
-    // Render the HBS template with the fetched data
     res.render("user/crmleadowners-dash", {
       user: true,
-      data: results, // Pass the results to the template
+      totalLeads,
+      stage,
+      mainStageCounts,
+      stageCounts,
+      subStageCounts,
+      stagesAndSubStages,
+      showLatestSubstage: showLatestSubstage === 'true',
     });
   } catch (error) {
-    // Log the error if something goes wrong
     console.error("Error fetching lead status counts:", error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 });
+
+router.get("/lead-details", verifyLogin, async (req, res) => {
+  const { id } = req.query;
+
+  console.log("Received ID:", id);
+
+  if (!id || !ObjectId.isValid(id)) {
+    return res.status(400).json({ success: false, message: "Invalid Lead ID" });
+  }
+
+  try {
+    const data = await serviceHelpers.getLeadDetailsById(id);
+    res.json({ success: true, data });
+  } catch (error) {
+    console.error("Error fetching lead details:", error.message);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+});
+
+// router.get("/crm-lead-owner-dashboard", verifyLogin, async (req, res) => {
+//   const sessionEmail = req.session.user.email;
+//   const { startDate, endDate, filterType, stage, showLatestSubstage } =
+//     req.query;
+
+//   try {
+//     // Log the incoming request details
+//     console.log("Request received with the following parameters:");
+//     console.log("Session Email:", sessionEmail);
+//     console.log("Start Date:", startDate);
+//     console.log("End Date:", endDate);
+//     console.log("Filter Type:", filterType);
+//     console.log("Stage:", stage);
+//     console.log("Show Latest Substage:", showLatestSubstage);
+
+//     // Call the helper function to fetch the lead status counts
+//     const results = await serviceHelpers.getLeadStatusCounts(
+//       sessionEmail,
+//       startDate,
+//       endDate,
+//       filterType,
+//       stage,
+//       showLatestSubstage
+//     );
+
+//     // Log the results from the helper function
+//     console.log(
+//       "Lead Status Counts Results:",
+//       JSON.stringify(results, null, 2)
+//     );
+
+//     // Render the HBS template with the fetched data
+//     res.render("user/crmleadowners-dash", {
+//       user: true,
+//       data: results, // Pass the results to the template
+//     });
+//   } catch (error) {
+//     // Log the error if something goes wrong
+//     console.error("Error fetching lead status counts:", error);
+//     res.status(500).json({ success: false, message: "Internal Server Error" });
+//   }
+// });
 
 // router.post("/filter-leads", async (req, res) => {
 //   const { startDate, endDate } = req.body;
@@ -688,17 +734,26 @@ router.get("/crm-lead-owner-dashboard", verifyLogin, async (req, res) => {
 
 
 
-
 router.get("/crm-lead-owner-details", async (req, res) => {
   // Check if the user is logged in
   if (!req.session.user) {
     return res.redirect("/lead-login");
   }
-  // Fetch all lead owners
-  const leadStage = await serviceHelpers.getAllLeadStage();
-  const leadOwnerName = req.session.user.email;
 
   try {
+    // Fetch all lead stages
+    const leadStage = await serviceHelpers.getAllLeadStage();
+
+    // Remove duplicate mainStage entries
+    const uniqueLeadStages = Array.from(
+      new Set(leadStage.map((stage) => stage.mainStage))
+    ).map((mainStage) => {
+      return leadStage.find((stage) => stage.mainStage === mainStage);
+    });
+
+    // Fetch lead owner name from session
+    const leadOwnerName = req.session.user.email;
+
     // Fetch data from both collections
     const [googlesheets, referrals, leadOwners] = await Promise.all([
       serviceHelpers.getAllGooglsheets(),
@@ -717,18 +772,22 @@ router.get("/crm-lead-owner-details", async (req, res) => {
     // Log the filtered data to the console (for debugging purposes)
     console.log(filteredData);
 
-    // Render the view with the filtered data
+    // Render the view with the filtered data and session user details
     res.render("user/crmleadowners-details", {
       admin: true,
       googlesheets: filteredData,
       leadOwners,
-      leadStage,
+      leadStage: uniqueLeadStages, // Use the unique stages
+      userEmail: req.session.user.email,
+      userName: req.session.user.name,
     });
   } catch (error) {
     console.error("Error fetching data:", error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 });
+
+
 
 router.post("/get-sub-stages", async (req, res) => {
   const { stage, mainStage } = req.body;

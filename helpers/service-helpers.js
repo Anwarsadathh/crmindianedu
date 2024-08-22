@@ -681,58 +681,745 @@ module.exports = {
   //     }
   //   });
   // },
-getLeadStatusCounts: async (sessionEmail, startDate, endDate, filterType, stage, showLatestSubstage) => {
-    try {
-        let matchCriteria = { leadOwnerName: sessionEmail };
+  getLeadDetailsById: async (id) => {
+    if (!id || !ObjectId.isValid(id)) {
+      throw new Error("Invalid Lead ID");
+    }
 
-        // Add date filtering if startDate and endDate are provided
-        if (startDate && endDate) {
-            matchCriteria['history.date'] = {
-                $gte: new Date(startDate),
-                $lte: new Date(endDate),
-            };
+    try {
+      const [googleSheetData, referralData] = await Promise.all([
+        db
+          .get()
+          .collection(collection.GOOGLESHEETS_COLLECTION)
+          .find({ _id: new ObjectId(id) })
+          .toArray(),
+        db
+          .get()
+          .collection(collection.REFERRAL_COLLECTION)
+          .find({ _id: new ObjectId(id) })
+          .toArray(),
+      ]);
+
+      const allData = [...googleSheetData, ...referralData];
+
+      if (allData.length === 0) {
+        throw new Error("Lead not found");
+      }
+
+      return allData[0];
+    } catch (error) {
+      console.error("Error fetching lead details:", error.message);
+      throw new Error("Internal Server Error");
+    }
+  },
+  //   getLeadStatusCounts: async (
+  //   sessionEmail,
+  //   startDate,
+  //   endDate,
+  //   filterType,
+  //   selectedStage,
+  //   showLatestSubstage = false // Flag to control showing the latest substage
+  // ) => {
+  //   return new Promise(async (resolve, reject) => {
+  //     try {
+  //       console.log("Lead Owner Email for Count:", sessionEmail);
+  //       console.log("Received startDate:", startDate);
+  //       console.log("Received endDate:", endDate);
+  //       console.log("Received filterType:", filterType);
+  //       console.log("Received stage:", selectedStage);
+  //       console.log("Show Latest Substage:", showLatestSubstage);
+
+  //      const start =
+  //        startDate && !isNaN(Date.parse(startDate))
+  //          ? new Date(startDate).toISOString().split("T")[0]
+  //          : null;
+  //      const end =
+  //        endDate && !isNaN(Date.parse(endDate))
+  //          ? new Date(endDate).toISOString().split("T")[0]
+  //          : null;
+
+  //       console.log("Parsed startDate:", start);
+  //       console.log("Parsed endDate:", end);
+
+  //       let matchCriteria = { leadOwnerName: sessionEmail };
+
+  //       const [googleSheetData, referralData] = await Promise.all([
+  //         db
+  //           .get()
+  //           .collection(collection.GOOGLESHEETS_COLLECTION)
+  //           .find(matchCriteria)
+  //           .toArray(),
+  //         db
+  //           .get()
+  //           .collection(collection.REFERRAL_COLLECTION)
+  //           .find(matchCriteria)
+  //           .toArray(),
+  //       ]);
+
+  //       const allData = [...googleSheetData, ...referralData];
+
+  //       let mainStageCounts = {};
+  //       let stageCounts = {};
+  //       let subStageCounts = {};
+  //       let mainStageList = new Set();
+
+  //       // Add arrays for full details
+  //       let mainStageDetails = [];
+  //       let stageDetails = [];
+  //       let subStageDetails = [];
+
+  //       allData.forEach((doc) => {
+  //         console.log("Processing document:", doc); // Log raw data for each document
+
+  //         let latestMainStage = null;
+  //         let latestStage = null;
+  //         let latestSubStage = null;
+  //         let latestDate = null;
+
+  //         for (const [mainStage, stages] of Object.entries(
+  //           doc.leadStatus || {}
+  //         )) {
+  //           // Collect unique main stages
+  //           if (!["In Progress", "Completed"].includes(mainStage)) {
+  //             mainStageList.add(mainStage);
+  //           }
+  //           if (filterType && filterType !== mainStage) continue;
+
+  //           for (const [stage, entries] of Object.entries(stages)) {
+  //             if (selectedStage && selectedStage !== stage) continue;
+
+  //             const latest = entries.reduce((latest, entry) => {
+  //               return !latest || new Date(entry.date) > new Date(latest.date)
+  //                 ? entry
+  //                 : latest;
+  //             }, null);
+
+  //             if (!latestDate || new Date(latest.date) > new Date(latestDate)) {
+  //               latestDate = latest.date;
+  //               latestMainStage = mainStage;
+  //               latestStage = stage;
+  //               latestSubStage = latest.subStage;
+  //             }
+  //           }
+  //         }
+
+  //         if (showLatestSubstage && latestDate) {
+  //           if (latestMainStage) {
+  //             mainStageCounts[latestMainStage] =
+  //               (mainStageCounts[latestMainStage] || 0) + 1;
+  //             stageCounts[`${latestMainStage}-${latestStage}`] =
+  //               (stageCounts[`${latestMainStage}-${latestStage}`] || 0) + 1;
+  //             subStageCounts[
+  //               `${latestMainStage}-${latestStage}-${latestSubStage}`
+  //             ] =
+  //               (subStageCounts[
+  //                 `${latestMainStage}-${latestStage}-${latestSubStage}`
+  //               ] || 0) + 1;
+
+  //             // Store full details
+  //             mainStageDetails.push({ mainStage: latestMainStage, doc });
+  //             stageDetails.push({
+  //               mainStage: latestMainStage,
+  //               stage: latestStage,
+  //               doc,
+  //             });
+  //             subStageDetails.push({
+  //               mainStage: latestMainStage,
+  //               stage: latestStage,
+  //               subStage: latestSubStage,
+  //               doc,
+  //             });
+  //           }
+  //         }
+  //       });
+
+  //       // Ensure all main stages from the mainStageList are included in the output
+  //       mainStageList.forEach((mainStage) => {
+  //         if (!(mainStage in mainStageCounts)) {
+  //           mainStageCounts[mainStage] = 0;
+  //         }
+  //       });
+
+  //       // Convert counts to arrays
+  //       const mainStageCountsArray = Array.from(mainStageList).map(
+  //         (mainStage) => ({
+  //           mainStage,
+  //           count: mainStageCounts[mainStage],
+  //         })
+  //       );
+
+  //       const stageCountsArray = Object.keys(stageCounts).map((key) => {
+  //         const [mainStage, stage] = key.split("-");
+  //         return {
+  //           mainStage,
+  //           stage,
+  //           count: stageCounts[key],
+  //         };
+  //       });
+
+  //       const subStageCountsArray = Object.keys(subStageCounts).map((key) => {
+  //         const [mainStage, stage, subStage] = key.split("-");
+  //         return {
+  //           mainStage,
+  //           stage,
+  //           subStage,
+  //           count: subStageCounts[key],
+  //         };
+  //       });
+
+  //       // Log detailed information about the counts
+  //       console.log("Main Stage Counts Array:", mainStageCountsArray);
+  //       mainStageCountsArray.forEach(({ mainStage, count }) => {
+  //         console.log(`Main Stage: ${mainStage}, Count: ${count}`);
+  //         Object.keys(stageCounts).forEach((key) => {
+  //           if (key.startsWith(`${mainStage}-`)) {
+  //             const [_, stage] = key.split("-");
+  //             console.log(`  Stage: ${stage}, Count: ${stageCounts[key]}`);
+  //             Object.keys(subStageCounts).forEach((subKey) => {
+  //               if (subKey.startsWith(`${mainStage}-${stage}-`)) {
+  //                 const [_, __, subStage] = subKey.split("-");
+  //                 console.log(
+  //                   `    Sub-Stage: ${subStage}, Count: ${subStageCounts[subKey]}`
+  //                 );
+  //               }
+  //             });
+  //           }
+  //         });
+  //       });
+
+  //       console.log("Total Leads:", allData.length);
+
+  //       resolve({
+  //         mainStageCounts: mainStageCountsArray,
+  //         stageCounts: stageCountsArray,
+  //         subStageCounts: subStageCountsArray,
+  //         totalLeads: allData.length,
+  //         mainStageDetails, // Full details returned here
+  //         stageDetails, // Full details returned here
+  //         subStageDetails, // Full details returned here
+  //       });
+  //     } catch (error) {
+  //       console.error("Error in getLeadStatusCounts:", error);
+  //       reject(error);
+  //     }
+  //   });
+  // },
+
+// getLeadStatusCounts: async (
+//   sessionEmail,
+//   startDate,
+//   endDate,
+//   filterType,
+//   selectedStage,
+//   showLatestSubstage = false
+// ) => {
+//   return new Promise(async (resolve, reject) => {
+//     try {
+//       console.log("Lead Owner Email for Count:", sessionEmail);
+//       console.log("Received startDate:", startDate);
+//       console.log("Received endDate:", endDate);
+//       console.log("Received filterType:", filterType);
+//       console.log("Received stage:", selectedStage);
+//       console.log("Show Latest Substage:", showLatestSubstage);
+
+//       // Parse startDate and endDate
+//       const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+//       const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+
+//       if ((startDate && !start) || (endDate && !end)) {
+//         throw new Error("Invalid date value provided");
+//       }
+
+//       let matchCriteria = { leadOwnerName: sessionEmail };
+
+//       // Fetch data
+//       const [googleSheetData, referralData] = await Promise.all([
+//         db.get().collection(collection.GOOGLESHEETS_COLLECTION).find(matchCriteria).toArray(),
+//         db.get().collection(collection.REFERRAL_COLLECTION).find(matchCriteria).toArray(),
+//       ]);
+
+//       const allData = [...googleSheetData, ...referralData];
+
+//       let mainStageCounts = {};
+//       let stageCounts = {};
+//       let subStageCounts = {};
+//       let mainStageList = new Set();
+
+//       let mainStageDetails = [];
+//       let stageDetails = [];
+//       let subStageDetails = [];
+
+//       allData.forEach((doc) => {
+//         console.log("Processing document:", doc);
+
+//         let latestMainStage = null;
+//         let latestStage = null;
+//         let latestSubStage = null;
+//         let latestDate = null;
+
+//         for (const [mainStage, stages] of Object.entries(doc.leadStatus || {})) {
+//           if (!["In Progress", "Completed"].includes(mainStage)) {
+//             mainStageList.add(mainStage);
+//           }
+//           if (filterType && filterType !== mainStage) continue;
+
+//           for (const [stage, entries] of Object.entries(stages)) {
+//             if (selectedStage && selectedStage !== stage) continue;
+
+//             const filteredEntries = entries.filter((entry) => {
+//               const entryDate = new Date(entry.date).getTime();
+//               return entryDate >= start && entryDate <= end;
+//             });
+
+//             console.log(`Filtered Entries for ${mainStage} - ${stage}:`, filteredEntries);
+
+//             if (filteredEntries.length === 0) continue;
+
+//             const latest = filteredEntries.reduce((latest, entry) => {
+//               const entryDate = new Date(entry.date).getTime();
+//               if (isNaN(entryDate)) {
+//                 console.warn("Invalid date found in entry:", entry);
+//                 return latest;
+//               }
+//               return !latest || entryDate > new Date(latest.date).getTime()
+//                 ? entry
+//                 : latest;
+//             }, null);
+
+//             console.log(`Latest Entry for ${mainStage} - ${stage}:`, latest);
+
+//             if (latest && (!latestDate || new Date(latest.date) > new Date(latestDate))) {
+//               latestDate = latest.date;
+//               latestMainStage = mainStage;
+//               latestStage = stage;
+//               latestSubStage = latest.subStage;
+//             }
+//           }
+//         }
+
+//         if (showLatestSubstage && latestDate) {
+//           if (latestMainStage) {
+//             mainStageCounts[latestMainStage] = (mainStageCounts[latestMainStage] || 0) + 1;
+//             stageCounts[`${latestMainStage}-${latestStage}`] = (stageCounts[`${latestMainStage}-${latestStage}`] || 0) + 1;
+//             subStageCounts[`${latestMainStage}-${latestStage}-${latestSubStage}`] = (subStageCounts[`${latestMainStage}-${latestStage}-${latestSubStage}`] || 0) + 1;
+
+//             mainStageDetails.push({ mainStage: latestMainStage, doc });
+//             stageDetails.push({ mainStage: latestMainStage, stage: latestStage, doc });
+//             subStageDetails.push({ mainStage: latestMainStage, stage: latestStage, subStage: latestSubStage, doc });
+//           }
+//         }
+//       });
+
+//       mainStageList.forEach((mainStage) => {
+//         if (!(mainStage in mainStageCounts)) {
+//           mainStageCounts[mainStage] = 0;
+//         }
+//       });
+
+//       const mainStageCountsArray = Array.from(mainStageList).map((mainStage) => ({
+//         mainStage,
+//         count: mainStageCounts[mainStage],
+//       }));
+
+//       const stageCountsArray = Object.keys(stageCounts).map((key) => {
+//         const [mainStage, stage] = key.split("-");
+//         return {
+//           mainStage,
+//           stage,
+//           count: stageCounts[key],
+//         };
+//       });
+
+//       const subStageCountsArray = Object.keys(subStageCounts).map((key) => {
+//         const [mainStage, stage, subStage] = key.split("-");
+//         return {
+//           mainStage,
+//           stage,
+//           subStage,
+//           count: subStageCounts[key],
+//         };
+//       });
+
+//       console.log("Main Stage Counts Array:", mainStageCountsArray);
+//       mainStageCountsArray.forEach(({ mainStage, count }) => {
+//         console.log(`Main Stage: ${mainStage}, Count: ${count}`);
+//         Object.keys(stageCounts).forEach((key) => {
+//           if (key.startsWith(`${mainStage}-`)) {
+//             const [, stage] = key.split("-");
+//             console.log(`  Stage: ${stage}, Count: ${stageCounts[key]}`);
+//             Object.keys(subStageCounts).forEach((subKey) => {
+//               if (subKey.startsWith(`${mainStage}-${stage}-`)) {
+//                 const [, , subStage] = subKey.split("-");
+//                 console.log(`    Sub-Stage: ${subStage}, Count: ${subStageCounts[subKey]}`);
+//               }
+//             });
+//           }
+//         });
+//       });
+
+//       console.log("Total Leads:", allData.length);
+
+//       resolve({
+//         mainStageCounts: mainStageCountsArray,
+//         stageCounts: stageCountsArray,
+//         subStageCounts: subStageCountsArray,
+//         totalLeads: allData.length,
+//         mainStageDetails,
+//         stageDetails,
+//         subStageDetails,
+//       });
+//     } catch (error) {
+//       console.error("Error in getLeadStatusCounts:", error);
+//       reject(error);
+//     }
+//   });
+// },
+
+getLeadStatusCounts: async (
+  sessionEmail,
+  startDate,
+  endDate,
+  filterType,
+  selectedStage,
+  showLatestSubstage = false
+) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      console.log("Lead Owner Email for Count:", sessionEmail);
+      console.log("Received startDate:", startDate);
+      console.log("Received endDate:", endDate);
+      console.log("Received filterType:", filterType);
+      console.log("Received stage:", selectedStage);
+      console.log("Show Latest Substage:", showLatestSubstage);
+
+      // Parse startDate and endDate
+      const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+      const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+
+      if ((startDate && !start) || (endDate && !end)) {
+        throw new Error("Invalid date value provided");
+      }
+
+      let matchCriteria = { leadOwnerName: sessionEmail };
+
+      // Fetch data
+      const [googleSheetData, referralData] = await Promise.all([
+        db.get().collection(collection.GOOGLESHEETS_COLLECTION).find(matchCriteria).toArray(),
+        db.get().collection(collection.REFERRAL_COLLECTION).find(matchCriteria).toArray(),
+      ]);
+
+      const allData = [...googleSheetData, ...referralData];
+
+      let mainStageCounts = {};
+      let stageCounts = {};
+      let subStageCounts = {};
+      let mainStageList = new Set();
+
+      let mainStageDetails = [];
+      let stageDetails = [];
+      let subStageDetails = [];
+
+      allData.forEach((doc) => {
+        console.log("Processing document:", doc);
+
+        let latestMainStage = null;
+        let latestStage = null;
+        let latestSubStage = null;
+        let latestDate = null;
+
+        for (const [mainStage, stages] of Object.entries(doc.leadStatus || {})) {
+          if (!["In Progress", "Completed"].includes(mainStage)) {
+            mainStageList.add(mainStage);
+          }
+          if (filterType && filterType !== mainStage) continue;
+
+          for (const [stage, entries] of Object.entries(stages)) {
+            if (selectedStage && selectedStage !== stage) continue;
+
+            const filteredEntries = entries.filter((entry) => {
+              const entryDate = new Date(entry.date).getTime();
+              return entryDate >= start && entryDate <= end;
+            });
+
+            console.log(`Filtered Entries for ${mainStage} - ${stage}:`, filteredEntries);
+
+            if (filteredEntries.length === 0) continue;
+
+            const latest = filteredEntries.reduce((latest, entry) => {
+              const entryDate = new Date(entry.date).getTime();
+              if (isNaN(entryDate)) {
+                console.warn("Invalid date found in entry:", entry);
+                return latest;
+              }
+              return !latest || entryDate > new Date(latest.date).getTime()
+                ? entry
+                : latest;
+            }, null);
+
+            console.log(`Latest Entry for ${mainStage} - ${stage}:`, latest);
+
+            if (latest && (!latestDate || new Date(latest.date) > new Date(latestDate))) {
+              latestDate = latest.date;
+              latestMainStage = mainStage;
+              latestStage = stage;
+              latestSubStage = latest.subStage;
+            }
+          }
         }
 
-        const collections = [
-            db.get().collection(collection.GOOGLESHEETS_COLLECTION),
-            db.get().collection(collection.REFERRAL_COLLECTION)
-        ];
+        if (showLatestSubstage && latestDate) {
+          if (latestMainStage) {
+            mainStageCounts[latestMainStage] = (mainStageCounts[latestMainStage] || 0) + 1;
+            stageCounts[`${latestMainStage}-${latestStage}`] = (stageCounts[`${latestMainStage}-${latestStage}`] || 0) + 1;
+            subStageCounts[`${latestMainStage}-${latestStage}-${latestSubStage}`] = (subStageCounts[`${latestMainStage}-${latestStage}-${latestSubStage}`] || 0) + 1;
 
-        const results = await Promise.all(collections.map(col =>
-            col.aggregate([
-                { $match: matchCriteria },
-                { $project: { leadStatus: 1, history: 1 } },
-                { $unwind: { path: "$leadStatus", preserveNullAndEmptyArrays: true } },
-                { $unwind: { path: "$leadStatus", preserveNullAndEmptyArrays: true } },
-                { $project: { mainStage: { k: "$leadStatus.mainStage", v: "$leadStatus" } } },
-                { $unwind: "$mainStage.v" },
-                { $group: {
-                    _id: {
-                        mainStage: "$mainStage.k",
-                        stage: "$mainStage.v.status",
-                        subStage: "$mainStage.v.subStage"
-                    },
-                    count: { $sum: 1 }
-                }},
-                { $project: {
-                    _id: 0,
-                    mainStage: "$_id.mainStage",
-                    stage: "$_id.stage",
-                    subStage: "$_id.subStage",
-                    count: 1
-                }}
-            ]).toArray()
-        ));
+            mainStageDetails.push({ mainStage: latestMainStage, doc });
+            stageDetails.push({ mainStage: latestMainStage, stage: latestStage, doc });
+            subStageDetails.push({ mainStage: latestMainStage, stage: latestStage, subStage: latestSubStage, doc });
+          }
+        }
+      });
 
-        // Flatten the results from multiple collections
-        const flattenedResults = results.flat();
+      mainStageList.forEach((mainStage) => {
+        if (!(mainStage in mainStageCounts)) {
+          mainStageCounts[mainStage] = 0;
+        }
+      });
 
-        return flattenedResults;
+      // Sort the counts by descending order
+      const mainStageCountsArray = Array.from(mainStageList)
+        .map((mainStage) => ({
+          mainStage,
+          count: mainStageCounts[mainStage],
+        }))
+        .sort((a, b) => b.count - a.count);
+
+      const stageCountsArray = Object.keys(stageCounts)
+        .map((key) => {
+          const [mainStage, stage] = key.split("-");
+          return {
+            mainStage,
+            stage,
+            count: stageCounts[key],
+          };
+        })
+        .sort((a, b) => b.count - a.count);
+
+      const subStageCountsArray = Object.keys(subStageCounts)
+        .map((key) => {
+          const [mainStage, stage, subStage] = key.split("-");
+          return {
+            mainStage,
+            stage,
+            subStage,
+            count: subStageCounts[key],
+          };
+        })
+        .sort((a, b) => b.count - a.count);
+
+      console.log("Main Stage Counts Array:", mainStageCountsArray);
+      mainStageCountsArray.forEach(({ mainStage, count }) => {
+        console.log(`Main Stage: ${mainStage}, Count: ${count}`);
+        Object.keys(stageCounts).forEach((key) => {
+          if (key.startsWith(`${mainStage}-`)) {
+            const [, stage] = key.split("-");
+            console.log(`  Stage: ${stage}, Count: ${stageCounts[key]}`);
+            Object.keys(subStageCounts).forEach((subKey) => {
+              if (subKey.startsWith(`${mainStage}-${stage}-`)) {
+                const [, , subStage] = subKey.split("-");
+                console.log(`    Sub-Stage: ${subStage}, Count: ${subStageCounts[subKey]}`);
+              }
+            });
+          }
+        });
+      });
+
+      console.log("Total Leads:", allData.length);
+
+      resolve({
+        mainStageCounts: mainStageCountsArray,
+        stageCounts: stageCountsArray,
+        subStageCounts: subStageCountsArray,
+        totalLeads: allData.length,
+        mainStageDetails,
+        stageDetails,
+        subStageDetails,
+      });
     } catch (error) {
-        console.error("Error in getLeadStatusCounts:", error);
-        throw error;
+      console.error("Error in getLeadStatusCounts:", error);
+      reject(error);
     }
+  });
 },
+
+  // getLeadStatusCounts: async (
+  //   sessionEmail,
+  //   startDate,
+  //   endDate,
+  //   filterType,
+  //   selectedStage,
+  //   showLatestSubstage = false // Flag to control showing the latest substage
+  // ) => {
+  //   return new Promise(async (resolve, reject) => {
+  //     try {
+  //       console.log("Lead Owner Email for Count:", sessionEmail);
+  //       console.log("Received startDate:", startDate);
+  //       console.log("Received endDate:", endDate);
+  //       console.log("Received filterType:", filterType);
+  //       console.log("Received stage:", selectedStage);
+  //       console.log("Show Latest Substage:", showLatestSubstage);
+
+  //       const start = startDate
+  //         ? new Date(startDate).toISOString().split("T")[0]
+  //         : null;
+  //       const end = endDate
+  //         ? new Date(endDate).toISOString().split("T")[0]
+  //         : null;
+
+  //       console.log("Parsed startDate:", start);
+  //       console.log("Parsed endDate:", end);
+
+  //       let matchCriteria = { leadOwnerName: sessionEmail };
+
+  //       const [googleSheetData, referralData] = await Promise.all([
+  //         db
+  //           .get()
+  //           .collection(collection.GOOGLESHEETS_COLLECTION)
+  //           .find(matchCriteria)
+  //           .toArray(),
+  //         db
+  //           .get()
+  //           .collection(collection.REFERRAL_COLLECTION)
+  //           .find(matchCriteria)
+  //           .toArray(),
+  //       ]);
+
+  //       const allData = [...googleSheetData, ...referralData];
+
+  //       let mainStageCounts = {};
+  //       let stageCounts = {};
+  //       let subStageCounts = {};
+  //       let mainStageList = new Set();
+
+  //       allData.forEach((doc) => {
+  //         console.log("Processing document:", doc); // Log raw data for each document
+
+  //         let latestMainStage = null;
+  //         let latestStage = null;
+  //         let latestSubStage = null;
+  //         let latestDate = null;
+
+  //         for (const [mainStage, stages] of Object.entries(
+  //           doc.leadStatus || {}
+  //         )) {
+  //           // Collect unique main stages
+  //           if (!["In Progress", "Completed"].includes(mainStage)) {
+  //             mainStageList.add(mainStage);
+  //           }
+  //           if (filterType && filterType !== mainStage) continue;
+
+  //           for (const [stage, entries] of Object.entries(stages)) {
+  //             if (selectedStage && selectedStage !== stage) continue;
+
+  //             const latest = entries.reduce((latest, entry) => {
+  //               return !latest || new Date(entry.date) > new Date(latest.date)
+  //                 ? entry
+  //                 : latest;
+  //             }, null);
+
+  //             if (!latestDate || new Date(latest.date) > new Date(latestDate)) {
+  //               latestDate = latest.date;
+  //               latestMainStage = mainStage;
+  //               latestStage = stage;
+  //               latestSubStage = latest.subStage;
+  //             }
+  //           }
+  //         }
+
+  //         if (showLatestSubstage && latestDate) {
+  //           if (latestMainStage) {
+  //             mainStageCounts[latestMainStage] =
+  //               (mainStageCounts[latestMainStage] || 0) + 1;
+  //             stageCounts[`${latestMainStage}-${latestStage}`] =
+  //               (stageCounts[`${latestMainStage}-${latestStage}`] || 0) + 1;
+  //             subStageCounts[
+  //               `${latestMainStage}-${latestStage}-${latestSubStage}`
+  //             ] =
+  //               (subStageCounts[
+  //                 `${latestMainStage}-${latestStage}-${latestSubStage}`
+  //               ] || 0) + 1;
+  //           }
+  //         }
+  //       });
+
+  //       // Ensure all main stages from the mainStageList are included in the output
+  //       mainStageList.forEach((mainStage) => {
+  //         if (!(mainStage in mainStageCounts)) {
+  //           mainStageCounts[mainStage] = 0;
+  //         }
+  //       });
+
+  //       // Convert counts to arrays
+  //       const mainStageCountsArray = Array.from(mainStageList).map(
+  //         (mainStage) => ({
+  //           mainStage,
+  //           count: mainStageCounts[mainStage],
+  //         })
+  //       );
+
+  //       const stageCountsArray = Object.keys(stageCounts).map((key) => {
+  //         const [mainStage, stage] = key.split("-");
+  //         return {
+  //           mainStage,
+  //           stage,
+  //           count: stageCounts[key],
+  //         };
+  //       });
+
+  //       const subStageCountsArray = Object.keys(subStageCounts).map((key) => {
+  //         const [mainStage, stage, subStage] = key.split("-");
+  //         return {
+  //           mainStage,
+  //           stage,
+  //           subStage,
+  //           count: subStageCounts[key],
+  //         };
+  //       });
+
+  //       // Log detailed information about the counts
+  //       console.log("Main Stage Counts Array:", mainStageCountsArray);
+  //       mainStageCountsArray.forEach(({ mainStage, count }) => {
+  //         console.log(`Main Stage: ${mainStage}, Count: ${count}`);
+  //         Object.keys(stageCounts).forEach((key) => {
+  //           if (key.startsWith(`${mainStage}-`)) {
+  //             const [_, stage] = key.split("-");
+  //             console.log(`  Stage: ${stage}, Count: ${stageCounts[key]}`);
+  //             Object.keys(subStageCounts).forEach((subKey) => {
+  //               if (subKey.startsWith(`${mainStage}-${stage}-`)) {
+  //                 const [_, __, subStage] = subKey.split("-");
+  //                 console.log(
+  //                   `    Sub-Stage: ${subStage}, Count: ${subStageCounts[subKey]}`
+  //                 );
+  //               }
+  //             });
+  //           }
+  //         });
+  //       });
+
+  //       console.log("Total Leads:", allData.length);
+
+  //       resolve({
+  //         mainStageCounts: mainStageCountsArray,
+  //         stageCounts: stageCountsArray,
+  //         subStageCounts: subStageCountsArray,
+  //         totalLeads: allData.length,
+  //       });
+  //     } catch (error) {
+  //       console.error("Error in getLeadStatusCounts:", error);
+  //       reject(error);
+  //     }
+  //   });
+  // },
 
   // getLeadStatusCounts: async (sessionEmail, startDate, endDate, filterType) => {
   //   return new Promise(async (resolve, reject) => {
@@ -1421,9 +2108,8 @@ getLeadStatusCounts: async (sessionEmail, startDate, endDate, filterType, stage,
 
         // Append the new status object to the array of stages
         stagesArray.push(statusObj);
-
-        // Update the mainStage data structure with the updated lead stage
         mainStageData[leadStage] = stagesArray;
+        currentStatus[mainStage] = mainStageData;
 
         // Prepare history object
         const historyEntry = {
@@ -1436,6 +2122,7 @@ getLeadStatusCounts: async (sessionEmail, startDate, endDate, filterType, stage,
         const historyData = googlesheet?.history || referral?.history || {};
         const historyArray = historyData[leadStage] || [];
         historyArray.push(historyEntry);
+        historyData[leadStage] = historyArray;
 
         // Update the collections with the new leadStatus and history
         await Promise.all([
@@ -1444,8 +2131,8 @@ getLeadStatusCounts: async (sessionEmail, startDate, endDate, filterType, stage,
             .collection(collection.GOOGLESHEETS_COLLECTION)
             .updateOne(query, {
               $set: {
-                [`leadStatus.${mainStage}`]: mainStageData,
-                [`history.${leadStage}`]: historyArray,
+                leadStatus: currentStatus,
+                history: historyData,
               },
             }),
           db
@@ -1453,8 +2140,8 @@ getLeadStatusCounts: async (sessionEmail, startDate, endDate, filterType, stage,
             .collection(collection.REFERRAL_COLLECTION)
             .updateOne(query, {
               $set: {
-                [`leadStatus.${mainStage}`]: mainStageData,
-                [`history.${leadStage}`]: historyArray,
+                leadStatus: currentStatus,
+                history: historyData,
               },
             }),
         ]);
@@ -1464,6 +2151,33 @@ getLeadStatusCounts: async (sessionEmail, startDate, endDate, filterType, stage,
         reject(error);
       }
     });
+  },
+
+  getLeadDetails: async (mainStage, stage, subStage) => {
+    try {
+      const matchCriteria = {
+        ...(mainStage && { mainStage }),
+        ...(stage && { stage }),
+        ...(subStage && { subStage }),
+      };
+
+      const [googlesheetsData, referralData] = await Promise.all([
+        db
+          .get()
+          .collection(collection.GOOGLESHEETS_COLLECTION)
+          .find(matchCriteria)
+          .toArray(),
+        db
+          .get()
+          .collection(collection.REFERRAL_COLLECTION)
+          .find(matchCriteria)
+          .toArray(),
+      ]);
+
+      return [...googlesheetsData, ...referralData]; // Combine or process data as needed
+    } catch (error) {
+      throw new Error("Error fetching lead details: " + error.message);
+    }
   },
 
   getSubStageMandatoryStatus: async (stage, subStage) => {

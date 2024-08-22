@@ -514,12 +514,12 @@ background-color: #1c008b !important;
                             {{/each}}
                         </select>
                     </td>
-                    <td>
-                        <button class="btn btn-info ms-2 show-lead-status-btn" style=" font-size: 10px !important;">Status</button>
-                        <div class="leadStatusContent" style="display:none;">
-                            {{json this.leadStatus}}
-                        </div>
-                    </td>
+                     <td>
+            <button class="btn btn-info ms-2 show-lead-status-btn" style="font-size: 10px !important;" data-bs-toggle="modal" data-bs-target="#leadStatusModal" onclick="showLeadStatus(this)">Status</button>
+            <div class="leadStatusContent" style="display:none;">
+                {{json this.leadStatus}}
+            </div>
+        </td>
                     <td>
                         <button class="btn btn-status {{#if (eq this.assignLead "assigned")}}btn-paid{{else}}btn-not-paid{{/if}}" 
                                 onclick="toggleAssignment(this)" >
@@ -537,12 +537,13 @@ background-color: #1c008b !important;
 </div>
 
 
+
 <!-- Modal -->
 <div class="modal fade" id="leadStatusModal" tabindex="-1" aria-labelledby="leadStatusModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="leadStatusModalLabel">Lead Status Timeline</h5>
+        <h6 class="modal-title" id="leadStatusModalLabel">Lead Status Timeline</h6>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -553,8 +554,9 @@ background-color: #1c008b !important;
 </div>
 
 
+
 <style>
-  /* Modal and header styling */
+      /* Modal and header styling */
   .modal-content {
     border-radius: 15px;
     background: linear-gradient(135deg, #f5f7fa, #c3cfe2); /* Gradient background */
@@ -573,39 +575,47 @@ background-color: #1c008b !important;
     font-size: 24px;
     font-weight: bold;
   }
+/* Status category section */
+.status-category-section {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px; /* Space between category and timeline items */
+    border-bottom: 2px solid #007bff; /* Optional: Add a border to separate categories */
+    padding-bottom: 10px; /* Space between category text and the border */
+}
 
-  /* Timeline container */
-  .timeline-container {
+/* Timeline container */
+.timeline-container {
     position: relative;
     padding: 20px;
     border-left: 3px solid #007bff; /* Thicker vertical line for timeline */
     overflow-x: hidden;
-  }
+}
 
-  /* Timeline items */
-  .timeline-item {
+/* Timeline items */
+.timeline-item {
     position: relative;
     padding: 15px 0;
     margin-left: 80px; /* Increased space for date and line */
     display: flex;
     align-items: flex-start;
     flex-direction: row;
-  }
+}
 
-  /* Date styling */
-  .timeline-item .timeline-date {
+/* Date styling */
+.timeline-item .timeline-date {
     position: absolute;
     left: -100px; /* Adjusted to fit within modal */
     top: 0;
     width: 80px;
     text-align: center;
     font-size: 14px;
-     color: #232f65; /* Change this to your desired color */
+    color: #232f65; /* Change this to your desired color */
     font-weight: bold;
-  }
+}
 
-  /* Item content styling */
-  .timeline-item-content {
+/* Item content styling */
+.timeline-item-content {
     background: #f9f9f9;
     border: 2px solid #ddd;
     border-radius: 8px;
@@ -616,10 +626,10 @@ background-color: #1c008b !important;
     width: calc(100% - 110px); /* Adjust width to fit within modal */
     max-width: 600px; /* Increased max-width for readability */
     border-left: 3px solid #007bff; /* Thicker vertical line after the date */
-  }
+}
 
-  /* Vertical line and circle */
-  .timeline-item::before {
+/* Vertical line and circle */
+.timeline-item::before {
     content: '';
     position: absolute;
     left: -10px; /* Adjust to ensure circle is visible */
@@ -628,32 +638,36 @@ background-color: #1c008b !important;
     height: 12px;
     background: #007bff;
     border-radius: 50%;
-  }
+}
 
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
+/* Responsive adjustments */
+@media (max-width: 768px) {
     .modal-content {
-      font-size: 10px; /* Font size for mobile screens */
+        font-size: 10px; /* Font size for mobile screens */
     }
 
     .timeline-item {
-      margin-left: 30px; /* Adjust for smaller screens */
+        margin-left: 30px; /* Adjust for smaller screens */
     }
 
     .timeline-item-content {
-      width: calc(100% - 40px); /* Adjust width for smaller screens */
-      padding: 10px;
+        width: calc(100% - 40px); /* Adjust width for smaller screens */
+        padding: 10px;
     }
 
     .timeline-item .timeline-date {
-      left: -50px; /* Adjust date position for mobile */
-      width: 50px;
+        left: -50px; /* Adjust date position for mobile */
+        width: 50px;
     }
 
     .timeline-item::before {
-      left: -6px; /* Adjust circle position for mobile */
+        left: -6px; /* Adjust circle position for mobile */
     }
-  }
+}
+.small-font {
+    font-size: smaller; /* or use any specific size like 10px */
+}
+
 </style>
 
 
@@ -673,36 +687,61 @@ async function showLeadStatus(button) {
     try {
         const leadStatus = JSON.parse(leadStatusContent);
 
+        // Function to format time in IST
+        function formatTimeInIST(dateString) {
+            const date = new Date(dateString);
+            date.setHours(date.getHours() + 5);
+            date.setMinutes(date.getMinutes() + 30);
+            return date.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+        }
+
         // Iterate through each stage in leadStatus
-        Object.keys(leadStatus).forEach(stage => {
-            const stages = leadStatus[stage];
-            
-            if (Array.isArray(stages)) {
-                stages.forEach((stageDetail, index) => {
-                    const timelineItem = document.createElement('div');
-                    timelineItem.className = `timeline-item ${index % 2 === 0 ? 'left' : 'right'}`;
+        Object.keys(leadStatus).forEach(statusCategory => {
+            const stages = leadStatus[statusCategory];
 
-                    // Create date element
-                    const dateElement = document.createElement('div');
-                    dateElement.className = 'timeline-date';
-                    dateElement.textContent = stageDetail.date || 'N/A';
+            // Create and append a section for the statusCategory
+            const categorySection = document.createElement('div');
+            categorySection.className = 'status-category-section';
+            categorySection.innerHTML = `<h5>${statusCategory}</h5>`;
+            timelineContainer.appendChild(categorySection);
 
-                    // Create content element
-                    const contentElement = document.createElement('div');
-                    contentElement.className = 'timeline-item-content';
-                    contentElement.innerHTML = `
-                        <h6>${stage} - ${stageDetail.subStage || 'N/A'}</h6>
-                        <p>Status: ${stageDetail.status || 'N/A'}</p>
-                        ${stageDetail.followUp ? `<p>Follow-Up Date: ${stageDetail.followUp.date} ${stageDetail.followUp.time}</p>` : ''}
-                    `;
+            Object.keys(stages).forEach(stage => {
+                const stageDetails = stages[stage];
 
-                    timelineItem.appendChild(dateElement);
-                    timelineItem.appendChild(contentElement);
-                    timelineContainer.appendChild(timelineItem);
-                });
-            } else {
-                console.error(`Invalid data format for stage "${stage}". Expected an array, but got:`, stages);
-            }
+                if (Array.isArray(stageDetails)) {
+                    stageDetails.forEach((stageDetail, index) => {
+                        const timelineItem = document.createElement('div');
+                        timelineItem.className = `timeline-item ${index % 2 === 0 ? 'left' : 'right'}`;
+
+                        // Format date and time separately
+                        const date = stageDetail.date ? new Date(stageDetail.date).toLocaleDateString() : 'N/A';
+                        const time = stageDetail.date ? formatTimeInIST(stageDetail.date) : '';
+
+                        // Create date element with time in a smaller font
+                        const dateElement = document.createElement('div');
+                        dateElement.className = 'timeline-date';
+                 dateElement.innerHTML = `<span class="small-font">${stageDetail.date ? new Date(stageDetail.date).toLocaleString() : 'N/A'}</span>`;
+
+
+
+                        // Create content element
+                        const contentElement = document.createElement('div');
+                        contentElement.className = 'timeline-item-content';
+                        contentElement.innerHTML = `
+                            <h6>${stage}</h6>
+                            <p>Status: ${stageDetail.status || 'N/A'}</p>
+                            <p>Sub-Stage: ${stageDetail.subStage || 'N/A'}</p>
+                            ${stageDetail.followUp ? `<p>Follow-Up Date: ${new Date(stageDetail.followUp.date).toLocaleDateString()} ${stageDetail.followUp.time}</p>` : ''}
+                        `;
+
+                        timelineItem.appendChild(dateElement);
+                        timelineItem.appendChild(contentElement);
+                        timelineContainer.appendChild(timelineItem);
+                    });
+                } else {
+                    console.error(`Invalid data format for stage "${stage}". Expected an array, but got:`, stageDetails);
+                }
+            });
         });
     } catch (error) {
         console.error('Error parsing lead status:', error);
@@ -718,7 +757,10 @@ document.addEventListener('DOMContentLoaded', function () {
         showLeadStatus(button);
     });
 });
+
+
 </script>
+
 
 <script>
 // Your existing code for bulk assignment

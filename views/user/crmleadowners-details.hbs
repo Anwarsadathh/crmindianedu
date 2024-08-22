@@ -185,8 +185,6 @@ select,textarea{
     margin-left: 0.5em;
     display: inline-block;
     width: auto;
-    margin-bottom: 10px; /* Add margin below the search bar */
-        position: sticky !important;
 }
 
 .dataTables_wrapper .dataTables_length {
@@ -202,8 +200,45 @@ select,textarea{
 .dataTables_wrapper .dataTables_paginate {
     float: right;
     margin-top: 10px; /* Add margin above the pagination controls */
-
 }
+
+/* Make the DataTables container scrollable */
+.dataTables_wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Sticky footer for pagination, info, length, and search */
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+    position: sticky;
+    bottom: 0; /* Stick to the bottom */
+    background-color: #fff; /* Background color to cover content */
+    z-index: 10; /* Ensure it's above other content */
+    border-top: 1px solid #ddd; /* Optional: Add a border for separation */
+    padding: 10px; /* Optional: Add padding for spacing */
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1); /* Optional: Add a shadow for better visibility */
+}
+
+/* Adjust margin and spacing for a cleaner layout */
+.dataTables_wrapper .dataTables_filter {
+    margin-bottom: 0; /* Remove bottom margin for sticky element */
+}
+
+.dataTables_wrapper .dataTables_length {
+    margin-bottom: 0; /* Remove bottom margin for sticky element */
+}
+
+.dataTables_wrapper .dataTables_info {
+    margin-bottom: 0; /* Remove bottom margin for sticky element */
+}
+
+.dataTables_wrapper .dataTables_paginate {
+    margin-bottom: 0; /* Remove bottom margin for sticky element */
+}
+
 </style>
 
 </head>
@@ -296,6 +331,7 @@ select,textarea{
                 </div>
             </nav>
             <!-- Navbar End -->
+<!-- Rest of your template code -->
 
 <div class="container-fluid pt-4 px-4">
     <div class="row g-4">
@@ -344,6 +380,7 @@ select,textarea{
                                 <th>Lead Status</th>
                                 <th>Action</th>
                                 <th>Lead Status</th>
+                                <th>Send</th>
                                 <th>SE</th>
                             </tr>
                         </thead>
@@ -416,6 +453,7 @@ select,textarea{
                 {{/if}}
             </textarea>
         </td>
+
         <td>
             <button class="btn-sm btn-primary" onclick="saveLeadStatus(this)">Save</button>
         </td>
@@ -425,6 +463,14 @@ select,textarea{
                 {{json this.leadStatus}}
             </div>
         </td>
+       <td>
+    <a href="#" data-bs-toggle="modal" data-bs-target="#whatsappModal" 
+       onclick="setCurrentPhoneNumber('{{this.whatsapp}}', '{{this.name}}')">
+       <i class="fab fa-whatsapp"></i>
+    </a>
+</td>
+
+
         <td>
             <button class="btn-sm btn-primary" onclick="redirectToSEForm(this)">SE FORM</button>
         </td>
@@ -440,6 +486,201 @@ select,textarea{
         Please save each stage of the lead form as you progress.
     </div>
 </div>
+<style>
+   .fab {
+    font-size: 25px !important;
+    font-weight: bolder;
+    color: #25D366; /* WhatsApp's official green color */
+}
+
+    .card {
+        background-color: #f8f9fa;
+        border: 2px solid #007bff;
+        border-radius: 10px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        cursor: pointer;
+    }
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+    .card-title {
+        font-size: 1rem;
+        color: #007bff;
+    }
+    .card-text {
+        font-size: 0.8rem;
+        color: #333;
+    }
+    h6{
+        font-size: 15px !important;
+    }
+</style>
+
+<!-- Modal -->
+<div class="modal fade" id="whatsappModal" tabindex="-1" aria-labelledby="whatsappModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title" id="whatsappModalLabel">Select a Draft to Send</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <!-- Card 1 -->
+          <div class="col-md-6">
+            <div class="card mb-3" onclick="sendDraftMessage('RNR')">
+              <div class="card-body">
+                <h5 class="card-title">Draft RNR</h5>
+                <p class="card-text">Greetings! This is {{userName}} from Indian Edu Hub. We missed our call regarding the (course name) course. Let’s reschedule!</p>
+              </div>
+            </div>
+          </div>
+          <!-- Card 2 -->
+          <div class="col-md-6">
+            <div class="card mb-3" onclick="sendDraftMessage('just_interest')">
+              <div class="card-body">
+                <h5 class="card-title">Draft Just Interest</h5>
+                <p class="card-text">I understand you might have reservations, {{currentLeadName}}. Let’s discuss how we can better assist you.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <!-- Card 3 -->
+          <div class="col-md-6">
+            <div class="card mb-3" onclick="sendDraftMessage('QL')">
+              <div class="card-body">
+                <h5 class="card-title">Draft QL</h5>
+                <p class="card-text">Excited to discuss your interest in our service, {{currentLeadName}}. Let’s set up a follow-up meeting!</p>
+              </div>
+            </div>
+          </div>
+          <!-- Card 4 -->
+          <div class="col-md-6">
+            <div class="card mb-3" onclick="sendDraftMessage('direct_university')">
+              <div class="card-body">
+                <h5 class="card-title">Draft Direct University</h5>
+                <p class="card-text">Thank you for opting out, {{currentLeadName}}. If you need support, feel free to reach out.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <!-- Card 5 -->
+          <div class="col-md-6">
+            <div class="card mb-3" onclick="sendDraftMessage('PQL')">
+              <div class="card-body">
+                <h5 class="card-title">Draft PQL</h5>
+                <p class="card-text">Great talking with you, {{currentLeadName}}! It sounds like our [specific service or product] is a perfect match for your needs. Let’s set up a follow-up meeting to explore how we can help you achieve your goals.</p>
+              </div>
+            </div>
+          </div>
+          <!-- Card 6 -->
+          <div class="col-md-6">
+            <div class="card mb-3" onclick="sendDraftMessage('HQL')">
+              <div class="card-body">
+                <h5 class="card-title">Draft HQL</h5>
+                <p class="card-text">Thank you for choosing our service, {{currentLeadName}}! We’re thrilled to have you on board and are excited to start working together. If you have any questions or need assistance, please don’t hesitate to reach out.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <!-- Card 7 -->
+          <div class="col-md-6">
+            <div class="card mb-3" onclick="sendDraftMessage('QL_NR')">
+              <div class="card-body">
+                <h5 class="card-title">Draft QL - NR</h5>
+                <p class="card-text">I noticed we missed a few calls, {{currentLeadName}}, but I’m excited about your continued interest in our [specific service or product]. Could you let me know your availability for a call?</p>
+              </div>
+            </div>
+          </div>
+          <!-- Card 8 -->
+          <div class="col-md-6">
+            <div class="card mb-3" onclick="sendDraftMessage('PQL_NR')">
+              <div class="card-body">
+                <h5 class="card-title">Draft PQL - NR</h5>
+                <p class="card-text">I noticed we missed a few calls, {{currentLeadName}}, but I’m very enthusiastic about the potential for us to work together. Your interest in our [specific service or product] is important to us. Could you let me know your preferred time for a call?</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <!-- Card 9 -->
+          <div class="col-md-6">
+            <div class="card mb-3" onclick="sendDraftMessage('Busy')">
+              <div class="card-body">
+                <h5 class="card-title">Draft Busy</h5>
+                <p class="card-text">I understand you’re currently on another call, {{currentLeadName}}. Just wanted to let you know that I’m here and ready to connect whenever it’s convenient for you. Please let me know a suitable time for us to speak.</p>
+              </div>
+            </div>
+          </div>
+          <!-- Card 10 -->
+          <div class="col-md-6">
+            <div class="card mb-3" onclick="sendDraftMessage('UQL')">
+              <div class="card-body">
+                <h5 class="card-title">Draft UQL</h5>
+                <p class="card-text">Thank you for considering our services, {{currentLeadName}}. After reviewing your needs, it seems our offerings might not be the best fit at this time. If you have any referrals for online UG/PG programs, please let us know.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <!-- Card 11 -->
+          <div class="col-md-6">
+            <div class="card mb-3" onclick="sendDraftMessage('Special_offer')">
+              <div class="card-body">
+                <h5 class="card-title">Draft Special Offer</h5>
+                <p class="card-text">We’re offering our premium membership for free to the first 500 sign-ups. Don’t miss out!</p>
+              </div>
+            </div>
+          </div>
+          <!-- Placeholder or Empty Space -->
+          <div class="col-md-6"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+function sendDraftMessage(draftKey, name) {
+    const draftMessages = {
+        RNR: `Hello ${currentLeadName},\n\nGreetings! This is {{userName}} from Indian Edu Hub.\n\nI noticed we missed our scheduled call today regarding the (course name) course you inquired about. If you’re still interested, I’d be happy to reschedule at a time that works better for you.\n\nPlease let me know your availability, or suggest another time that suits you.\n\nLooking forward to hearing from you!\n\nBest regards,\n{{userName}}`,
+        just_interest: `Hello ${currentLeadName},\n\nI hope you’re doing well.\n\nThank you for your time during our initial call. I understand you might have some reservations or limited interest at the moment. I’d love to learn more about your specific needs and how we might better assist you.\n\nIf you have any questions or need more information about our services, please let me know. I’m here to help and can provide additional details or arrange another conversation at your convenience.\n\nLooking forward to hearing from you!\n\nBest regards,\n{{userName}}\nIndian Edu Hub`,
+        QL: `Hello ${currentLeadName},\n\nThank you for the engaging conversation earlier. I’m excited to hear about your interest in our (specific service or product). To move forward, we can schedule a follow-up meeting to discuss the next steps and tailor our offerings to meet your needs.\n\nPlease let me know your next time availability, or if you prefer, I can suggest a few times that work on my end.\n\nLooking forward to continuing our discussion!\n\nBest regards,\n{{userName}}\nIndian Edu Hub`,
+        direct_university: `Hello ${currentLeadName},\n\nI hope you’re well.\n\nThank you for our recent conversation. I understand you’re opting to handle university selection without our premium plan service. If you have any questions or need support, feel free to reach out. We're here to help.\n\nBest of luck with your higher studies!\n\nBest regards,\n{{userName}}\nIndian Edu Hub`,
+        PQL: `Hello ${currentLeadName},\n\nGreat talking with you! It sounds like our [specific service or product] is a perfect match for your needs. Let’s set up a follow-up meeting to explore how we can help you achieve your goals.\n\nWhen are you available? I’m flexible and happy to work around your schedule.\n\nLooking forward to it!\n\nBest,\n{{userName}}\nIndian Edu Hub`,
+        HQL: `Hello ${currentLeadName},\n\nThank you for choosing our service! We’re thrilled to have you on board and are excited to start working together.\n\nIf you have any questions or need assistance as we get started, please don’t hesitate to reach out. We’re here to ensure everything goes smoothly and meets your expectations.\n\nLooking forward to a successful collaboration!\n\nBest regards,\n{{userName}}\nIndian Edu Hub`,
+        'QL-NR': `Hello ${currentLeadName},\n\nI hope you’re doing well!\n\nI noticed we missed a few calls, but I’m excited about your continued interest in our [specific service or product]. I’d love to discuss how we can move forward.\n\nCould you let me know your availability for a call (00:00)? \n\nLooking forward to connecting soon!\n\nBest regards,\n{{userName}}\nIndian Edu Hub`,
+        'PQL-NR': `Hello ${currentLeadName},\n\nI hope you’re well!\n\nI noticed we missed a few calls, but I’m very enthusiastic about the potential for us to work together. Your interest in our [specific service or product] is important to us, and I want to ensure we address all your needs.\n\nCould you let me know your preferred time for a call? (Please mention the Time & Date). I’m flexible and happy to accommodate your schedule.\n\nLooking forward to your response and to moving forward together!\n\nBest regards,\n{{userName}}\nIndian Edu Hub`,
+        Busy: `Hello ${currentLeadName},\n\nI understand you’re currently on another call. Just wanted to let you know that I’m here and ready to connect whenever it’s convenient for you.\n\nPlease let me know a suitable time for us to speak, or if you prefer, I can follow up at a later time that works better for you.\n\nLooking forward to our conversation!\n\nBest regards,\n{{userName}}\nIndian Edu Hub`,
+        UQL: `Hello ${currentLeadName},\n\nThank you for considering our services. After reviewing your needs, it seems our offerings might not be the best fit at this time.\n\nIf you have any referrals for online UG/PG programs or know someone who might benefit from our services, please let us know.\n\nBest of luck with your search!\n\nBest regards,\n{{userName}}\nIndian Edu Hub`,
+        Special_offer: `Hello ${currentLeadName},\n\nExciting news!\n\nWe’re offering our premium membership plan, worth ₹7,0000, for free to the first 500 sign-ups.\n\nThis is a fantastic chance to access top-tier benefits at no cost. It will help you grow & succeed.\n\nInterested or know someone who might be? Let us know to secure your spot!\n\nBest regards,\n{{userName}}\nIndian Edu Hub\nIndianeduhub.in`
+    };
+
+    const message = draftMessages[draftKey];
+    if (!message) {
+        console.error('Draft not found');
+        return;
+    }
+
+    const whatsappLink = `https://wa.me/${currentPhoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappLink, '_blank');
+}
+
+let currentPhoneNumber = '';
+let currentLeadName = '';
+
+function setCurrentPhoneNumber(phoneNumber, leadName) {
+    currentPhoneNumber = phoneNumber;
+    currentLeadName = leadName;
+}
+
+</script>
+
 
 
 <!-- Modal -->
@@ -447,7 +688,7 @@ select,textarea{
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="leadStatusModalLabel">Lead Status Timeline</h5>
+        <h6 class="modal-title" id="leadStatusModalLabel">Lead Status Timeline</h6>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -458,8 +699,9 @@ select,textarea{
 </div>
 
 
+
 <style>
-  /* Modal and header styling */
+      /* Modal and header styling */
   .modal-content {
     border-radius: 15px;
     background: linear-gradient(135deg, #f5f7fa, #c3cfe2); /* Gradient background */
@@ -478,39 +720,47 @@ select,textarea{
     font-size: 24px;
     font-weight: bold;
   }
+/* Status category section */
+.status-category-section {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px; /* Space between category and timeline items */
+    border-bottom: 2px solid #007bff; /* Optional: Add a border to separate categories */
+    padding-bottom: 10px; /* Space between category text and the border */
+}
 
-  /* Timeline container */
-  .timeline-container {
+/* Timeline container */
+.timeline-container {
     position: relative;
     padding: 20px;
     border-left: 3px solid #007bff; /* Thicker vertical line for timeline */
     overflow-x: hidden;
-  }
+}
 
-  /* Timeline items */
-  .timeline-item {
+/* Timeline items */
+.timeline-item {
     position: relative;
     padding: 15px 0;
     margin-left: 80px; /* Increased space for date and line */
     display: flex;
     align-items: flex-start;
     flex-direction: row;
-  }
+}
 
-  /* Date styling */
-  .timeline-item .timeline-date {
+/* Date styling */
+.timeline-item .timeline-date {
     position: absolute;
     left: -100px; /* Adjusted to fit within modal */
     top: 0;
     width: 80px;
     text-align: center;
     font-size: 14px;
-     color: #232f65; /* Change this to your desired color */
+    color: #232f65; /* Change this to your desired color */
     font-weight: bold;
-  }
+}
 
-  /* Item content styling */
-  .timeline-item-content {
+/* Item content styling */
+.timeline-item-content {
     background: #f9f9f9;
     border: 2px solid #ddd;
     border-radius: 8px;
@@ -521,10 +771,10 @@ select,textarea{
     width: calc(100% - 110px); /* Adjust width to fit within modal */
     max-width: 600px; /* Increased max-width for readability */
     border-left: 3px solid #007bff; /* Thicker vertical line after the date */
-  }
+}
 
-  /* Vertical line and circle */
-  .timeline-item::before {
+/* Vertical line and circle */
+.timeline-item::before {
     content: '';
     position: absolute;
     left: -10px; /* Adjust to ensure circle is visible */
@@ -533,32 +783,36 @@ select,textarea{
     height: 12px;
     background: #007bff;
     border-radius: 50%;
-  }
+}
 
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
+/* Responsive adjustments */
+@media (max-width: 768px) {
     .modal-content {
-      font-size: 10px; /* Font size for mobile screens */
+        font-size: 10px; /* Font size for mobile screens */
     }
 
     .timeline-item {
-      margin-left: 30px; /* Adjust for smaller screens */
+        margin-left: 30px; /* Adjust for smaller screens */
     }
 
     .timeline-item-content {
-      width: calc(100% - 40px); /* Adjust width for smaller screens */
-      padding: 10px;
+        width: calc(100% - 40px); /* Adjust width for smaller screens */
+        padding: 10px;
     }
 
     .timeline-item .timeline-date {
-      left: -50px; /* Adjust date position for mobile */
-      width: 50px;
+        left: -50px; /* Adjust date position for mobile */
+        width: 50px;
     }
 
     .timeline-item::before {
-      left: -6px; /* Adjust circle position for mobile */
+        left: -6px; /* Adjust circle position for mobile */
     }
-  }
+}
+.small-font {
+    font-size: smaller; /* or use any specific size like 10px */
+}
+
 </style>
 
 
@@ -581,46 +835,58 @@ async function showLeadStatus(button) {
         // Function to format time in IST
         function formatTimeInIST(dateString) {
             const date = new Date(dateString);
-            // Offset IST (UTC+5:30)
             date.setHours(date.getHours() + 5);
             date.setMinutes(date.getMinutes() + 30);
             return date.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
         }
 
         // Iterate through each stage in leadStatus
-        Object.keys(leadStatus).forEach(stage => {
-            const stages = leadStatus[stage];
+        Object.keys(leadStatus).forEach(statusCategory => {
+            const stages = leadStatus[statusCategory];
 
-            if (Array.isArray(stages)) {
-                stages.forEach((stageDetail, index) => {
-                    const timelineItem = document.createElement('div');
-                    timelineItem.className = `timeline-item ${index % 2 === 0 ? 'left' : 'right'}`;
+            // Create and append a section for the statusCategory
+            const categorySection = document.createElement('div');
+            categorySection.className = 'status-category-section';
+            categorySection.innerHTML = `<h5>${statusCategory}</h5>`;
+            timelineContainer.appendChild(categorySection);
 
-                    // Format date and time separately
-                    const date = stageDetail.date ? new Date(stageDetail.date).toLocaleDateString() : 'N/A';
-                    const time = stageDetail.date ? formatTimeInIST(stageDetail.date) : '';
+            Object.keys(stages).forEach(stage => {
+                const stageDetails = stages[stage];
 
-                    // Create date element with time in a smaller font
-                    const dateElement = document.createElement('div');
-                    dateElement.className = 'timeline-date';
-                    dateElement.innerHTML = `${date} <span style="font-size: 0.8em; color: #666;">${time}</span>`;
+                if (Array.isArray(stageDetails)) {
+                    stageDetails.forEach((stageDetail, index) => {
+                        const timelineItem = document.createElement('div');
+                        timelineItem.className = `timeline-item ${index % 2 === 0 ? 'left' : 'right'}`;
 
-                    // Create content element
-                    const contentElement = document.createElement('div');
-                    contentElement.className = 'timeline-item-content';
-                    contentElement.innerHTML = `
-                        <h6>${stage} - ${stageDetail.subStage || 'N/A'}</h6>
-                        <p>Status: ${stageDetail.status || 'N/A'}</p>
-                        ${stageDetail.followUp ? `<p>Follow-Up Date: ${stageDetail.followUp.date} ${formatTimeInIST(stageDetail.followUp.date)}</p>` : ''}
-                    `;
+                        // Format date and time separately
+                        const date = stageDetail.date ? new Date(stageDetail.date).toLocaleDateString() : 'N/A';
+                        const time = stageDetail.date ? formatTimeInIST(stageDetail.date) : '';
 
-                    timelineItem.appendChild(dateElement);
-                    timelineItem.appendChild(contentElement);
-                    timelineContainer.appendChild(timelineItem);
-                });
-            } else {
-                console.error(`Invalid data format for stage "${stage}". Expected an array, but got:`, stages);
-            }
+                        // Create date element with time in a smaller font
+                        const dateElement = document.createElement('div');
+                        dateElement.className = 'timeline-date';
+                 dateElement.innerHTML = `<span class="small-font">${stageDetail.date ? new Date(stageDetail.date).toLocaleString() : 'N/A'}</span>`;
+
+
+
+                        // Create content element
+                        const contentElement = document.createElement('div');
+                        contentElement.className = 'timeline-item-content';
+                        contentElement.innerHTML = `
+                            <h6>${stage}</h6>
+                            <p>Status: ${stageDetail.status || 'N/A'}</p>
+                            <p>Sub-Stage: ${stageDetail.subStage || 'N/A'}</p>
+                            ${stageDetail.followUp ? `<p>Follow-Up Date: ${new Date(stageDetail.followUp.date).toLocaleDateString()} ${stageDetail.followUp.time}</p>` : ''}
+                        `;
+
+                        timelineItem.appendChild(dateElement);
+                        timelineItem.appendChild(contentElement);
+                        timelineContainer.appendChild(timelineItem);
+                    });
+                } else {
+                    console.error(`Invalid data format for stage "${stage}". Expected an array, but got:`, stageDetails);
+                }
+            });
         });
     } catch (error) {
         console.error('Error parsing lead status:', error);
@@ -636,7 +902,10 @@ document.addEventListener('DOMContentLoaded', function () {
         showLeadStatus(button);
     });
 });
+
+
 </script>
+
 <style>
     
 </style>
@@ -785,7 +1054,6 @@ async function updateSubStageOptions(stageSelect) {
 }
 
 
-
 async function saveLeadStatus(button) {
     const row = button.closest('tr');
     const id = row.querySelector('td[hidden]').textContent.trim();
@@ -798,7 +1066,6 @@ async function saveLeadStatus(button) {
     const subStage = subStageSelect.value;
     const leadStatus = leadStatusTextarea.value.trim();
 
-    // Ensure lead-status-textarea is filled
     if (!leadStatus) {
         Swal.fire({
             icon: 'warning',
@@ -808,7 +1075,6 @@ async function saveLeadStatus(button) {
         return;
     }
 
-    // Fetch the mandatory status of the selected sub-stage from the server
     let isMandatory = false;
     if (subStage) {
         try {
@@ -832,7 +1098,6 @@ async function saveLeadStatus(button) {
         }
     }
 
-    // Validate mandatory sub-stage
     if (isMandatory && !subStage) {
         Swal.fire({
             icon: 'warning',
@@ -842,7 +1107,6 @@ async function saveLeadStatus(button) {
         return;
     }
 
-    // Check if follow-up is needed based on lead stage
     const followUpContainer = row.querySelector('.follow-up-container');
     const followUpDate = row.querySelector('.follow-up-date')?.value || null;
     const followUpTime = row.querySelector('.follow-up-time')?.value || null;
@@ -856,11 +1120,16 @@ async function saveLeadStatus(button) {
         return;
     }
 
-    // Create the nested structure for the lead status update
+    // Get the current date and time in IST
+    const now = new Date();
+    const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
+    const istDate = new Date(now.getTime() + istOffset);
+    const dateString = istDate.toISOString().slice(0, 19).replace('T', ' '); // Convert to 'YYYY-MM-DD HH:MM:SS' format
+
     const statusObj = {
         status: leadStatus,
         subStage,
-        date: new Date().toISOString(),
+        date: dateString, // Store the IST formatted date and time
         followUp: followUpDate || followUpTime ? { date: followUpDate, time: followUpTime } : null
     };
 
@@ -878,7 +1147,7 @@ async function saveLeadStatus(button) {
             },
             body: JSON.stringify({
                 id,
-                leadStatusUpdate // Send the nested structure to the server
+                leadStatusUpdate
             })
         });
 
@@ -889,9 +1158,10 @@ async function saveLeadStatus(button) {
                 icon: 'success',
                 title: 'Saved',
                 text: 'Lead status has been updated successfully!',
+            }).then(() => {
+                location.reload();  // Reload the page after success
             });
 
-            // Clear fields after successful save
             leadStatusTextarea.value = '';
             subStageSelect.value = '';
             row.querySelector('.follow-up-date').value = '';
