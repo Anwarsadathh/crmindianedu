@@ -389,46 +389,50 @@ background-color: #1c008b !important;
 </button>
 </div>
  
-                <div class="filter-card glassmorphism p-4 shadow-lg d-flex">
-                    <div class="floating-label-wrapper">
-                        <label for="leadOwner" class="floating-label"> Lead Owner</label>
-                        <select id="leadOwner" class="form-control shadow-sm circular-input">
-                            <option value="">Select Lead Owner</option>
-                            {{#each leadOwners}}
-                              <option value="{{this.email}}">{{this.email}}</option>
-                            {{/each}}
-                        </select>
-                    </div>
+               <div class="filter-card glassmorphism p-4 shadow-lg d-flex">
+    <div class="floating-label-wrapper">
+        <label for="leadOwner" class="floating-label">Lead Owner</label>
+        <select id="leadOwner" class="form-control shadow-sm circular-input">
+            <option value="">Select Lead Owner</option>
+            {{#each leadOwners}}
+                <option value="{{this.email}}">{{this.email}}</option>
+            {{/each}}
+        </select>
+    </div>
 
-                    <div class="floating-label-wrapper ms-3">
-                        <label for="dateRange" class="floating-label">Date Range</label>
-                        <input type="text" id="dateRange" class="form-control shadow-sm circular-input" placeholder="Select Date Range">
-                    </div>
+    <div class="floating-label-wrapper ms-3">
+        <label for="timeStampRange" class="floating-label">TimeStamp Range</label>
+        <input type="text" id="timeStampRange" class="form-control shadow-sm circular-input" placeholder="Select TimeStamp Range">
+    </div>
 
-                    <div class="floating-label-wrapper ms-3">
-                        <label for="state" class="floating-label">State</label>
-                        <input type="text" id="state" class="form-control shadow-sm circular-input" placeholder="Enter State">
-                    </div>
+    <div class="floating-label-wrapper ms-3">
+        <label for="assignDateRange" class="floating-label">Assign Date Range</label>
+        <input type="text" id="assignDateRange" class="form-control shadow-sm circular-input" placeholder="Select Assign Date Range">
+    </div>
 
-                    <div class="floating-label-wrapper ms-3">
-                        <label for="city" class="floating-label">City</label>
-                        <input type="text" id="city" class="form-control shadow-sm circular-input" placeholder="Enter City">
-                    </div>
+    <div class="floating-label-wrapper ms-3">
+        <label for="state" class="floating-label">State</label>
+        <input type="text" id="state" class="form-control shadow-sm circular-input" placeholder="Enter State">
+    </div>
 
-                    <div class="floating-label-wrapper ms-3">
-                        <label for="course" class="floating-label">Course</label>
-                        <input type="text" id="course" class="form-control shadow-sm circular-input" placeholder="Enter Course">
-                    </div>
+    <div class="floating-label-wrapper ms-3">
+        <label for="city" class="floating-label">City</label>
+        <input type="text" id="city" class="form-control shadow-sm circular-input" placeholder="Enter City">
+    </div>
 
-                    <button class="btn btn-glass shadow-sm circular-btn ms-3" id="filterBtn">
-                        <i class="bi bi-filter-circle"></i>
-                    </button>
+    <div class="floating-label-wrapper ms-3">
+        <label for="course" class="floating-label">Course</label>
+        <input type="text" id="course" class="form-control shadow-sm circular-input" placeholder="Enter Course">
+    </div>
 
-                    <button class="btn btn-danger shadow-sm circular-btn ms-3" id="clearFiltersBtn">
-                        <i class="fas fa-times-circle"></i> 
-                    </button>
-                </div>
+    <button class="btn btn-glass shadow-sm circular-btn ms-3" id="filterBtn">
+        <i class="bi bi-filter-circle"></i>
+    </button>
 
+    <button class="btn btn-danger shadow-sm circular-btn ms-3" id="clearFiltersBtn">
+        <i class="fas fa-times-circle"></i> 
+    </button>
+</div>
 
     <div class="table-responsive">
         <table class="table" id="dataTable">
@@ -963,80 +967,95 @@ document.getElementById('updateButton').addEventListener('click', function() {
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 <script>
-    $(document).ready(function() {
-        // Initialize DataTable
-        const table = $('#dataTable').DataTable();
+  $(document).ready(function() {
+    // Initialize DataTable
+    const table = $('#dataTable').DataTable();
 
-        // Initialize Flatpickr for date range
-        flatpickr("#dateRange", {
-            mode: "range",
-            dateFormat: "Y-m-d"
-        });
-
-        // Filter Button Event Listener
-        document.getElementById('filterBtn').addEventListener('click', function() {
-            const leadOwner = document.getElementById('leadOwner').value;
-            const dateRange = document.getElementById('dateRange').value;
-            const state = document.getElementById('state').value.toLowerCase();
-            const city = document.getElementById('city').value.toLowerCase();
-            const course = document.getElementById('course').value.toLowerCase();
-
-            filterAndDisplayData(leadOwner, dateRange, state, city, course);
-        });
-
-        // Clear Filters Button Event Listener
-        document.getElementById('clearFiltersBtn').addEventListener('click', function() {
-            document.getElementById('leadOwner').value = '';
-            document.getElementById('dateRange').value = '';
-            document.getElementById('state').value = '';
-            document.getElementById('city').value = '';
-            document.getElementById('course').value = '';
-
-            filterAndDisplayData('', '', '', '', '');
-        });
-
-        function filterAndDisplayData(leadOwner, dateRange, state, city, course) {
-            // Parse date range
-            const dates = dateRange.split(' to ');
-            const startDate = dates.length > 1 ? new Date(dates[0]) : null;
-            const endDate = dates.length > 1 ? new Date(dates[1]) : null;
-
-            // Clear existing custom filters
-            $.fn.dataTable.ext.search.pop();
-
-            // Add custom filter
-            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-                const rowLeadOwner = $(table.row(dataIndex).node()).find('.lead-owner-select').val().toLowerCase();
-                const rowState = data[7].toLowerCase(); // Column index for State
-                const rowCity = data[16].toLowerCase(); // Column index for City
-                const rowCourse = data[17].toLowerCase(); // Column index for Course
-                const assignDateText = data[4]; // Column index for Assign Date
-                const rowDate = new Date(assignDateText);
-
-                // Apply filters
-                let showRow = true;
-
-                if (leadOwner && rowLeadOwner !== leadOwner.toLowerCase()) showRow = false;
-                if (state && rowState !== state) showRow = false;
-                if (city && rowCity !== city) showRow = false;
-                if (course && rowCourse !== course) showRow = false;
-                if (startDate && endDate && (rowDate < startDate || rowDate > endDate || isNaN(rowDate))) showRow = false;
-
-                return showRow;
-            });
-
-            // Redraw the table to reflect changes
-            table.draw();
-
-            // Scroll to the first visible row
-            const firstVisibleRow = $('#dataTable tbody tr:visible').first();
-            if (firstVisibleRow.length) {
-                $('html, body').animate({
-                    scrollTop: firstVisibleRow.offset().top
-                }, 500);
-            }
-        }
+    // Initialize Flatpickr for date ranges
+    flatpickr("#timeStampRange", {
+        mode: "range",
+        dateFormat: "Y-m-d"
     });
+    flatpickr("#assignDateRange", {
+        mode: "range",
+        dateFormat: "Y-m-d"
+    });
+
+    // Filter Button Event Listener
+    document.getElementById('filterBtn').addEventListener('click', function() {
+        const leadOwner = document.getElementById('leadOwner').value;
+        const timeStampRange = document.getElementById('timeStampRange').value;
+        const assignDateRange = document.getElementById('assignDateRange').value;
+        const state = document.getElementById('state').value.toLowerCase();
+        const city = document.getElementById('city').value.toLowerCase();
+        const course = document.getElementById('course').value.toLowerCase();
+
+        filterAndDisplayData(leadOwner, timeStampRange, assignDateRange, state, city, course);
+    });
+
+    // Clear Filters Button Event Listener
+    document.getElementById('clearFiltersBtn').addEventListener('click', function() {
+        document.getElementById('leadOwner').value = '';
+        document.getElementById('timeStampRange').value = '';
+        document.getElementById('assignDateRange').value = '';
+        document.getElementById('state').value = '';
+        document.getElementById('city').value = '';
+        document.getElementById('course').value = '';
+
+        filterAndDisplayData('', '', '', '', '', '');
+    });
+
+    function filterAndDisplayData(leadOwner, timeStampRange, assignDateRange, state, city, course) {
+        // Parse date ranges
+        const timeStampDates = timeStampRange.split(' to ');
+        const timeStampStartDate = timeStampDates.length > 1 ? new Date(timeStampDates[0]) : null;
+        const timeStampEndDate = timeStampDates.length > 1 ? new Date(timeStampDates[1]) : null;
+
+        const assignDateDates = assignDateRange.split(' to ');
+        const assignDateStartDate = assignDateDates.length > 1 ? new Date(assignDateDates[0]) : null;
+        const assignDateEndDate = assignDateDates.length > 1 ? new Date(assignDateDates[1]) : null;
+
+        // Clear existing custom filters
+        $.fn.dataTable.ext.search.pop();
+
+        // Add custom filter
+        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+            const rowLeadOwner = $(table.row(dataIndex).node()).find('.lead-owner-select').val().toLowerCase();
+            const rowState = data[7].toLowerCase(); // Column index for State
+            const rowCity = data[16].toLowerCase(); // Column index for City
+            const rowCourse = data[17].toLowerCase(); // Column index for Course
+            const timeStampText = data[3]; // Column index for TimeStamp
+            const assignDateText = data[4]; // Column index for Assign Date
+            const rowTimeStamp = new Date(timeStampText);
+            const rowAssignDate = new Date(assignDateText);
+
+            // Apply filters
+            let showRow = true;
+
+            if (leadOwner && rowLeadOwner !== leadOwner.toLowerCase()) showRow = false;
+            if (state && rowState !== state) showRow = false;
+            if (city && rowCity !== city) showRow = false;
+            if (course && rowCourse !== course) showRow = false;
+            if (timeStampStartDate && timeStampEndDate && (rowTimeStamp < timeStampStartDate || rowTimeStamp > timeStampEndDate || isNaN(rowTimeStamp))) showRow = false;
+            if (assignDateStartDate && assignDateEndDate && (rowAssignDate < assignDateStartDate || rowAssignDate > assignDateEndDate || isNaN(rowAssignDate))) showRow = false;
+
+            return showRow;
+        });
+
+        // Redraw the table to reflect changes
+        table.draw();
+
+        // Scroll to the first visible row
+        const firstVisibleRow = $('#dataTable tbody tr:visible').first();
+        if (firstVisibleRow.length) {
+            $('html, body').animate({
+                scrollTop: firstVisibleRow.offset().top
+            }, 500);
+        }
+    }
+});
+
+
 </script>
 
 
