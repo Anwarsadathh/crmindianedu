@@ -302,7 +302,7 @@ select,textarea{
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                             <img class="rounded-circle me-lg-2" src="/images/WhatsApp Image 2024-07-26 at 17.51.27_ac46e3bb.jpg" alt="" style="width: 40px; height: 40px;">
-                            <span class="d-none d-lg-inline-flex">Seyed Shahid</span>
+                            <span class="d-none d-lg-inline-flex">{{userName}}</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
                             <a href="#" class="dropdown-item">Log Out</a>
@@ -444,11 +444,11 @@ select,textarea{
                 {{json this.leadStatus}}
             </div>
         </td>
-       <td>
-    <a href="#" data-bs-toggle="modal" data-bs-target="#whatsappModal" 
-       onclick="setCurrentPhoneNumber('{{this.whatsapp}}', '{{this.name}}')">
-       <i class="fab fa-whatsapp"></i>
-    </a>
+    <td>
+  <a href="#" data-bs-toggle="modal" data-bs-target="#whatsappModal" 
+     onclick="setCurrentPhoneNumber('{{this.whatsapp}}', '{{this.name}}', '{{this.course}}')">
+     <i class="fab fa-whatsapp"></i>
+  </a>
 </td>
 
 
@@ -514,7 +514,7 @@ select,textarea{
             <div class="card mb-3" onclick="sendDraftMessage('RNR')">
               <div class="card-body">
                 <h5 class="card-title">Draft RNR</h5>
-                <p class="card-text">Greetings! This is {{userName}} from Indian Edu Hub. We missed our call regarding the (course name) course. Let’s reschedule!</p>
+                <p class="card-text">Greetings! This is {{userName}} from Indian Edu Hub. We missed our call regarding the {{course}} course. Let’s reschedule!</p>
               </div>
             </div>
           </div>
@@ -554,7 +554,7 @@ select,textarea{
             <div class="card mb-3" onclick="sendDraftMessage('PQL')">
               <div class="card-body">
                 <h5 class="card-title">Draft PQL</h5>
-                <p class="card-text">Great talking with you, {{currentLeadName}}! It sounds like our [specific service or product] is a perfect match for your needs. Let’s set up a follow-up meeting to explore how we can help you achieve your goals.</p>
+                <p class="card-text">Great talking with you, {{currentLeadName}}! It sounds like our Premium Membership plan is a perfect match for your needs. Let’s set up a follow-up meeting to explore how we can help you achieve your goals.</p>
               </div>
             </div>
           </div>
@@ -574,7 +574,7 @@ select,textarea{
             <div class="card mb-3" onclick="sendDraftMessage('QL_NR')">
               <div class="card-body">
                 <h5 class="card-title">Draft QL - NR</h5>
-                <p class="card-text">I noticed we missed a few calls, {{currentLeadName}}, but I’m excited about your continued interest in our [specific service or product]. Could you let me know your availability for a call?</p>
+                <p class="card-text">I noticed we missed a few calls, {{currentLeadName}}, but I’m excited about your continued interest in our Premium Membership plan. Could you let me know your availability for a call?</p>
               </div>
             </div>
           </div>
@@ -583,7 +583,7 @@ select,textarea{
             <div class="card mb-3" onclick="sendDraftMessage('PQL_NR')">
               <div class="card-body">
                 <h5 class="card-title">Draft PQL - NR</h5>
-                <p class="card-text">I noticed we missed a few calls, {{currentLeadName}}, but I’m very enthusiastic about the potential for us to work together. Your interest in our [specific service or product] is important to us. Could you let me know your preferred time for a call?</p>
+                <p class="card-text">I noticed we missed a few calls, {{currentLeadName}}, but I’m very enthusiastic about the potential for us to work together. Your interest in our Premium Membership plan is important to us. Could you let me know your preferred time for a call?</p>
               </div>
             </div>
           </div>
@@ -630,20 +630,20 @@ select,textarea{
 <script>
 function sendDraftMessage(draftKey, name) {
     const draftMessages = {
-        RNR: `Hello ${currentLeadName},\n\nGreetings! This is {{userName}} from Indian Edu Hub.\n\nI noticed we missed our scheduled call today regarding the (course name) course you inquired about. If you’re still interested, I’d be happy to reschedule at a time that works better for you.\n\nPlease let me know your availability, or suggest another time that suits you.\n\nLooking forward to hearing from you!\n\nBest regards,\n{{userName}}`,
+         RNR: `Hello ${currentLeadName},\n\nGreetings! This is {{userName}} from Indian Edu Hub.\n\nI noticed we missed our scheduled call today regarding the ${currentCourse} course you inquired about. If you’re still interested, I’d be happy to reschedule at a time that works better for you.\n\nPlease let me know your availability, or suggest another time that suits you.\n\nLooking forward to hearing from you!\n\nBest regards,\n{{userName}}`,
         just_interest: `Hello ${currentLeadName},\n\nI hope you’re doing well.\n\nThank you for your time during our initial call. I understand you might have some reservations or limited interest at the moment. I’d love to learn more about your specific needs and how we might better assist you.\n\nIf you have any questions or need more information about our services, please let me know. I’m here to help and can provide additional details or arrange another conversation at your convenience.\n\nLooking forward to hearing from you!\n\nBest regards,\n{{userName}}\nIndian Edu Hub`,
         QL: `Hello ${currentLeadName},\n\nThank you for the engaging conversation earlier. I’m excited to hear about your interest in our (specific service or product). To move forward, we can schedule a follow-up meeting to discuss the next steps and tailor our offerings to meet your needs.\n\nPlease let me know your next time availability, or if you prefer, I can suggest a few times that work on my end.\n\nLooking forward to continuing our discussion!\n\nBest regards,\n{{userName}}\nIndian Edu Hub`,
         direct_university: `Hello ${currentLeadName},\n\nI hope you’re well.\n\nThank you for our recent conversation. I understand you’re opting to handle university selection without our premium plan service. If you have any questions or need support, feel free to reach out. We're here to help.\n\nBest of luck with your higher studies!\n\nBest regards,\n{{userName}}\nIndian Edu Hub`,
-        PQL: `Hello ${currentLeadName},\n\nGreat talking with you! It sounds like our [specific service or product] is a perfect match for your needs. Let’s set up a follow-up meeting to explore how we can help you achieve your goals.\n\nWhen are you available? I’m flexible and happy to work around your schedule.\n\nLooking forward to it!\n\nBest,\n{{userName}}\nIndian Edu Hub`,
+        PQL: `Hello ${currentLeadName},\n\nGreat talking with you! It sounds like our Premium Membership plan is a perfect match for your needs. Let’s set up a follow-up meeting to explore how we can help you achieve your goals.\n\nWhen are you available? I’m flexible and happy to work around your schedule.\n\nLooking forward to it!\n\nBest,\n{{userName}}\nIndian Edu Hub`,
         HQL: `Hello ${currentLeadName},\n\nThank you for choosing our service! We’re thrilled to have you on board and are excited to start working together.\n\nIf you have any questions or need assistance as we get started, please don’t hesitate to reach out. We’re here to ensure everything goes smoothly and meets your expectations.\n\nLooking forward to a successful collaboration!\n\nBest regards,\n{{userName}}\nIndian Edu Hub`,
-        'QL-NR': `Hello ${currentLeadName},\n\nI hope you’re doing well!\n\nI noticed we missed a few calls, but I’m excited about your continued interest in our [specific service or product]. I’d love to discuss how we can move forward.\n\nCould you let me know your availability for a call (00:00)? \n\nLooking forward to connecting soon!\n\nBest regards,\n{{userName}}\nIndian Edu Hub`,
-        'PQL-NR': `Hello ${currentLeadName},\n\nI hope you’re well!\n\nI noticed we missed a few calls, but I’m very enthusiastic about the potential for us to work together. Your interest in our [specific service or product] is important to us, and I want to ensure we address all your needs.\n\nCould you let me know your preferred time for a call? (Please mention the Time & Date). I’m flexible and happy to accommodate your schedule.\n\nLooking forward to your response and to moving forward together!\n\nBest regards,\n{{userName}}\nIndian Edu Hub`,
+        'QL-NR': `Hello ${currentLeadName},\n\nI hope you’re doing well!\n\nI noticed we missed a few calls, but I’m excited about your continued interest in our Premium Membership plan. I’d love to discuss how we can move forward.\n\nCould you let me know your availability for a call (00:00)? \n\nLooking forward to connecting soon!\n\nBest regards,\n{{userName}}\nIndian Edu Hub`,
+        'PQL-NR': `Hello ${currentLeadName},\n\nI hope you’re well!\n\nI noticed we missed a few calls, but I’m very enthusiastic about the potential for us to work together. Your interest in our Premium Membership plan is important to us, and I want to ensure we address all your needs.\n\nCould you let me know your preferred time for a call? (Please mention the Time & Date). I’m flexible and happy to accommodate your schedule.\n\nLooking forward to your response and to moving forward together!\n\nBest regards,\n{{userName}}\nIndian Edu Hub`,
         Busy: `Hello ${currentLeadName},\n\nI understand you’re currently on another call. Just wanted to let you know that I’m here and ready to connect whenever it’s convenient for you.\n\nPlease let me know a suitable time for us to speak, or if you prefer, I can follow up at a later time that works better for you.\n\nLooking forward to our conversation!\n\nBest regards,\n{{userName}}\nIndian Edu Hub`,
         UQL: `Hello ${currentLeadName},\n\nThank you for considering our services. After reviewing your needs, it seems our offerings might not be the best fit at this time.\n\nIf you have any referrals for online UG/PG programs or know someone who might benefit from our services, please let us know.\n\nBest of luck with your search!\n\nBest regards,\n{{userName}}\nIndian Edu Hub`,
         Special_offer: `Hello ${currentLeadName},\n\nExciting news!\n\nWe’re offering our premium membership plan, worth ₹7,0000, for free to the first 500 sign-ups.\n\nThis is a fantastic chance to access top-tier benefits at no cost. It will help you grow & succeed.\n\nInterested or know someone who might be? Let us know to secure your spot!\n\nBest regards,\n{{userName}}\nIndian Edu Hub\nIndianeduhub.in`
     };
 
-    const message = draftMessages[draftKey];
+   const message = draftMessages[draftKey];
     if (!message) {
         console.error('Draft not found');
         return;
@@ -655,10 +655,12 @@ function sendDraftMessage(draftKey, name) {
 
 let currentPhoneNumber = '';
 let currentLeadName = '';
+let currentCourse = ''; // Added for handling course
 
-function setCurrentPhoneNumber(phoneNumber, leadName) {
+function setCurrentPhoneNumber(phoneNumber, leadName, course) {
     currentPhoneNumber = phoneNumber;
     currentLeadName = leadName;
+    currentCourse = course; // Set course here
 }
 
 </script>

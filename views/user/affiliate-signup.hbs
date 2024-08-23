@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Affiliate Sign Up / Sign in</title>
+    
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <style>
@@ -184,9 +185,15 @@ header img {
 
         <div class="row">
             <div class="col-md-6 col-6 form-group">
-                <input type="text" class="form-control" id="working_status" placeholder="Working Status" required>
-                <div id="working_status_error" class="error-message"></div>
-            </div>
+  <select class="form-control" id="working_status" required>
+    <option value="" disabled selected>Working Status</option>
+    <option value="fresher">Fresher</option>
+    <option value="entrepreneur">Entrepreneur</option>
+    <option value="working_professional">Working Professional</option>
+  </select>
+  <div id="working_status_error" class="error-message"></div>
+</div>
+
 
             <div class="col-md-6 col-6 form-group">
                 <input type="text" class="form-control" id="position" placeholder="Position" required>
@@ -227,7 +234,7 @@ header img {
             <div class="col-md-12 form-group position-relative">
                 <input type="text" class="form-control" id="emailOtpField" placeholder="Email" required>
                 <button type="button" id="sendOtpBtn" class="btn-sm btn-secondary position-absolute" style="right: 0; top: 0;">Send OTP</button>
-                <button type="button" id="verifyOtpBtn" class="btn-sm btn-secondary d-none position-absolute" style="right: 0; top: 0;">Verify OTP</button>
+                <button type="button" id="verifyOtpBtn" class="btn-sm btn-success d-none position-absolute" style="right: 0; top: 0;">Verify OTP</button>
                 <div id="email_error" class="error-message"></div>
             </div>
         </div>

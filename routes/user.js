@@ -295,7 +295,15 @@ router.get("/crm-tl-details", async (req, res) => {
   try {
     const { leadOwnerEmail, startDate, endDate, state, city, course } =
       req.query;
+   const leadStage = await serviceHelpers.getAllLeadStage();
 
+   // Remove duplicate mainStage entries
+   const uniqueLeadStages = Array.from(
+     new Set(leadStage.map((stage) => stage.mainStage))
+   ).map((mainStage) => {
+     return leadStage.find((stage) => stage.mainStage === mainStage);
+   });
+    
     let matchCriteria = {};
     if (leadOwnerEmail) matchCriteria.leadOwnerName = leadOwnerEmail;
     if (state) matchCriteria.state = state;
@@ -360,6 +368,7 @@ router.get("/crm-tl-details", async (req, res) => {
       admin: true,
       googlesheets: combinedData,
       leadOwners,
+      leadStage: uniqueLeadStages,
     });
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -661,7 +670,9 @@ router.get("/crm-lead-owner-dashboard", verifyLogin, async (req, res) => {
       stageCounts,
       subStageCounts,
       stagesAndSubStages,
-      showLatestSubstage: showLatestSubstage === 'true',
+      showLatestSubstage: showLatestSubstage === "true",
+      userEmail: req.session.user.email,
+      userName: req.session.user.name,
     });
   } catch (error) {
     console.error("Error fetching lead status counts:", error);

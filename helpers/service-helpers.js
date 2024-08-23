@@ -2466,86 +2466,78 @@ getLeadStatusCounts: async (
     }
   },
   createAfPartner: async (formData) => {
-    try {
-      const database = db.get();
-      const partnersCollection = database.collection(
-        collection.AFFILIATE_COLLECTION
-      );
+   try {
+    const database = db.get(); // Get the database connection
+    const partnersCollection = database.collection(collection.AFFILIATE_COLLECTION);
 
-      // Generate the base institute ID
-      const baseInstituteId =
-        "IEHAP-" +
-        formData.name.split(" ").join("").substring(0, 4).toUpperCase();
+    // Generate the base institute ID
+    const namePart = formData.name.split(" ").join("").substring(0, 4).toUpperCase();
+    const baseInstituteId = `IEHAP-${namePart}`;
 
-      // Find the latest institute ID with the same base
-      const latestPartner = await partnersCollection
-        .find({ instituteid: { $regex: `^${baseInstituteId}-\\d{5}$` } })
-        .sort({ instituteid: -1 })
-        .limit(1)
-        .toArray();
+    // Find the latest institute ID with the same base
+    const latestPartner = await partnersCollection
+      .find({ instituteid: { $regex: `^${baseInstituteId}-\\d{5}$` } })
+      .sort({ instituteid: -1 })
+      .limit(1)
+      .toArray();
 
-      let nextInstituteId;
-      if (latestPartner.length > 0) {
-        // Extract the number part and increment it
-        const latestNumber = parseInt(
-          latestPartner[0].instituteid.split("-").pop(),
-          10
-        );
-        nextInstituteId = `${baseInstituteId}-${(latestNumber + 1)
-          .toString()
-          .padStart(5, "0")}`;
-      } else {
-        // Start with the first number 00436
-        nextInstituteId = `${baseInstituteId}-00313`;
-      }
-
-      // Check if the email or institute ID already exists
-      const existingPartner = await partnersCollection.findOne({
-        $or: [{ email: formData.email }, { instituteid: nextInstituteId }],
-      });
-
-      if (existingPartner) {
-        if (existingPartner.email === formData.email) {
-          return { success: false, message: "Email already exists" };
-        }
-        if (existingPartner.instituteid === nextInstituteId) {
-          return { success: false, message: "Institute ID already exists" };
-        }
-      }
-
-      // Hash the password before storing it
-      const hashedPassword = await bcrypt.hash(formData.password, 10);
-
-      // Create a new partner document with the updated fields
-      const newPartner = {
-        name: formData.name,
-        email: formData.email,
-        mobNumber: formData.mobile_number, // Corrected field name
-        workingStatus: formData.working_status, // Corrected field name
-        position: formData.position,
-        presentCompany: formData.present_company, // Corrected field name
-        state: formData.state,
-        city: formData.city,
-        password: hashedPassword, // Store the hashed password
-        instituteid: nextInstituteId, // Use the generated institute ID
-      };
-
-      // Insert the new partner document into the collection
-      const result = await partnersCollection.insertOne(newPartner);
-
-      console.log("New Partner Created:", result);
-      return {
-        success: true,
-        message: "Partner created successfully",
-        data: result.insertedId,
-      };
-    } catch (error) {
-      console.error("Error creating partner:", error);
-      return {
-        success: false,
-        message: "Internal Server Error: " + error.message,
-      };
+    let nextInstituteId;
+    if (latestPartner.length > 0) {
+      // Extract the number part and increment it
+      const latestNumber = parseInt(latestPartner[0].instituteid.split("-").pop(), 10);
+      nextInstituteId = `${baseInstituteId}-${(latestNumber + 1).toString().padStart(5, "0")}`;
+    } else {
+      // Start with the first number 00313 if no previous IDs are found
+      nextInstituteId = `${baseInstituteId}-00313`;
     }
+
+    // Check if the email or institute ID already exists
+    const existingPartner = await partnersCollection.findOne({
+      $or: [{ email: formData.email }, { instituteid: nextInstituteId }],
+    });
+
+    if (existingPartner) {
+      if (existingPartner.email === formData.email) {
+        return { success: false, message: "Email already exists" };
+      }
+      if (existingPartner.instituteid === nextInstituteId) {
+        return { success: false, message: "Institute ID already exists" };
+      }
+    }
+
+    // Hash the password before storing it
+    const hashedPassword = await bcrypt.hash(formData.password, 10);
+
+    // Create a new partner document with the updated fields
+    const newPartner = {
+      name: formData.name,
+      email: formData.email,
+      mobNumber: formData.mobile_number, // Corrected field name
+      workingStatus: formData.working_status, // Corrected field name
+      position: formData.position,
+      presentCompany: formData.present_company, // Corrected field name
+      state: formData.state,
+      city: formData.city,
+      password: hashedPassword, // Store the hashed password
+      instituteid: nextInstituteId, // Use the generated institute ID
+    };
+
+    // Insert the new partner document into the collection
+    const result = await partnersCollection.insertOne(newPartner);
+
+    console.log("New Partner Created:", result);
+    return {
+      success: true,
+      message: "Partner created successfully",
+      data: result.insertedId,
+    };
+  } catch (error) {
+    console.error("Error creating partner:", error);
+    return {
+      success: false,
+      message: "Internal Server Error: " + error.message,
+    };
+  }
   },
   sendOtp: async (email, otpStore) => {
     try {
