@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Mentor Dashboard</title>
+    <title>Referral Leads</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -203,7 +203,7 @@ header img {
         padding: 20px; /* More padding for content */
          font-size: 12px !important;
     }
- .card-body p, h6{
+ .card-body p{
          font-size: 10px !important;
     }
     
@@ -246,7 +246,7 @@ header img {
             </div>
         </div>
         <!-- Spinner End -->
-  <!-- Sidebar Start -->
+ <!-- Sidebar Start -->
         <div class="sidebar pe-4 pb-3" style="background-color: #232f65;">
             <nav class="navbar " style="background-color: #232f65;">
                 <a href="index.html" class="navbar-brand mx-4 mb-3">
@@ -262,9 +262,9 @@ header img {
                 <div class="navbar-nav w-100" style="background-color: #232f65;">
                     <a href="/partner-dashboard" class="nav-item nav-link text-white"><i class="fa fa-tachometer-alt me-2 text-dark"></i>Dashboard</a>
                     <div class="nav-item dropdown">
-                          <a href="#" class="nav-link dropdown-toggle text-dark active" data-bs-toggle="dropdown"><i class="fas fa-user-plus me-2 text-dark"></i>Client Track</a>
+                          <a href="#" class="nav-link dropdown-toggle text-white " data-bs-toggle="dropdown"><i class="fas fa-user-plus me-2 text-dark"></i>Client Track</a>
                         <div class="dropdown-menu bg-transparent border-0">
-                            <a href="/partner-referral-details" class="dropdown-item active">Lead Details</a>
+                            <a href="/partner-referral-details" class="dropdown-item ">Lead Details</a>
                         </div>
                            
                     </div>
@@ -279,7 +279,7 @@ header img {
                             
                     </div>
                      <div class="nav-item dropdown">
-                        <a href="/partner-wallet" class="nav-link  text-white" ><i class="fa fa-wallet text-dark me-2"></i>Wallet</a>
+                        <a href="/partner-wallet" class="nav-link  text-dark active" ><i class="fa fa-wallet text-dark me-2"></i>Wallet</a>
                     </div>
                 </div>
             </nav>
@@ -320,8 +320,8 @@ header img {
                     </div>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                             <img class="rounded-circle me-lg-2" src="{{defaultImage partner.profilePhoto '/images/anon.webp'}}" alt="" style="width: 40px; height: 40px;">
-                            <span class="d-none d-lg-inline-flex">{{partner.owner_name}}</span>
+                             <img class="rounded-circle me-lg-2" src="{{defaultImage affiliate.profilePhoto '/images/anon.webp'}}" alt="" style="width: 40px; height: 40px;">
+                            <span class="d-none d-lg-inline-flex">{{affiliate.owner_name}}</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
                             <a href="#" class="dropdown-item">Log Out</a>
@@ -334,233 +334,60 @@ header img {
 <!-- Table End -->
 <div class="container-fluid pt-4 px-4" style=" width: 100%;">
     <div class="row g-4">
-        <div class="col-12">
-            <div class="bg-light rounded h-100 p-4" >
-                   <h6 class="mb-4">Referral Leads</h6>
-                <!-- Update Button -->
-                <div class="table-responsive" >
-                    <table class="table" id="dataTable">
-                        <thead>
-                            <tr>
-                                <th hidden>d</th>
-                                <th>Time Stamp</th>
-                                <th>ReferredBy</th>
-                                <th>Source</th>
-                                <th>State</th>
-                                <th>Name</th>
-                                <th>WhatsApp</th>
-                                <th>Mobile</th>
-                                <th>Budget</th>
-                                <th>City</th>
-                                <th>Course</th>
-                                <th>Current Salary</th>
-                                <th>Description</th>
-                                <th>Email</th>
-                                <th>Employee Location</th>
-                                <th>Expected Salary</th>
-                                <th>Experience</th>
-                                <th>Exposure</th>
-                                <th>Previous Qualification</th>
-                                <th>Previous University</th>
-                                <th>Sector</th>
-                                <th>Specialization</th>
-                                <th>Role</th>
-                                <th>Lead Stage & Status</th>
-                            </tr>
-                        </thead>
-                      <tbody>
-    {{#each referral}}
-    <tr>
-        <td class="font-weight-bold" data-id="{{this._id}}" data-source="{{this.source}}" hidden>{{this._id}}</td>
-
-       <td class="text-danger">{{this.timeStamp}}</td>
-        <td>{{this.ReferredBy}}</td>
-        <td>{{#if this.source}}{{this.source}}{{else}}N/A{{/if}}</td> <!-- Conditional source display -->
-        <td>{{this.state}}</td>
-        <td>{{this.name}}</td>
-        <td>{{hidePartial this.whatsapp}}</td>
-        <td>{{hidePartial this.mobile}}</td>
-        <td>{{this.budget}}</td>
-        <td>{{this.city}}</td>
-        <td>{{this.course}}</td>
-        <td>{{this.currSalary}}</td>
-        <td>{{this.description}}</td>
-        <td>{{hidePartial this.email}}</td>
-        <td>{{this.empLocation}}</td>
-        <td>{{this.expSalary}}</td>
-        <td>{{this.experience}}</td>
-        <td>{{this.exposure}}</td>
-        <td>{{this.prevQualification}}</td>
-        <td>{{this.prevUniversity}}</td>
-        <td>{{this.sector}}</td>
-        <td>{{this.specialization}}</td>
-        <td>{{this.role}}</td>
-        <td>
-            <button class="btn btn-info ms-2 show-lead-status-btn" style="font-size: 9px !important;">Status</button>
-            <div class="leadStatusContent" style="display:none;">
-                {{json this.leadStatus}}
-            </div>
-        </td>
-     
-    </tr>
-    {{/each}}
-</tbody>
-
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- Lead Status Modal -->
-<div class="modal fade" id="leadStatusModal" tabindex="-1" aria-labelledby="leadStatusModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">  
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="leadStatusModalLabel">Lead Status Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="leadStatusContent">
-                <!-- Lead status content will be inserted here -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<style>
-    .modal-content {
-        border-radius: 15px; /* Rounded corners */
-        background: linear-gradient(135deg, #f5f7fa, #c3cfe2); /* Gradient background */
-    }
-
-    .modal-dialog {
-        max-width: 900px; /* Set a custom max width */
-    }
-
-    .card {
-        border: none; /* Remove card border */
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Card shadow */
-        border-radius: 10px; /* Rounded corners for cards */
-    }
-
-    .card-header {
-        border-bottom: 2px solid #007bff; /* Add a blue bottom border */
-        border-top-left-radius: 10px; /* Rounded top corners */
-        border-top-right-radius: 10px; /* Rounded top corners */
-    }
-
-    .card-body {
-        padding: 20px; /* More padding for content */
-         font-size: 12px !important;
-    }
- .card-body p{
-         font-size: 10px !important;
-    }
-    
-    .card:hover {
-        transform: scale(1.05); /* Scale effect on hover */
-        transition: transform 0.3s; /* Smooth transition */
-    }
-
-    .container {
+         <div class="container mt-5">
+        <h1 class="text-center mb-4">Wallet</h1>
         
-        margin: 10px; /* Margin around the container */
-    }
+        <!-- Wallet Balance -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h4 class="card-title"><i class="fa fa-wallet me-2"></i>Current Balance</h4>
+                <h2 class="card-text">₹0</h2>
+                <p class="text-muted">Last updated: 23 Aug 2024</p>
+            </div>
+        </div>
 
-    .modal-header {
-         font-size: 12px !important;
-        border-bottom: 2px solid #007bff; /* Add a blue line at the bottom of header */
-    }
+        <!-- Transaction History -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h4 class="card-title"><i class="fa fa-history me-2"></i>Transaction History</h4>
+                <table class="table table-striped mt-3">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>23 Aug 2024</td>
+                            <td>Affiliate Commission</td>
+                            <td>$200.00</td>
+                            <td><span class="badge bg-success">Credit</span></td>
+                            <td><span class="badge bg-success">Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td>15 Aug 2024</td>
+                            <td>Withdrawal to Bank</td>
+                            <td>-$150.00</td>
+                            <td><span class="badge bg-danger">Debit</span></td>
+                            <td><span class="badge bg-warning text-dark">Pending</span></td>
+                        </tr>
+                        <!-- More transactions here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-    .modal-title {
-        font-weight: bold;
-     font-size: 12px !important;
-    }
-
-    /* Responsive design */
-    @media (max-width: 768px) {
-        .card {
-            margin-bottom: 15px; /* Space between cards on smaller screens */
-        }
-    }
-</style>
-
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Add click event listener for 'Show Lead Status' buttons
-    document.querySelectorAll('.show-lead-status-btn').forEach(function (button) {
-        button.addEventListener('click', function () {
-            const row = this.closest('tr');
-            const leadStatusContent = row.querySelector('.leadStatusContent').textContent.trim();
-
-            // Check if leadStatusContent exists and is not empty
-            if (leadStatusContent) {
-                try {
-                    const leadStatus = JSON.parse(leadStatusContent); // Parse the JSON string
-
-                    // Define the headings
-                    const headings = ['QL', 'PQL', 'HQL', 'UQL', 'RNR', 'Busy', 'Call Later', 'Next Intake', 'QL to NR', 'PQL to NR', 'Not Interested', 'Just Enquiry', 'Regular', 'WhatsApp Connected', 'Direct University'];
-
-                    // Build the HTML content to display the lead status details under headings
-                    let leadStatusHtml = '<div class="container"><div class="row">';
-                    headings.forEach((heading, index) => {
-                        const statusDetails = leadStatus[heading] || { status: 'N/A', date: 'N/A' }; // Fallback if empty
-                        leadStatusHtml += `
-                            <div class="col-md-3 mb-3">
-                                <div class="card">
-                                    <div class="card-header bg-primary text-white">
-                                        <h6 class="m-0 mhead">${heading}</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <p class="m-0">Status: ${statusDetails.status || 'N/A'}</p>
-                                        <p class="m-0">Date: ${statusDetails.date ? new Date(statusDetails.date).toLocaleString() : 'N/A'}</p>
-                                    </div>
-                                </div>
-                            </div>`;
-                        if ((index + 1) % 4 === 0) leadStatusHtml += '</div><div class="row">';
-                    });
-                    leadStatusHtml += '</div></div>';
-
-                    // Insert lead status into modal
-                    document.getElementById('leadStatusContent').innerHTML = leadStatusHtml;
-
-                    // Show the modal
-                    const leadStatusModal = new bootstrap.Modal(document.getElementById('leadStatusModal'));
-                    leadStatusModal.show();
-                } catch (error) {
-                    console.error('Invalid JSON or error parsing lead status content:', error);
-                }
-            } else {
-                console.error('No lead status content available.');
-            }
-        });
-    });
-});
-</script>
-
-<!-- Include SweetAlert2 for alerts -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-
-<script>$(document).ready(function() {
-    $('#dataTable').DataTable();
-
-    // Change header background on scroll
-    $(window).scroll(function() {
-        if ($(this).scrollTop() > 50) {
-            $('header').addClass('scrolled');
-        } else {
-            $('header').removeClass('scrolled');
-        }
-    });
-});</script>
- 
+        <!-- Deposit/Withdraw Buttons -->
+        <div class="d-flex justify-content-center">
+            <a href="#" class="btn btn-secondary"><i class="fa fa-minus-circle me-1"></i>Withdraw Funds</a>
+        </div>
+    </div>
+      </div>
+  </div>
   <!-- Additional JavaScript Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="lib/chart/chart.min.js"></script>

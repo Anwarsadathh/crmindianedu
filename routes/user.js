@@ -1743,8 +1743,15 @@ router.get("/affiliate-partner-dashboard", verifyAffiliate, async (req, res) => 
   }
 });
 
-router.get("/affiliate-partner-client-track", verifyAffiliate, (req, res) => {
-  res.render("user/partner-client-track", { user: true,affiliate: req.session.affiliate });
+router.get("/affiliate-partner-wallet", verifyAffiliate, (req, res) => {
+  res.render("user/affiliate-partner-wallet", { user: true,affiliate: req.session.affiliate });
+});
+
+router.get("/affiliate-partner-client-status", verifyAffiliate, (req, res) => {
+  res.render("user/affiliate-partner-client-status", { user: true,affiliate: req.session.affiliate });
+});
+router.get("/affiliate-partner-payout-track", verifyAffiliate, (req, res) => {
+  res.render("user/affiliate-partner-payout-track", { user: true,affiliate: req.session.affiliate });
 });
 
 router.get("/affiliate-partner-referral-details", verifyAffiliate, (req, res) => {
@@ -1766,6 +1773,15 @@ router.get("/affiliate-partner-referral-details", verifyAffiliate, (req, res) =>
         .send("An error occurred while fetching referral details.");
     });
 });
+
+router.get("/partner-wallet", verifyPartner, (req, res) => {
+  res.render("user/partner-wallet", { user: true,partner: req.session.partner });
+});
+
+router.get("/partner-client-status", verifyPartner, (req, res) => {
+  res.render("user/partner-client-status", { user: true,partner: req.session.partner });
+});
+
 
 router.get("/partner-dashboard", verifyPartner, async (req, res) => {
   try {
@@ -1792,6 +1808,11 @@ router.get("/partner-dashboard", verifyPartner, async (req, res) => {
 router.get("/partner-client-track", verifyPartner, (req, res) => {
   res.render("user/partner-client-track", { user: true });
 });
+
+router.get("/testimonials", (req, res) => {
+  res.render("user/Youtube", { user: true });
+});
+
 
 router.get("/partner-payout-track", verifyPartner, (req, res) => {
   res.render("user/partner-payout-track", { user: true });

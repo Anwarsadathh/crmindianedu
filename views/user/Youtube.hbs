@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Testimonials</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom CSS for Animations -->
+  <style>
+    .fade-in {
+      animation: fadeIn 2s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .card-hover:hover {
+      transform: scale(1.05);
+      transition: all 0.3s ease-in-out;
+    }
+
+    .testimonial-carousel {
+      animation: slideInLeft 2s ease-in-out;
+    }
+
+    @keyframes slideInLeft {
+      from { transform: translateX(-100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* Overlay styling */
+    .bg-dark {
+      position: relative;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .bg-dark .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5); /* Black shade with 50% opacity */
+      backdrop-filter: blur(8px); /* Blur effect */
+      z-index: 1;
+    }
+
+    /* Ensure header text is above the overlay */
+    .bg-dark h1, .bg-dark p {
+      position: relative;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="bg-dark text-white text-center py-5 fade-in" style="position: relative; overflow: hidden; background-image: url(img/istockphoto-948400550-612x612.jpg); background-size: cover; background-position: center;">
+  <div class="overlay"></div>
+  <h1>Testimonials</h1>
+  <p>What Students Say About Our Service and Company</p>
+
+</header>
+
+
+
+<!-- Testimonial Section -->
+<section class="testimonial-carousel py-5 bg-light text-center">
+  <div class="container">
+    <h2 class="mb-5">What People Are Saying</h2>
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+      <ol class="carousel-indicators">
+        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+      </ol>
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <div class="testimonial">
+            <p>"Being part of a network with over 5000 alumni has been an incredible experience. The suggestions platform has truly guided me in making the right educational choices."</p>
+            <h5>- Aparna P</h5>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <div class="testimonial">
+            <p>"The access to 100+ experienced mentors was invaluable. I received personalized advice that helped me excel in my career."</p>
+            <h5>- Ajun</h5>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <div class="testimonial">
+            <p>"I appreciate the variety of online courses available. From online PG to diploma programs, the flexibility in learning has been fantastic."</p>
+            <h5>- Shefin Thomas</h5>
+          </div>
+        </div>
+      </div>
+      <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+  <!-- YouTube Video Gallery -->
+  <section class="py-5">
+    <div class="container">
+      <h2 class="text-center mb-5">YouTube Video Gallery</h2>
+      <div class="row">
+        <!-- Video Card -->
+        <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
+          <div class="card card-hover">
+            <iframe class="card-img-top" src="https://www.youtube.com/embed/VIDEO_ID_1" frameborder="0" allowfullscreen></iframe>
+            <div class="card-body">
+              <h5 class="card-title">Video Title 1</h5>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
+          <div class="card card-hover">
+            <iframe class="card-img-top" src="https://www.youtube.com/embed/VIDEO_ID_2" frameborder="0" allowfullscreen></iframe>
+            <div class="card-body">
+              <h5 class="card-title">Video Title 2</h5>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
+          <div class="card card-hover">
+            <iframe class="card-img-top" src="https://www.youtube.com/embed/VIDEO_ID_3" frameborder="0" allowfullscreen></iframe>
+            <div class="card-body">
+              <h5 class="card-title">Video Title 3</h5>
+            </div>
+          </div>
+        </div>
+        <!-- Add more video cards as needed -->
+      </div>
+    </div>
+  </section>
+
+  
+
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
