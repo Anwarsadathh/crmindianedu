@@ -328,18 +328,34 @@ router.get("/crm-tl-details", async (req, res) => {
     );
     if (invalidData.length > 0) {
       console.error("Invalid data found:", invalidData);
-      return res
-        .status(400)
-        .json({
-          message:
-            "One or more selected leads have invalid or missing ID/source.",
-        });
+      return res.status(400).json({
+        message:
+          "One or more selected leads have invalid or missing ID/source.",
+      });
     }
+
+    // Sort combined data: show assigned leads last
+    combinedData.sort((a, b) => {
+      // If both have "assigned", maintain original order
+      if (a.assignLead === "assigned" && b.assignLead === "assigned") {
+        return 0;
+      }
+      // If 'a' is "assigned" and 'b' is not, move 'a' down
+      if (a.assignLead === "assigned") {
+        return 1;
+      }
+      // If 'b' is "assigned" and 'a' is not, move 'b' down
+      if (b.assignLead === "assigned") {
+        return -1;
+      }
+      // If neither are "assigned", maintain original order
+      return 0;
+    });
 
     // Fetch lead owners
     const leadOwners = await serviceHelpers.getAllLeadOwners();
 
-    // Render the view with the combined data
+    // Render the view with the sorted combined data
     res.render("user/crm-tl-details", {
       admin: true,
       googlesheets: combinedData,
@@ -350,6 +366,8 @@ router.get("/crm-tl-details", async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
+
 
 
 // router.get("/crm-lead-rewards", (req, res) => {
