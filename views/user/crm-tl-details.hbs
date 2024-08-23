@@ -70,7 +70,7 @@ body {
     background-color: #160070 !important;
 }
 .table-responsive{
-    padding: 10px;
+    margin-top: 15px;
 }
 .form-control:focus{
     
@@ -137,6 +137,14 @@ background-color: #1c008b !important;
     background-color: #ffc107 !important; /* Yellow */
     color: #000;
 }
+/* Container for table */
+.table-wrapper {
+    position: relative; /* To contain the sticky header */
+    overflow: auto; /* Allows the table body to scroll */
+    height: 500px; /* Set a height for the scrolling area */
+}
+
+/* Ensure the table takes the full width of its container */
 .table {
     width: 100%;
     border-collapse: collapse;
@@ -144,6 +152,15 @@ background-color: #1c008b !important;
     table-layout: fixed; /* Ensures fixed widths are respected */
 }
 
+/* Ensure the table header stays fixed at the top */
+.table thead {
+    position: sticky;
+    top: 0;
+    background-color: #fff; /* Solid background color for visibility */
+    z-index: 2; /* Ensure it stays on top of other content */
+}
+
+/* Table header and cells styling */
 .table thead th,
 .table tbody td {
     text-align: left;
@@ -163,7 +180,7 @@ background-color: #1c008b !important;
 }
 
 .table tbody tr:hover {
-    background-color: #d0e3ff; /* Use your chosen color here */
+    background-color: #d0e3ff; /* Hover color for rows */
 }
 
 
@@ -243,8 +260,6 @@ background-color: #1c008b !important;
     border: 2px solid white;
     padding: 1px;
 }
-
-
 
 
  .dotted-spinner {
@@ -433,9 +448,9 @@ background-color: #1c008b !important;
         <i class="fas fa-times-circle"></i> 
     </button>
 </div>
-
-    <div class="table-responsive">
-        <table class="table" id="dataTable">
+<div class="table-responsive">
+ <div class="table-wrapper ">
+    <table class="table" id="dataTable">
             <thead>
                 <tr>
                     <th><input type="checkbox" id="selectAll"> Select All</th> <!-- Select All Checkbox -->
@@ -537,6 +552,7 @@ background-color: #1c008b !important;
                 {{/each}}
             </tbody>
         </table>
+    </div>
     </div>
     <div class="alert alert-warning my-3" role="alert" id="alertMessage">
     If you have already assigned, do not reassign. It will delete the old status of that student.
