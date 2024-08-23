@@ -401,12 +401,12 @@ background-color: #1c008b !important;
     </div>
 
     <div class="floating-label-wrapper ms-3">
-        <label for="timeStampRange" class="floating-label">TimeStamp Range</label>
+        <label for="timeStampRange" class="floating-label">T-S Range</label>
         <input type="text" id="timeStampRange" class="form-control shadow-sm circular-input" placeholder="Select TimeStamp Range">
     </div>
 
     <div class="floating-label-wrapper ms-3">
-        <label for="assignDateRange" class="floating-label">Assign Date Range</label>
+        <label for="assignDateRange" class="floating-label">Assign Range</label>
         <input type="text" id="assignDateRange" class="form-control shadow-sm circular-input" placeholder="Select Assign Date Range">
     </div>
 
@@ -440,6 +440,9 @@ background-color: #1c008b !important;
                 <tr>
                     <th><input type="checkbox" id="selectAll"> Select All</th> <!-- Select All Checkbox -->
                     <th hidden>d</th>
+                     <th>Action</th>
+                    <th>Lead Owners</th>
+                    <th>Lead Stage & Status</th>
                     <th>ID</th>
                     <th>Time Stamp</th>
                     <th hidden>Assign date</th>
@@ -470,9 +473,7 @@ background-color: #1c008b !important;
                     <th>Role</th>
                     <th>PDF Link</th>
                     <th>Password</th>
-                    <th>Lead Owners</th>
-                    <th>Lead Stage & Status</th>
-                    <th>Action</th>
+                    
                 </tr>
             </thead>
             <tbody>
@@ -480,6 +481,27 @@ background-color: #1c008b !important;
                 <tr>
                     <td><input type="checkbox" class="select-lead" data-id="{{this._id}}" data-source="{{this.source}}"></td>
                     <td class="font-weight-bold" data-id="{{this._id}}" data-source="{{this.source}}" hidden>{{this._id}}</td>
+                       <td>
+                        <button class="btn btn-status {{#if (eq this.assignLead "assigned")}}btn-paid{{else}}btn-not-paid{{/if}}" 
+                                onclick="toggleAssignment(this)" >
+                            {{#if (eq this.assignLead "assigned")}}Assigned to lead owner{{else}}Assign to lead owner{{/if}}
+                        </button>
+                    </td>
+                       <td>
+                        <select class="form-control lead-owner-select" data-id="{{this.id}}">
+                            <option value="">Select</option> <!-- Default option -->
+                            {{#each ../leadOwners}}
+                            <option value="{{this.email}}" {{#if (eq this.email ../this.leadOwnerName)}}selected{{/if}}>{{this.email}}</option>
+                            {{/each}}
+                        </select>
+                    </td>
+                     <td>
+            <button class="btn btn-info ms-2 show-lead-status-btn" style="font-size: 10px !important;" data-bs-toggle="modal" data-bs-target="#leadStatusModal" onclick="showLeadStatus(this)">Status</button>
+            <div class="leadStatusContent" style="display:none;">
+                {{json this.leadStatus}}
+            </div>
+        </td>
+                   
                     <td class="font-weight-bold">{{this.id}}</td>
                     <td>{{this.timeStamp}}</td>
                     <td hidden>{{this.assignDate}}</td>
@@ -510,31 +532,16 @@ background-color: #1c008b !important;
                     <td>{{this.role}}</td>
                     <td><a href="{{this.pdfLink}}" target="_blank">Link</a></td>
                     <td>{{this.password}}</td>
-                    <td>
-                        <select class="form-control lead-owner-select" data-id="{{this.id}}">
-                            <option value="">Select</option> <!-- Default option -->
-                            {{#each ../leadOwners}}
-                            <option value="{{this.email}}" {{#if (eq this.email ../this.leadOwnerName)}}selected{{/if}}>{{this.email}}</option>
-                            {{/each}}
-                        </select>
-                    </td>
-                     <td>
-            <button class="btn btn-info ms-2 show-lead-status-btn" style="font-size: 10px !important;" data-bs-toggle="modal" data-bs-target="#leadStatusModal" onclick="showLeadStatus(this)">Status</button>
-            <div class="leadStatusContent" style="display:none;">
-                {{json this.leadStatus}}
-            </div>
-        </td>
-                    <td>
-                        <button class="btn btn-status {{#if (eq this.assignLead "assigned")}}btn-paid{{else}}btn-not-paid{{/if}}" 
-                                onclick="toggleAssignment(this)" >
-                            {{#if (eq this.assignLead "assigned")}}Assigned to lead owner{{else}}Assign to lead owner{{/if}}
-                        </button>
-                    </td>
+                 
                 </tr>
                 {{/each}}
             </tbody>
         </table>
     </div>
+    <div class="alert alert-warning my-3" role="alert" id="alertMessage">
+    If you have already assigned, do not reassign. It will delete the old status of that student.
+</div>
+
             </div>
         </div>
     </div>
@@ -969,7 +976,11 @@ document.getElementById('updateButton').addEventListener('click', function() {
 <script>
   $(document).ready(function() {
     // Initialize DataTable
-    const table = $('#dataTable').DataTable();
+const table = $('#dataTable').DataTable({
+        pageLength: 100, // Show 100 entries by default
+        lengthMenu: [[100, 25, 10], [100, 25, 10]] // Options for 100, 25, and 10 entries per page
+    });
+
 
     // Initialize Flatpickr for date ranges
     flatpickr("#timeStampRange", {
