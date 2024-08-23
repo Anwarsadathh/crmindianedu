@@ -185,6 +185,8 @@ select,textarea{
     margin-left: 0.5em;
     display: inline-block;
     width: auto;
+    margin-bottom: 10px; /* Add margin below the search bar */
+        position: sticky !important;
 }
 
 .dataTables_wrapper .dataTables_length {
@@ -200,45 +202,8 @@ select,textarea{
 .dataTables_wrapper .dataTables_paginate {
     float: right;
     margin-top: 10px; /* Add margin above the pagination controls */
-}
 
-/* Make the DataTables container scrollable */
-.dataTables_wrapper {
-    position: relative;
-    overflow: hidden;
 }
-
-/* Sticky footer for pagination, info, length, and search */
-.dataTables_wrapper .dataTables_filter,
-.dataTables_wrapper .dataTables_length,
-.dataTables_wrapper .dataTables_info,
-.dataTables_wrapper .dataTables_paginate {
-    position: sticky;
-    bottom: 0; /* Stick to the bottom */
-    background-color: #fff; /* Background color to cover content */
-    z-index: 10; /* Ensure it's above other content */
-    border-top: 1px solid #ddd; /* Optional: Add a border for separation */
-    padding: 10px; /* Optional: Add padding for spacing */
-    box-shadow: 0 -2px 5px rgba(0,0,0,0.1); /* Optional: Add a shadow for better visibility */
-}
-
-/* Adjust margin and spacing for a cleaner layout */
-.dataTables_wrapper .dataTables_filter {
-    margin-bottom: 0; /* Remove bottom margin for sticky element */
-}
-
-.dataTables_wrapper .dataTables_length {
-    margin-bottom: 0; /* Remove bottom margin for sticky element */
-}
-
-.dataTables_wrapper .dataTables_info {
-    margin-bottom: 0; /* Remove bottom margin for sticky element */
-}
-
-.dataTables_wrapper .dataTables_paginate {
-    margin-bottom: 0; /* Remove bottom margin for sticky element */
-}
-
 </style>
 
 </head>
