@@ -316,11 +316,18 @@ background-color: #1c008b !important;
                 <div class="navbar-nav w-100" style="background-color: #232f65;">
                     <a href="/crm-tl-dashboard" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Dashboard</a>
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Leads</a>
-                            <div class="dropdown-menu bg-transparent border-0">
-                            <a href="/crm-tl-details" class="dropdown-item text-white active">Spreadsheet-leads</a>
+                        <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Add lead</a>
+                    <div class="dropdown-menu bg-transparent border-0">
+                            <a href="/crm-tl-details" class="dropdown-item text-white active">Lead Assign</a>
+        
                         </div>
                            
+                    </div>
+                     <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2 text-dark"></i> My Team</a>
+                            <div class="dropdown-menu bg-transparent border-0">
+                             <a href="/crm-tl-assigned" class="dropdown-item text-white ">Assigned</a>
+                        </div>
                     </div>
                        <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle text-white " data-bs-toggle="dropdown"><i class="fa fa-user text-dark me-2"></i>Create-Lead</a>
@@ -420,10 +427,10 @@ background-color: #1c008b !important;
         <input type="text" id="timeStampRange" class="form-control shadow-sm circular-input" placeholder="Select TimeStamp Range">
     </div>
 
-    <div class="floating-label-wrapper ms-3">
+    {{!-- <div class="floating-label-wrapper ms-3">
         <label for="assignDateRange" class="floating-label">Assign Range</label>
         <input type="text" id="assignDateRange" class="form-control shadow-sm circular-input" placeholder="Select Assign Date Range">
-    </div>
+    </div> --}}
 
     <div class="floating-label-wrapper ms-3">
         <label for="state" class="floating-label">State</label>
@@ -454,9 +461,10 @@ background-color: #1c008b !important;
             <thead>
                 <tr>
                     <th><input type="checkbox" id="selectAll"> Select All</th> <!-- Select All Checkbox -->
+                    <th>No.</th>
                     <th hidden>d</th>
                      <th>Action</th>
-                    <th>Lead Owners</th>
+                    {{!-- <th>Lead Owners</th> --}}
                     <th>Lead Stage & Status</th>
                     <th>ID</th>
                     <th>Time Stamp</th>
@@ -495,21 +503,17 @@ background-color: #1c008b !important;
                 {{#each googlesheets}}
                 <tr>
                     <td><input type="checkbox" class="select-lead" data-id="{{this._id}}" data-source="{{this.source}}"></td>
+                    <td><strong>{{incrementIndex @index}}</strong></td>
                     <td class="font-weight-bold" data-id="{{this._id}}" data-source="{{this.source}}" hidden>{{this._id}}</td>
                        <td>
                         <button class="btn btn-status {{#if (eq this.assignLead "assigned")}}btn-paid{{else}}btn-not-paid{{/if}}" 
                                 onclick="toggleAssignment(this)" >
-                            {{#if (eq this.assignLead "assigned")}}Assigned to lead owner{{else}}Assign to lead owner{{/if}}
+                            {{#if (eq this.assignLead "assigned")}}Assigned{{else}}Not Assign{{/if}}
                         </button>
                     </td>
-                       <td>
-                        <select class="form-control lead-owner-select" data-id="{{this.id}}">
-                            <option value="">Select</option> <!-- Default option -->
-                            {{#each ../leadOwners}}
-                            <option value="{{this.email}}" {{#if (eq this.email ../this.leadOwnerName)}}selected{{/if}}>{{this.email}}</option>
-                            {{/each}}
-                        </select>
-                    </td>
+                                   {{!-- <td>
+    <span>{{this.leadOwnerName}}</span>
+</td> --}}
                      <td>
             <button class="btn btn-info ms-2 show-lead-status-btn" style="font-size: 10px !important;" data-bs-toggle="modal" data-bs-target="#leadStatusModal" onclick="showLeadStatus(this)">Status</button>
             <div class="leadStatusContent" style="display:none;">

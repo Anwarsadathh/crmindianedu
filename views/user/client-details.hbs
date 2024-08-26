@@ -333,8 +333,10 @@
                                 <th>Specific Name</th>
                                 <th>Service Pack</th>
                                 <th>Intake</th>
-                                <th>Uni Selected</th>
                                 <th>Mentorship</th>
+                                <th>Uni Selected</th>
+                                <th>Initial Reg</th>
+                                <th>Message</th>
                                 <th>Uni Paid</th>
                                 <th>Uni Fee Paid Date</th>
                                 <th>Document Status</th>
@@ -378,12 +380,25 @@
                                         <option value="Next Intake" {{#if (eq this.intake "Next Intake")}}selected{{/if}}>Next Intake</option>
                                     </select>
                                 </td>
-                                <td>{{this.university}}</td>
-                                <td>
-                                    <button class="btn btn-status {{#if (eq this.mentorshipStatus "Done")}}btn-done{{else}}btn-not-done{{/if}}" onclick="toggleStatus(this, 'Mentorship')">
-                                        {{#if (eq this.mentorshipStatus "Done")}}Done{{else}}Not Done{{/if}}
-                                    </button>
+                                  <td>
+                                   {{this.mentorshipStatus}}
                                 </td>
+                                <td>{{this.university}}</td>
+                              <td>
+    <!-- Initial Registration Field -->
+    <button class="btn btn-status {{#if (eq this.initialRegistration "Correct")}}btn-correct{{else}}btn-incorrect{{/if}}"
+            onclick="toggleInitialRegistration(this)">
+        {{#if (eq this.initialRegistration "Correct")}}✔{{else}}✘{{/if}}
+    </button>
+</td>
+
+<td>
+    <!-- Message Field with Icon -->
+    <button class="btn btn-icon" onclick="openMessageModal('{{this.mobile}}', '{{this.email}}')">
+        <i class="fas fa-comment-dots"></i>
+    </button>
+</td>
+
                                 <td>
                                     <button class="btn btn-status {{#if (eq this.universityPaid "Paid")}}btn-paid{{else}}btn-not-paid{{/if}}" onclick="toggleStatus(this, 'University Paid')">
                                         {{#if (eq this.universityPaid "Paid")}}Paid{{else}}Not Paid{{/if}}
@@ -499,9 +514,81 @@
 </script>
 
 
+<!-- Modal Structure -->
+<div class="modal" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="messageModalLabel">Send Message</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="whatsappMessage" class="form-label">WhatsApp Message</label>
+                    <input type="text" class="form-control" id="whatsappMessage" placeholder="Enter your WhatsApp message">
+                </div>
+                <div class="mb-3">
+                    <label for="emailMessage" class="form-label">Email Message</label>
+                    <textarea class="form-control" id="emailMessage" rows="3" placeholder="Enter your Email message"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="sendMessages()">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+<script>
+    function openMessageModal(mobile, email) {
+    // Set the data in the modal
+    document.getElementById('whatsappMessage').value = '';
+    document.getElementById('emailMessage').value = '';
+    
+    // Store mobile and email for later use
+    document.getElementById('messageModal').dataset.mobile = mobile;
+    document.getElementById('messageModal').dataset.email = email;
+    
+    // Show the modal
+    var myModal = new bootstrap.Modal(document.getElementById('messageModal'));
+    myModal.show();
+}
 
+function sendMessages() {
+    const mobile = document.getElementById('messageModal').dataset.mobile;
+    const email = document.getElementById('messageModal').dataset.email;
+    const whatsappMessage = document.getElementById('whatsappMessage').value;
+    const emailMessage = document.getElementById('emailMessage').value;
+    
+    // Redirect to WhatsApp with a pre-filled message
+    const whatsappUrl = `https://wa.me/${mobile}?text=${encodeURIComponent(whatsappMessage)}`;
+    window.open(whatsappUrl, '_blank');
+    
+    // Send email using an API or directly via server-side
+    fetch('/send-emailclient', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email: email,
+            message: emailMessage
+        })
+    }).then(response => response.json())
+      .then(data => {
+          if(data.success) {
+              alert('Email sent successfully');
+          } else {
+              alert('Failed to send email');
+          }
+      }).catch(error => {
+          console.error('Error:', error);
+          alert('Error sending email');
+      });
+}
 
+</script>
 {{!-- <!-- Table Start -->
 <div class="container-fluid pt-4 px-4">
     <div class="row g-4">
@@ -674,17 +761,56 @@
 
 <script>
 
+$(document).ready(function () {
+    // Attach the toggleDateVisibility function to the change event of the refund status dropdowns
+    $('#dataTable').on('change', 'select', function () {
+        const row = $(this).closest('tr');
+        toggleDateVisibility(row);
+    });
+
+    // Run the toggleDateVisibility function on page load for each row
+    $('#dataTable tbody tr').each(function () {
+        toggleDateVisibility($(this));
+    });
+});
+
+
+function toggleInitialRegistration(button) {
+    const currentStatus = $(button).text().trim();
+
+    // Determine the new status and button class
+    const newStatus = currentStatus === '✔' ? 'Incorrect' : 'Correct';
+    const newClass = currentStatus === '✔' ? 'btn-incorrect' : 'btn-correct';
+    const newText = newStatus === 'Correct' ? '✔' : '✘';
+
+    // Update the button text and class
+    $(button).text(newText)
+        .removeClass('btn-correct btn-incorrect')
+        .addClass(newClass);
+
+    // Optionally, update the row data or make an AJAX call to save the change
+    const row = $(button).closest('tr');
+    const rowData = getRowData(row);
+
+    // Example: Update the rowData object if needed
+    rowData.initialRegistration = newStatus;
+    
+    console.log('Row Data:', rowData); // Log rowData to check if it contains the correct data
+
+    // You can add further logic here if needed, such as sending data to a server
+}
+
 
 function toggleDateVisibility(row) {
     // Get refund statuses from the row
     const status = {
-        unirefund: row.find('td').eq(18).find('select').val(),
-        iehrefund: row.find('td').eq(20).find('select').val()
+        unirefund: row.find('td').eq(22).find('select').val(),  // Uni Refund Initiated status
+        iehrefund: row.find('td').eq(24).find('select').val()    // IEH Refund Initiated status
     };
 
     // Show/Hide date inputs based on refund statuses
-    const uniDateInput = row.find('td').eq(19).find('input');
-    const iehDateInput = row.find('td').eq(21).find('input');
+    const uniDateInput = row.find('td').eq(23).find('input');    // Date of Uni Refund Initiated
+    const iehDateInput = row.find('td').eq(25).find('input');    // Date of IEH Refund Initiated
 
     uniDateInput.toggleClass('d-none', status.unirefund !== 'success');
     iehDateInput.toggleClass('d-none', status.iehrefund !== 'success');
@@ -693,6 +819,7 @@ function toggleDateVisibility(row) {
     uniDateInput.prop('required', status.unirefund === 'success');
     iehDateInput.prop('required', status.iehrefund === 'success');
 }
+
 
 function toggleStatus(button, type) {
     const currentText = $(button).text().trim();
@@ -737,22 +864,25 @@ function getRowData(row) {
         specificName: row.find('td').eq(12).text().trim(),
         servicePack: row.find('td').eq(13).text().trim(),
         intake: row.find('td').eq(14).find('select').val() || '',
-        university: row.find('td').eq(15).text().trim(),
-        mentorshipStatus: row.find('td').eq(16).find('button').text().trim(),
-        universityPaid: row.find('td').eq(17).find('button').text().trim(),
-        universityPaidDate: row.find('td').eq(18).find('input').val() || '',
-        documentStatus: row.find('td').eq(19).find('button').text().trim(),
-        unirefundinitiated: row.find('td').eq(20).find('select').val() || '',
-        dateOfRefundInitiateduni: row.find('td').eq(21).find('input').val() || '',
-        iehrefundinitiated: row.find('td').eq(22).find('select').val() || '',
-        dateOfRefundInitiatedieh: row.find('td').eq(23).find('input').val() || '',
-        scholarship: row.find('td').eq(24).text().trim(), // Moved Scholarship field
-        feepaid: row.find('td').eq(25).find('select').val() || '',
-        feePaidAmount: row.find('td').eq(26).find('input').val() || '',
-        semesterStatus: row.find('td').eq(27).find('select').val() || '',
-        batch: row.find('td').eq(28).find('select').val() || '',
-        enrollmentNo: row.find('td').eq(29).find('input').val() || '',
-        idApproved: row.find('td').eq(30).find('button').text().trim()
+        mentorshipStatus: row.find('td').eq(15).text().trim(),
+        university: row.find('td').eq(16).text().trim(),
+        initialRegistration: row.find('td').eq(17).find('button').text().trim(),
+        message: row.find('td').eq(18).find('button').text().trim(),
+        universityPaid: row.find('td').eq(19).find('button').text().trim(),
+        universityPaidDate: row.find('td').eq(20).find('input').val() || '',
+        documentStatus: row.find('td').eq(21).find('button').text().trim(),
+        unirefundinitiated: row.find('td').eq(22).find('select').val() || '',
+        dateOfRefundInitiateduni: row.find('td').eq(23).find('input').val() || '',
+        iehrefundinitiated: row.find('td').eq(24).find('select').val() || '',
+        dateOfRefundInitiatedieh: row.find('td').eq(25).find('input').val() || '',
+        scholarship: row.find('td').eq(26).text().trim(),
+        feepaid: row.find('td').eq(27).find('select').val() || '',
+        feePaidAmount: row.find('td').eq(28).find('input').val() || '',
+        semesterStatus: row.find('td').eq(29).find('select').val() || '',
+        batch: row.find('td').eq(30).find('select').val() || '',
+        enrollmentNo: row.find('td').eq(31).find('input').val() || '',
+        idApproved: row.find('td').eq(32).find('button').text().trim(),
+        action: row.find('td').eq(33).find('button').text().trim()  // Assuming the last column is for actions
     };
 }
 
@@ -914,7 +1044,7 @@ function validateFields(rowData) {
         { name: 'Mentor', field: rowData.mentor },
         { name: 'Fee Paid', field: rowData.feepaid },
         { name: 'Fee Paid Amount', field: rowData.feePaidAmount },
-        { name: 'Scholarship', field: rowData.scholarship } // Added Scholarship field
+        { name: 'Scholarship', field: rowData.scholarship }
     ];
 
     // Include the new required fields if the status is 'success'

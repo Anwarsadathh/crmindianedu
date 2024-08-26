@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>CRM TL Spreadsheet Leads</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+ <!-- Add necessary meta tags and links to CSS/JS files -->
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet">
+  <!-- Bootstrap JS -->
+  <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <!-- Libraries Stylesheet -->
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+     <style>
+
+
+ @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+}
+
+.form-control{
+    
+    border:none;
+    padding-left:32px;
+}
+.tt {
+    margin-top: 20px;
+    padding: 70px;
+    border-radius: 10px;background-color: #f2f9f6; /* Very pale mint green */
+
+}
+.btn-primary{
+    font-size: 10px;
+    background-color: #007bff !important;
+}
+.btn-secondary{
+    font-size: 10px;
+    background-color: #160070 !important;
+}
+.table-responsive{
+    margin-top: 15px;
+}
+.form-control:focus{
+    
+    border:none;
+    box-shadow:none;
+}
+
+.green{
+    
+    color:green;
+}
+/* Button styles */
+.btn-status {
+    font-size: 10px; /* Smaller font size for buttons */
+    padding: 4px 8px; /* Smaller padding for buttons */
+    transition: background-color 0.3s ease;
+}
+
+.btn-not-paid {
+    background-color: #e8172c; /* Red */
+    color: #fff;
+}
+
+.btn-paid {
+    background-color: #28a745; /* Green */
+    color: #fff;
+}
+
+.btn-not-approved {
+    background-color: #ffc107; /* Yellow */
+    color: #000;
+}
+
+.btn-approved {
+    background-color: #17a2b8; /* Teal */
+    color: #fff;
+}
+
+.btn-not-done {
+    background-color: #ffc107; /* Yellow */
+    color: #000;
+}
+
+.btn-done {
+    background-color: #28a745; /* Green */
+    color: #fff;
+}
+
+.btn-status.active-paid {
+    background-color: #28a745 !important; /* Green */
+    color: #fff;
+}
+
+.btn-status.active-not-paid {
+    background-color: #dc3545 !important; /* Red */
+    color: #fff;
+}
+
+.btn-glass:hover{
+color: #ffffff;
+background-color: #1c008b !important;
+}
+.btn-status.active-not-approved {
+    background-color: #ffc107 !important; /* Yellow */
+    color: #000;
+}
+/* Container for table */
+.table-wrapper {
+    position: relative; /* To contain the sticky header */
+    overflow: auto; /* Allows the table body to scroll */
+    height: 500px; /* Set a height for the scrolling area */
+}
+
+/* Ensure the table takes the full width of its container */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10px; /* Smaller font size for table content */
+    table-layout: fixed; /* Ensures fixed widths are respected */
+}
+
+/* Ensure the table header stays fixed at the top */
+.table thead {
+    position: sticky;
+    top: 0;
+    background-color: #fff; /* Solid background color for visibility */
+    z-index: 2; /* Ensure it stays on top of other content */
+}
+
+/* Table header and cells styling */
+.table thead th,
+.table tbody td {
+    text-align: left;
+    padding: 6px; /* Reduced padding for a smaller appearance */
+    border: 1px solid #dee2e6;
+    font-size: 12px; /* Consistent smaller font size */
+    width: 120px; /* Fixed width for consistency */
+    font-family: Arial, Helvetica, sans-serif;
+    overflow: hidden; /* Prevent overflow for fixed-width cells */
+    text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+.table thead th {
+    background-color: #232f65;
+    color: #ffffff;
+}
+
+.table tbody tr:hover {
+    background-color: #d0e3ff; /* Hover color for rows */
+}
+
+
+/* Adjust other table-related styles if necessary */
+
+
+.btn-status.active-approved {
+    background-color: #17a2b8 !important; /* Teal */
+    color: #fff;
+}
+
+.btn-status.active-not-done {
+    background-color: #ffc107 !important; /* Yellow */
+    color: #000;
+}
+
+.btn-status.active-done {
+    background-color: #28a745 !important; /* Green */
+    color: #fff;
+}
+/* DataTables styles */
+.dataTables_wrapper .dataTables_filter {
+    float: right;
+    text-align: right;
+    margin-bottom: 10px; /* Add margin below the search bar */
+}
+
+.dataTables_wrapper .dataTables_filter input {
+    margin-left: 0.5em;
+    display: inline-block;
+    width: auto;
+    margin-bottom: 10px; /* Add margin below the search bar */
+        position: sticky !important;
+}
+
+.dataTables_wrapper .dataTables_length {
+    float: left;
+    margin-bottom: 10px; /* Add margin below the length dropdown */
+}
+
+.dataTables_wrapper .dataTables_info {
+    float: left;
+    margin-top: 10px; /* Add margin above the info text */
+}
+
+.dataTables_wrapper .dataTables_paginate {
+    float: right;
+    margin-top: 10px; /* Add margin above the pagination controls */
+
+}
+
+
+
+.image-stack {
+    position: relative;
+    display: flex;
+}
+
+.profile-img {
+    border-radius: 50%;
+    position: relative;
+    z-index: 1;
+    margin-left: -20px;
+    transition: transform 0.3s, z-index 0.3s;
+}
+
+.profile-img:hover {
+    transform: translateX(-20px);
+    z-index: 10;
+}
+
+.image-stack .bg-success {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border-radius: 50%;
+    border: 2px solid white;
+    padding: 1px;
+}
+
+
+ .dotted-spinner {
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        border: 3px dotted white; /* White dotted border */
+        border-top: 3px solid white; /* Solid top border to create spinner effect */
+        animation: dotted-spinner 1.5s linear infinite;
+    }
+
+    @keyframes dotted-spinner {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .loading {
+        background-color: #6c757d; /* Change to a different color for the loading state */
+        color: #ffffff; /* Change text color if needed */
+    }
+    
+    </style>
+    
+</head>
+
+<body>
+    <div class="container-xxl position-relative bg-white d-flex p-0" style="background-color: #232f65;">
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+
+
+      <!-- Sidebar Start -->
+        <div class="sidebar pe-4 pb-3" style="background-color: #232f65;">
+            <nav class="navbar " style="background-color: #232f65;">
+                <a href="index.html" class="navbar-brand mx-4 mb-3">
+                    <h3 class="text-primary"> <img src="/images/indian-hub-logo-vert-white-e1662813826792.png" alt="Indian Edu Hub Logo" class="log"></h3>
+                </a>
+                <div class="d-flex align-items-center ms-4 mb-4" style="background-color: #232f65;">
+                      
+                    <div class="ms-3" >
+                        <h6 class="mb-0 text-white">Indianeduhub</h6>
+                        <span style="color: rgb(209, 211, 212);">Team Lead</span>
+                    </div>
+                </div>
+                <div class="navbar-nav w-100" style="background-color: #232f65;">
+                    <a href="/crm-tl-dashboard" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Dashboard</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2 text-dark"></i> Add Leads</a>
+                            <div class="dropdown-menu bg-transparent border-0">
+                            <a href="/crm-tl-details" class="dropdown-item text-white ">Lead Assign</a>
+        
+                        </div>
+                           
+                    </div>
+                     <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i> My Team</a>
+                            <div class="dropdown-menu bg-transparent border-0">
+                             <a href="/crm-tl-assigned" class="dropdown-item text-white active">Assigned</a>
+                        </div>
+                    </div>
+                                       
+                       <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle text-white " data-bs-toggle="dropdown"><i class="fa fa-user text-dark me-2"></i>Create-Lead</a>
+                       
+                            <div class="dropdown-menu bg-transparent border-0">
+                                 <a href="/crm-create-lead" class="dropdown-item ">Create-Lead-Owner</a>
+                            <a href="/crm-leadstage" class="dropdown-item ">Create-Lead-Stage</a>
+                        </div>
+                    </div>
+                       <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown"><i class="fa fa-user text-dark me-2"></i>Rewards</a>
+                       
+                            <div class="dropdown-menu bg-transparent border-0">
+                            <a href="/crm-tl-referral" class="dropdown-item text-white">lead Owner</a>
+                            <a href="/crm-tl-referral-all" class="dropdown-item text-white">All Category</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <!-- Sidebar End -->
+
+
+
+        <!-- Content Start -->
+        <div class="content">
+            <!-- Navbar Start -->
+            <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
+                <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
+                    <h2 class="text-primary mb-0"><img src="/img/ie.png" alt="Indian Edu Hub Logo" style="height: 30px;"></h2>
+                </a>
+                <a href="#" class="sidebar-toggler flex-shrink-0">
+                    <i class="fa fa-bars"></i>
+                </a>
+                <form class="d-none d-md-flex ms-4">
+                    <input class="form-control border-0" type="search" placeholder="Search">
+                </form>
+                <div class="navbar-nav align-items-center ms-auto">
+                    
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="fa fa-bell me-lg-2"></i>
+                            <span class="d-none d-lg-inline-flex">Notificatin</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                            <a href="#" class="dropdown-item">
+                                <h6 class="fw-normal mb-0">Profile updated</h6>
+                                <small>15 minutes ago</small>
+                            </a>
+                       
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item text-center">See all notifications</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <img class="rounded-circle me-lg-2" src="/images/WhatsApp Image 2024-07-26 at 17.51.27_ac46e3bb.jpg" alt="" style="width: 40px; height: 40px;">
+                            <span class="d-none d-lg-inline-flex">Seyed Shahid</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                            <a href="#" class="dropdown-item">Log Out</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <!-- Navbar End -->
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">Total Leads</h6>
+                <!-- Update Button -->
+                <div class="col-md-12">
+                <button id="updateButton" class="btn btn-primary mb-3">
+                    Fetch Data From Googlesheet
+                    <span id="loadingIcon" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
+                </button>
+                <button id="bulkAssignButton" class="btn btn-secondary mb-3">
+    Assign Selected Leads
+</button>
+</div>
+ 
+               <div class="filter-card glassmorphism p-4 shadow-lg d-flex">
+    <div class="floating-label-wrapper">
+        <label for="leadOwner" class="floating-label">Lead Owner</label>
+        <select id="leadOwner" class="form-control shadow-sm circular-input">
+            <option value="">Select Lead Owner</option>
+            {{#each leadOwners}}
+                <option value="{{this.email}}">{{this.email}}</option>
+            {{/each}}
+        </select>
+    </div>
+
+    <div class="floating-label-wrapper ms-3">
+        <label for="timeStampRange" class="floating-label">T-S Range</label>
+        <input type="text" id="timeStampRange" class="form-control shadow-sm circular-input" placeholder="Select TimeStamp Range">
+    </div>
+
+    <div class="floating-label-wrapper ms-3">
+        <label for="assignDateRange" class="floating-label">Assign Range</label>
+        <input type="text" id="assignDateRange" class="form-control shadow-sm circular-input" placeholder="Select Assign Date Range">
+    </div>
+
+    <div class="floating-label-wrapper ms-3">
+        <label for="state" class="floating-label">State</label>
+        <input type="text" id="state" class="form-control shadow-sm circular-input" placeholder="Enter State">
+    </div>
+
+    <div class="floating-label-wrapper ms-3">
+        <label for="city" class="floating-label">City</label>
+        <input type="text" id="city" class="form-control shadow-sm circular-input" placeholder="Enter City">
+    </div>
+
+    <div class="floating-label-wrapper ms-3">
+        <label for="course" class="floating-label">Course</label>
+        <input type="text" id="course" class="form-control shadow-sm circular-input" placeholder="Enter Course">
+    </div>
+
+    <button class="btn btn-glass shadow-sm circular-btn ms-3" id="filterBtn">
+        <i class="bi bi-filter-circle"></i>
+    </button>
+
+    <button class="btn btn-danger shadow-sm circular-btn ms-3" id="clearFiltersBtn">
+        <i class="fas fa-times-circle"></i> 
+    </button>
+</div>
+<div class="table-responsive">
+ <div class="table-wrapper ">
+    <table class="table" id="dataTable">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="selectAll"> Select All</th> <!-- Select All Checkbox -->
+                    <th>No.</th>
+                    <th hidden>d</th>
+                     <th>Action</th>
+                    <th>Lead Owners</th>
+                    <th>Lead Stage & Status</th>
+                    <th>ID</th>
+                    <th>Time Stamp</th>
+                    <th hidden>Assign date</th>
+                    <th>ReferredBy</th>
+                    <th>Source</th>
+                    <th>State</th>
+                    <th>Name</th>
+                    <th>WhatsApp</th>
+                    <th>Mobile</th>
+                    <th>Uni 1</th>
+                    <th>Uni 2</th>
+                    <th>Uni 3</th>
+                    <th>Uni 4</th>
+                    <th>Budget</th>
+                    <th>City</th>
+                    <th>Course</th>
+                    <th>Current Salary</th>
+                    <th>Description</th>
+                    <th>Email</th>
+                    <th>Employee Location</th>
+                    <th>Expected Salary</th>
+                    <th>Experience</th>
+                    <th>Exposure</th>
+                    <th>Previous Qualification</th>
+                    <th>Previous University</th>
+                    <th>Sector</th>
+                    <th>Specialization</th>
+                    <th>Role</th>
+                    <th>PDF Link</th>
+                    <th>Password</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {{#each googlesheets}}
+                <tr>
+                    <td><input type="checkbox" class="select-lead" data-id="{{this._id}}" data-source="{{this.source}}"></td>
+                    <td><strong>{{incrementIndex @index}}</strong></td>
+                    <td class="font-weight-bold" data-id="{{this._id}}" data-source="{{this.source}}" hidden>{{this._id}}</td>
+                       <td>
+                        <button class="btn btn-status {{#if (eq this.assignLead "assigned")}}btn-paid{{else}}btn-not-paid{{/if}}" 
+                                onclick="toggleAssignment(this)" >
+                            {{#if (eq this.assignLead "assigned")}}Assigned{{else}}Not Assign{{/if}}
+                        </button>
+                    </td>
+                     <td>
+    <span>{{this.leadOwnerName}}</span>
+</td>
+
+                     <td>
+            <button class="btn btn-info ms-2 show-lead-status-btn" style="font-size: 10px !important;" data-bs-toggle="modal" data-bs-target="#leadStatusModal" onclick="showLeadStatus(this)">Status</button>
+            <div class="leadStatusContent" style="display:none;">
+                {{json this.leadStatus}}
+            </div>
+        </td>
+                   
+                    <td class="font-weight-bold">{{this.id}}</td>
+                    <td>{{this.timeStamp}}</td>
+                    <td hidden>{{this.assignDate}}</td>
+                    <td>{{this.ReferredBy}}</td>
+                    <td>{{#if this.source}}{{this.source}}{{else}}N/A{{/if}}</td>
+                    <td>{{this.state}}</td>
+                    <td>{{this.name}}</td>
+                    <td>{{this.whatsapp}}</td>
+                    <td>{{this.mobile}}</td>
+                    <td>{{this.uni1}}</td>
+                    <td>{{this.uni2}}</td>
+                    <td>{{this.uni3}}</td>
+                    <td>{{this.uni4}}</td>
+                    <td>{{this.budget}}</td>
+                    <td>{{this.city}}</td>
+                    <td>{{this.course}}</td>
+                    <td>{{this.currSalary}}</td>
+                    <td>{{this.description}}</td>
+                    <td>{{this.email}}</td>
+                    <td>{{this.empLocation}}</td>
+                    <td>{{this.expSalary}}</td>
+                    <td>{{this.experience}}</td>
+                    <td>{{this.exposure}}</td>
+                    <td>{{this.prevQualification}}</td>
+                    <td>{{this.prevUniversity}}</td>
+                    <td>{{this.sector}}</td>
+                    <td>{{this.specialization}}</td>
+                    <td>{{this.role}}</td>
+                    <td><a href="{{this.pdfLink}}" target="_blank">Link</a></td>
+                    <td>{{this.password}}</td>
+                 
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+    </div>
+    <div class="alert alert-warning my-3" role="alert" id="alertMessage">
+    If you have already assigned, do not reassign. It will delete the old status of that student.
+</div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="leadStatusModal" tabindex="-1" aria-labelledby="leadStatusModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title" id="leadStatusModalLabel">Lead Status Timeline</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="timeline-container"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<style>
+      /* Modal and header styling */
+  .modal-content {
+    border-radius: 15px;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2); /* Gradient background */
+    color: #333; /* Darker text for contrast */
+  }
+  
+  .modal-header {
+    border-bottom: 2px solid #007bff; /* Blue bottom border */
+    background: #f5f7fa; /* Lighter background for header */
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 15px;
+  }
+
+  .modal-title {
+    font-size: 24px;
+    font-weight: bold;
+  }
+/* Status category section */
+.status-category-section {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px; /* Space between category and timeline items */
+    border-bottom: 2px solid #007bff; /* Optional: Add a border to separate categories */
+    padding-bottom: 10px; /* Space between category text and the border */
+}
+
+/* Timeline container */
+.timeline-container {
+    position: relative;
+    padding: 20px;
+    border-left: 3px solid #007bff; /* Thicker vertical line for timeline */
+    overflow-x: hidden;
+}
+
+/* Timeline items */
+.timeline-item {
+    position: relative;
+    padding: 15px 0;
+    margin-left: 80px; /* Increased space for date and line */
+    display: flex;
+    align-items: flex-start;
+    flex-direction: row;
+}
+
+/* Date styling */
+.timeline-item .timeline-date {
+    position: absolute;
+    left: -100px; /* Adjusted to fit within modal */
+    top: 0;
+    width: 80px;
+    text-align: center;
+    font-size: 14px;
+    color: #232f65; /* Change this to your desired color */
+    font-weight: bold;
+}
+
+/* Item content styling */
+.timeline-item-content {
+    background: #f9f9f9;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-left: 30px; /* Increased space between date and content */
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: calc(100% - 110px); /* Adjust width to fit within modal */
+    max-width: 600px; /* Increased max-width for readability */
+    border-left: 3px solid #007bff; /* Thicker vertical line after the date */
+}
+
+/* Vertical line and circle */
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -10px; /* Adjust to ensure circle is visible */
+    top: 15px;
+    width: 12px;
+    height: 12px;
+    background: #007bff;
+    border-radius: 50%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .modal-content {
+        font-size: 10px; /* Font size for mobile screens */
+    }
+
+    .timeline-item {
+        margin-left: 30px; /* Adjust for smaller screens */
+    }
+
+    .timeline-item-content {
+        width: calc(100% - 40px); /* Adjust width for smaller screens */
+        padding: 10px;
+    }
+
+    .timeline-item .timeline-date {
+        left: -50px; /* Adjust date position for mobile */
+        width: 50px;
+    }
+
+    .timeline-item::before {
+        left: -6px; /* Adjust circle position for mobile */
+    }
+}
+.small-font {
+    font-size: smaller; /* or use any specific size like 10px */
+}
+
+</style>
+
+
+<script>
+async function showLeadStatus(button) {
+    const row = button.closest('tr');
+    const leadStatusContent = row.querySelector('.leadStatusContent').textContent.trim();
+
+    if (!leadStatusContent) {
+        alert('No lead status available.');
+        return;
+    }
+
+    const timelineContainer = document.querySelector('.timeline-container');
+    timelineContainer.innerHTML = '';
+
+    try {
+        const leadStatus = JSON.parse(leadStatusContent);
+
+        // Function to format time in IST
+        function formatTimeInIST(dateString) {
+            const date = new Date(dateString);
+            date.setHours(date.getHours() + 5);
+            date.setMinutes(date.getMinutes() + 30);
+            return date.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // Iterate through each stage in leadStatus
+        Object.keys(leadStatus).forEach(statusCategory => {
+            const stages = leadStatus[statusCategory];
+
+            // Create and append a section for the statusCategory
+            const categorySection = document.createElement('div');
+            categorySection.className = 'status-category-section';
+            categorySection.innerHTML = `<h5>${statusCategory}</h5>`;
+            timelineContainer.appendChild(categorySection);
+
+            Object.keys(stages).forEach(stage => {
+                const stageDetails = stages[stage];
+
+                if (Array.isArray(stageDetails)) {
+                    stageDetails.forEach((stageDetail, index) => {
+                        const timelineItem = document.createElement('div');
+                        timelineItem.className = `timeline-item ${index % 2 === 0 ? 'left' : 'right'}`;
+
+                        // Format date and time separately
+                        const date = stageDetail.date ? new Date(stageDetail.date).toLocaleDateString() : 'N/A';
+                        const time = stageDetail.date ? formatTimeInIST(stageDetail.date) : '';
+
+                        // Create date element with time in a smaller font
+                        const dateElement = document.createElement('div');
+                        dateElement.className = 'timeline-date';
+                 dateElement.innerHTML = `<span class="small-font">${stageDetail.date ? new Date(stageDetail.date).toLocaleString() : 'N/A'}</span>`;
+
+
+
+                        // Create content element
+                        const contentElement = document.createElement('div');
+                        contentElement.className = 'timeline-item-content';
+                        contentElement.innerHTML = `
+                            <h6>${stage}</h6>
+                            <p>Status: ${stageDetail.status || 'N/A'}</p>
+                            <p>Sub-Stage: ${stageDetail.subStage || 'N/A'}</p>
+                            ${stageDetail.followUp ? `<p>Follow-Up Date: ${new Date(stageDetail.followUp.date).toLocaleDateString()} ${stageDetail.followUp.time}</p>` : ''}
+                        `;
+
+                        timelineItem.appendChild(dateElement);
+                        timelineItem.appendChild(contentElement);
+                        timelineContainer.appendChild(timelineItem);
+                    });
+                } else {
+                    console.error(`Invalid data format for stage "${stage}". Expected an array, but got:`, stageDetails);
+                }
+            });
+        });
+    } catch (error) {
+        console.error('Error parsing lead status:', error);
+    }
+}
+
+// Attach event listener to modal show event
+document.addEventListener('DOMContentLoaded', function () {
+    const leadStatusModal = document.getElementById('leadStatusModal');
+
+    leadStatusModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget; // Button that triggered the modal
+        showLeadStatus(button);
+    });
+});
+
+
+</script>
+
+
+<script>
+// Your existing code for bulk assignment
+
+// Drag to select checkboxes
+document.addEventListener('DOMContentLoaded', function() {
+    let isDragging = false;
+    let isChecked = false;
+
+    const checkboxes = document.querySelectorAll('.select-lead');
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('mousedown', function(event) {
+            isDragging = true;
+            isChecked = !checkbox.checked;
+            checkbox.checked = isChecked;
+            event.preventDefault();
+        });
+
+        checkbox.addEventListener('mousemove', function(event) {
+            if (isDragging) {
+                checkbox.checked = isChecked;
+            }
+        });
+
+        checkbox.addEventListener('mouseup', function() {
+            isDragging = false;
+        });
+    });
+
+    document.addEventListener('mouseup', function() {
+        isDragging = false;
+    });
+});
+</script>
+
+
+
+<script>
+
+// Handle Select All Checkbox
+document.getElementById('selectAll').addEventListener('change', function() {
+    const checkboxes = document.querySelectorAll('.select-lead');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = this.checked;
+    });
+});
+
+// Bulk Assignment Button Handler
+document.getElementById('bulkAssignButton').addEventListener('click', async function() {
+    const selectedCheckboxes = Array.from(document.querySelectorAll('.select-lead:checked'));
+    const selectedLeads = selectedCheckboxes.map(cb => ({
+        id: cb.getAttribute('data-id'),
+        source: cb.getAttribute('data-source')
+    }));
+
+    // Check for invalid IDs
+    const invalidLeads = selectedLeads.filter(lead => !lead.id || !lead.source);
+    if (invalidLeads.length > 0) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'One or more selected leads have invalid or missing ID/source.',
+        });
+        return;
+    }
+
+    if (selectedLeads.length === 0) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Please select at least one lead to assign.',
+        });
+        return;
+    }
+
+    const { value: leadOwnerName } = await Swal.fire({
+        title: 'Assign to User',
+        input: 'select',
+        inputOptions: {
+            {{#each leadOwners}}
+            '{{this.email}}': '{{this.email}}',
+            {{/each}}
+        },
+        inputPlaceholder: 'Select a user',
+        showCancelButton: true,
+    });
+
+    if (leadOwnerName) {
+        try {
+            const response = await fetch('/update-lead-owner', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    leads: selectedLeads,
+                    leadOwnerName,
+                    assignLead: 'assigned',
+                    assignDate: new Date().toISOString().split("T")[0]
+                }),
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Updated',
+                    text: 'Leads have been assigned successfully!',
+                }).then(() => {
+                    location.reload(); // Refresh the page to show updates
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: result.message || 'An error occurred while assigning leads.',
+                });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An error occurred while assigning leads.',
+            });
+        }
+    }
+});
+
+
+</script>
+
+    <!-- Add necessary JS files -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+ 
+document.getElementById('updateButton').addEventListener('click', function() {
+    const button = document.getElementById('updateButton');
+    const loadingIcon = document.getElementById('loadingIcon');
+
+    // Change button text and show loading icon
+    button.disabled = true; // Disable the button to prevent multiple clicks
+    button.classList.add('loading'); // Add loading class to change background color
+    button.innerHTML = 'Fetching Data... <span id="loadingIcon" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+
+    fetch('/update-database', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Data fetched from spreadsheet successfully!',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                // Reload the page after the alert is confirmed
+                window.location.reload();
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Failed',
+                text: 'Failed to fetch data from the spreadsheet.',
+                confirmButtonText: 'OK'
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'An error occurred.',
+            confirmButtonText: 'OK'
+        });
+    })
+    .finally(() => {
+        // Revert button text, hide loading icon, and reset button styles
+        button.disabled = false;
+        button.classList.remove('loading'); // Remove loading class to revert background color
+        button.innerHTML = 'Fetch Data';
+        loadingIcon.style.display = 'none';
+    });
+});
+
+</script>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<script>
+  $(document).ready(function() {
+    // Initialize DataTable
+const table = $('#dataTable').DataTable({
+        pageLength: 100, // Show 100 entries by default
+        lengthMenu: [[100, 25, 10], [100, 25, 10]] // Options for 100, 25, and 10 entries per page
+    });
+
+
+    // Initialize Flatpickr for date ranges
+    flatpickr("#timeStampRange", {
+        mode: "range",
+        dateFormat: "Y-m-d"
+    });
+    flatpickr("#assignDateRange", {
+        mode: "range",
+        dateFormat: "Y-m-d"
+    });
+
+    // Filter Button Event Listener
+    document.getElementById('filterBtn').addEventListener('click', function() {
+        const leadOwner = document.getElementById('leadOwner').value;
+        const timeStampRange = document.getElementById('timeStampRange').value;
+        const assignDateRange = document.getElementById('assignDateRange').value;
+        const state = document.getElementById('state').value.toLowerCase();
+        const city = document.getElementById('city').value.toLowerCase();
+        const course = document.getElementById('course').value.toLowerCase();
+
+        filterAndDisplayData(leadOwner, timeStampRange, assignDateRange, state, city, course);
+    });
+
+    // Clear Filters Button Event Listener
+    document.getElementById('clearFiltersBtn').addEventListener('click', function() {
+        document.getElementById('leadOwner').value = '';
+        document.getElementById('timeStampRange').value = '';
+        document.getElementById('assignDateRange').value = '';
+        document.getElementById('state').value = '';
+        document.getElementById('city').value = '';
+        document.getElementById('course').value = '';
+
+        filterAndDisplayData('', '', '', '', '', '');
+    });
+
+    function filterAndDisplayData(leadOwner, timeStampRange, assignDateRange, state, city, course) {
+        // Parse date ranges
+        const timeStampDates = timeStampRange.split(' to ');
+        const timeStampStartDate = timeStampDates.length > 1 ? new Date(timeStampDates[0]) : null;
+        const timeStampEndDate = timeStampDates.length > 1 ? new Date(timeStampDates[1]) : null;
+
+        const assignDateDates = assignDateRange.split(' to ');
+        const assignDateStartDate = assignDateDates.length > 1 ? new Date(assignDateDates[0]) : null;
+        const assignDateEndDate = assignDateDates.length > 1 ? new Date(assignDateDates[1]) : null;
+
+        // Clear existing custom filters
+        $.fn.dataTable.ext.search.pop();
+
+        // Add custom filter
+        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+            const rowLeadOwner = $(table.row(dataIndex).node()).find('.lead-owner-select').val().toLowerCase();
+            const rowState = data[7].toLowerCase(); // Column index for State
+            const rowCity = data[16].toLowerCase(); // Column index for City
+            const rowCourse = data[17].toLowerCase(); // Column index for Course
+            const timeStampText = data[3]; // Column index for TimeStamp
+            const assignDateText = data[4]; // Column index for Assign Date
+            const rowTimeStamp = new Date(timeStampText);
+            const rowAssignDate = new Date(assignDateText);
+
+            // Apply filters
+            let showRow = true;
+
+            if (leadOwner && rowLeadOwner !== leadOwner.toLowerCase()) showRow = false;
+            if (state && rowState !== state) showRow = false;
+            if (city && rowCity !== city) showRow = false;
+            if (course && rowCourse !== course) showRow = false;
+            if (timeStampStartDate && timeStampEndDate && (rowTimeStamp < timeStampStartDate || rowTimeStamp > timeStampEndDate || isNaN(rowTimeStamp))) showRow = false;
+            if (assignDateStartDate && assignDateEndDate && (rowAssignDate < assignDateStartDate || rowAssignDate > assignDateEndDate || isNaN(rowAssignDate))) showRow = false;
+
+            return showRow;
+        });
+
+        // Redraw the table to reflect changes
+        table.draw();
+
+        // Scroll to the first visible row
+        const firstVisibleRow = $('#dataTable tbody tr:visible').first();
+        if (firstVisibleRow.length) {
+            $('html, body').animate({
+                scrollTop: firstVisibleRow.offset().top
+            }, 500);
+        }
+    }
+});
+
+
+</script>
+
+
+
+ 
+  <!-- Additional JavaScript Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="lib/chart/chart.min.js"></script>
+  <script src="lib/easing/easing.min.js"></script>
+  <script src="lib/waypoints/waypoints.min.js"></script>
+  <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+  <script src="lib/tempusdominus/js/moment.min.js"></script>
+  <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
+  <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+  <!-- Template Javascript -->
+  <script src="js/main.js"></script>
+</body>
+</html>

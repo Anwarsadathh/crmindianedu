@@ -22,6 +22,35 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+
+
+router.post('/send-emailclient', (req, res) => {
+    const { email, message } = req.body;
+
+    const transporter = nodemailer.createTransport({
+      service: "Gmail",
+      auth: {
+        user: "clientsupport@indianeduhub.com",
+        pass: "xeep ypij nhqg ilcd",
+      },
+    });
+
+    const mailOptions = {
+        from: 'clientsupport@indianeduhub.com',
+        to: email,
+        subject: 'Message from Client Department',
+        text: message
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return res.status(500).json({ success: false, error });
+        } else {
+            return res.status(200).json({ success: true, info });
+        }
+    });
+});
+
 // Function to generate OTP
 function generateOTP() {
   return crypto.randomInt(100000, 999999).toString();
@@ -295,15 +324,15 @@ router.get("/crm-tl-details", async (req, res) => {
   try {
     const { leadOwnerEmail, startDate, endDate, state, city, course } =
       req.query;
-   const leadStage = await serviceHelpers.getAllLeadStage();
+    const leadStage = await serviceHelpers.getAllLeadStage();
 
-   // Remove duplicate mainStage entries
-   const uniqueLeadStages = Array.from(
-     new Set(leadStage.map((stage) => stage.mainStage))
-   ).map((mainStage) => {
-     return leadStage.find((stage) => stage.mainStage === mainStage);
-   });
-    
+    // Remove duplicate mainStage entries
+    const uniqueLeadStages = Array.from(
+      new Set(leadStage.map((stage) => stage.mainStage))
+    ).map((mainStage) => {
+      return leadStage.find((stage) => stage.mainStage === mainStage);
+    });
+
     let matchCriteria = {};
     if (leadOwnerEmail) matchCriteria.leadOwnerName = leadOwnerEmail;
     if (state) matchCriteria.state = state;
@@ -330,43 +359,79 @@ router.get("/crm-tl-details", async (req, res) => {
     // Combine data
     const combinedData = [...filteredGooglesheets, ...referralsWithSource];
 
-    // Validate combined data for missing or invalid ID/source
-    const invalidData = combinedData.filter(
-      (item) => !item._id || !item.source
+    // Filter out leads that have assignLead set to "assigned"
+    const filteredCombinedData = combinedData.filter(
+      (item) => item.assignLead !== "assigned"
     );
-    if (invalidData.length > 0) {
-      console.error("Invalid data found:", invalidData);
-      return res.status(400).json({
-        message:
-          "One or more selected leads have invalid or missing ID/source.",
-      });
-    }
-
-    // Sort combined data: show assigned leads last
-    combinedData.sort((a, b) => {
-      // If both have "assigned", maintain original order
-      if (a.assignLead === "assigned" && b.assignLead === "assigned") {
-        return 0;
-      }
-      // If 'a' is "assigned" and 'b' is not, move 'a' down
-      if (a.assignLead === "assigned") {
-        return 1;
-      }
-      // If 'b' is "assigned" and 'a' is not, move 'b' down
-      if (b.assignLead === "assigned") {
-        return -1;
-      }
-      // If neither are "assigned", maintain original order
-      return 0;
-    });
 
     // Fetch lead owners
     const leadOwners = await serviceHelpers.getAllLeadOwners();
 
-    // Render the view with the sorted combined data
+    // Render the view with the filtered combined data
     res.render("user/crm-tl-details", {
       admin: true,
-      googlesheets: combinedData,
+      googlesheets: filteredCombinedData,
+      leadOwners,
+      leadStage: uniqueLeadStages,
+    });
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+
+router.get("/crm-tl-assigned", async (req, res) => {
+  try {
+    const { leadOwnerEmail, startDate, endDate, state, city, course } =
+      req.query;
+    const leadStage = await serviceHelpers.getAllLeadStage();
+
+    // Remove duplicate mainStage entries
+    const uniqueLeadStages = Array.from(
+      new Set(leadStage.map((stage) => stage.mainStage))
+    ).map((mainStage) => {
+      return leadStage.find((stage) => stage.mainStage === mainStage);
+    });
+
+    let matchCriteria = {};
+    if (leadOwnerEmail) matchCriteria.leadOwnerName = leadOwnerEmail;
+    if (state) matchCriteria.state = state;
+    if (city) matchCriteria.city = city;
+    if (course) matchCriteria.course = course;
+    if (startDate && endDate) {
+      matchCriteria.assignDate = { $gte: startDate, $lte: endDate };
+    }
+
+    // Fetch data from both collections based on match criteria
+    const googlesheets = await serviceHelpers.getAllGooglsheets(matchCriteria);
+    const referrals = await serviceHelpers.getAllReferral(matchCriteria);
+
+    // Handle missing source values
+    const filteredGooglesheets = googlesheets.map((item) => ({
+      ...item,
+      source: item.source || "N/A",
+    }));
+    const referralsWithSource = referrals.map((item) => ({
+      ...item,
+      source: item.source || "N/A",
+    }));
+
+    // Combine data
+    const combinedData = [...filteredGooglesheets, ...referralsWithSource];
+
+    // Filter out data without the "assignLead" field or where "assignLead" is not "assigned"
+    const filteredCombinedData = combinedData.filter(
+      (item) => item.assignLead === "assigned"
+    );
+
+    // Fetch lead owners
+    const leadOwners = await serviceHelpers.getAllLeadOwners();
+
+    // Render the view with the filtered data
+    res.render("user/crm-tl-assigned", {
+      admin: true,
+      googlesheets: filteredCombinedData,
       leadOwners,
       leadStage: uniqueLeadStages,
     });
@@ -1340,7 +1405,8 @@ router.post("/update-client-details", async (req, res) => {
       scholarship,
       password, // New password field
       state,
-      city
+      city,
+      initialRegistration,
     } = req.body;
 
     // Build the updateFields object with only the provided fields
@@ -1395,7 +1461,8 @@ router.post("/update-client-details", async (req, res) => {
       updateFields.assignaccounts =
         assignaccounts === "null" ? null : assignaccounts;
     if (password !== undefined) updateFields.password = password;
-
+ if (initialRegistration  !== undefined)
+      updateFields.initialRegistration  = initialRegistration  === "null" ? null : initialRegistration ;
     // Ensure the id is provided and valid
     if (!id) {
       return res.status(400).json({ message: "Client ID is required" });
