@@ -905,352 +905,390 @@ module.exports = {
   //   });
   // },
 
-// getLeadStatusCounts: async (
-//   sessionEmail,
-//   startDate,
-//   endDate,
-//   filterType,
-//   selectedStage,
-//   showLatestSubstage = false
-// ) => {
-//   return new Promise(async (resolve, reject) => {
-//     try {
-//       console.log("Lead Owner Email for Count:", sessionEmail);
-//       console.log("Received startDate:", startDate);
-//       console.log("Received endDate:", endDate);
-//       console.log("Received filterType:", filterType);
-//       console.log("Received stage:", selectedStage);
-//       console.log("Show Latest Substage:", showLatestSubstage);
+  // getLeadStatusCounts: async (
+  //   sessionEmail,
+  //   startDate,
+  //   endDate,
+  //   filterType,
+  //   selectedStage,
+  //   showLatestSubstage = false
+  // ) => {
+  //   return new Promise(async (resolve, reject) => {
+  //     try {
+  //       console.log("Lead Owner Email for Count:", sessionEmail);
+  //       console.log("Received startDate:", startDate);
+  //       console.log("Received endDate:", endDate);
+  //       console.log("Received filterType:", filterType);
+  //       console.log("Received stage:", selectedStage);
+  //       console.log("Show Latest Substage:", showLatestSubstage);
 
-//       // Parse startDate and endDate
-//       const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
-//       const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+  //       // Parse startDate and endDate
+  //       const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+  //       const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
 
-//       if ((startDate && !start) || (endDate && !end)) {
-//         throw new Error("Invalid date value provided");
-//       }
+  //       if ((startDate && !start) || (endDate && !end)) {
+  //         throw new Error("Invalid date value provided");
+  //       }
 
-//       let matchCriteria = { leadOwnerName: sessionEmail };
+  //       let matchCriteria = { leadOwnerName: sessionEmail };
 
-//       // Fetch data
-//       const [googleSheetData, referralData] = await Promise.all([
-//         db.get().collection(collection.GOOGLESHEETS_COLLECTION).find(matchCriteria).toArray(),
-//         db.get().collection(collection.REFERRAL_COLLECTION).find(matchCriteria).toArray(),
-//       ]);
+  //       // Fetch data
+  //       const [googleSheetData, referralData] = await Promise.all([
+  //         db.get().collection(collection.GOOGLESHEETS_COLLECTION).find(matchCriteria).toArray(),
+  //         db.get().collection(collection.REFERRAL_COLLECTION).find(matchCriteria).toArray(),
+  //       ]);
 
-//       const allData = [...googleSheetData, ...referralData];
+  //       const allData = [...googleSheetData, ...referralData];
 
-//       let mainStageCounts = {};
-//       let stageCounts = {};
-//       let subStageCounts = {};
-//       let mainStageList = new Set();
+  //       let mainStageCounts = {};
+  //       let stageCounts = {};
+  //       let subStageCounts = {};
+  //       let mainStageList = new Set();
 
-//       let mainStageDetails = [];
-//       let stageDetails = [];
-//       let subStageDetails = [];
+  //       let mainStageDetails = [];
+  //       let stageDetails = [];
+  //       let subStageDetails = [];
 
-//       allData.forEach((doc) => {
-//         console.log("Processing document:", doc);
+  //       allData.forEach((doc) => {
+  //         console.log("Processing document:", doc);
 
-//         let latestMainStage = null;
-//         let latestStage = null;
-//         let latestSubStage = null;
-//         let latestDate = null;
+  //         let latestMainStage = null;
+  //         let latestStage = null;
+  //         let latestSubStage = null;
+  //         let latestDate = null;
 
-//         for (const [mainStage, stages] of Object.entries(doc.leadStatus || {})) {
-//           if (!["In Progress", "Completed"].includes(mainStage)) {
-//             mainStageList.add(mainStage);
-//           }
-//           if (filterType && filterType !== mainStage) continue;
+  //         for (const [mainStage, stages] of Object.entries(doc.leadStatus || {})) {
+  //           if (!["In Progress", "Completed"].includes(mainStage)) {
+  //             mainStageList.add(mainStage);
+  //           }
+  //           if (filterType && filterType !== mainStage) continue;
 
-//           for (const [stage, entries] of Object.entries(stages)) {
-//             if (selectedStage && selectedStage !== stage) continue;
+  //           for (const [stage, entries] of Object.entries(stages)) {
+  //             if (selectedStage && selectedStage !== stage) continue;
 
-//             const filteredEntries = entries.filter((entry) => {
-//               const entryDate = new Date(entry.date).getTime();
-//               return entryDate >= start && entryDate <= end;
-//             });
+  //             const filteredEntries = entries.filter((entry) => {
+  //               const entryDate = new Date(entry.date).getTime();
+  //               return entryDate >= start && entryDate <= end;
+  //             });
 
-//             console.log(`Filtered Entries for ${mainStage} - ${stage}:`, filteredEntries);
+  //             console.log(`Filtered Entries for ${mainStage} - ${stage}:`, filteredEntries);
 
-//             if (filteredEntries.length === 0) continue;
+  //             if (filteredEntries.length === 0) continue;
 
-//             const latest = filteredEntries.reduce((latest, entry) => {
-//               const entryDate = new Date(entry.date).getTime();
-//               if (isNaN(entryDate)) {
-//                 console.warn("Invalid date found in entry:", entry);
-//                 return latest;
-//               }
-//               return !latest || entryDate > new Date(latest.date).getTime()
-//                 ? entry
-//                 : latest;
-//             }, null);
+  //             const latest = filteredEntries.reduce((latest, entry) => {
+  //               const entryDate = new Date(entry.date).getTime();
+  //               if (isNaN(entryDate)) {
+  //                 console.warn("Invalid date found in entry:", entry);
+  //                 return latest;
+  //               }
+  //               return !latest || entryDate > new Date(latest.date).getTime()
+  //                 ? entry
+  //                 : latest;
+  //             }, null);
 
-//             console.log(`Latest Entry for ${mainStage} - ${stage}:`, latest);
+  //             console.log(`Latest Entry for ${mainStage} - ${stage}:`, latest);
 
-//             if (latest && (!latestDate || new Date(latest.date) > new Date(latestDate))) {
-//               latestDate = latest.date;
-//               latestMainStage = mainStage;
-//               latestStage = stage;
-//               latestSubStage = latest.subStage;
-//             }
-//           }
-//         }
+  //             if (latest && (!latestDate || new Date(latest.date) > new Date(latestDate))) {
+  //               latestDate = latest.date;
+  //               latestMainStage = mainStage;
+  //               latestStage = stage;
+  //               latestSubStage = latest.subStage;
+  //             }
+  //           }
+  //         }
 
-//         if (showLatestSubstage && latestDate) {
-//           if (latestMainStage) {
-//             mainStageCounts[latestMainStage] = (mainStageCounts[latestMainStage] || 0) + 1;
-//             stageCounts[`${latestMainStage}-${latestStage}`] = (stageCounts[`${latestMainStage}-${latestStage}`] || 0) + 1;
-//             subStageCounts[`${latestMainStage}-${latestStage}-${latestSubStage}`] = (subStageCounts[`${latestMainStage}-${latestStage}-${latestSubStage}`] || 0) + 1;
+  //         if (showLatestSubstage && latestDate) {
+  //           if (latestMainStage) {
+  //             mainStageCounts[latestMainStage] = (mainStageCounts[latestMainStage] || 0) + 1;
+  //             stageCounts[`${latestMainStage}-${latestStage}`] = (stageCounts[`${latestMainStage}-${latestStage}`] || 0) + 1;
+  //             subStageCounts[`${latestMainStage}-${latestStage}-${latestSubStage}`] = (subStageCounts[`${latestMainStage}-${latestStage}-${latestSubStage}`] || 0) + 1;
 
-//             mainStageDetails.push({ mainStage: latestMainStage, doc });
-//             stageDetails.push({ mainStage: latestMainStage, stage: latestStage, doc });
-//             subStageDetails.push({ mainStage: latestMainStage, stage: latestStage, subStage: latestSubStage, doc });
-//           }
-//         }
-//       });
+  //             mainStageDetails.push({ mainStage: latestMainStage, doc });
+  //             stageDetails.push({ mainStage: latestMainStage, stage: latestStage, doc });
+  //             subStageDetails.push({ mainStage: latestMainStage, stage: latestStage, subStage: latestSubStage, doc });
+  //           }
+  //         }
+  //       });
 
-//       mainStageList.forEach((mainStage) => {
-//         if (!(mainStage in mainStageCounts)) {
-//           mainStageCounts[mainStage] = 0;
-//         }
-//       });
+  //       mainStageList.forEach((mainStage) => {
+  //         if (!(mainStage in mainStageCounts)) {
+  //           mainStageCounts[mainStage] = 0;
+  //         }
+  //       });
 
-//       const mainStageCountsArray = Array.from(mainStageList).map((mainStage) => ({
-//         mainStage,
-//         count: mainStageCounts[mainStage],
-//       }));
+  //       const mainStageCountsArray = Array.from(mainStageList).map((mainStage) => ({
+  //         mainStage,
+  //         count: mainStageCounts[mainStage],
+  //       }));
 
-//       const stageCountsArray = Object.keys(stageCounts).map((key) => {
-//         const [mainStage, stage] = key.split("-");
-//         return {
-//           mainStage,
-//           stage,
-//           count: stageCounts[key],
-//         };
-//       });
+  //       const stageCountsArray = Object.keys(stageCounts).map((key) => {
+  //         const [mainStage, stage] = key.split("-");
+  //         return {
+  //           mainStage,
+  //           stage,
+  //           count: stageCounts[key],
+  //         };
+  //       });
 
-//       const subStageCountsArray = Object.keys(subStageCounts).map((key) => {
-//         const [mainStage, stage, subStage] = key.split("-");
-//         return {
-//           mainStage,
-//           stage,
-//           subStage,
-//           count: subStageCounts[key],
-//         };
-//       });
+  //       const subStageCountsArray = Object.keys(subStageCounts).map((key) => {
+  //         const [mainStage, stage, subStage] = key.split("-");
+  //         return {
+  //           mainStage,
+  //           stage,
+  //           subStage,
+  //           count: subStageCounts[key],
+  //         };
+  //       });
 
-//       console.log("Main Stage Counts Array:", mainStageCountsArray);
-//       mainStageCountsArray.forEach(({ mainStage, count }) => {
-//         console.log(`Main Stage: ${mainStage}, Count: ${count}`);
-//         Object.keys(stageCounts).forEach((key) => {
-//           if (key.startsWith(`${mainStage}-`)) {
-//             const [, stage] = key.split("-");
-//             console.log(`  Stage: ${stage}, Count: ${stageCounts[key]}`);
-//             Object.keys(subStageCounts).forEach((subKey) => {
-//               if (subKey.startsWith(`${mainStage}-${stage}-`)) {
-//                 const [, , subStage] = subKey.split("-");
-//                 console.log(`    Sub-Stage: ${subStage}, Count: ${subStageCounts[subKey]}`);
-//               }
-//             });
-//           }
-//         });
-//       });
+  //       console.log("Main Stage Counts Array:", mainStageCountsArray);
+  //       mainStageCountsArray.forEach(({ mainStage, count }) => {
+  //         console.log(`Main Stage: ${mainStage}, Count: ${count}`);
+  //         Object.keys(stageCounts).forEach((key) => {
+  //           if (key.startsWith(`${mainStage}-`)) {
+  //             const [, stage] = key.split("-");
+  //             console.log(`  Stage: ${stage}, Count: ${stageCounts[key]}`);
+  //             Object.keys(subStageCounts).forEach((subKey) => {
+  //               if (subKey.startsWith(`${mainStage}-${stage}-`)) {
+  //                 const [, , subStage] = subKey.split("-");
+  //                 console.log(`    Sub-Stage: ${subStage}, Count: ${subStageCounts[subKey]}`);
+  //               }
+  //             });
+  //           }
+  //         });
+  //       });
 
-//       console.log("Total Leads:", allData.length);
+  //       console.log("Total Leads:", allData.length);
 
-//       resolve({
-//         mainStageCounts: mainStageCountsArray,
-//         stageCounts: stageCountsArray,
-//         subStageCounts: subStageCountsArray,
-//         totalLeads: allData.length,
-//         mainStageDetails,
-//         stageDetails,
-//         subStageDetails,
-//       });
-//     } catch (error) {
-//       console.error("Error in getLeadStatusCounts:", error);
-//       reject(error);
-//     }
-//   });
-// },
+  //       resolve({
+  //         mainStageCounts: mainStageCountsArray,
+  //         stageCounts: stageCountsArray,
+  //         subStageCounts: subStageCountsArray,
+  //         totalLeads: allData.length,
+  //         mainStageDetails,
+  //         stageDetails,
+  //         subStageDetails,
+  //       });
+  //     } catch (error) {
+  //       console.error("Error in getLeadStatusCounts:", error);
+  //       reject(error);
+  //     }
+  //   });
+  // },
 
-getLeadStatusCounts: async (
-  sessionEmail,
-  startDate,
-  endDate,
-  filterType,
-  selectedStage,
-  showLatestSubstage = false
-) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      console.log("Lead Owner Email for Count:", sessionEmail);
-      console.log("Received startDate:", startDate);
-      console.log("Received endDate:", endDate);
-      console.log("Received filterType:", filterType);
-      console.log("Received stage:", selectedStage);
-      console.log("Show Latest Substage:", showLatestSubstage);
+  getLeadStatusCounts: async (
+    sessionEmail,
+    startDate,
+    endDate,
+    filterType,
+    selectedStage,
+    showLatestSubstage = false
+  ) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        console.log("Lead Owner Email for Count:", sessionEmail);
+        console.log("Received startDate:", startDate);
+        console.log("Received endDate:", endDate);
+        console.log("Received filterType:", filterType);
+        console.log("Received stage:", selectedStage);
+        console.log("Show Latest Substage:", showLatestSubstage);
 
-      // Parse startDate and endDate
-      const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
-      const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+        // Parse startDate and endDate
+        const start = startDate
+          ? new Date(startDate).setHours(0, 0, 0, 0)
+          : null;
+        const end = endDate
+          ? new Date(endDate).setHours(23, 59, 59, 999)
+          : null;
 
-      if ((startDate && !start) || (endDate && !end)) {
-        throw new Error("Invalid date value provided");
-      }
+        if ((startDate && !start) || (endDate && !end)) {
+          throw new Error("Invalid date value provided");
+        }
 
-      let matchCriteria = { leadOwnerName: sessionEmail };
+        let matchCriteria = { leadOwnerName: sessionEmail };
 
-      // Fetch data
-      const [googleSheetData, referralData] = await Promise.all([
-        db.get().collection(collection.GOOGLESHEETS_COLLECTION).find(matchCriteria).toArray(),
-        db.get().collection(collection.REFERRAL_COLLECTION).find(matchCriteria).toArray(),
-      ]);
+        // Fetch data
+        const [googleSheetData, referralData] = await Promise.all([
+          db
+            .get()
+            .collection(collection.GOOGLESHEETS_COLLECTION)
+            .find(matchCriteria)
+            .toArray(),
+          db
+            .get()
+            .collection(collection.REFERRAL_COLLECTION)
+            .find(matchCriteria)
+            .toArray(),
+        ]);
 
-      const allData = [...googleSheetData, ...referralData];
+        const allData = [...googleSheetData, ...referralData];
 
-      let mainStageCounts = {};
-      let stageCounts = {};
-      let subStageCounts = {};
-      let mainStageList = new Set();
+        let mainStageCounts = {};
+        let stageCounts = {};
+        let subStageCounts = {};
+        let mainStageList = new Set();
 
-      let mainStageDetails = [];
-      let stageDetails = [];
-      let subStageDetails = [];
+        let mainStageDetails = [];
+        let stageDetails = [];
+        let subStageDetails = [];
 
-      allData.forEach((doc) => {
-        console.log("Processing document:", doc);
+        allData.forEach((doc) => {
+          console.log("Processing document:", doc);
 
-        let latestMainStage = null;
-        let latestStage = null;
-        let latestSubStage = null;
-        let latestDate = null;
+          let latestMainStage = null;
+          let latestStage = null;
+          let latestSubStage = null;
+          let latestDate = null;
 
-        for (const [mainStage, stages] of Object.entries(doc.leadStatus || {})) {
-          if (!["In Progress", "Completed"].includes(mainStage)) {
-            mainStageList.add(mainStage);
-          }
-          if (filterType && filterType !== mainStage) continue;
+          for (const [mainStage, stages] of Object.entries(
+            doc.leadStatus || {}
+          )) {
+            if (!["In Progress", "Completed"].includes(mainStage)) {
+              mainStageList.add(mainStage);
+            }
+            if (filterType && filterType !== mainStage) continue;
 
-          for (const [stage, entries] of Object.entries(stages)) {
-            if (selectedStage && selectedStage !== stage) continue;
+            for (const [stage, entries] of Object.entries(stages)) {
+              if (selectedStage && selectedStage !== stage) continue;
 
-            const filteredEntries = entries.filter((entry) => {
-              const entryDate = new Date(entry.date).getTime();
-              return entryDate >= start && entryDate <= end;
-            });
+              const filteredEntries = entries.filter((entry) => {
+                const entryDate = new Date(entry.date).getTime();
+                return entryDate >= start && entryDate <= end;
+              });
 
-            console.log(`Filtered Entries for ${mainStage} - ${stage}:`, filteredEntries);
+              console.log(
+                `Filtered Entries for ${mainStage} - ${stage}:`,
+                filteredEntries
+              );
 
-            if (filteredEntries.length === 0) continue;
+              if (filteredEntries.length === 0) continue;
 
-            const latest = filteredEntries.reduce((latest, entry) => {
-              const entryDate = new Date(entry.date).getTime();
-              if (isNaN(entryDate)) {
-                console.warn("Invalid date found in entry:", entry);
-                return latest;
+              const latest = filteredEntries.reduce((latest, entry) => {
+                const entryDate = new Date(entry.date).getTime();
+                if (isNaN(entryDate)) {
+                  console.warn("Invalid date found in entry:", entry);
+                  return latest;
+                }
+                return !latest || entryDate > new Date(latest.date).getTime()
+                  ? entry
+                  : latest;
+              }, null);
+
+              console.log(`Latest Entry for ${mainStage} - ${stage}:`, latest);
+
+              if (
+                latest &&
+                (!latestDate || new Date(latest.date) > new Date(latestDate))
+              ) {
+                latestDate = latest.date;
+                latestMainStage = mainStage;
+                latestStage = stage;
+                latestSubStage = latest.subStage;
               }
-              return !latest || entryDate > new Date(latest.date).getTime()
-                ? entry
-                : latest;
-            }, null);
-
-            console.log(`Latest Entry for ${mainStage} - ${stage}:`, latest);
-
-            if (latest && (!latestDate || new Date(latest.date) > new Date(latestDate))) {
-              latestDate = latest.date;
-              latestMainStage = mainStage;
-              latestStage = stage;
-              latestSubStage = latest.subStage;
             }
           }
-        }
 
-        if (showLatestSubstage && latestDate) {
-          if (latestMainStage) {
-            mainStageCounts[latestMainStage] = (mainStageCounts[latestMainStage] || 0) + 1;
-            stageCounts[`${latestMainStage}-${latestStage}`] = (stageCounts[`${latestMainStage}-${latestStage}`] || 0) + 1;
-            subStageCounts[`${latestMainStage}-${latestStage}-${latestSubStage}`] = (subStageCounts[`${latestMainStage}-${latestStage}-${latestSubStage}`] || 0) + 1;
+          if (showLatestSubstage && latestDate) {
+            if (latestMainStage) {
+              mainStageCounts[latestMainStage] =
+                (mainStageCounts[latestMainStage] || 0) + 1;
+              stageCounts[`${latestMainStage}-${latestStage}`] =
+                (stageCounts[`${latestMainStage}-${latestStage}`] || 0) + 1;
+              subStageCounts[
+                `${latestMainStage}-${latestStage}-${latestSubStage}`
+              ] =
+                (subStageCounts[
+                  `${latestMainStage}-${latestStage}-${latestSubStage}`
+                ] || 0) + 1;
 
-            mainStageDetails.push({ mainStage: latestMainStage, doc });
-            stageDetails.push({ mainStage: latestMainStage, stage: latestStage, doc });
-            subStageDetails.push({ mainStage: latestMainStage, stage: latestStage, subStage: latestSubStage, doc });
-          }
-        }
-      });
-
-      mainStageList.forEach((mainStage) => {
-        if (!(mainStage in mainStageCounts)) {
-          mainStageCounts[mainStage] = 0;
-        }
-      });
-
-      // Sort the counts by descending order
-      const mainStageCountsArray = Array.from(mainStageList)
-        .map((mainStage) => ({
-          mainStage,
-          count: mainStageCounts[mainStage],
-        }))
-        .sort((a, b) => b.count - a.count);
-
-      const stageCountsArray = Object.keys(stageCounts)
-        .map((key) => {
-          const [mainStage, stage] = key.split("-");
-          return {
-            mainStage,
-            stage,
-            count: stageCounts[key],
-          };
-        })
-        .sort((a, b) => b.count - a.count);
-
-      const subStageCountsArray = Object.keys(subStageCounts)
-        .map((key) => {
-          const [mainStage, stage, subStage] = key.split("-");
-          return {
-            mainStage,
-            stage,
-            subStage,
-            count: subStageCounts[key],
-          };
-        })
-        .sort((a, b) => b.count - a.count);
-
-      console.log("Main Stage Counts Array:", mainStageCountsArray);
-      mainStageCountsArray.forEach(({ mainStage, count }) => {
-        console.log(`Main Stage: ${mainStage}, Count: ${count}`);
-        Object.keys(stageCounts).forEach((key) => {
-          if (key.startsWith(`${mainStage}-`)) {
-            const [, stage] = key.split("-");
-            console.log(`  Stage: ${stage}, Count: ${stageCounts[key]}`);
-            Object.keys(subStageCounts).forEach((subKey) => {
-              if (subKey.startsWith(`${mainStage}-${stage}-`)) {
-                const [, , subStage] = subKey.split("-");
-                console.log(`    Sub-Stage: ${subStage}, Count: ${subStageCounts[subKey]}`);
-              }
-            });
+              mainStageDetails.push({ mainStage: latestMainStage, doc });
+              stageDetails.push({
+                mainStage: latestMainStage,
+                stage: latestStage,
+                doc,
+              });
+              subStageDetails.push({
+                mainStage: latestMainStage,
+                stage: latestStage,
+                subStage: latestSubStage,
+                doc,
+              });
+            }
           }
         });
-      });
 
-      console.log("Total Leads:", allData.length);
+        mainStageList.forEach((mainStage) => {
+          if (!(mainStage in mainStageCounts)) {
+            mainStageCounts[mainStage] = 0;
+          }
+        });
 
-      resolve({
-        mainStageCounts: mainStageCountsArray,
-        stageCounts: stageCountsArray,
-        subStageCounts: subStageCountsArray,
-        totalLeads: allData.length,
-        mainStageDetails,
-        stageDetails,
-        subStageDetails,
-      });
-    } catch (error) {
-      console.error("Error in getLeadStatusCounts:", error);
-      reject(error);
-    }
-  });
-},
+        // Sort the counts by descending order
+        const mainStageCountsArray = Array.from(mainStageList)
+          .map((mainStage) => ({
+            mainStage,
+            count: mainStageCounts[mainStage],
+          }))
+          .sort((a, b) => b.count - a.count);
+
+        const stageCountsArray = Object.keys(stageCounts)
+          .map((key) => {
+            const [mainStage, stage] = key.split("-");
+            return {
+              mainStage,
+              stage,
+              count: stageCounts[key],
+            };
+          })
+          .sort((a, b) => b.count - a.count);
+
+        const subStageCountsArray = Object.keys(subStageCounts)
+          .map((key) => {
+            const [mainStage, stage, subStage] = key.split("-");
+            return {
+              mainStage,
+              stage,
+              subStage,
+              count: subStageCounts[key],
+            };
+          })
+          .sort((a, b) => b.count - a.count);
+
+        console.log("Main Stage Counts Array:", mainStageCountsArray);
+        mainStageCountsArray.forEach(({ mainStage, count }) => {
+          console.log(`Main Stage: ${mainStage}, Count: ${count}`);
+          Object.keys(stageCounts).forEach((key) => {
+            if (key.startsWith(`${mainStage}-`)) {
+              const [, stage] = key.split("-");
+              console.log(`  Stage: ${stage}, Count: ${stageCounts[key]}`);
+              Object.keys(subStageCounts).forEach((subKey) => {
+                if (subKey.startsWith(`${mainStage}-${stage}-`)) {
+                  const [, , subStage] = subKey.split("-");
+                  console.log(
+                    `    Sub-Stage: ${subStage}, Count: ${subStageCounts[subKey]}`
+                  );
+                }
+              });
+            }
+          });
+        });
+
+        console.log("Total Leads:", allData.length);
+
+        resolve({
+          mainStageCounts: mainStageCountsArray,
+          stageCounts: stageCountsArray,
+          subStageCounts: subStageCountsArray,
+          totalLeads: allData.length,
+          mainStageDetails,
+          stageDetails,
+          subStageDetails,
+        });
+      } catch (error) {
+        console.error("Error in getLeadStatusCounts:", error);
+        reject(error);
+      }
+    });
+  },
 
   // getLeadStatusCounts: async (
   //   sessionEmail,
@@ -2466,78 +2504,89 @@ getLeadStatusCounts: async (
     }
   },
   createAfPartner: async (formData) => {
-   try {
-    const database = db.get(); // Get the database connection
-    const partnersCollection = database.collection(collection.AFFILIATE_COLLECTION);
+    try {
+      const database = db.get(); // Get the database connection
+      const partnersCollection = database.collection(
+        collection.AFFILIATE_COLLECTION
+      );
 
-    // Generate the base institute ID
-    const namePart = formData.name.split(" ").join("").substring(0, 4).toUpperCase();
-    const baseInstituteId = `IEHAP-${namePart}`;
+      // Generate the base institute ID
+      const namePart = formData.name
+        .split(" ")
+        .join("")
+        .substring(0, 4)
+        .toUpperCase();
+      const baseInstituteId = `IEHAP-${namePart}`;
 
-    // Find the latest institute ID with the same base
-    const latestPartner = await partnersCollection
-      .find({ instituteid: { $regex: `^${baseInstituteId}-\\d{5}$` } })
-      .sort({ instituteid: -1 })
-      .limit(1)
-      .toArray();
+      // Find the latest institute ID with the same base
+      const latestPartner = await partnersCollection
+        .find({ instituteid: { $regex: `^${baseInstituteId}-\\d{5}$` } })
+        .sort({ instituteid: -1 })
+        .limit(1)
+        .toArray();
 
-    let nextInstituteId;
-    if (latestPartner.length > 0) {
-      // Extract the number part and increment it
-      const latestNumber = parseInt(latestPartner[0].instituteid.split("-").pop(), 10);
-      nextInstituteId = `${baseInstituteId}-${(latestNumber + 1).toString().padStart(5, "0")}`;
-    } else {
-      // Start with the first number 00313 if no previous IDs are found
-      nextInstituteId = `${baseInstituteId}-00313`;
-    }
-
-    // Check if the email or institute ID already exists
-    const existingPartner = await partnersCollection.findOne({
-      $or: [{ email: formData.email }, { instituteid: nextInstituteId }],
-    });
-
-    if (existingPartner) {
-      if (existingPartner.email === formData.email) {
-        return { success: false, message: "Email already exists" };
+      let nextInstituteId;
+      if (latestPartner.length > 0) {
+        // Extract the number part and increment it
+        const latestNumber = parseInt(
+          latestPartner[0].instituteid.split("-").pop(),
+          10
+        );
+        nextInstituteId = `${baseInstituteId}-${(latestNumber + 1)
+          .toString()
+          .padStart(5, "0")}`;
+      } else {
+        // Start with the first number 00313 if no previous IDs are found
+        nextInstituteId = `${baseInstituteId}-00313`;
       }
-      if (existingPartner.instituteid === nextInstituteId) {
-        return { success: false, message: "Institute ID already exists" };
+
+      // Check if the email or institute ID already exists
+      const existingPartner = await partnersCollection.findOne({
+        $or: [{ email: formData.email }, { instituteid: nextInstituteId }],
+      });
+
+      if (existingPartner) {
+        if (existingPartner.email === formData.email) {
+          return { success: false, message: "Email already exists" };
+        }
+        if (existingPartner.instituteid === nextInstituteId) {
+          return { success: false, message: "Institute ID already exists" };
+        }
       }
+
+      // Hash the password before storing it
+      const hashedPassword = await bcrypt.hash(formData.password, 10);
+
+      // Create a new partner document with the updated fields
+      const newPartner = {
+        name: formData.name,
+        email: formData.email,
+        mobNumber: formData.mobile_number, // Corrected field name
+        workingStatus: formData.working_status, // Corrected field name
+        position: formData.position,
+        presentCompany: formData.present_company, // Corrected field name
+        state: formData.state,
+        city: formData.city,
+        password: hashedPassword, // Store the hashed password
+        instituteid: nextInstituteId, // Use the generated institute ID
+      };
+
+      // Insert the new partner document into the collection
+      const result = await partnersCollection.insertOne(newPartner);
+
+      console.log("New Partner Created:", result);
+      return {
+        success: true,
+        message: "Partner created successfully",
+        data: result.insertedId,
+      };
+    } catch (error) {
+      console.error("Error creating partner:", error);
+      return {
+        success: false,
+        message: "Internal Server Error: " + error.message,
+      };
     }
-
-    // Hash the password before storing it
-    const hashedPassword = await bcrypt.hash(formData.password, 10);
-
-    // Create a new partner document with the updated fields
-    const newPartner = {
-      name: formData.name,
-      email: formData.email,
-      mobNumber: formData.mobile_number, // Corrected field name
-      workingStatus: formData.working_status, // Corrected field name
-      position: formData.position,
-      presentCompany: formData.present_company, // Corrected field name
-      state: formData.state,
-      city: formData.city,
-      password: hashedPassword, // Store the hashed password
-      instituteid: nextInstituteId, // Use the generated institute ID
-    };
-
-    // Insert the new partner document into the collection
-    const result = await partnersCollection.insertOne(newPartner);
-
-    console.log("New Partner Created:", result);
-    return {
-      success: true,
-      message: "Partner created successfully",
-      data: result.insertedId,
-    };
-  } catch (error) {
-    console.error("Error creating partner:", error);
-    return {
-      success: false,
-      message: "Internal Server Error: " + error.message,
-    };
-  }
   },
   sendOtp: async (email, otpStore) => {
     try {
@@ -2959,6 +3008,31 @@ getLeadStatusCounts: async (
       callback(null, error.message);
     }
   },
+  saveAllClientDetails: async (allData) => {
+    try {
+      const insertPromises = allData.map(async (client) => {
+        // Optionally, hash passwords if they exist
+        if (client.password) {
+          client.password = await bcrypt.hash(client.password, saltRounds);
+        }
+
+        // Insert the client data into the database
+        return db
+          .get()
+          .collection(collection.CLIENT_COLLECTION)
+          .insertOne(client);
+      });
+
+      // Wait for all insertions to complete
+      const result = await Promise.all(insertPromises);
+
+      return result;
+    } catch (error) {
+      console.error("Error saving all client details:", error);
+      throw new Error("Error saving all client details");
+    }
+  },
+
   updateClientDetails: async (id, updates) => {
     try {
       // Hash the password if it exists

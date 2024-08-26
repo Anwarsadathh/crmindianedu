@@ -315,7 +315,7 @@
 
     <div class="table-responsive">
     <table class="table table-responsive table-borderless" id="dataTable">
-        
+        <button id="saveButton" class="btn btn-primary">Save Changes</button>
       <thead>
         <tr class="bg-light">
           <th>No.</th>
@@ -758,9 +758,7 @@ function sendMessages() {
 
 <!-- Include SweetAlert2 for alerts -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script>
-
 $(document).ready(function () {
     // Attach the toggleDateVisibility function to the change event of the refund status dropdowns
     $('#dataTable').on('change', 'select', function () {
@@ -772,54 +770,45 @@ $(document).ready(function () {
     $('#dataTable tbody tr').each(function () {
         toggleDateVisibility($(this));
     });
-});
 
+    // Attach the saveData function to the save button
+    $('#saveButton').on('click', function () {
+        saveData();
+    });
+});
 
 function toggleInitialRegistration(button) {
     const currentStatus = $(button).text().trim();
-
-    // Determine the new status and button class
     const newStatus = currentStatus === '✔' ? 'Incorrect' : 'Correct';
     const newClass = currentStatus === '✔' ? 'btn-incorrect' : 'btn-correct';
     const newText = newStatus === 'Correct' ? '✔' : '✘';
 
-    // Update the button text and class
     $(button).text(newText)
         .removeClass('btn-correct btn-incorrect')
         .addClass(newClass);
 
-    // Optionally, update the row data or make an AJAX call to save the change
     const row = $(button).closest('tr');
     const rowData = getRowData(row);
-
-    // Example: Update the rowData object if needed
     rowData.initialRegistration = newStatus;
-    
-    console.log('Row Data:', rowData); // Log rowData to check if it contains the correct data
 
-    // You can add further logic here if needed, such as sending data to a server
+    console.log('Row Data:', rowData);
 }
 
-
 function toggleDateVisibility(row) {
-    // Get refund statuses from the row
     const status = {
-        unirefund: row.find('td').eq(22).find('select').val(),  // Uni Refund Initiated status
-        iehrefund: row.find('td').eq(24).find('select').val()    // IEH Refund Initiated status
+        unirefund: row.find('td').eq(22).find('select').val(),
+        iehrefund: row.find('td').eq(24).find('select').val()
     };
 
-    // Show/Hide date inputs based on refund statuses
-    const uniDateInput = row.find('td').eq(23).find('input');    // Date of Uni Refund Initiated
-    const iehDateInput = row.find('td').eq(25).find('input');    // Date of IEH Refund Initiated
+    const uniDateInput = row.find('td').eq(23).find('input');
+    const iehDateInput = row.find('td').eq(25).find('input');
 
     uniDateInput.toggleClass('d-none', status.unirefund !== 'success');
     iehDateInput.toggleClass('d-none', status.iehrefund !== 'success');
 
-    // Add required attribute if the status is 'success'
     uniDateInput.prop('required', status.unirefund === 'success');
     iehDateInput.prop('required', status.iehrefund === 'success');
 }
-
 
 function toggleStatus(button, type) {
     const currentText = $(button).text().trim();
@@ -882,36 +871,24 @@ function getRowData(row) {
         batch: row.find('td').eq(30).find('select').val() || '',
         enrollmentNo: row.find('td').eq(31).find('input').val() || '',
         idApproved: row.find('td').eq(32).find('button').text().trim(),
-        action: row.find('td').eq(33).find('button').text().trim()  // Assuming the last column is for actions
+        action: row.find('td').eq(33).find('button').text().trim()
     };
 }
-
 
 function toggleAssignment(button) {
     const row = $(button).closest('tr');
     const rowData = getRowData(row);
 
-    // Determine the new assignment status and button class
     const isAssigned = $(button).text().trim() === 'Assigned to accounts department';
     const newAssignStatus = isAssigned ? 'Assign to accounts department' : 'Assigned to accounts department';
     const newButtonClass = isAssigned ? 'btn-not-paid' : 'btn-paid';
 
-    console.log('Current Text:', $(button).text().trim()); // Log current button text
-    console.log('New Status:', newAssignStatus); // Log new status
-    console.log('New Button Class:', newButtonClass); // Log new button class
-
-    // Update the button text and class
     $(button).text(newAssignStatus)
         .removeClass('btn-paid btn-not-paid')
         .addClass(newButtonClass);
 
-    // Update the rowData object
     rowData.assignaccounts = newAssignStatus;
 
-    // Log rowData to check if it contains the correct data
-    console.log('Row Data:', rowData);
-
-    // Send the updated data to the server
     $.post('/update-client-details', rowData)
         .done(() => {
             Swal.fire({
@@ -931,8 +908,6 @@ function toggleAssignment(button) {
         });
 }
 
-
-
 function handleIdApproval(row, rowData, newStatus) {
     if (newStatus === 'Approved') {
         Swal.fire({
@@ -947,8 +922,6 @@ function handleIdApproval(row, rowData, newStatus) {
         }).then((result) => {
             if (result.isConfirmed) {
                 const missingFields = validateFields(rowData);
-                console.log('Row Data:', rowData); // Log row data
-                console.log('Missing Fields:', missingFields); // Log missing fields
 
                 if (missingFields.length) {
                     Swal.fire({
@@ -960,7 +933,6 @@ function handleIdApproval(row, rowData, newStatus) {
                     return;
                 }
 
-                // Create a random password
                 const randomPassword = Math.random().toString(36).slice(-8);
                 rowData.password = randomPassword;
                 rowData.idApproved = 'Approved';
@@ -997,11 +969,12 @@ function handleIdApproval(row, rowData, newStatus) {
         }).then((result) => {
             if (result.isConfirmed) {
                 rowData.idApproved = 'Not Approved';
+
                 $.post('/update-client-details', rowData)
                     .done(() => {
                         Swal.fire({
                             title: 'Success!',
-                            text: 'Student blocked. ID has been removed successfully.',
+                            text: 'ID has been removed successfully.',
                             icon: 'success',
                             confirmButtonText: 'OK'
                         });
@@ -1018,47 +991,70 @@ function handleIdApproval(row, rowData, newStatus) {
         });
     }
 }
-function validateFields(rowData) {
+
+function validateFields(data) {
     const requiredFields = [
-        { name: 'Student Name', field: rowData.name },
-        { name: 'Course', field: rowData.course },
-        { name: 'Specialization', field: rowData.specialization },
-        { name: 'Email', field: rowData.email },
-        { name: 'Mobile Number', field: rowData.mobile },
-        { name: 'State', field: rowData.state },
-        { name: 'City', field: rowData.city },
-        { name: 'Role', field: rowData.role },
-        { name: 'Specific Name', field: rowData.specificName },
-        { name: 'Service Pack', field: rowData.servicePack },
-        { name: 'Intake', field: rowData.intake },
-        { name: 'University', field: rowData.university },
-        { name: 'Semester Status', field: rowData.semesterStatus },
-        { name: 'Mentorship Status', field: rowData.mentorshipStatus },
-        { name: 'University Paid', field: rowData.universityPaid },
-        { name: 'University Paid Date', field: rowData.universityPaidDate },
-        { name: 'Document Status', field: rowData.documentStatus },
-        { name: 'Batch', field: rowData.batch },
-        { name: 'Enrollment No', field: rowData.enrollmentNo },
-        { name: 'Student ID', field: rowData.studentid },
-        { name: 'Date', field: rowData.date },
-        { name: 'Mentor', field: rowData.mentor },
-        { name: 'Fee Paid', field: rowData.feepaid },
-        { name: 'Fee Paid Amount', field: rowData.feePaidAmount },
-        { name: 'Scholarship', field: rowData.scholarship }
+        'id',
+        'date',
+        'studentid',
+        'mentor',
+        'name',
+        'course',
+        'specialization',
+        'email',
+        'mobile',
+        'state',
+        'city',
+        'role',
+        'specificName',
+        'servicePack',
+        'intake',
+        'mentorshipStatus',
+        'university',
+        'initialRegistration',
+        'universityPaid',
+        'universityPaidDate',
+        'documentStatus',
+        'unirefundinitiated',
+        'dateOfRefundInitiateduni',
+        'iehrefundinitiated',
+        'dateOfRefundInitiatedieh',
+        'scholarship',
+        'feepaid',
+        'feePaidAmount',
+        'semesterStatus',
+        'batch',
+        'enrollmentNo',
+        'idApproved',
+        'action'
     ];
 
-    // Include the new required fields if the status is 'success'
-    if (rowData.unirefundinitiated === 'success') {
-        requiredFields.push({ name: 'Date of Refund Initiated (Uni)', field: rowData.dateOfRefundInitiateduni });
-    }
-    if (rowData.iehrefundinitiated === 'success') {
-        requiredFields.push({ name: 'Date of Refund Initiated (IEH)', field: rowData.dateOfRefundInitiatedieh });
-    }
+    return requiredFields.filter(field => !data[field]);
+}
 
-    return requiredFields.filter(field => !field.field || field.field.trim() === '').map(field => field.name);
+function saveData() {
+    $('#dataTable tbody tr').each(function() {
+        const rowData = getRowData($(this));
+        $.post('/update-client-details', rowData)
+            .done(() => {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'All changes have been saved successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            })
+            .fail(() => {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Save failed. Please try again.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            });
+    });
 }
 </script>
-
 
  
   <!-- Additional JavaScript Libraries -->

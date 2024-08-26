@@ -1368,8 +1368,11 @@ router.get("/mentor-dashboard", async function (req, res, next) {
 
 
 
+
 router.post("/update-client-details", async (req, res) => {
   try {
+    console.log("Received data:", req.body);
+
     const {
       id,
       date,
@@ -1467,14 +1470,14 @@ router.post("/update-client-details", async (req, res) => {
     if (!id) {
       return res.status(400).json({ message: "Client ID is required" });
     }
-
     const result = await serviceHelpers.updateClientDetails(id, updateFields);
 
     // Send a success response with the result
     res.json(result);
   } catch (error) {
-    // Send an error response with the error message
-    res.status(500).json({ message: error.message });
+console.error(error);
+res.status(500).json({ message: error.message });
+
   }
 });
 
