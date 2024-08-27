@@ -77,11 +77,17 @@ const hbs = exphbs.create({
       return value;
     },
     shouldShowFollowUp: function (leadStage) {
-      const stagesWithoutFollowUp = ["HQL", "UQL", "Not Interested", "Just Enquiry", "Regular"];
+      const stagesWithoutFollowUp = [
+        "HQL",
+        "UQL",
+        "Not Interested",
+        "Just Enquiry",
+        "Regular",
+      ];
       return !stagesWithoutFollowUp.includes(leadStage);
     },
     keyValue: function (obj) {
-  return Object.keys(obj).map(key => ({ key, value: obj[key] }));
+      return Object.keys(obj).map((key) => ({ key, value: obj[key] }));
     },
     unlessEqual: function (value1, value2, options) {
       if (value1 !== value2) {
@@ -89,7 +95,11 @@ const hbs = exphbs.create({
       } else {
         return options.inverse(this);
       }
-    }
+    },
+    // Add the reverse helper function here
+    reverse: function (array) {
+      return array.slice().reverse();
+    },
   },
 });
 

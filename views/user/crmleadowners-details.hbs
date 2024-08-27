@@ -131,7 +131,7 @@ select,textarea{
 .table-wrapper {
     position: relative; /* To contain the sticky header */
     overflow: auto; /* Allows the table body to scroll */
-    height: 500px; /* Set a height for the scrolling area */
+    height: 400px; /* Set a height for the scrolling area */
 }
 
 /* Ensure the table takes the full width of its container */
@@ -218,6 +218,9 @@ select,textarea{
     float: right;
     margin-top: 10px; /* Add margin above the pagination controls */
 
+}
+.btn-glass:hover{
+    background-color: #007bff !important;
 }
 </style>
 
@@ -318,6 +321,37 @@ select,textarea{
         <div class="col-12">
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">Leads</h6>
+
+                <!-- Filter Section -->
+                <div class="filter-card glassmorphism p-4 shadow-lg d-flex">
+                    <div class="floating-label-wrapper ms-3">
+                        <label for="filterDateRange" class="floating-label">Date Range</label>
+                        <input type="text" id="filterDateRange" class="form-control shadow-sm circular-input" placeholder="Select Date Range">
+                    </div>
+
+                    <div class="floating-label-wrapper ms-3">
+                        <label for="filterState" class="floating-label">State</label>
+                        <input type="text" id="filterState" class="form-control shadow-sm circular-input" placeholder="Enter State">
+                    </div>
+
+                    <div class="floating-label-wrapper ms-3">
+                        <label for="filterCity" class="floating-label">City</label>
+                        <input type="text" id="filterCity" class="form-control shadow-sm circular-input" placeholder="Enter City">
+                    </div>
+
+                    <button id="applyFiltersBtn" class="btn btn-glass shadow-sm circular-btn ms-3">
+                        <i class="bi bi-filter-circle"></i> 
+                    </button>
+
+                    <button id="clearFiltersBtn" class="btn btn-danger shadow-sm circular-btn ms-3">
+                        <i class="fas fa-times-circle"></i> 
+                    </button>
+                </div>
+
+             
+
+
+
                 <!-- Update Button -->
            <div class="table-responsive">
  <div class="table-wrapper ">
@@ -369,6 +403,7 @@ select,textarea{
                             {{#each googlesheets}}
                             <tr>
                                 <td hidden>{{this._id}}</td>
+                              {{!-- <td>{{this.assignDate}} - {{this.id}}</td> --}}
                                 <td>{{this.id}}</td>
                                 <td>{{this.timeStamp}}</td>
                                 <td>{{this.source}}</td>
@@ -1174,26 +1209,65 @@ async function saveLeadStatus(button) {
     <!-- Add necessary JS files -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+ <script>
     $(document).ready(function() {
-    $('#dataTable').DataTable();
-
-    // Change header background on scroll
-    $(window).scroll(function() {
-        if ($(this).scrollTop() > 50) {
-            $('header').addClass('scrolled');
-        } else {
-            $('header').removeClass('scrolled');
-        }
+        // Initialize DataTable
+       const table = $('#dataTable').DataTable({
+        pageLength: 100,
+        lengthMenu: [[100, 25, 10, -1], [100, 25, 10, "All"]],
+        order: [[2, 'desc']] // Adjust column index if needed
     });
-});
 
+
+        // Initialize Flatpickr for date ranges
+        flatpickr("#filterDateRange", {
+            mode: "range",
+            dateFormat: "Y-m-d"
+        });
+
+        // Apply Filters Button Event Listener
+        $('#applyFiltersBtn').on('click', function() {
+            const state = $('#filterState').val().toLowerCase();
+            const city = $('#filterCity').val().toLowerCase();
+            const dateRange = $('#filterDateRange').val();
+
+            const [startDate, endDate] = dateRange.split(' to ').map(date => new Date(date));
+
+            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                const rowState = data[4].toLowerCase(); // Column index for State
+                const rowCity = data[13].toLowerCase(); // Column index for City
+                const rowDate = new Date(data[2]); // Column index for Date
+
+                // Apply filters
+                const isStateMatch = state ? rowState.includes(state) : true;
+                const isCityMatch = city ? rowCity.includes(city) : true;
+                const isDateMatch = (startDate && endDate) ? (rowDate >= startDate && rowDate <= endDate) : true;
+
+                return isStateMatch && isCityMatch && isDateMatch;
+            });
+
+            // Redraw the table to reflect changes
+            table.draw();
+        });
+
+        // Clear Filters Button Event Listener
+        $('#clearFiltersBtn').on('click', function() {
+            $('#filterState').val('');
+            $('#filterCity').val('');
+            $('#filterDateRange').val('');
+
+            $.fn.dataTable.ext.search.pop();
+            table.draw();
+        });
+    });
 </script>
 
-
-
-
- 
   <!-- Additional JavaScript Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="lib/chart/chart.min.js"></script>

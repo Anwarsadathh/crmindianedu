@@ -863,13 +863,22 @@ router.get("/crm-lead-owner-details", async (req, res) => {
       (item) => item.leadOwnerName === leadOwnerName && item.assignLead !== null
     );
 
-    // Log the filtered data to the console (for debugging purposes)
-    console.log(filteredData);
+    // Sort the filtered data by assignDate in descending order (latest date first)
+    const sortedData = filteredData.sort((a, b) => {
+      const dateA = new Date(a.assignDate);
+      const dateB = new Date(b.assignDate);
+      return dateB - dateA; // Descending order: latest date first
+    });
 
-    // Render the view with the filtered data and session user details
+    // Log the sorted data to verify the order
+    sortedData.forEach((item, index) => {
+      console.log(`Sorted Data Item ${index + 1}:`, item.assignDate);
+    });
+
+    // Render the view with the sorted data and session user details
     res.render("user/crmleadowners-details", {
       admin: true,
-      googlesheets: filteredData,
+      googlesheets: sortedData, // Use the sorted data
       leadOwners,
       leadStage: uniqueLeadStages, // Use the unique stages
       userEmail: req.session.user.email,
@@ -880,6 +889,9 @@ router.get("/crm-lead-owner-details", async (req, res) => {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 });
+
+
+
 
 
 
