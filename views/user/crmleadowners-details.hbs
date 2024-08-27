@@ -899,7 +899,7 @@ function redirectToSEForm(button) {
     const row = button.closest('tr');
      const name = row.querySelector('td:nth-child(6)').textContent.trim();
     const email = row.querySelector('td:nth-child(18)').textContent.trim();
-    const mobile = row.querySelector('td:nth-child(8)').textContent.trim();
+    const whatsapp = row.querySelector('td:nth-child(7)').textContent.trim();
     const course = row.querySelector('td:nth-child(15)').textContent.trim();
     const specialization = row.querySelector('td:nth-child(26)').textContent.trim();
     const city = row.querySelector('td:nth-child(14)').textContent.trim();
@@ -910,7 +910,7 @@ function redirectToSEForm(button) {
     const url = new URL('/se-form', window.location.origin);
     url.searchParams.append('name', encodeURIComponent(name));
     url.searchParams.append('email', encodeURIComponent(email));
-    url.searchParams.append('mobile', encodeURIComponent(mobile));
+    url.searchParams.append('whatsapp', encodeURIComponent(whatsapp));
     url.searchParams.append('course', encodeURIComponent(course));
     url.searchParams.append('specialization', encodeURIComponent(specialization));
     url.searchParams.append('city', encodeURIComponent(city)); // Add city

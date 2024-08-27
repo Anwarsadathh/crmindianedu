@@ -996,13 +996,12 @@ document.getElementById('updateButton').addEventListener('click', function() {
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 <script>
-  $(document).ready(function() {
+$(document).ready(function() {
     // Initialize DataTable
-const table = $('#dataTable').DataTable({
+    const table = $('#dataTable').DataTable({
         pageLength: 100, // Show 100 entries by default
         lengthMenu: [[100, 25, 10], [100, 25, 10]] // Options for 100, 25, and 10 entries per page
     });
-
 
     // Initialize Flatpickr for date ranges
     flatpickr("#timeStampRange", {
@@ -1016,7 +1015,7 @@ const table = $('#dataTable').DataTable({
 
     // Filter Button Event Listener
     document.getElementById('filterBtn').addEventListener('click', function() {
-        const leadOwner = document.getElementById('leadOwner').value;
+        const leadOwner = document.getElementById('leadOwner').value.toLowerCase();
         const timeStampRange = document.getElementById('timeStampRange').value;
         const assignDateRange = document.getElementById('assignDateRange').value;
         const state = document.getElementById('state').value.toLowerCase();
@@ -1053,7 +1052,7 @@ const table = $('#dataTable').DataTable({
 
         // Add custom filter
         $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-            const rowLeadOwner = $(table.row(dataIndex).node()).find('.lead-owner-select').val().toLowerCase();
+            const rowLeadOwner = $(table.row(dataIndex).node()).find('span').text().toLowerCase();
             const rowState = data[7].toLowerCase(); // Column index for State
             const rowCity = data[16].toLowerCase(); // Column index for City
             const rowCourse = data[17].toLowerCase(); // Column index for Course
@@ -1065,7 +1064,7 @@ const table = $('#dataTable').DataTable({
             // Apply filters
             let showRow = true;
 
-            if (leadOwner && rowLeadOwner !== leadOwner.toLowerCase()) showRow = false;
+            if (leadOwner && rowLeadOwner !== leadOwner) showRow = false;
             if (state && rowState !== state) showRow = false;
             if (city && rowCity !== city) showRow = false;
             if (course && rowCourse !== course) showRow = false;
