@@ -1417,7 +1417,7 @@ router.post("/update-client-details", async (req, res) => {
     if (name !== undefined) updateFields.name = name;
     if (scholarship !== undefined) updateFields.scholarship = scholarship;
     if (state !== undefined) updateFields.state = state;
-     if (city !== undefined) updateFields.city = city;
+    if (city !== undefined) updateFields.city = city;
     if (course !== undefined) updateFields.course = course;
     if (unirefundinitiated !== undefined)
       updateFields.unirefundinitiated = unirefundinitiated;
@@ -1464,20 +1464,64 @@ router.post("/update-client-details", async (req, res) => {
       updateFields.assignaccounts =
         assignaccounts === "null" ? null : assignaccounts;
     if (password !== undefined) updateFields.password = password;
- if (initialRegistration  !== undefined)
-      updateFields.initialRegistration  = initialRegistration  === "null" ? null : initialRegistration ;
+    if (initialRegistration !== undefined)
+      updateFields.initialRegistration =
+        initialRegistration === "null" ? null : initialRegistration;
     // Ensure the id is provided and valid
     if (!id) {
       return res.status(400).json({ message: "Client ID is required" });
     }
     const result = await serviceHelpers.updateClientDetails(id, updateFields);
 
+    // Send an email if the ID is approved
+    if (idApproved === "Approved" && password) {
+      const transporter = nodemailer.createTransport({
+        service: "gmail", // or your email service provider
+        auth: {
+          user: "clientsupport@indianeduhub.com",
+          pass: "xeep ypij nhqg ilcd",
+        },
+      });
+
+   const mailOptions = {
+     from: "clientsupport@indianeduhub.com",
+     to: email,
+     subject: "Your ID Approval and Login Details",
+     html: `
+    <p>Dear ${name},</p>
+    <p>Your ID has been approved. Below are your login details:</p>
+    <table style="border-collapse: collapse; width: 100%;">
+      <tr>
+        <th style="border: 1px solid #dddddd; text-align: left; padding: 8px;">Email</th>
+        <td style="border: 1px solid #dddddd; text-align: left; padding: 8px;">${email}</td>
+      </tr>
+      <tr>
+        <th style="border: 1px solid #dddddd; text-align: left; padding: 8px;">Password</th>
+        <td style="border: 1px solid #dddddd; text-align: left; padding: 8px;">${password}</td>
+      </tr>
+    </table>
+    <p>You can log in using the following link:</p>
+    <p><a href="https://crm.indianeduhub.in/students-login" style="color: #007bff;">https://crm.indianeduhub.in/students-login</a></p>
+    <p>Please keep this information secure.</p>
+    <p>Best regards,<br>IndianEduHub</p>
+  `,
+   };
+
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log("Error sending email:", error);
+        } else {
+          console.log("Email sent:", info.response);
+        }
+      });
+    }
+
     // Send a success response with the result
     res.json(result);
   } catch (error) {
-console.error(error);
-res.status(500).json({ message: error.message });
-
+    console.error(error);
+    res.status(500).json({ message: error.message });
   }
 });
 
