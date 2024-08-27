@@ -464,9 +464,7 @@ background-color: #1c008b !important;
                    
                     <th style="width: 20px !important;">No.</th>
                     <th hidden>d</th>
-                     {{!-- <th>Action</th> --}}
-                   
-                    {{!-- <th>ID</th> --}}
+                    
                     <th>Time Stamp</th>
                     <th hidden>Assign date</th>
                       <th >Source</th>
@@ -478,28 +476,7 @@ background-color: #1c008b !important;
                      <th style="width: 60px !important;">City</th>
                      <th>Lead Owners</th>
                     <th style="width: 50px !important;">Status</th>
-                    {{!-- <th>WhatsApp</th>
-                    <th>Mobile</th> --}}
-                    {{!-- <th>Uni 1</th>
-                    <th>Uni 2</th>
-                    <th>Uni 3</th>
-                    <th>Uni 4</th>
-                    <th>Budget</th> --}}
                  
-                    {{!-- <th>Current Salary</th>
-                    <th>Description</th> --}}
-                    {{!-- <th>Email</th> --}}
-                    {{!-- <th>Employee Location</th>
-                    <th>Expected Salary</th>
-                    <th>Experience</th>
-                    <th>Exposure</th>
-                    <th>Previous Qualification</th>
-                    <th>Previous University</th>
-                    <th>Sector</th>
-                    <th>Specialization</th>
-                    <th>Role</th>
-                    <th>PDF Link</th>
-                    <th>Password</th> --}}
                      <th style="width: 40px !important;"><input type="checkbox" id="selectAll"> Select All</th> <!-- Select All Checkbox -->
                 </tr>
             </thead>
@@ -509,12 +486,7 @@ background-color: #1c008b !important;
                     
                     <td style="width: 20px !important;"><strong>{{incrementIndex @index}}</strong></td>
                     <td class="font-weight-bold" data-id="{{this._id}}" data-source="{{this.source}}" hidden>{{this._id}}</td>
-                       {{!-- <td>
-                        <button class="btn btn-status {{#if (eq this.assignLead "assigned")}}btn-paid{{else}}btn-not-paid{{/if}}" 
-                                onclick="toggleAssignment(this)" >
-                            {{#if (eq this.assignLead "assigned")}}Assigned{{else}}Not Assign{{/if}}
-                        </button>
-                    </td> --}}
+                   
           <td>{{this.timeStamp}}</td>
                     <td hidden>{{this.assignDate}}</td>
                     <td>{{#if this.source}}{{this.source}}{{else}}N/A{{/if}}</td>
@@ -533,30 +505,7 @@ background-color: #1c008b !important;
             </div>
         </td>
                    
-                    {{!-- <td class="font-weight-bold">{{this.id}}</td> --}}
-                  
-                    
-                    {{!-- <td>{{this.whatsapp}}</td>
-                    <td>{{this.mobile}}</td>
-                    <td>{{this.uni1}}</td>
-                    <td>{{this.uni2}}</td>
-                    <td>{{this.uni3}}</td>
-                    <td>{{this.uni4}}</td>
-                    <td>{{this.budget}}</td> --}}
-                    {{!-- <td>{{this.currSalary}}</td>
-                    <td>{{this.description}}</td>
-                    <td>{{this.email}}</td>
-                    <td>{{this.empLocation}}</td>
-                    <td>{{this.expSalary}}</td>
-                    <td>{{this.experience}}</td>
-                    <td>{{this.exposure}}</td>
-                    <td>{{this.prevQualification}}</td>
-                    <td>{{this.prevUniversity}}</td>
-                    <td>{{this.sector}}</td>
-                    <td>{{this.specialization}}</td>
-                    <td>{{this.role}}</td>
-                    <td><a href="{{this.pdfLink}}" target="_blank">Link</a></td>
-                    <td>{{this.password}}</td> --}}
+                   
                  <td style="width: 40px !important;"><input type="checkbox" class="select-lead" data-id="{{this._id}}" data-source="{{this.source}}"></td>
                 </tr>
                 {{/each}}
@@ -573,8 +522,119 @@ background-color: #1c008b !important;
     </div>
 </div>
 
+{{!-- 
+<div class="table-responsive">
+ <div class="table-wrapper ">
+    <table class="table" id="dataTable">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="selectAll"> Select All</th> <!-- Select All Checkbox -->
+                    <th>No.</th>
+                    <th hidden>d</th>
+                     <th>Action</th>
+                    <th>Lead Owners</th>
+                    <th>Lead Stage & Status</th>
+                    <th>ID</th>
+                    <th>Time Stamp</th>
+                    <th hidden>Assign date</th>
+                    <th>ReferredBy</th>
+                    <th>Source</th>
+                    <th>State</th>
+                    <th>Name</th>
+                    <th>WhatsApp</th>
+                    <th>Mobile</th>
+                    <th>Uni 1</th>
+                    <th>Uni 2</th>
+                    <th>Uni 3</th>
+                    <th>Uni 4</th>
+                    <th>Budget</th>
+                    <th>City</th>
+                    <th>Course</th>
+                    <th>Current Salary</th>
+                    <th>Description</th>
+                    <th>Email</th>
+                    <th>Employee Location</th>
+                    <th>Expected Salary</th>
+                    <th>Experience</th>
+                    <th>Exposure</th>
+                    <th>Previous Qualification</th>
+                    <th>Previous University</th>
+                    <th>Sector</th>
+                    <th>Specialization</th>
+                    <th>Role</th>
+                    <th>PDF Link</th>
+                    <th>Password</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {{#each googlesheets}}
+                <tr>
+                    <td><input type="checkbox" class="select-lead" data-id="{{this._id}}" data-source="{{this.source}}"></td>
+                    <td><strong>{{incrementIndex @index}}</strong></td>
+                    <td class="font-weight-bold" data-id="{{this._id}}" data-source="{{this.source}}" hidden>{{this._id}}</td>
+                       <td>
+                        <button class="btn btn-status {{#if (eq this.assignLead "assigned")}}btn-paid{{else}}btn-not-paid{{/if}}" 
+                                onclick="toggleAssignment(this)" >
+                            {{#if (eq this.assignLead "assigned")}}Assigned{{else}}Not Assign{{/if}}
+                        </button>
+                    </td>
+                     <td>
+    <span>{{this.leadOwnerName}}</span>
+</td>
 
+                     <td>
+            <button class="btn btn-info ms-2 show-lead-status-btn" style="font-size: 10px !important;" data-bs-toggle="modal" data-bs-target="#leadStatusModal" onclick="showLeadStatus(this)">Status</button>
+            <div class="leadStatusContent" style="display:none;">
+                {{json this.leadStatus}}
+            </div>
+        </td>
+                   
+                    <td class="font-weight-bold">{{this.id}}</td>
+                    <td>{{this.timeStamp}}</td>
+                    <td hidden>{{this.assignDate}}</td>
+                    <td>{{this.ReferredBy}}</td>
+                    <td>{{#if this.source}}{{this.source}}{{else}}N/A{{/if}}</td>
+                    <td>{{this.state}}</td>
+                    <td>{{this.name}}</td>
+                    <td>{{this.whatsapp}}</td>
+                    <td>{{this.mobile}}</td>
+                    <td>{{this.uni1}}</td>
+                    <td>{{this.uni2}}</td>
+                    <td>{{this.uni3}}</td>
+                    <td>{{this.uni4}}</td>
+                    <td>{{this.budget}}</td>
+                    <td>{{this.city}}</td>
+                    <td>{{this.course}}</td>
+                    <td>{{this.currSalary}}</td>
+                    <td>{{this.description}}</td>
+                    <td>{{this.email}}</td>
+                    <td>{{this.empLocation}}</td>
+                    <td>{{this.expSalary}}</td>
+                    <td>{{this.experience}}</td>
+                    <td>{{this.exposure}}</td>
+                    <td>{{this.prevQualification}}</td>
+                    <td>{{this.prevUniversity}}</td>
+                    <td>{{this.sector}}</td>
+                    <td>{{this.specialization}}</td>
+                    <td>{{this.role}}</td>
+                    <td><a href="{{this.pdfLink}}" target="_blank">Link</a></td>
+                    <td>{{this.password}}</td>
+                 
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+    </div>
+    <div class="alert alert-warning my-3" role="alert" id="alertMessage">
+    If you have already assigned, do not reassign. It will delete the old status of that student.
+</div>
 
+            </div>
+        </div>
+    </div>
+</div> --}}
 <!-- Modal -->
 <div class="modal fade" id="leadStatusModal" tabindex="-1" aria-labelledby="leadStatusModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -1057,13 +1117,29 @@ $(document).ready(function() {
         // Add custom filter
         $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
             const rowLeadOwner = $(table.row(dataIndex).node()).find('span').text().toLowerCase();
-            const rowState = data[7].toLowerCase(); // Column index for State
-            const rowCity = data[16].toLowerCase(); // Column index for City
-            const rowCourse = data[17].toLowerCase(); // Column index for Course
-            const timeStampText = data[3]; // Column index for TimeStamp
-            const assignDateText = data[4]; // Column index for Assign Date
-            const rowTimeStamp = new Date(timeStampText);
-            const rowAssignDate = new Date(assignDateText);
+            const rowState = data[8].toLowerCase(); // Column index for State
+            const rowCity = data[9].toLowerCase(); // Column index for City
+            const rowCourse = data[7].toLowerCase(); // Column index for Course
+            const timeStampText = data[2]; // Column index for Time Stamp
+            const assignDateText = $(table.row(dataIndex).node()).find('td').eq(3).text(); // Access hidden Assign Date via index
+
+            // Function to parse different date formats
+            function parseDate(dateString) {
+                // Try parsing the first format: "DD/MM/YYYY, h:mm:ss a"
+                const date1 = moment(dateString, "DD/MM/YYYY, h:mm:ss a", true);
+                if (date1.isValid()) return date1.toDate();
+
+                // Try parsing the second format: "MMMM DD YYYY HH:mm"
+                const date2 = moment(dateString, "MMMM DD YYYY HH:mm", true);
+                if (date2.isValid()) return date2.toDate();
+
+                // If no format matches, return an invalid date
+                return new Date(NaN);
+            }
+
+            // Parse dates with specific formats
+            const rowTimeStamp = parseDate(timeStampText);
+            const rowAssignDate = new Date(assignDateText); // Assign Date in 'YYYY-MM-DD' format
 
             // Apply filters
             let showRow = true;
@@ -1091,10 +1167,11 @@ $(document).ready(function() {
     }
 });
 
-
 </script>
 
 
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
  
   <!-- Additional JavaScript Libraries -->
