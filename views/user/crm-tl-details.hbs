@@ -997,10 +997,9 @@ document.getElementById('updateButton').addEventListener('click', function() {
   $(document).ready(function() {
     // Initialize DataTable
 const table = $('#dataTable').DataTable({
-        pageLength: 100, // Show 100 entries by default
-        lengthMenu: [[100, 25, 10], [100, 25, 10]] // Options for 100, 25, and 10 entries per page
+        pageLength: 100, // Default to showing 100 entries
+        lengthMenu: [[100, 25, 10, -1], [100, 25, 10, "All"]] // Options for 100, 25, 10, and All entries per page
     });
-
 
     // Initialize Flatpickr for date ranges
     flatpickr("#timeStampRange", {
