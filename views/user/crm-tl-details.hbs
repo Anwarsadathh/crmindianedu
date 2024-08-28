@@ -457,7 +457,7 @@ background-color: #1c008b !important;
                  
                      <th>Source</th>
                     <th>ReferredBy</th>
-                   
+                   <th style="width: 20px !important;">ID</th>
                     <th>Name</th>
                         <th>Course</th>
                     <th>State</th>
@@ -479,6 +479,7 @@ background-color: #1c008b !important;
                    
                     <td>{{#if this.source}}{{this.source}}{{else}}N/A{{/if}}</td>
                     <td>{{this.ReferredBy}}</td>
+                    <td style="width: 20px !important; font-weight: bold;">{{this.id}}</td>
                        <td>{{this.name}}</td>
                         <td>{{this.course}}</td>
                     <td>{{this.state}}</td>
@@ -1083,9 +1084,9 @@ $(document).ready(function() {
 
         // Add custom filter
         $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-            const rowState = data[7].toLowerCase(); // Column index for State
-            const rowCity = data[8].toLowerCase(); // Column index for City
-            const rowCourse = data[6].toLowerCase(); // Column index for Course
+            const rowState = data[8].toLowerCase(); // Column index for State
+            const rowCity = data[9].toLowerCase(); // Column index for City
+            const rowCourse = data[7].toLowerCase(); // Column index for Course
             const timeStampText = data[2]; // Column index for TimeStamp
             const rowTimeStamp = parseTimeStamp(timeStampText);
 

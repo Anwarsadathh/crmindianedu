@@ -469,7 +469,7 @@ background-color: #1c008b !important;
                     <th hidden>Assign date</th>
                       <th >Source</th>
                     <th >ReferredBy</th>
-                  
+                  <th style="width: 20px !important; ">ID</th>
                       <th>Name</th>
                         <th style="width: 50px !important;">Course</th>
                     <th style="width: 60px !important;">State</th>
@@ -491,6 +491,7 @@ background-color: #1c008b !important;
                     <td hidden>{{this.assignDate}}</td>
                     <td>{{#if this.source}}{{this.source}}{{else}}N/A{{/if}}</td>
 <td >{{this.ReferredBy}}</td>
+  <td style="width: 20px !important; font-weight: bold;">{{this.id}}</td>
                     <td>{{this.name}}</td>
                     <td style="width: 50px !important;">{{this.course}}</td>
                     <td style="width: 60px !important;">{{this.state}}</td>
@@ -1117,9 +1118,9 @@ $(document).ready(function() {
         // Add custom filter
         $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
             const rowLeadOwner = $(table.row(dataIndex).node()).find('span').text().toLowerCase();
-            const rowState = data[8].toLowerCase(); // Column index for State
-            const rowCity = data[9].toLowerCase(); // Column index for City
-            const rowCourse = data[7].toLowerCase(); // Column index for Course
+            const rowState = data[9].toLowerCase(); // Column index for State
+            const rowCity = data[10].toLowerCase(); // Column index for City
+            const rowCourse = data[8].toLowerCase(); // Column index for Course
             const timeStampText = data[2]; // Column index for Time Stamp
             const assignDateText = $(table.row(dataIndex).node()).find('td').eq(3).text(); // Access hidden Assign Date via index
 
