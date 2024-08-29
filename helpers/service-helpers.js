@@ -2588,6 +2588,7 @@ module.exports = {
       };
     }
   },
+
   sendOtp: async (email, otpStore) => {
     try {
       const database = db.get();
