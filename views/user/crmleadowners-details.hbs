@@ -400,33 +400,54 @@ select,textarea{
     <button id="hideColumnsBtn" class="btn btn-sm btn-primary animated-btn">Minimize Some Fields</button>
 </div>
 
-                <!-- Filter Section -->
-                <div class="filter-card glassmorphism p-4 shadow-lg d-flex">
-                    <div class="floating-label-wrapper ms-3">
-                        <label for="filterDateRange" class="floating-label">Date Range</label>
-                        <input type="text" id="filterDateRange" class="form-control shadow-sm circular-input" placeholder="Select Date Range">
-                    </div>
+<div class="filter-card glassmorphism p-4 shadow-lg d-flex">
+    <div class="floating-label-wrapper ms-3">
+        <label for="filterDateRange" class="floating-label">Date Range</label>
+        <input type="text" id="filterDateRange" class="form-control shadow-sm circular-input" placeholder="Select Date Range">
+    </div>
 
-                    <div class="floating-label-wrapper ms-3">
-                        <label for="filterState" class="floating-label">State</label>
-                        <input type="text" id="filterState" class="form-control shadow-sm circular-input" placeholder="Enter State">
-                    </div>
+    <!-- <div class="floating-label-wrapper ms-3">
+        <label for="filterSingleDate" class="floating-label">Single Date</label>
+        <input type="text" id="filterSingleDate" class="form-control shadow-sm circular-input" placeholder="Select Single Date">
+    </div> -->
 
-                    <div class="floating-label-wrapper ms-3">
-                        <label for="filterCity" class="floating-label">City</label>
-                        <input type="text" id="filterCity" class="form-control shadow-sm circular-input" placeholder="Enter City">
-                    </div>
+    <div class="floating-label-wrapper ms-3">
+        <label for="filterState" class="floating-label">State</label>
+        <input type="text" id="filterState" class="form-control shadow-sm circular-input" placeholder="Enter State">
+    </div>
 
-                    <button id="applyFiltersBtn" class="btn btn-glass shadow-sm circular-btn ms-3">
-                        <i class="bi bi-filter-circle"></i> 
-                    </button>
+    <div class="floating-label-wrapper ms-3">
+        <label for="filterCity" class="floating-label">City</label>
+        <input type="text" id="filterCity" class="form-control shadow-sm circular-input" placeholder="Enter City">
+    </div>
 
-                    <button id="clearFiltersBtn" class="btn btn-danger shadow-sm circular-btn ms-3">
-                        <i class="fas fa-times-circle"></i> 
-                    </button>
-                </div>
+    <!-- New course filter input -->
+    <div class="floating-label-wrapper ms-3">
+        <label for="filterCourse" class="floating-label">Course</label>
+        <input type="text" id="filterCourse" class="form-control shadow-sm circular-input" placeholder="Enter Course">
+    </div>
 
-             
+    <div class="floating-label-wrapper ms-3">
+        <label for="stageFilter" class="floating-label">Stage</label>
+        <input type="text" id="stageFilter" class="form-control form-control-sm" placeholder="Enter Stage" onkeyup="filterTable()">
+    </div>
+
+    <div class="floating-label-wrapper ms-3">
+        <label for="substageFilter" class="floating-label">Substage</label>
+        <input type="text" id="substageFilter" class="form-control form-control-sm" placeholder="Enter Substage" onkeyup="filterTable()">
+    </div>
+
+    <button id="applyFiltersBtn" class="btn btn-glass shadow-sm circular-btn ms-3">
+        <i class="bi bi-filter-circle"></i> 
+    </button>
+
+    <button id="clearFiltersBtn" class="btn btn-danger shadow-sm circular-btn ms-3">
+        <i class="fas fa-times-circle"></i> 
+    </button>
+</div>
+
+
+
 
 
 
@@ -1330,58 +1351,155 @@ async function saveLeadStatus(button) {
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
- <script>
-    $(document).ready(function() {
-        // Initialize DataTable
-       const table = $('#dataTable').DataTable({
+<script>
+$(document).ready(function() {
+    // Initialize DataTable
+    const table = $('#dataTable').DataTable({
         pageLength: 100,
         lengthMenu: [[100, 25, 10, -1], [100, 25, 10, "All"]],
         order: [[2, 'desc']] // Adjust column index if needed
     });
 
-
-        // Initialize Flatpickr for date ranges
-        flatpickr("#filterDateRange", {
-            mode: "range",
-            dateFormat: "Y-m-d"
-        });
-
-        // Apply Filters Button Event Listener
-        $('#applyFiltersBtn').on('click', function() {
-            const state = $('#filterState').val().toLowerCase();
-            const city = $('#filterCity').val().toLowerCase();
-            const dateRange = $('#filterDateRange').val();
-
-            const [startDate, endDate] = dateRange.split(' to ').map(date => new Date(date));
-
-            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-                const rowState = data[4].toLowerCase(); // Column index for State
-                const rowCity = data[13].toLowerCase(); // Column index for City
-                const rowDate = new Date(data[2]); // Column index for Date
-
-                // Apply filters
-                const isStateMatch = state ? rowState.includes(state) : true;
-                const isCityMatch = city ? rowCity.includes(city) : true;
-                const isDateMatch = (startDate && endDate) ? (rowDate >= startDate && rowDate <= endDate) : true;
-
-                return isStateMatch && isCityMatch && isDateMatch;
-            });
-
-            // Redraw the table to reflect changes
-            table.draw();
-        });
-
-        // Clear Filters Button Event Listener
-        $('#clearFiltersBtn').on('click', function() {
-            $('#filterState').val('');
-            $('#filterCity').val('');
-            $('#filterDateRange').val('');
-
-            $.fn.dataTable.ext.search.pop();
-            table.draw();
-        });
+    // Initialize Flatpickr for date ranges and single date
+    flatpickr("#filterDateRange", {
+        mode: "range",
+        dateFormat: "Y-m-d"
     });
+
+    flatpickr("#filterSingleDate", {
+        mode: "single",
+        dateFormat: "Y-m-d"
+    });
+
+    // Filter function for stage and substage
+    function filterTable() {
+        const stageFilterValue = $('#stageFilter').val().toLowerCase();
+        const substageFilterValue = $('#substageFilter').val().toLowerCase();
+        const courseFilterValue = $('#filterCourse').val().toLowerCase(); // New course filter value
+        const rows = table.rows().nodes();
+
+        rows.each(function(row) {
+            const leadStatusCell = $(row).find('.leadStatusContent');
+            let stageMatch = false;
+            let substageMatch = false;
+            let courseMatch = false; // New course match variable
+
+            if (leadStatusCell.length) {
+                try {
+                    const leadStatus = JSON.parse(leadStatusCell.text());
+
+                    Object.keys(leadStatus).forEach(statusCategory => {
+                        const stages = leadStatus[statusCategory];
+
+                        Object.keys(stages).forEach(stage => {
+                            const stageDetails = stages[stage];
+
+                            if (Array.isArray(stageDetails)) {
+                                stageDetails.forEach(stageDetail => {
+                                    if (stage.toLowerCase() === stageFilterValue) {
+                                        stageMatch = true;
+                                    }
+                                    if (stageDetail.subStage && stageDetail.subStage.toLowerCase() === substageFilterValue) {
+                                        substageMatch = true;
+                                    }
+                                });
+                            }
+                        });
+                    });
+
+                    // Check if the course matches
+                    const rowCourse = $(row).find('td').eq(14).text().toLowerCase(); // Assuming course is in the 15th column
+                    if (courseFilterValue === '' || rowCourse.includes(courseFilterValue)) {
+                        courseMatch = true;
+                    }
+
+                    if ((stageFilterValue === '' || stageMatch) && (substageFilterValue === '' || substageMatch) && courseMatch) {
+                        $(row).show();
+                    } else {
+                        $(row).hide();
+                    }
+                } catch (error) {
+                    console.error('Error parsing lead status:', error);
+                }
+            }
+        });
+    }
+
+    // Apply Filters Button Event Listener
+    $('#applyFiltersBtn').on('click', function() {
+        const state = $('#filterState').val().toLowerCase();
+        const city = $('#filterCity').val().toLowerCase();
+        const dateRange = $('#filterDateRange').val();
+        const singleDateValue = $('#filterSingleDate').val();
+        const singleDate = singleDateValue ? new Date(singleDateValue) : null;
+        const course = $('#filterCourse').val().toLowerCase(); // New course filter
+
+        let startDate = null, endDate = null;
+
+        if (dateRange) {
+            const dates = dateRange.split(' to ');
+            startDate = new Date(dates[0]);
+            endDate = dates[1] ? new Date(dates[1]) : startDate;
+
+            startDate.setHours(0, 0, 0, 0);
+            endDate.setHours(23, 59, 59, 999);
+        }
+
+        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+            const rowState = data[4].toLowerCase();
+            const rowCity = data[13].toLowerCase();
+            const rowCourse = data[14].toLowerCase(); // Assuming course is in the 15th column
+            const rowDate = new Date(data[2]);
+
+            rowDate.setHours(0, 0, 0, 0);
+
+            const isStateMatch = state ? rowState.includes(state) : true;
+            const isCityMatch = city ? rowCity.includes(city) : true;
+            const isCourseMatch = course ? rowCourse.includes(course) : true;
+
+            let isDateMatch = true;
+
+            if (singleDate) {
+                isDateMatch = rowDate.getTime() === singleDate.getTime();
+            } else if (startDate && endDate) {
+                isDateMatch = rowDate.getTime() >= startDate.getTime() && rowDate.getTime() <= endDate.getTime();
+            }
+
+            return isStateMatch && isCityMatch && isDateMatch && isCourseMatch;
+        });
+
+        filterTable(); // Apply stage, substage, and course filters
+        table.draw(); // Redraw the table to reflect changes
+    });
+
+  $('#clearFiltersBtn').on('click', function() {
+    // Clear all filter inputs
+    $('#filterState').val('');
+    $('#filterCity').val('');
+    $('#filterDateRange').val('');
+    $('#filterSingleDate').val('');
+    $('#stageFilter').val('');
+    $('#substageFilter').val('');
+    $('#courseFilter').val(''); // Add this line to clear the course filter
+
+    // Clear DataTable filters
+    $.fn.dataTable.ext.search.pop();
+    table.search('').columns().search('').draw();
+
+    // Clear custom filters
+    filterTable(); // Clear stage and substage filters
+    table.draw(); // Redraw the table to reflect changes
+});
+
+});
+
 </script>
+
+
+
+
+
+
 
   <!-- Additional JavaScript Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>

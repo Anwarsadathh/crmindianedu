@@ -837,7 +837,7 @@ router.get("/crm-lead-owner-details", async (req, res) => {
   try {
     // Fetch all lead stages
     const leadStage = await serviceHelpers.getAllLeadStage();
-
+const leadStages = await serviceHelpers.getAllLeadStage();
     // Remove duplicate mainStage entries
     const uniqueLeadStages = Array.from(
       new Set(leadStage.map((stage) => stage.mainStage))
@@ -883,6 +883,7 @@ router.get("/crm-lead-owner-details", async (req, res) => {
       leadStage: uniqueLeadStages, // Use the unique stages
       userEmail: req.session.user.email,
       userName: req.session.user.name,
+      leadStages,
     });
   } catch (error) {
     console.error("Error fetching data:", error);
