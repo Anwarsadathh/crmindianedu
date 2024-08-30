@@ -32,7 +32,7 @@
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
      <style>
-        body {
+      body {
             font-family: 'Montserrat', sans-serif !important;
             background-color: #f0f2f5;
             margin: 0;
@@ -244,7 +244,7 @@
 
         @media (max-width: 768px) {
            .card {
-        width: 100%;
+        width: 400px;
         padding: 15px;
         margin: 10px auto; /* Add margin for spacing on mobile screens */
         background-size: contain; /* Make the background image smaller */
@@ -310,7 +310,7 @@
                 <div class="navbar-nav w-100" style="background-color: #232f65;">
                     <a href="/partner-dashboard" class="nav-item nav-link text-dark active"><i class="fa fa-tachometer-alt me-2 text-dark"></i>Dashboard</a>
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown"><i class="fas fa-user-plus me-2 text-dark"></i>Add Lead</a>
+                        <a href="#" class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown"><i class="fas fa-user-plus me-2 text-dark"></i>Client Track</a>
                         <div class="dropdown-menu bg-transparent border-0">
                             <a href="/partner-referral-details" class="dropdown-item active">Lead Details</a>
                         </div>
@@ -432,8 +432,7 @@
           </div>
         </div>
         <div class="links mt-5 mb-3">
-          <a href="https://chat.whatsapp.com/CbtsmpwFZH3HEl60CgxM1T" class="link">Community</a>
-           <a href="https://chat.whatsapp.com/CbtsmpwFZH3HEl60CgxM1T" class="link">Community</a>
+         
        <a href="#" class="link" onclick="handleReferralClick('{{partner.instituteid}}')">Add Lead</a>
         </div>
       </div>
@@ -458,7 +457,7 @@
 
    <script>
 function handleReferralClick(studentId) {
-    const url = `/p-referral?studentid=${studentId}`;
+    const url = `https://crm.indianeduhub.in/p-referral?studentid=${studentId}`;
     
     navigator.clipboard.writeText(url)
         .then(() => {

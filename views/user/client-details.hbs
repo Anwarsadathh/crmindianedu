@@ -474,31 +474,32 @@
                                     </button>
                                 </td>
                                 <td><input type="date" class="form-control" value="{{this.universityPaidDate}}" /></td>
-                                <td>
-                                    <button class="btn btn-status {{#if (eq this.documentStatus "Approved")}}btn-approved{{else}}btn-not-approved{{/if}}" onclick="toggleStatus(this, 'Document Status')">
-                                        {{#if (eq this.documentStatus "Approved")}}Approved{{else}}Not Approved{{/if}}
-                                    </button>
-                                </td>
-                                <td>
-                                    <select class="form-select">
-                                        <option value="" {{#if (eq this.unirefundinitiated "")}}selected{{/if}}>Select</option>
-                                        <option value="initiated" {{#if (eq this.unirefundinitiated "initiated")}}selected{{/if}}>Initiated</option>
-                                        <option value="success" {{#if (eq this.unirefundinitiated "success")}}selected{{/if}}>Success</option>
-                                    </select>
-                                </td>
-                                <td class="refund-cell">
-                                    <input type="date" class="form-control {{#unless (eq this.unirefundinitiated "success")}}d-none{{/unless}}" value="{{this.dateOfRefundInitiateduni}}" />
-                                </td>
-                                <td>
-                                    <select class="form-select">
-                                        <option value="" {{#if (eq this.iehrefundinitiated "")}}selected{{/if}}>Select</option>
-                                        <option value="initiated" {{#if (eq this.iehrefundinitiated "initiated")}}selected{{/if}}>Initiated</option>
-                                        <option value="success" {{#if (eq this.iehrefundinitiated "success")}}selected{{/if}}>Success</option>
-                                    </select>
-                                </td>
-                                <td class="refund-cell">
-                                    <input type="date" class="form-control {{#unless (eq this.iehrefundinitiated "success")}}d-none{{/unless}}" value="{{this.dateOfRefundInitiatedieh}}" />
-                                </td>
+                             <td>
+    <button class="btn btn-status {{#if (eq this.documentStatus "Approved")}}btn-approved{{else}}btn-not-approved{{/if}}" onclick="toggleStatus(this, 'Document Status')">
+        {{#if (eq this.documentStatus "Approved")}}Approved{{else}}Not Approved{{/if}}
+    </button>
+</td>
+<td class="detail-row">
+    <select class="form-select">
+        <option value="" {{#if (eq this.unirefundinitiated "")}}selected{{/if}}>Select</option>
+        <option value="initiated" {{#if (eq this.unirefundinitiated "initiated")}}selected{{/if}}>Initiated</option>
+        <option value="success" {{#if (eq this.unirefundinitiated "success")}}selected{{/if}}>Success</option>
+    </select>
+</td>
+<td class="refund-cell detail-row">
+    <input type="date" class="form-control {{#unless (eq this.unirefundinitiated "success")}}d-none{{/unless}}" value="{{this.dateOfRefundInitiateduni}}" />
+</td>
+<td class="detail-row">
+    <select class="form-select">
+        <option value="" {{#if (eq this.iehrefundinitiated "")}}selected{{/if}}>Select</option>
+        <option value="initiated" {{#if (eq this.iehrefundinitiated "initiated")}}selected{{/if}}>Initiated</option>
+        <option value="success" {{#if (eq this.iehrefundinitiated "success")}}selected{{/if}}>Success</option>
+    </select>
+</td>
+<td class="refund-cell detail-row">
+    <input type="date" class="form-control {{#unless (eq this.iehrefundinitiated "success")}}d-none{{/unless}}" value="{{this.dateOfRefundInitiatedieh}}" />
+</td>
+
                                   <td>{{this.scholarship}}</td>
                                 <td>
                                     <select class="form-select">
@@ -838,6 +839,7 @@ $(document).ready(function () {
     // Run the toggleDateVisibility function on page load for each row
     $('#dataTable tbody tr').each(function () {
         toggleDateVisibility($(this));
+        handleRowStatus($(this));  // Added function to handle row status on page load
     });
 
     // Attach the saveData function to the save button
@@ -882,28 +884,55 @@ function toggleDateVisibility(row) {
 function toggleStatus(button, type) {
     const currentText = $(button).text().trim();
     const statusConfig = {
-        'Not Paid': { text: 'Paid', newClass: 'btn-paid' },
-        'Paid': { text: 'Not Paid', newClass: 'btn-not-paid' },
         'Not Approved': { text: 'Approved', newClass: 'btn-approved' },
-        'Approved': { text: 'Not Approved', newClass: 'btn-not-approved' },
-        'Not Done': { text: 'Done', newClass: 'btn-done' },
-        'Done': { text: 'Not Done', newClass: 'btn-not-done' }
+        'Approved': { text: 'Not Approved', newClass: 'btn-not-approved' }
     };
 
     const newStatus = statusConfig[currentText];
     if (newStatus) {
         $(button).text(newStatus.text)
-            .removeClass('btn-not-paid btn-paid btn-not-approved btn-approved btn-not-done btn-done')
+            .removeClass('btn-not-approved btn-approved')
             .addClass(newStatus.newClass);
 
         const row = $(button).closest('tr');
-        const rowData = getRowData(row);
+        handleRowStatus(row, newStatus.text);  // Updated to handle row status
 
         if (type === 'ID Approved') {
-            handleIdApproval(row, rowData, newStatus.text);
+            handleIdApproval(row, getRowData(row), newStatus.text);
         }
     }
 }
+
+function handleRowStatus(row, newStatus = null) {
+    const status = newStatus || row.find('td').eq(32).find('button').text().trim();
+    
+    if (status === 'Approved') {
+        // Disable and hide specific columns related to refund statuses
+        row.find('td').each(function () {
+            const index = $(this).index();
+            
+            // Hide dropdowns and date inputs related to refund statuses
+            if (index === 22 || index === 24) {
+                $(this).find('select').prop('disabled', true).hide(); // Hide select dropdowns
+            } else if (index === 23 || index === 25) {
+                $(this).find('input[type="date"]').prop('disabled', true).hide(); // Hide date inputs
+            }
+        });
+    } else {
+        // Show and enable specific columns related to refund statuses
+        row.find('td').each(function () {
+            const index = $(this).index();
+
+            // Show dropdowns and date inputs related to refund statuses
+            if (index === 22 || index === 24) {
+                $(this).find('select').prop('disabled', false).show(); // Show select dropdowns
+            } else if (index === 23 || index === 25) {
+                $(this).find('input[type="date"]').prop('disabled', false).show(); // Show date inputs
+            }
+        });
+    }
+}
+
 
 function getRowData(row) {
     return {
@@ -1062,6 +1091,7 @@ function handleIdApproval(row, rowData, newStatus) {
 }
 
 function validateFields(data) {
+    // Define the required fields
     const requiredFields = [
         'id',
         'date',
@@ -1084,10 +1114,6 @@ function validateFields(data) {
         'universityPaid',
         'universityPaidDate',
         'documentStatus',
-        'unirefundinitiated',
-        'dateOfRefundInitiateduni',
-        'iehrefundinitiated',
-        'dateOfRefundInitiatedieh',
         'scholarship',
         'feepaid',
         'feePaidAmount',
@@ -1098,8 +1124,25 @@ function validateFields(data) {
         'action'
     ];
 
-    return requiredFields.filter(field => !data[field]);
+    // Define the fields that should be required only if ID is not Approved
+    const conditionalRequiredFields = [
+        'unirefundinitiated',
+        'dateOfRefundInitiateduni',
+        'iehrefundinitiated',
+        'dateOfRefundInitiatedieh'
+    ];
+
+    // Check if ID is approved
+    if (data.idApproved === 'Approved') {
+        // When ID is approved, exclude certain conditional fields from validation
+        return requiredFields.filter(field => !data[field] && !conditionalRequiredFields.includes(field));
+    } else {
+        // When ID is not approved, include the conditional fields in validation
+        return requiredFields.filter(field => !data[field]) // Ensure all required fields are filled
+            .concat(conditionalRequiredFields.filter(field => !data[field])); // Include conditional fields if not filled
+    }
 }
+
 
 function saveData() {
     $('#dataTable tbody tr').each(function() {
