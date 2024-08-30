@@ -450,16 +450,25 @@ select,textarea{
 
 
 
-
-
-                <!-- Update Button -->
-           <div class="table-responsive">
- <div class="table-wrapper ">
-                    <table class="table" id="dataTable">
+   <div class="table-responsive">
+    <div class="table-wrapper">
+        <!-- Dropdown for Filtering Assign Date -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div>
+                <select id="dateFilter" class="form-select form-select-sm" style="width: 150px; display: inline-block;">
+                    <option selected value="">Assign Date</option>
+                    <option value="today">Today</option>
+                    <option value="yesterday">Yesterday</option>
+                    <option value="this-week">This Week</option>
+                    <option value="last-month">Last Month</option>
+                </select>
+            </div>
+        </div>    <table class="table" id="dataTable">
                         <thead>
                             <tr>
                                 <!-- Define table headers -->
                                 <th hidden>ID</th>
+                                <th hidden>Assign date</th>
                                 <th>ID</th>
                                 <th>Time Stamp</th>
                                 <th>Source</th>
@@ -501,9 +510,9 @@ select,textarea{
                         </thead>
                         <tbody>
                             {{#each googlesheets}}
-                            <tr>
+                           <tr data-assign-date="{{this.assignDate}}">
                                 <td hidden>{{this._id}}</td>
-                              {{!-- <td>{{this.assignDate}} - {{this.id}}</td> --}}
+                              <td hidden>{{this.assignDate}} </td>
                                 <td>{{this.id}}</td>
                                 <td>{{this.timeStamp}}</td>
                                 <td>{{this.source}}</td>
@@ -603,6 +612,61 @@ select,textarea{
         Please save each stage of the lead form as you progress.
     </div>
 </div>
+
+{{!-- <script>
+    $(document).ready(function() {
+        // Initialize DataTable
+        const table = $('#dataTable').DataTable({
+            pageLength: 100,
+            lengthMenu: [[100, 25, 10, -1], [100, 25, 10, "All"]],
+            order: [[2, 'desc']] // Adjust column index if needed
+        });
+
+        // Filter rows based on date selection
+        $('#dateFilter').on('change', function() {
+            const filterValue = $(this).val();
+            const today = new Date();
+            let startDate, endDate;
+
+            switch (filterValue) {
+                case 'today':
+                    startDate = new Date(today.setHours(0, 0, 0, 0));
+                    endDate = new Date(today.setHours(23, 59, 59, 999));
+                    break;
+                case 'yesterday':
+                    startDate = new Date(today.setDate(today.getDate() - 1));
+                    startDate.setHours(0, 0, 0, 0);
+                    endDate = new Date(today.setHours(23, 59, 59, 999));
+                    break;
+                case 'this-week':
+                    const firstDayOfWeek = today.getDate() - today.getDay();
+                    startDate = new Date(today.setDate(firstDayOfWeek));
+                    startDate.setHours(0, 0, 0, 0);
+                    endDate = new Date(today.setDate(firstDayOfWeek + 6));
+                    endDate.setHours(23, 59, 59, 999);
+                    break;
+                case 'last-month':
+                    startDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+                    endDate = new Date(today.getFullYear(), today.getMonth(), 0);
+                    endDate.setHours(23, 59, 59, 999);
+                    break;
+                default:
+                    table.search('').draw(); // Show all rows if no filter selected
+                    return;
+            }
+
+            table.rows().every(function() {
+                const rowDate = new Date($(this.node()).data('assign-date'));
+                if (rowDate >= startDate && rowDate <= endDate) {
+                    $(this.node()).show();
+                } else {
+                    $(this.node()).hide();
+                }
+            });
+        });
+    });
+</script> --}}
+
 
 
 <script>
@@ -1360,6 +1424,62 @@ $(document).ready(function() {
         order: [[2, 'desc']] // Adjust column index if needed
     });
 
+
+  // Helper function to format dates as YYYY-MM-DD
+        function formatDate(date) {
+            let month = '' + (date.getMonth() + 1);
+            let day = '' + date.getDate();
+            const year = date.getFullYear();
+
+            if (month.length < 2) month = '0' + month;
+            if (day.length < 2) day = '0' + day;
+
+            return [year, month, day].join('-');
+        }
+
+        // Filter rows based on date selection
+        $('#dateFilter').on('change', function() {
+            const filterValue = $(this).val();
+            const today = new Date();
+            let startDate, endDate;
+
+            switch (filterValue) {
+                case 'today':
+                    startDate = formatDate(new Date(today.setHours(0, 0, 0, 0)));
+                    endDate = formatDate(new Date(today.setHours(23, 59, 59, 999)));
+                    break;
+                case 'yesterday':
+                    const yesterday = new Date(today);
+                    yesterday.setDate(today.getDate() - 1);
+                    startDate = formatDate(new Date(yesterday.setHours(0, 0, 0, 0)));
+                    endDate = formatDate(new Date(yesterday.setHours(23, 59, 59, 999)));
+                    break;
+                case 'this-week':
+                    const firstDayOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
+                    startDate = formatDate(new Date(firstDayOfWeek.setHours(0, 0, 0, 0)));
+                    endDate = formatDate(new Date(firstDayOfWeek.setDate(firstDayOfWeek.getDate() + 6)));
+                    break;
+                case 'last-month':
+                    const firstDayLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+                    startDate = formatDate(new Date(firstDayLastMonth.setHours(0, 0, 0, 0)));
+                    const lastDayLastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                    endDate = formatDate(new Date(lastDayLastMonth.setHours(23, 59, 59, 999)));
+                    break;
+                default:
+                    table.search('').draw(); // Show all rows if no filter is selected
+                    return;
+            }
+
+            // Filter table rows based on the date range
+            table.rows().every(function() {
+                const rowDate = $(this.node()).data('assign-date');
+                if (rowDate >= startDate && rowDate <= endDate) {
+                    $(this.node()).show();
+                } else {
+                    $(this.node()).hide();
+                }
+            });
+        });
     // Initialize Flatpickr for date ranges and single date
     flatpickr("#filterDateRange", {
         mode: "range",
@@ -1446,10 +1566,10 @@ $(document).ready(function() {
         }
 
         $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-            const rowState = data[4].toLowerCase();
-            const rowCity = data[13].toLowerCase();
-            const rowCourse = data[14].toLowerCase(); // Assuming course is in the 15th column
-            const rowDate = new Date(data[2]);
+            const rowState = data[5].toLowerCase();
+            const rowCity = data[14].toLowerCase();
+            const rowCourse = data[15].toLowerCase(); // Assuming course is in the 15th column
+            const rowDate = new Date(data[3]);
 
             rowDate.setHours(0, 0, 0, 0);
 

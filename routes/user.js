@@ -12,6 +12,11 @@ const bodyParser = require("body-parser");
 const { log } = require("console");
 const collection = require("../config/collection");
 const db = require("../config/connection");
+// const checkFollowUps = require("../utils/followUpChecker"); // Import the follow-up checker
+
+// // Call the function periodically (e.g., every minute)
+// setInterval(checkFollowUps, 10000);
+
 
 // Configure the transporter
 const transporter = nodemailer.createTransport({
