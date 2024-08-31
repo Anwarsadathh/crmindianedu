@@ -67,319 +67,9 @@
   padding: 1px;
 }
 
-    </style>
-</head>
-
-<body>
-    <div class="container-xxl position-relative bg-white d-flex p-0" style="background-color: #232f65;">
-        <!-- Spinner Start -->
-        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-        </div>
-        <!-- Spinner End -->
-
-  <!-- Sidebar Start -->
-        <div class="sidebar pe-4 pb-3" style="background-color: #232f65;">
-            <nav class="navbar " style="background-color: #232f65;">
-                <a href="index.html" class="navbar-brand mx-4 mb-3">
-                    <h3 class="text-primary"> <img src="/images/indian-hub-logo-vert-white-e1662813826792.png" alt="Indian Edu Hub Logo" class="log"></h3>
-                </a>
-                <div class="d-flex align-items-center ms-4 mb-4" style="background-color: #232f65;">
-                      
-                    <div class="ms-3" >
-                        <h6 class="mb-0 text-white">Indianeduhub</h6>
-                        <span style="color: rgb(209, 211, 212);">Lead owner</span>
-                    </div>
-                </div>
-                <div class="navbar-nav w-100" style="background-color: #232f65;">
-                    <a href="/crm-lead-owner-dashboard" class="nav-item nav-link text-dark active"><i class="fa fa-tachometer-alt me-2 text-dark"></i>Dashboard</a>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2 text-dark"></i>Leads</a>
-                        <div class="dropdown-menu bg-transparent border-0">
-                            <a href="/crm-lead-owner-details" class="dropdown-item active">Spreadsheet Leads</a>
-                            
-                      
-                    </div>
-                  
-                </div>
-                 <div class="nav-item dropdown">
-                        <a href="/affiliate-partner-signup" class="nav-link  text-white" class="nav-item nav-link text-dark active"><i class="fa fa-user text-dark me-2"></i>My Referral</a>
-                       
-                    </div>
-            </nav>
-        </div>
-        <!-- Sidebar End -->
-
-        <!-- Content Start -->
-        <div class="content">
-            <!-- Navbar Start -->
-            <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
-                <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
-                    <h2 class="text-primary mb-0"><img src="/img/ie.png" alt="Indian Edu Hub Logo" style="height: 30px;"></h2>
-                </a>
-                <a href="#" class="sidebar-toggler flex-shrink-0">
-                    <i class="fa fa-bars"></i>
-                </a>
-                <form class="d-none d-md-flex ms-4">
-                    <input class="form-control border-0" type="search" placeholder="Search">
-                </form>
-                <div class="navbar-nav align-items-center ms-auto">
-                    
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="fa fa-bell me-lg-2"></i>
-                            <span class="d-none d-lg-inline-flex">Notificatin</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item">
-                                <h6 class="fw-normal mb-0">Profile updated</h6>
-                                <small>15 minutes ago</small>
-                            </a>
-                       
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item text-center">See all notifications</a>
-                        </div>
-                    </div>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img class="rounded-circle me-lg-2" src="/images/anon.webp" alt="" style="width: 40px; height: 40px;">
-                            <span class="d-none d-lg-inline-flex">{{userName}}</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item">Log Out</a>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-            <!-- Navbar End -->
 
 
-
-<div class="container-fluid pt-4 px-4">
-    <div class="row g-4">
-        <!-- Unique Date Range Filter and Button -->
-        <div class="col-12 col-md-12 d-flex">
-             {{#if user}}
-                <div class="filter-card glassmorphism p-4 shadow-lg d-flex">
-                    <div class="floating-label-wrapper">
-                        <label for="dateRange" class="floating-label">Date Range</label>
-                        <input type="text" id="dateRange" class="form-control shadow-sm circular-input" placeholder="Select Date Range">
-                    </div>
-                    <div class="floating-label-wrapper ms-3">
-                        <label for="presetDateRange" class="floating-label">Preset Date Range</label>
-                        <select id="presetDateRange" class="form-select shadow-sm circular-input">
-                            <option value="">Select Preset</option>
-                            <option value="today">Today</option>
-                            <option value="this-week">This Week</option>
-                            <option value="last-month">Last Month</option>
-                            <option value="last-year">Last Year</option>
-                        </select>
-                    </div>
-                    <button class="btn btn-glass shadow-sm circular-btn ms-3" id="latestBtn">
-                        <i class="bi bi-filter-circle"></i> 
-                    </button>
-                </div>
-            {{/if}}
-        </div>
-
-        <!-- Lead Statistics -->
-        <div class="col-6 col-xl-3">
-            <div class="stat-card bg-gradient-primary text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-chart-line fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total Leads</p>
-                    <h6 class="mb-0">{{totalLeads}}</h6>
-                </div>
-            </div>
-        </div>
-
-        <!-- Main Stage Cards -->
-        {{#each mainStageCounts}}
-            <div class="col-6 col-xl-3">
-                <div class="stat-card bg-gradient-neon text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl main-stage-card" data-stage="{{mainStage}}">
-                    <i class="fa fa-briefcase fa-3x neon-icon"></i>
-                    <div class="ms-3">
-                        <p class="mb-2 counts">Main Stage: {{mainStage}}</p>
-                        <h6 class="mb-0">{{count}}</h6>
-                    </div>
-                </div>
-            </div>
-        {{/each}}
-
-        <!-- Stage Cards -->
-        {{#each stageCounts}}
-            <div class="col-6 col-xl-3">
-                <div class="stat-card bg-gradient-info text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl stage-card" data-stage="{{stage}}" data-main-stage="{{mainStage}}">
-                    <i class="fa fa-layer-group fa-3x neon-icon"></i>
-                    <div class="ms-3">
-                        <p class="mb-2 counts">Stage: {{stage}}</p>
-                        <h6 class="mb-0">{{count}}</h6>
-                    </div>
-                </div>
-            </div>
-        {{/each}}
-
-        <!-- Sub-Stage Cards -->
-        {{#each subStageCounts}}
-            <div class="col-6 col-xl-3">
-                <div class="stat-card bg-gradient-success text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl sub-stage-card" data-sub-stage="{{subStage}}" data-stage="{{stage}}" data-main-stage="{{mainStage}}">
-                    <i class="fa fa-tags fa-3x neon-icon"></i>
-                    <div class="ms-3">
-                        <p class="mb-2 counts">Sub-Stage: {{subStage}}</p>
-                        <h6 class="mb-0">{{count}}</h6>
-                    </div>
-                </div>
-            </div>
-        {{/each}}
-    </div>
-</div>
-<div class="container-fluid pt-4 px-4">
-    <div class="row g-4">
-        <!-- Existing Filters and Stats Sections -->
-        
-        <!-- Filtered Lead Details Section -->
-        <div class="col-12">
-            <div class="row g-4">
-                {{#each mainStageDetails}}
-                <div class="col-12 col-md-6 col-xl-4">
-                    <div class="card shadow-sm border-light p-4">
-                        <div class="card-header">
-                            <h5 class="card-title">Lead Details</h5>
-                        </div>
-                        <div class="card-body">
-                            <p><strong>Name:</strong> {{doc.name}}</p>
-                            <p><strong>Email:</strong> {{doc.email}}</p>
-                            <p><strong>Mobile:</strong> {{doc.mobile}}</p>
-                            <p><strong>WhatsApp:</strong> {{doc.whatsapp}}</p>
-                            <p><strong>Course:</strong> {{doc.course}}</p>
-                            <p><strong>Specialization:</strong> {{doc.specialization}}</p>
-                            <p><strong>State:</strong> {{doc.state}}</p>
-                            <p><strong>City:</strong> {{doc.city}}</p>
-                            <p><strong>Budget:</strong> {{doc.budget}}</p>
-                            <p><strong>Status:</strong> {{doc.status}}</p>
-                            <p><strong>Referred By:</strong> {{doc.ReferredBy}}</p>
-                            <p><strong>Assign Date:</strong> {{doc.assignDate}}</p>
-                            <p><strong>Main Stage:</strong> {{mainStage}}</p>
-                        </div>
-                    </div>
-                </div>
-                {{/each}}
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-  document.getElementById('latestBtn').addEventListener('click', function() {
-    const dateRange = document.getElementById('dateRange').value;
-    const preset = document.getElementById('presetDateRange').value;
-
-    let startDate, endDate;
-
-    // Calculate dates based on preset
-    const today = new Date();
-    switch(preset) {
-        case 'today':
-            startDate = endDate = today.toISOString().split('T')[0];
-            break;
-        case 'this-week':
-            const firstDayOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 1));
-            const lastDayOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 7));
-            startDate = firstDayOfWeek.toISOString().split('T')[0];
-            endDate = lastDayOfWeek.toISOString().split('T')[0];
-            break;
-        case 'last-month':
-            const firstDayOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-            const lastDayOfLastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
-            startDate = firstDayOfLastMonth.toISOString().split('T')[0];
-            endDate = lastDayOfLastMonth.toISOString().split('T')[0];
-            break;
-        case 'last-year':
-            const firstDayOfLastYear = new Date(today.getFullYear() - 1, 0, 1);
-            const lastDayOfLastYear = new Date(today.getFullYear() - 1, 11, 31);
-            startDate = firstDayOfLastYear.toISOString().split('T')[0];
-            endDate = lastDayOfLastYear.toISOString().split('T')[0];
-            break;
-        default:
-            if (dateRange) {
-                [startDate, endDate] = dateRange.split(' to ');
-            }
-            break;
-    }
-
-    // Check if no date is selected
-    if (!startDate || !endDate) {
-      alert('Please select a date range or a preset date range.');
-      return;
-    }
-
-    const url = `/crm-lead-owner-dashboard?startDate=${startDate}&endDate=${endDate}&showLatestSubstage=true`;
-    window.location.href = url;
-  });
-
-  // Add event listener for each card to show more details on click
-  document.querySelectorAll('.stat-card').forEach(function(card) {
-    card.addEventListener('click', function() {
-        const mainStage = this.dataset.mainStage || '';
-        const stage = this.dataset.stage || '';
-        const subStage = this.dataset.subStage || '';
-
-        // Fetch the details of the processed document
-        fetch(`/get-lead-details?mainStage=${mainStage}&stage=${stage}&subStage=${subStage}`)
-          .then(response => response.json())
-          .then(data => {
-            const doc = data.document; // Assuming the document is returned in the response
-            if (doc) {
-              alert(`
-                Course: ${doc.course}
-                Specialization: ${doc.specialization}
-                Status: ${doc.status}
-                Exp. Salary: ${doc.expSalary}
-                Curr. Salary: ${doc.currSalary}
-                Experience: ${doc.experience}
-                Emp. Location: ${doc.empLocation}
-                Sector: ${doc.sector}
-                Prev. University: ${doc.prevUniversity}
-                Prev. Qualification: ${doc.prevQualification}
-                Exposure: ${doc.exposure}
-                Budget: ${doc.budget}
-                Description: ${doc.description}
-                Name: ${doc.name}
-                Email: ${doc.email}
-                WhatsApp: ${doc.whatsapp}
-                Mobile: ${doc.mobile}
-                State: ${doc.state}
-                City: ${doc.city}
-                Referred By: ${doc.ReferredBy}
-                Time Stamp: ${doc.timeStamp}
-                Assign Date: ${doc.assignDate}
-                Assign Lead: ${doc.assignLead}
-                Lead Owner Name: ${doc.leadOwnerName}
-                History: ${JSON.stringify(doc.history)}
-                Lead Status: ${JSON.stringify(doc.leadStatus)}
-              `);
-            } else {
-              alert('No details found for the selected card.');
-            }
-          })
-          .catch(error => {
-            console.error('Error fetching lead details:', error);
-            alert('Failed to fetch lead details.');
-          });
-    });
-  });
-</script>
-
-
-       
-     
-<!-- Back to Top -->
-<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top neon-btn"><i class="bi bi-arrow-up"></i></a>
-
-<style>
-    .filter-card {
+   .filter-card {
       background: rgba(245, 245, 245, 0.2) !important;
       border-radius: 20px !important;
       backdrop-filter: blur(10px) !important;
@@ -535,6 +225,473 @@ color: #ffffff;
       z-index: 9999 !important;
   }
 
+    </style>
+</head>
+
+<body>
+    <div class="container-xxl position-relative bg-white d-flex p-0" style="background-color: #232f65;">
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+
+  <!-- Sidebar Start -->
+        <div class="sidebar pe-4 pb-3" style="background-color: #232f65;">
+            <nav class="navbar " style="background-color: #232f65;">
+                <a href="index.html" class="navbar-brand mx-4 mb-3">
+                    <h3 class="text-primary"> <img src="/images/indian-hub-logo-vert-white-e1662813826792.png" alt="Indian Edu Hub Logo" class="log"></h3>
+                </a>
+                <div class="d-flex align-items-center ms-4 mb-4" style="background-color: #232f65;">
+                      
+                    <div class="ms-3" >
+                        <h6 class="mb-0 text-white">Indianeduhub</h6>
+                        <span style="color: rgb(209, 211, 212);">Lead owner</span>
+                    </div>
+                </div>
+                <div class="navbar-nav w-100" style="background-color: #232f65;">
+                    <a href="/crm-lead-owner-dashboard" class="nav-item nav-link text-dark active"><i class="fa fa-tachometer-alt me-2 text-dark"></i>Dashboard</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2 text-dark"></i>Leads</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="/crm-lead-owner-details" class="dropdown-item active">Spreadsheet Leads</a>
+                            
+                      
+                    </div>
+                  
+                </div>
+                 <div class="nav-item dropdown">
+                        <a href="/affiliate-partner-signup" class="nav-link  text-white" class="nav-item nav-link text-dark active"><i class="fa fa-user text-dark me-2"></i>My Referral</a>
+                       
+                    </div>
+            </nav>
+        </div>
+        <!-- Sidebar End -->
+
+        <!-- Content Start -->
+        <div class="content">
+            <!-- Navbar Start -->
+            <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
+                <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
+                    <h2 class="text-primary mb-0"><img src="/img/ie.png" alt="Indian Edu Hub Logo" style="height: 30px;"></h2>
+                </a>
+                <a href="#" class="sidebar-toggler flex-shrink-0">
+                    <i class="fa fa-bars"></i>
+                </a>
+                <form class="d-none d-md-flex ms-4">
+                    <input class="form-control border-0" type="search" placeholder="Search">
+                </form>
+                <div class="navbar-nav align-items-center ms-auto">
+                    
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="fa fa-bell me-lg-2"></i>
+                            <span class="d-none d-lg-inline-flex">Notificatin</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                            <a href="#" class="dropdown-item">
+                                <h6 class="fw-normal mb-0">Profile updated</h6>
+                                <small>15 minutes ago</small>
+                            </a>
+                       
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item text-center">See all notifications</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <img class="rounded-circle me-lg-2" src="/images/anon.webp" alt="" style="width: 40px; height: 40px;">
+                            <span class="d-none d-lg-inline-flex">{{userName}}</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                            <a href="#" class="dropdown-item">Log Out</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <!-- Navbar End -->
+
+
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <!-- Unique Date Range Filter and Button -->
+        <div class="col-12 col-md-12 d-flex">
+             {{#if user}}
+                <div class="filter-card glassmorphism p-4 shadow-lg d-flex">
+                    <div class="floating-label-wrapper">
+                        <label for="dateRange" class="floating-label">Date Range</label>
+                        <input type="text" id="dateRange" class="form-control shadow-sm circular-input" placeholder="Select Date Range">
+                    </div>
+                    <div class="floating-label-wrapper ms-3">
+                        <label for="presetDateRange" class="floating-label">Preset Date Range</label>
+                        <select id="presetDateRange" class="form-select shadow-sm circular-input">
+                            <option value="">Select Preset</option>
+                            <option value="today">Today</option>
+                            <option value="this-week">This Week</option>
+                            <option value="last-month">Last Month</option>
+                            <option value="last-year">Last Year</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-glass shadow-sm circular-btn ms-3" id="latestBtn">
+                        <i class="bi bi-filter-circle"></i> 
+                    </button>
+                </div>
+            {{/if}}
+        </div>
+
+        <!-- Lead Statistics -->
+        <div class="col-6 col-xl-3">
+            <div class="stat-card bg-gradient-primary text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+                <i class="fa fa-chart-line fa-3x neon-icon"></i>
+                <div class="ms-3">
+                    <p class="mb-2 counts">Total Leads</p>
+                    <h6 class="mb-0">{{totalLeads}}</h6>
+                </div>
+            </div>
+        </div>
+    
+
+
+<!-- Modal -->
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="detailsModalLabel">Document Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Course</th>
+              <th scope="col">Specialization</th>
+              <th scope="col">Status</th>
+              <th scope="col">Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Mobile</th>
+              <th scope="col">budget</th>
+              <!-- Add more headers as needed -->
+            </tr>
+          </thead>
+          <tbody id="modalTableBody">
+            <!-- Rows will be populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Main Stage Cards -->
+{{#each mainStageCounts}}
+    <div class="col-6 col-xl-3">
+        <div class="stat-card bg-gradient-neon text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl main-stage-card" 
+            data-stage="{{mainStage}}" 
+            data-documents='{{json this.documents}}'>
+            <i class="fa fa-briefcase fa-3x neon-icon"></i>
+            <div class="ms-3">
+                <p class="mb-2 counts">{{mainStage}}</p>
+                <h6 class="mb-0">{{count}}</h6>
+            </div>
+        </div>
+    </div>
+{{/each}}
+
+<!-- Stage Cards -->
+{{#each stageCounts}}
+    <div class="col-6 col-xl-3 stage-card d-none" 
+         data-main-stage="{{mainStage}}" 
+         data-stage="{{stage}}" 
+         data-documents='{{json this.documents}}'>
+        <div class="stat-card bg-gradient-info text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+            <i class="fa fa-layer-group fa-3x neon-icon"></i>
+            <div class="ms-3">
+                <p class="mb-2 counts">{{stage}}</p>
+                <h6 class="mb-0">{{count}}</h6>
+            </div>
+        </div>
+    </div>
+{{/each}}
+
+<!-- Sub-Stage Cards -->
+{{#each subStageCounts}}
+    <div class="col-6 col-xl-3 sub-stage-card d-none" 
+         data-stage="{{stage}}" 
+         data-sub-stage="{{subStage}}" 
+         data-documents='{{json this.documents}}'>
+        <div class="stat-card bg-gradient-success text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+            <i class="fa fa-tags fa-3x neon-icon"></i>
+            <div class="ms-3">
+                <p class="mb-2 counts">{{subStage}}</p>
+                <h6 class="mb-0">{{count}}</h6>
+            </div>
+        </div>
+    </div>
+{{/each}}
+{{!-- {{#each subStageCounts}}
+    <div class="col-6 col-xl-3">
+        <div class="stat-card bg-gradient-success text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl sub-stage-card" data-sub-stage="{{subStage}}" data-documents='{{json this.documents}}' data-bs-toggle="modal" data-bs-target="#detailsModal">
+            <i class="fa fa-tags fa-3x neon-icon"></i>
+            <div class="ms-3">
+                <p class="mb-2 counts">Sub-Stage: {{subStage}}</p>
+                <h6 class="mb-0">{{count}}</h6>
+            </div>
+        </div>
+    </div>
+{{/each}} --}}
+<!-- Modal for Choosing Action -->
+<div class="modal fade" id="actionModal" tabindex="-1" aria-labelledby="actionModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="actionModalLabel">Choose Action</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Please choose what you want to do:</p>
+        <button type="button" class="btn btn-primary" id="showCardsBtn">Show Stages</button>
+        <button type="button" class="btn btn-secondary" id="showTableBtn">Show Table</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Displaying Table -->
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="detailsModalLabel">Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Course</th>
+              <th>Specialization</th>
+              <th>Status</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Mobile</th>
+              <th>Budget</th>
+              <!-- Add more headers as needed -->
+            </tr>
+          </thead>
+          <tbody id="modalTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    let selectedMainStage = null;
+    let selectedStage = null;
+    let documents = null;
+
+    // Handle main stage card click
+    document.querySelectorAll(".main-stage-card").forEach(function(mainStageCard) {
+        mainStageCard.addEventListener("click", function() {
+            selectedMainStage = this.dataset.stage;
+            documents = JSON.parse(this.getAttribute('data-documents'));
+
+            // Show the action modal
+            new bootstrap.Modal(document.getElementById('actionModal')).show();
+
+            // Update button text to "Show Stages"
+            document.getElementById("showCardsBtn").textContent = "Show Stages";
+
+            // Attach action listeners
+            document.getElementById("showCardsBtn").onclick = function() {
+                // Show stage cards related to the selected main stage
+                document.querySelectorAll(".stage-card, .sub-stage-card").forEach(function(card) {
+                    card.classList.add("d-none");
+                });
+                document.querySelectorAll(`.stage-card[data-main-stage="${selectedMainStage}"]`).forEach(function(stageCard) {
+                    stageCard.classList.remove("d-none");
+                });
+                bootstrap.Modal.getInstance(document.getElementById('actionModal')).hide();
+            };
+
+            document.getElementById("showTableBtn").onclick = function() {
+                // Display the table in the modal
+                const modalTableBody = document.getElementById('modalTableBody');
+                modalTableBody.innerHTML = ''; // Clear previous data
+                documents.forEach(doc => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${doc.course}</td>
+                        <td>${doc.specialization}</td>
+                        <td>${doc.status}</td>
+                        <td>${doc.name}</td>
+                        <td>${doc.email}</td>
+                        <td>${doc.mobile}</td>
+                        <td>${doc.budget}</td>
+                        <!-- Add more cells as needed -->
+                    `;
+                    modalTableBody.appendChild(row);
+                });
+                bootstrap.Modal.getInstance(document.getElementById('actionModal')).hide();
+                new bootstrap.Modal(document.getElementById('detailsModal')).show();
+            };
+        });
+    });
+
+    // Handle stage card click
+    document.querySelectorAll(".stage-card").forEach(function(stageCard) {
+        stageCard.addEventListener("click", function() {
+            selectedStage = this.dataset.stage;
+            documents = JSON.parse(this.getAttribute('data-documents'));
+
+            // Show the action modal
+            new bootstrap.Modal(document.getElementById('actionModal')).show();
+
+            // Update button text to "Show Sub-Stages"
+            document.getElementById("showCardsBtn").textContent = "Show Sub-Stages";
+
+            // Attach action listeners
+            document.getElementById("showCardsBtn").onclick = function() {
+                // Hide all other stages and sub-stages
+                document.querySelectorAll(".stage-card, .sub-stage-card").forEach(function(card) {
+                    card.classList.add("d-none");
+                });
+
+                // Show the clicked stage count
+                document.querySelectorAll(`.stage-card[data-stage="${selectedStage}"]`).forEach(function(stageCard) {
+                    stageCard.classList.remove("d-none");
+                });
+
+                // Show sub-stage cards related to the selected stage
+                document.querySelectorAll(`.sub-stage-card[data-stage="${selectedStage}"]`).forEach(function(subStageCard) {
+                    subStageCard.classList.remove("d-none");
+                });
+
+                bootstrap.Modal.getInstance(document.getElementById('actionModal')).hide();
+            };
+
+            document.getElementById("showTableBtn").onclick = function() {
+                // Display the table in the modal
+                const modalTableBody = document.getElementById('modalTableBody');
+                modalTableBody.innerHTML = ''; // Clear previous data
+                documents.forEach(doc => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${doc.course}</td>
+                        <td>${doc.specialization}</td>
+                        <td>${doc.status}</td>
+                        <td>${doc.name}</td>
+                        <td>${doc.email}</td>
+                        <td>${doc.mobile}</td>
+                        <td>${doc.budget}</td>
+                        <!-- Add more cells as needed -->
+                    `;
+                    modalTableBody.appendChild(row);
+                });
+                bootstrap.Modal.getInstance(document.getElementById('actionModal')).hide();
+                new bootstrap.Modal(document.getElementById('detailsModal')).show();
+            };
+        });
+    });
+
+    // Handle sub-stage card click
+    document.querySelectorAll(".sub-stage-card").forEach(function(subStageCard) {
+        subStageCard.addEventListener("click", function() {
+            documents = JSON.parse(this.getAttribute('data-documents'));
+
+            // Display the table in the modal directly
+            const modalTableBody = document.getElementById('modalTableBody');
+            modalTableBody.innerHTML = ''; // Clear previous data
+            documents.forEach(doc => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${doc.course}</td>
+                    <td>${doc.specialization}</td>
+                    <td>${doc.status}</td>
+                    <td>${doc.name}</td>
+                    <td>${doc.email}</td>
+                    <td>${doc.mobile}</td>
+                    <td>${doc.budget}</td>
+                    <!-- Add more cells as needed -->
+                `;
+                modalTableBody.appendChild(row);
+            });
+            new bootstrap.Modal(document.getElementById('detailsModal')).show();
+        });
+    });
+});
+
+</script>
+
+
+<script>
+  document.getElementById('latestBtn').addEventListener('click', function() {
+    const dateRange = document.getElementById('dateRange').value;
+    const preset = document.getElementById('presetDateRange').value;
+
+    let startDate, endDate;
+
+    // Calculate dates based on preset
+    const today = new Date();
+    switch(preset) {
+        case 'today':
+            startDate = endDate = today.toISOString().split('T')[0];
+            break;
+        case 'this-week':
+            const firstDayOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 1));
+            const lastDayOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 7));
+            startDate = firstDayOfWeek.toISOString().split('T')[0];
+            endDate = lastDayOfWeek.toISOString().split('T')[0];
+            break;
+        case 'last-month':
+            const firstDayOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+            const lastDayOfLastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+            startDate = firstDayOfLastMonth.toISOString().split('T')[0];
+            endDate = lastDayOfLastMonth.toISOString().split('T')[0];
+            break;
+        case 'last-year':
+            const firstDayOfLastYear = new Date(today.getFullYear() - 1, 0, 1);
+            const lastDayOfLastYear = new Date(today.getFullYear() - 1, 11, 31);
+            startDate = firstDayOfLastYear.toISOString().split('T')[0];
+            endDate = lastDayOfLastYear.toISOString().split('T')[0];
+            break;
+        default:
+            if (dateRange) {
+                [startDate, endDate] = dateRange.split(' to ');
+            }
+            break;
+    }
+
+    // Check if no date is selected
+    if (!startDate || !endDate) {
+      alert('Please select a date range or a preset date range.');
+      return;
+    }
+
+    const url = `/crm-lead-owner-dashboard?startDate=${startDate}&endDate=${endDate}&showLatestSubstage=true`;
+    window.location.href = url;
+  });
+
+  
+</script>
+
+
+       
+     
+<!-- Back to Top -->
+<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top neon-btn"><i class="bi bi-arrow-up"></i></a>
+
+<style>
+ 
 </style>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">

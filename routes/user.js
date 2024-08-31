@@ -689,66 +689,55 @@ router.get("/crm-lead-owner-dashboard-details", (req, res) => {
   res.render("user/crm-tp-dashboard-details", { user: true });
 });
 
-router.get("/get-lead-details", async (req, res) => {
-  const { mainStage, stage, subStage } = req.query;
 
-  if (!mainStage || !stage || !subStage) {
-    return res
-      .status(400)
-      .json({
-        success: false,
-        message: "Missing or empty required parameters",
-      });
-  }
 
-  try {
-    const leadDetails = await fetchLeadDetails(mainStage, stage, subStage);
-    res.json(leadDetails);
-  } catch (error) {
-    console.error("Error fetching lead details:", error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
-  }
-});
 
 
 
 router.get("/crm-lead-owner-dashboard", verifyLogin, async (req, res) => {
   const sessionEmail = req.session.user.email;
-  const { startDate, endDate, filterType, stage, showLatestSubstage } = req.query;
+  const { startDate, endDate, filterType, stage, showLatestSubstage } =
+    req.query;
 
   try {
-    const {
-      mainStageCounts,
-      stageCounts,
-      subStageCounts,
-      totalLeads,
-      stagesAndSubStages,
-    } = await serviceHelpers.getLeadStatusCounts(
-      sessionEmail,
-      startDate,
-      endDate,
-      filterType,
-      stage,
-      showLatestSubstage === 'true' // Convert the query string to a boolean
-    );
+    // Modify the backend function to include documents
+   const {
+     mainStageCounts,
+     stageCounts,
+     subStageCounts,
+     totalLeads,
+     documents, // Ensure documents are included here
+   } = await serviceHelpers.getLeadStatusCounts(
+     sessionEmail,
+     startDate,
+     endDate,
+     filterType,
+     stage,
+     showLatestSubstage === "true"
+   );
 
-    res.render("user/crmleadowners-dash", {
-      user: true,
-      totalLeads,
-      stage,
-      mainStageCounts,
-      stageCounts,
-      subStageCounts,
-      stagesAndSubStages,
-      showLatestSubstage: showLatestSubstage === "true",
-      userEmail: req.session.user.email,
-      userName: req.session.user.name,
-    });
+
+
+
+      res.render("user/crmleadowners-dash", {
+        user: true,
+        totalLeads,
+        stage,
+        mainStageCounts,
+        stageCounts,
+        subStageCounts,
+        showLatestSubstage: showLatestSubstage === "true",
+        userEmail: req.session.user.email,
+        userName: req.session.user.name,
+        documents, // Ensure this is passed to the template
+      });
+
   } catch (error) {
     console.error("Error fetching lead status counts:", error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 });
+
 
 router.get("/lead-details", verifyLogin, async (req, res) => {
   const { id } = req.query;
@@ -757,7 +746,7 @@ router.get("/lead-details", verifyLogin, async (req, res) => {
 
   if (!id || !ObjectId.isValid(id)) {
     return res.status(400).json({ success: false, message: "Invalid Lead ID" });
-  }
+  }a
 
   try {
     const data = await serviceHelpers.getLeadDetailsById(id);
