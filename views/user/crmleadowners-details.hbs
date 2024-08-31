@@ -1285,36 +1285,36 @@ async function saveLeadStatus(button) {
     const subStage = subStageSelect.value;
     const leadStatus = leadStatusTextarea.value.trim();
 
-    if (!leadStatus) {
+    // Check if the main stage, lead stage, lead status, and sub-stage fields are filled
+    if (!mainStage || !leadStage || !leadStatus || !subStage) {
         Swal.fire({
             icon: 'warning',
-            title: 'Lead Status Required',
-            text: 'Please provide a lead status before saving.',
+            title: 'Missing Required Fields',
+            text: 'Please fill out the main stage, lead stage, sub-stage, and lead status fields before saving.',
         });
         return;
     }
 
+    // Check if the sub-stage is required and if it is filled
     let isMandatory = false;
-    if (subStage) {
-        try {
-            const response = await fetch('/get-sub-stage-mandatory', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ stage: leadStage, subStage })
-            });
+    try {
+        const response = await fetch('/get-sub-stage-mandatory', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ stage: leadStage, subStage })
+        });
 
-            const result = await response.json();
-            if (result.success) {
-                isMandatory = result.isMandatory;
-                console.log(`Sub-Stage "${subStage}" is mandatory: ${isMandatory}`);
-            } else {
-                console.error('Failed to fetch sub-stage mandatory status:', result.message);
-                return;
-            }
-        } catch (error) {
-            console.error('Error fetching sub-stage mandatory status:', error);
+        const result = await response.json();
+        if (result.success) {
+            isMandatory = result.isMandatory;
+            console.log(`Sub-Stage "${subStage}" is mandatory: ${isMandatory}`);
+        } else {
+            console.error('Failed to fetch sub-stage mandatory status:', result.message);
             return;
         }
+    } catch (error) {
+        console.error('Error fetching sub-stage mandatory status:', error);
+        return;
     }
 
     if (isMandatory && !subStage) {
@@ -1326,6 +1326,7 @@ async function saveLeadStatus(button) {
         return;
     }
 
+    // Check if follow-up fields are required and filled
     const followUpContainer = row.querySelector('.follow-up-container');
     const followUpDate = row.querySelector('.follow-up-date')?.value || null;
     const followUpTime = row.querySelector('.follow-up-time')?.value || null;
