@@ -469,7 +469,7 @@
 </td>
 
                                 <td>
-                                    <button class="btn btn-status {{#if (eq this.universityPaid "Paid")}}btn-paid{{else}}btn-not-paid{{/if}}" onclick="toggleStatus(this, 'University Paid')">
+                                    <button class="btn btn-status {{#if (eq this.universityPaid "Paid")}}btn-paid{{else}}btn-not-paid{{/if}}" onclick="toggleStatuss(this, 'University Paid')">
                                         {{#if (eq this.universityPaid "Paid")}}Paid{{else}}Not Paid{{/if}}
                                     </button>
                                 </td>
@@ -831,9 +831,11 @@ function sendMessages() {
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).ready(function () {
-    // Run the handleRowStatus function on page load for each row
+    // Handle row status for each row on page load
     $('#dataTable tbody tr').each(function () {
-        handleRowStatus($(this));  // Ensure this is called after rendering
+        const row = $(this);
+        const documentStatus = row.find('td').eq(21).find('button').text().trim();
+        handleRowStatus(row, documentStatus);
     });
 
     // Attach the toggleDateVisibility function to the change event of the refund status dropdowns
@@ -881,6 +883,31 @@ function toggleDateVisibility(row) {
     iehDateInput.prop('required', status.iehrefund === 'success');
 }
 
+function toggleStatuss(button, type) {
+    const currentText = $(button).text().trim();
+    const statusConfig = {
+        'Not Paid': { text: 'Paid', newClass: 'btn-paid' },
+        'Paid': { text: 'Not Paid', newClass: 'btn-not-paid' },
+
+        'Not Done': { text: 'Done', newClass: 'btn-done' },
+        'Done': { text: 'Not Done', newClass: 'btn-not-done' }
+    };
+
+    const newStatus = statusConfig[currentText];
+    if (newStatus) {
+        $(button).text(newStatus.text)
+            .removeClass('btn-not-paid btn-paid ')
+            .addClass(newStatus.newClass);
+
+        const row = $(button).closest('tr');
+        const rowData = getRowData(row);
+
+        if (type === 'ID Approved') {
+            handleIdApproval(row, rowData, newStatus.text);
+        }
+    }
+}
+
 function toggleStatus(button, type) {
     const currentText = $(button).text().trim();
     const statusConfig = {
@@ -903,10 +930,8 @@ function toggleStatus(button, type) {
     }
 }
 
-function handleRowStatus(row, newStatus = null) {
-    const status = newStatus || row.find('td').eq(32).find('button').text().trim();
-
-    if (status === 'Approved') {
+function handleRowStatus(row, documentStatus) {
+    if (documentStatus === 'Approved') {
         // Disable and hide specific columns related to refund statuses
         row.find('td').each(function () {
             const index = $(this).index();
@@ -1055,12 +1080,12 @@ function handleIdApproval(row, rowData, newStatus) {
     } else if (newStatus === 'Not Approved') {
         Swal.fire({
             title: 'Are you sure?',
-            text: 'Do you want to remove this ID?',
+            text: 'Do you want to reject this ID?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, remove it!',
+            confirmButtonText: 'Yes, reject it!',
             cancelButtonText: 'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {
@@ -1070,7 +1095,7 @@ function handleIdApproval(row, rowData, newStatus) {
                     .done(() => {
                         Swal.fire({
                             title: 'Success!',
-                            text: 'ID has been removed successfully.',
+                            text: 'ID has been rejected successfully.',
                             icon: 'success',
                             confirmButtonText: 'OK'
                         });
@@ -1087,6 +1112,7 @@ function handleIdApproval(row, rowData, newStatus) {
         });
     }
 }
+
 function validateFields(data) {
     // Define the required fields
     const requiredFields = [
@@ -1121,7 +1147,7 @@ function validateFields(data) {
         'action'
     ];
 
-    // Define the fields that should be required only if ID is not Approved
+    // Define the fields that should be required only if documentStatus is 'Not Approved'
     const conditionalRequiredFields = [
         'unirefundinitiated',
         'dateOfRefundInitiateduni',
@@ -1129,21 +1155,27 @@ function validateFields(data) {
         'dateOfRefundInitiatedieh'
     ];
 
-    // Check if ID is approved
-    if (data.idApproved === 'Approved') {
-        // When ID is approved, exclude certain conditional fields from validation
-        return requiredFields.filter(field => !data[field] && !conditionalRequiredFields.includes(field));
-    } else {
-        // When ID is not approved, include the conditional fields in validation
+    // Check if documentStatus is 'Not Approved'
+    if (data.documentStatus === 'Not Approved') {
+        // When documentStatus is 'Not Approved', include the conditional fields in validation
         return requiredFields.filter(field => !data[field]) // Ensure all required fields are filled
             .concat(conditionalRequiredFields.filter(field => !data[field])); // Include conditional fields if not filled
+    } else {
+        // When documentStatus is 'Approved', only validate the required fields without conditional fields
+        return requiredFields.filter(field => !data[field]);
     }
 }
 
 
 function saveData() {
     $('#dataTable tbody tr').each(function() {
-        const rowData = getRowData($(this));
+        // Get the row data
+        let rowData = getRowData($(this));
+
+        // Remove or ignore the idApproved field
+        delete rowData.idApproved;
+
+        // Make the AJAX request to save the data
         $.post('/update-client-details', rowData)
             .done(() => {
                 Swal.fire({
@@ -1163,6 +1195,7 @@ function saveData() {
             });
     });
 }
+
 </script>
 
  
