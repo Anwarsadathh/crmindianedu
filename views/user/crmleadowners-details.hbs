@@ -1132,14 +1132,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function redirectToSEForm(button) {
     const row = button.closest('tr');
-     const name = row.querySelector('td:nth-child(6)').textContent.trim();
-    const email = row.querySelector('td:nth-child(18)').textContent.trim();
-    const whatsapp = row.querySelector('td:nth-child(7)').textContent.trim();
-    const course = row.querySelector('td:nth-child(15)').textContent.trim();
-    const specialization = row.querySelector('td:nth-child(26)').textContent.trim();
-    const city = row.querySelector('td:nth-child(14)').textContent.trim();
-    const state = row.querySelector('td:nth-child(5)').textContent.trim();
-     const budget = row.querySelector('td:nth-child(13)').textContent.trim();
+     const name = row.querySelector('td:nth-child(7)').textContent.trim();
+    const email = row.querySelector('td:nth-child(19)').textContent.trim();
+    const whatsapp = row.querySelector('td:nth-child(8)').textContent.trim();
+    const course = row.querySelector('td:nth-child(16)').textContent.trim();
+    const specialization = row.querySelector('td:nth-child(27)').textContent.trim();
+    const city = row.querySelector('td:nth-child(15)').textContent.trim();
+    const state = row.querySelector('td:nth-child(6)').textContent.trim();
+     const budget = row.querySelector('td:nth-child(14)').textContent.trim();
 
     // Construct URL with query parameters
     const url = new URL('/se-form', window.location.origin);

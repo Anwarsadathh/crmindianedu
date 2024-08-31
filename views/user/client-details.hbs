@@ -474,7 +474,7 @@
                                     </button>
                                 </td>
                                 <td><input type="date" class="form-control" value="{{this.universityPaidDate}}" /></td>
-                             <td>
+                        <td>
     <button class="btn btn-status {{#if (eq this.documentStatus "Approved")}}btn-approved{{else}}btn-not-approved{{/if}}" onclick="toggleStatus(this, 'Document Status')">
         {{#if (eq this.documentStatus "Approved")}}Approved{{else}}Not Approved{{/if}}
     </button>
@@ -499,6 +499,7 @@
 <td class="refund-cell detail-row">
     <input type="date" class="form-control {{#unless (eq this.iehrefundinitiated "success")}}d-none{{/unless}}" value="{{this.dateOfRefundInitiatedieh}}" />
 </td>
+
 
                                   <td>{{this.scholarship}}</td>
                                 <td>
@@ -830,16 +831,15 @@ function sendMessages() {
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).ready(function () {
+    // Run the handleRowStatus function on page load for each row
+    $('#dataTable tbody tr').each(function () {
+        handleRowStatus($(this));  // Ensure this is called after rendering
+    });
+
     // Attach the toggleDateVisibility function to the change event of the refund status dropdowns
     $('#dataTable').on('change', 'select', function () {
         const row = $(this).closest('tr');
         toggleDateVisibility(row);
-    });
-
-    // Run the toggleDateVisibility function on page load for each row
-    $('#dataTable tbody tr').each(function () {
-        toggleDateVisibility($(this));
-        handleRowStatus($(this));  // Added function to handle row status on page load
     });
 
     // Attach the saveData function to the save button
@@ -905,17 +905,16 @@ function toggleStatus(button, type) {
 
 function handleRowStatus(row, newStatus = null) {
     const status = newStatus || row.find('td').eq(32).find('button').text().trim();
-    
+
     if (status === 'Approved') {
         // Disable and hide specific columns related to refund statuses
         row.find('td').each(function () {
             const index = $(this).index();
-            
-            // Hide dropdowns and date inputs related to refund statuses
+
             if (index === 22 || index === 24) {
-                $(this).find('select').prop('disabled', true).hide(); // Hide select dropdowns
+                $(this).find('select').prop('disabled', true).hide();
             } else if (index === 23 || index === 25) {
-                $(this).find('input[type="date"]').prop('disabled', true).hide(); // Hide date inputs
+                $(this).find('input[type="date"]').prop('disabled', true).hide();
             }
         });
     } else {
@@ -923,11 +922,10 @@ function handleRowStatus(row, newStatus = null) {
         row.find('td').each(function () {
             const index = $(this).index();
 
-            // Show dropdowns and date inputs related to refund statuses
             if (index === 22 || index === 24) {
-                $(this).find('select').prop('disabled', false).show(); // Show select dropdowns
+                $(this).find('select').prop('disabled', false).show();
             } else if (index === 23 || index === 25) {
-                $(this).find('input[type="date"]').prop('disabled', false).show(); // Show date inputs
+                $(this).find('input[type="date"]').prop('disabled', false).show();
             }
         });
     }
@@ -1089,7 +1087,6 @@ function handleIdApproval(row, rowData, newStatus) {
         });
     }
 }
-
 function validateFields(data) {
     // Define the required fields
     const requiredFields = [
