@@ -338,10 +338,75 @@ color: #ffffff;
                     <button class="btn btn-glass shadow-sm circular-btn ms-3" id="latestBtn">
                         <i class="bi bi-filter-circle"></i> 
                     </button>
+                    
                 </div>
             {{/if}}
+            
         </div>
+<div class="col-12 col-xl-12">
+    <div style="width: 10%;">
+        <button type="button" class="btn-sm btn-secondary icon-only-btn" id="backBtn">
+            <i class="fa fa-arrow-left"></i> 
+        </button>
+    </div>
+</div>
 
+<style>
+   .icon-only-btn {
+    background-color: #343a40;
+    color: #ffffff;
+    padding: 8px;
+    font-size: 14px;
+    border-radius: 50%;
+    border: 2px solid #28a745;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease-in-out;
+    width: 40px;
+    height: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    position: relative;
+}
+
+.icon-only-btn i {
+    transition: transform 0.2s ease-in-out;
+}
+
+.icon-only-btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 300%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(40, 167, 69, 0.5), transparent);
+    transition: all 0.5s ease-in-out;
+}
+
+.icon-only-btn:hover::before {
+    left: -50%;
+}
+
+.icon-only-btn:hover {
+    background-color: #28a745;
+    color: #ffffff;
+    border-color: #343a40;
+    transform: scale(1.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+}
+
+.icon-only-btn:hover i {
+    transform: translateX(-3px);
+}
+
+.icon-only-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.5);
+}
+
+</style>
         <!-- Lead Statistics -->
         <div class="col-6 col-xl-3">
             <div class="stat-card bg-gradient-primary text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
@@ -389,6 +454,12 @@ color: #ffffff;
   </div>
 </div>
 
+{{!-- <!-- Back Button -->
+<div class="navigation-buttons d-none">
+    <button id="backBtn" class="btn btn-secondary">
+        <i class="fa fa-arrow-left"></i> Back
+    </button>
+</div> --}}
 
 <!-- Main Stage Cards -->
 {{#each mainStageCounts}}
@@ -436,6 +507,53 @@ color: #ffffff;
         </div>
     </div>
 {{/each}}
+
+{{!-- <!-- Main Stage Cards -->
+{{#each mainStageCounts}}
+    <div class="col-6 col-xl-3">
+        <div class="stat-card bg-gradient-neon text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl main-stage-card" 
+            data-stage="{{mainStage}}" 
+            data-documents='{{json this.documents}}'>
+            <i class="fa fa-briefcase fa-3x neon-icon"></i>
+            <div class="ms-3">
+                <p class="mb-2 counts">{{mainStage}}</p>
+                <h6 class="mb-0">{{count}}</h6>
+            </div>
+        </div>
+    </div>
+{{/each}}
+
+<!-- Stage Cards -->
+{{#each stageCounts}}
+    <div class="col-6 col-xl-3 stage-card d-none" 
+         data-main-stage="{{mainStage}}" 
+         data-stage="{{stage}}" 
+         data-documents='{{json this.documents}}'>
+        <div class="stat-card bg-gradient-info text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+            <i class="fa fa-layer-group fa-3x neon-icon"></i>
+            <div class="ms-3">
+                <p class="mb-2 counts">{{stage}}</p>
+                <h6 class="mb-0">{{count}}</h6>
+            </div>
+        </div>
+    </div>
+{{/each}}
+
+<!-- Sub-Stage Cards -->
+{{#each subStageCounts}}
+    <div class="col-6 col-xl-3 sub-stage-card d-none" 
+         data-stage="{{stage}}" 
+         data-sub-stage="{{subStage}}" 
+         data-documents='{{json this.documents}}'>
+        <div class="stat-card bg-gradient-success text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+            <i class="fa fa-tags fa-3x neon-icon"></i>
+            <div class="ms-3">
+                <p class="mb-2 counts">{{subStage}}</p>
+                <h6 class="mb-0">{{count}}</h6>
+            </div>
+        </div>
+    </div>
+{{/each}} --}}
 {{!-- {{#each subStageCounts}}
     <div class="col-6 col-xl-3">
         <div class="stat-card bg-gradient-success text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl sub-stage-card" data-sub-stage="{{subStage}}" data-documents='{{json this.documents}}' data-bs-toggle="modal" data-bs-target="#detailsModal">
@@ -493,17 +611,69 @@ color: #ffffff;
   </div>
 </div>
 
+
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     let selectedMainStage = null;
     let selectedStage = null;
     let documents = null;
+    const backBtn = document.getElementById("backBtn");
+
+    // Initialize Back Button
+    backBtn.style.display = "none";
+
+    function showBackButton() {
+        backBtn.style.display = "block";
+    }
+
+    function hideBackButton() {
+        backBtn.style.display = "none";
+    }
+
+    function resetView() {
+        document.querySelectorAll(".main-stage-card, .stage-card, .sub-stage-card").forEach(function(card) {
+            card.classList.add("d-none");
+        });
+        document.querySelectorAll(".main-stage-card").forEach(function(card) {
+            card.classList.remove("d-none");
+        });
+        hideBackButton();
+    }
+
+    // Handle Back Button Click
+    backBtn.addEventListener("click", function() {
+        if (selectedStage) {
+            // If sub-stages are being viewed, go back to stage view
+            document.querySelectorAll(".sub-stage-card").forEach(function(card) {
+                card.classList.add("d-none");
+            });
+            document.querySelectorAll(`.stage-card[data-main-stage="${selectedMainStage}"]`).forEach(function(card) {
+                card.classList.remove("d-none");
+            });
+            selectedStage = null;
+        } else if (selectedMainStage) {
+            // If stages are being viewed, go back to main stage view
+            document.querySelectorAll(".stage-card, .sub-stage-card").forEach(function(card) {
+                card.classList.add("d-none");
+            });
+            document.querySelectorAll(".main-stage-card").forEach(function(card) {
+                card.classList.remove("d-none");
+            });
+            selectedMainStage = null;
+        } else {
+            // If at the main stage view, reset everything
+            resetView();
+        }
+    });
 
     // Handle main stage card click
     document.querySelectorAll(".main-stage-card").forEach(function(mainStageCard) {
         mainStageCard.addEventListener("click", function() {
             selectedMainStage = this.dataset.stage;
             documents = JSON.parse(this.getAttribute('data-documents'));
+
+            showBackButton();
 
             // Show the action modal
             new bootstrap.Modal(document.getElementById('actionModal')).show();
@@ -552,6 +722,8 @@ document.addEventListener("DOMContentLoaded", function() {
         stageCard.addEventListener("click", function() {
             selectedStage = this.dataset.stage;
             documents = JSON.parse(this.getAttribute('data-documents'));
+
+            showBackButton();
 
             // Show the action modal
             new bootstrap.Modal(document.getElementById('actionModal')).show();
@@ -629,7 +801,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
-
 </script>
 
 
