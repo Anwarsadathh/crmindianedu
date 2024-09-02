@@ -20,13 +20,37 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
  <!-- Add necessary meta tags and links to CSS/JS files -->
-  <!-- jQuery -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet">
-  <!-- Bootstrap JS -->
-  <!-- DataTables JS -->
-  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css">
+
+<!-- DataTables JavaScript -->
+<script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+
+<!-- DataTables Buttons CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/3.0.1/css/buttons.dataTables.css">
+
+<!-- DataTables Buttons JavaScript -->
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/dataTables.buttons.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.dataTables.js"></script>
+
+<!-- JSZip -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<!-- pdfmake -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+<!-- DataTables Buttons HTML5 and Print JavaScript -->
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.print.min.js"></script>
+
+<!-- DataTables Select JavaScript -->
+<script src="https://cdn.datatables.net/select/2.0.0/js/dataTables.select.js"></script>
+<script src="https://cdn.datatables.net/select/2.0.0/js/select.dataTables.js"></script>
+
     <!-- Libraries Stylesheet -->
     <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
@@ -36,93 +60,53 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
-     <style>
+    <style>
+   
+ @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
 body {
     font-family: 'Montserrat', sans-serif;
     background-color: #f0f2f5;
     margin: 0;
     padding: 0;
-    font-size: 14px; /* Smaller font size for overall content */
-}
-
-header {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    padding: 15px;
-    background-color: #f8f9fa;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-}
-
-header img {
-    height: 35px;
-    margin-left: 15px;
-}
-
-.dashboard-container {
-    margin-top: 80px; /* Space for fixed header */
-    width: 90%;
-    max-width: 1200px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-}
-
-.dashboard-container:hover {
-    transform: scale(1.02);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-}
-
-.btn-custom {
-    background-color: #007BFF;
-    color: #fff;
-    border-radius: 5px;
     font-size: 14px;
-    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.btn-custom:hover {
-    background-color: #0056b3;
-    transform: scale(1.05);
+.form-control{
+    
+    border:none;
+    padding-left:32px;
 }
-
-
-//
-.table-responsive {
+.tt {
     margin-top: 20px;
+    padding: 70px;
+    border-radius: 10px;background-color: #f2f9f6; /* Very pale mint green */
+
+}
+.btn-primary{
+    font-size: 10px;
+    background-color: #007bff !important;
+}
+.btn-secondary{
+    font-size: 10px;
+    background-color: #160070 !important;
+}
+.table-responsive{
+    margin-top: 15px;
+}
+.form-control:focus{
+    
+    border:none;
+    box-shadow:none;
 }
 
-.table {
-    width: 100%;
-    border-collapse: collapse;
+.green{
+    
+    color:green;
 }
-
-.table thead th {
-    background-color: #232f65;
-    border-bottom: 2px solid #dee2e6;
-    color: #ffffff;
-    text-align: left;
-    padding: 10px;
-    width: auto !important;
-    font-size: 12px; /* Smaller font size for table headers */
-}
-
-.table tbody td {
-    border-bottom: 1px solid #dee2e6;
-    padding: 8px;
-    font-size: 12px; /* Smaller font size for table content */
-}
-
 /* Button styles */
 .btn-status {
-    font-size: 12px;
-    padding: 5px 10px;
+    font-size: 10px; /* Smaller font size for buttons */
+    padding: 4px 8px; /* Smaller padding for buttons */
     transition: background-color 0.3s ease;
 }
 
@@ -166,10 +150,63 @@ header img {
     color: #fff;
 }
 
+.btn-glass:hover{
+color: #ffffff;
+background-color: #1c008b !important;
+}
 .btn-status.active-not-approved {
     background-color: #ffc107 !important; /* Yellow */
     color: #000;
 }
+/* Container for table */
+.table-wrapper {
+    position: relative; /* To contain the sticky header */
+    overflow: auto; /* Allows the table body to scroll */
+    height: 500px; /* Set a height for the scrolling area */
+}
+
+/* Ensure the table takes the full width of its container */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10px; /* Smaller font size for table content */
+    table-layout: fixed; /* Ensures fixed widths are respected */
+}
+
+/* Ensure the table header stays fixed at the top */
+.table thead {
+    position: sticky;
+    top: 0;
+    background-color: #fff; /* Solid background color for visibility */
+    z-index: 2; /* Ensure it stays on top of other content */
+}
+
+/* Table header and cells styling */
+.table thead th,
+.table tbody td {
+    text-align: left;
+    padding: 6px; /* Reduced padding for a smaller appearance */
+    border: 1px solid #dee2e6;
+    font-size: 12px; /* Consistent smaller font size */
+    width: 120px; /* Fixed width for consistency */
+    font-family: Arial, Helvetica, sans-serif;
+    overflow: hidden; /* Prevent overflow for fixed-width cells */
+    text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+.table thead th {
+    background-color: #232f65;
+    color: #ffffff;
+}
+
+.table tbody tr:hover {
+    background-color: #d0e3ff; /* Hover color for rows */
+}
+
+
+/* Adjust other table-related styles if necessary */
+
 
 .btn-status.active-approved {
     background-color: #17a2b8 !important; /* Teal */
@@ -185,37 +222,7 @@ header img {
     background-color: #28a745 !important; /* Green */
     color: #fff;
 }
-
-
-
-.image-stack {
-    position: relative;
-    display: flex;
-}
-
-.profile-img {
-    border-radius: 50%;
-    position: relative;
-    z-index: 1;
-    margin-left: -20px; /* Adjust based on the desired overlap */
-    transition: transform 0.3s, z-index 0.3s;
-}
-
-.profile-img:hover {
-    transform: translateX(-20px); /* Adjust based on the desired hover effect */
-    z-index: 10;
-}
-
-.image-stack .bg-success {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    border-radius: 50%;
-    border: 2px solid white;
-    padding: 1px;
-}
-
-/* Custom styles for DataTables */
+/* DataTables styles */
 .dataTables_wrapper .dataTables_filter {
     float: right;
     text-align: right;
@@ -227,6 +234,7 @@ header img {
     display: inline-block;
     width: auto;
     margin-bottom: 10px; /* Add margin below the search bar */
+        position: sticky !important;
 }
 
 .dataTables_wrapper .dataTables_length {
@@ -242,33 +250,63 @@ header img {
 .dataTables_wrapper .dataTables_paginate {
     float: right;
     margin-top: 10px; /* Add margin above the pagination controls */
-}
-.required-field {
-    border: 2px solid red;
+
 }
 
-input, select {
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    box-sizing: border-box;
-    background-color: #eeeeee;
-    color: #000000;
-    transition: background-color 0.3s, transform 0.3s, width 0.3s;
+
+
+.image-stack {
+    position: relative;
+    display: flex;
 }
 
-input:focus, select:focus {
-    background-color: #ffffff;
-    transform: scale(1.05);
-    width: 180%; /* Adjust the percentage as needed */
+.profile-img {
+    border-radius: 50%;
+    position: relative;
+    z-index: 1;
+    margin-left: -20px;
+    transition: transform 0.3s, z-index 0.3s;
 }
-.form-control{
-    width: 100px;
+
+.profile-img:hover {
+    transform: translateX(-20px);
+    z-index: 10;
 }
-.form-select{
-    width: 100px;
+
+.image-stack .bg-success {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border-radius: 50%;
+    border: 2px solid white;
+    padding: 1px;
 }
-    </style>
+
+
+ .dotted-spinner {
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        border: 3px dotted white; /* White dotted border */
+        border-top: 3px solid white; /* Solid top border to create spinner effect */
+        animation: dotted-spinner 1.5s linear infinite;
+    }
+
+    @keyframes dotted-spinner {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .loading {
+        background-color: #6c757d; /* Change to a different color for the loading state */
+        color: #ffffff; /* Change text color if needed */
+    }
+</style>
+
 </head>
 
 <body>
@@ -292,15 +330,15 @@ input:focus, select:focus {
                       
                     <div class="ms-3" >
                         <h6 class="mb-0 text-white">Indianeduhub</h6>
-                        <span style="color: rgb(209, 211, 212);">Accounts</span>
+                        <span style="color: rgb(209, 211, 212);">Client</span>
                     </div>
                 </div>
                 <div class="navbar-nav w-100" style="background-color: #232f65;">
-                    <a href="/accounts-dashboard" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Dashboard</a>
+                    <a href="/client-dashboard" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Dashboard</a>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>SE Form</a>
                         <div class="dropdown-menu bg-transparent border-0">
-                            <a href="/accounts-details" class="dropdown-item active">Se-form-details</a>
+                            <a href="/client-details" class="dropdown-item active">Se-form-details</a>
                             <a href="typography.html" class="dropdown-item"></a>
                             <a href="element.html" class="dropdown-item"></a>
                         </div>
@@ -354,31 +392,103 @@ input:focus, select:focus {
                 </div>
             </nav>
             <!-- Navbar End -->
-<!-- Table Start -->
-<div class="container-fluid pt-4 px-4">
-    <div class="row g-4">
-        <div class="col-12">
-            <div class="bg-light rounded h-100 p-4">
-                <h6 class="mb-4">Mentor Details</h6>
-                <div class="table-responsive">
-                    <table class="table" id="dataTable">
-                        <thead>
-                            <tr>
-                                <th>No.</th>
+
+
+<style>
+
+/* CSS */
+.button-57 {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #18181a;
+  color: #18181a;
+  display: inline-block;
+  font-size: 15px;
+  line-height: 15px;
+  border-radius: 7px;
+  padding: 12px 12px 11px;
+  text-decoration: none;
+  cursor: pointer;
+  background: #fff;
+  user-select: none;
+  margin-bottom: ;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-57 span:first-child {
+  position: relative;
+  transition: color 600ms cubic-bezier(0.48, 0, 0.12, 1);
+  z-index: 10;
+}
+
+.button-57 span:last-child {
+  color: white;
+  display: block;
+  position: absolute;
+  bottom: 0;
+  transition: all 500ms cubic-bezier(0.48, 0, 0.12, 1);
+  z-index: 100;
+  opacity: 0;
+  top: 50%;
+  left: 50%;
+  transform: translateY(225%) translateX(-50%);
+  height: 14px;
+  line-height: 13px;
+}
+
+.button-57:after {
+  content: "";
+  position: absolute;
+  bottom: -50%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  transform-origin: bottom center;
+  transition: transform 600ms cubic-bezier(0.48, 0, 0.12, 1);
+  transform: skewY(9.3deg) scaleY(0);
+  z-index: 50;
+}
+
+.button-57:hover:after {
+  transform-origin: bottom center;
+  transform: skewY(9.3deg) scaleY(2);
+}
+
+.button-57:hover span:last-child {
+  transform: translateX(-50%) translateY(-100%);
+  opacity: 1;
+  transition: all 900ms cubic-bezier(0.48, 0, 0.12, 1);
+}
+</style>
+            <div class="container tt mt-5 px-2">
+
+    <div class="table-responsive">
+    <table class="table table-responsive table-borderless" id="dataTable">
+        <button  id="saveButton" class="button-57" role="button"><span class="text">Save Changes</span><span>Save</span></button>
+      <thead>
+        <tr class="bg-light">
+          <th style="width: 10px; !important">No.</th>
                                 <th>Date</th>
                                 <th>Student ID</th>
-                                <th>Mentor</th>
+                                
                                 <th>Student Name</th>
                                 <th>Course</th>
                                 <th>Specialization</th>
                                 <th>Email</th>
                                 <th>Mobile Number</th>
-                                <th>Role</th>
+                                <th>State</th>
+                                <th>City</th>
+                               
+                                <th>Mentor</th>
                                 <th>Specific Name</th>
                                 <th>Service Pack</th>
                                 <th>Intake</th>
-                                <th>Uni Selected</th>
                                 <th>Mentorship</th>
+                                <th>Uni Selected</th>
+                                <th>Initial Reg</th>
+                                <th>Message</th>
                                 <th>Uni Paid</th>
                                 <th>Uni Fee Paid Date</th>
                                 <th>Document Status</th>
@@ -386,18 +496,20 @@ input:focus, select:focus {
                                 <th>Date of Uni Refund Initiated</th>
                                 <th>IEH Refund Initiated</th>
                                 <th>Date of IEH Refund Initiated</th>
+                                <th>Scholarship</th>
                                 <th>Fee Paid</th>
                                 <th>Amount</th>
                                 <th>Semester Status</th>
                                 <th>Batch</th>
                                 <th>Enrollment No</th>
                                 <th>ID Approved</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                                <th>Action</th>
+        </tr>
+      </thead>
+  <tbody>
                             {{#each formData}}
                             <tr data-id="{{_id}}">
-                                <td>{{incrementIndex @index}}</td>
+                                <td style="width: 10px; !important">{{incrementIndex @index}}</td>
                                 <td class="text-danger">{{this.date}}</td>
                                 <td>{{this.studentid}}</td>
                                 <td>{{this.mentor}}</td>
@@ -406,7 +518,9 @@ input:focus, select:focus {
                                 <td>{{this.specialization}}</td>
                                 <td>{{this.email}}</td>
                                 <td>{{this.mobile}}</td>
-                                <td>{{this.role}}</td>
+                                <td>{{this.state}}</td>
+                                <td>{{this.city}}</td>
+                               
                                 <td>{{this.specificName}}</td>
                                 <td>{{this.servicePack}}</td>
                                 <td>
@@ -418,43 +532,60 @@ input:focus, select:focus {
                                         <option value="Next Intake" {{#if (eq this.intake "Next Intake")}}selected{{/if}}>Next Intake</option>
                                     </select>
                                 </td>
-                                <td>{{this.university}}</td>
-                                <td>
-                                    <button class="btn btn-status {{#if (eq this.mentorshipStatus "Done")}}btn-done{{else}}btn-not-done{{/if}}" onclick="toggleStatus(this, 'Mentorship')">
-                                        {{#if (eq this.mentorshipStatus "Done")}}Done{{else}}Not Done{{/if}}
-                                    </button>
+                                  <td>
+                                   {{this.mentorshipStatus}}
                                 </td>
+                                <td>{{this.university}}</td>
+             <td>
+    <!-- Initial Registration Field -->
+    <button class="btn btn-status {{#if (eq this.initialRegistration "✔")}}btn-correct{{else}}btn-incorrect{{/if}}"
+            onclick="toggleInitialRegistration(this)">
+        {{#if (eq this.initialRegistration "✔")}}✔{{else}}✘{{/if}}
+    </button>
+</td>
+
+
+<td>
+    <!-- Message Field with Icon -->
+    <button class="btn btn-icon" onclick="openMessageModal('{{this.mobile}}', '{{this.email}}')">
+        <i class="fas fa-comment-dots"></i>
+    </button>
+</td>
+
                                 <td>
-                                    <button class="btn btn-status {{#if (eq this.universityPaid "Paid")}}btn-paid{{else}}btn-not-paid{{/if}}" onclick="toggleStatus(this, 'University Paid')">
+                                    <button class="btn btn-status {{#if (eq this.universityPaid "Paid")}}btn-paid{{else}}btn-not-paid{{/if}}" onclick="toggleStatuss(this, 'University Paid')">
                                         {{#if (eq this.universityPaid "Paid")}}Paid{{else}}Not Paid{{/if}}
                                     </button>
                                 </td>
                                 <td><input type="date" class="form-control" value="{{this.universityPaidDate}}" /></td>
-                                <td>
-                                    <button class="btn btn-status {{#if (eq this.documentStatus "Approved")}}btn-approved{{else}}btn-not-approved{{/if}}" onclick="toggleStatus(this, 'Document Status')">
-                                        {{#if (eq this.documentStatus "Approved")}}Approved{{else}}Not Approved{{/if}}
-                                    </button>
-                                </td>
-                                <td>
-                                    <select class="form-select">
-                                        <option value="" {{#if (eq this.unirefundinitiated "")}}selected{{/if}}>Select</option>
-                                        <option value="initiated" {{#if (eq this.unirefundinitiated "initiated")}}selected{{/if}}>Initiated</option>
-                                        <option value="success" {{#if (eq this.unirefundinitiated "success")}}selected{{/if}}>Success</option>
-                                    </select>
-                                </td>
-                                <td class="refund-cell">
-                                    <input type="date" class="form-control {{#unless (eq this.unirefundinitiated "success")}}d-none{{/unless}}" value="{{this.dateOfRefundInitiateduni}}" />
-                                </td>
-                                <td>
-                                    <select class="form-select">
-                                        <option value="" {{#if (eq this.iehrefundinitiated "")}}selected{{/if}}>Select</option>
-                                        <option value="initiated" {{#if (eq this.iehrefundinitiated "initiated")}}selected{{/if}}>Initiated</option>
-                                        <option value="success" {{#if (eq this.iehrefundinitiated "success")}}selected{{/if}}>Success</option>
-                                    </select>
-                                </td>
-                                <td class="refund-cell">
-                                    <input type="date" class="form-control {{#unless (eq this.iehrefundinitiated "success")}}d-none{{/unless}}" value="{{this.dateOfRefundInitiatedieh}}" />
-                                </td>
+                        <td>
+    <button class="btn btn-status {{#if (eq this.documentStatus "Approved")}}btn-approved{{else}}btn-not-approved{{/if}}" onclick="toggleStatus(this, 'Document Status')">
+        {{#if (eq this.documentStatus "Approved")}}Approved{{else}}Not Approved{{/if}}
+    </button>
+</td>
+<td class="detail-row">
+    <select class="form-select">
+        <option value="" {{#if (eq this.unirefundinitiated "")}}selected{{/if}}>Select</option>
+        <option value="initiated" {{#if (eq this.unirefundinitiated "initiated")}}selected{{/if}}>Initiated</option>
+        <option value="success" {{#if (eq this.unirefundinitiated "success")}}selected{{/if}}>Success</option>
+    </select>
+</td>
+<td class="refund-cell detail-row">
+    <input type="date" class="form-control {{#unless (eq this.unirefundinitiated "success")}}d-none{{/unless}}" value="{{this.dateOfRefundInitiateduni}}" />
+</td>
+<td class="detail-row">
+    <select class="form-select">
+        <option value="" {{#if (eq this.iehrefundinitiated "")}}selected{{/if}}>Select</option>
+        <option value="initiated" {{#if (eq this.iehrefundinitiated "initiated")}}selected{{/if}}>Initiated</option>
+        <option value="success" {{#if (eq this.iehrefundinitiated "success")}}selected{{/if}}>Success</option>
+    </select>
+</td>
+<td class="refund-cell detail-row">
+    <input type="date" class="form-control {{#unless (eq this.iehrefundinitiated "success")}}d-none{{/unless}}" value="{{this.dateOfRefundInitiatedieh}}" />
+</td>
+
+
+                                  <td>{{this.scholarship}}</td>
                                 <td>
                                     <select class="form-select">
                                         <option value="" {{#if (eq this.feepaid "")}}selected{{/if}}>Select</option>
@@ -491,64 +622,192 @@ input:focus, select:focus {
                                         {{#if (eq this.idApproved "Approved")}}Approved{{else}}Not Approved{{/if}}
                                     </button>
                                 </td>
+   <td>
+    <button class="btn btn-status {{#if (eq assignaccounts 'Assigned to accounts department')}}btn-paid{{else}}btn-not-paid{{/if}}" 
+            onclick="toggleAssignment(this)">
+        {{#if (eq assignaccounts 'Assigned to accounts department')}}Assigned to accounts department{{else}}Assign to accounts department{{/if}}
+    </button>
+</td>
+
+
+
+
                             </tr>
                             {{/each}}
                         </tbody>
-                    </table>
+</table>
+  
+  </div>
+    
+</div>
+
+   
+        <script>
+ $('#dataTable').DataTable({
+    layout: {
+        topStart: {
+            buttons: [
+                'copy',
+                'csv',
+                'excel',
+                'pdf',
+                {
+                    extend: 'print',
+                    text: 'Print all (not just selected)',
+                    exportOptions: {
+                        modifier: {
+                            selected: null
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    select: true
+});
+
+</script>
+
+
+<!-- Modal Structure -->
+<div class="modal" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="messageModalLabel">Send Message</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="whatsappMessage" class="form-label">WhatsApp Message</label>
+                    <input type="text" class="form-control" id="whatsappMessage" placeholder="Enter your WhatsApp message">
                 </div>
+                <div class="mb-3">
+                    <label for="emailMessage" class="form-label">Email Message</label>
+                    <textarea class="form-control" id="emailMessage" rows="3" placeholder="Enter your Email message"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="sendMessages()">Send</button>
             </div>
         </div>
     </div>
 </div>
-<!-- Table End -->
+
+<script>
+    function openMessageModal(mobile, email) {
+    // Set the data in the modal
+    document.getElementById('whatsappMessage').value = '';
+    document.getElementById('emailMessage').value = '';
+    
+    // Store mobile and email for later use
+    document.getElementById('messageModal').dataset.mobile = mobile;
+    document.getElementById('messageModal').dataset.email = email;
+    
+    // Show the modal
+    var myModal = new bootstrap.Modal(document.getElementById('messageModal'));
+    myModal.show();
+}
+
+function sendMessages() {
+    const mobile = document.getElementById('messageModal').dataset.mobile;
+    const email = document.getElementById('messageModal').dataset.email;
+    const whatsappMessage = document.getElementById('whatsappMessage').value;
+    const emailMessage = document.getElementById('emailMessage').value;
+    
+    // Redirect to WhatsApp with a pre-filled message
+    const whatsappUrl = `https://wa.me/${mobile}?text=${encodeURIComponent(whatsappMessage)}`;
+    window.open(whatsappUrl, '_blank');
+    
+    // Send email using an API or directly via server-side
+    fetch('/send-emailclient', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email: email,
+            message: emailMessage
+        })
+    }).then(response => response.json())
+      .then(data => {
+          if(data.success) {
+              alert('Email sent successfully');
+          } else {
+              alert('Failed to send email');
+          }
+      }).catch(error => {
+          console.error('Error:', error);
+          alert('Error sending email');
+      });
+}
+
+</script>
 
 
 <!-- Include SweetAlert2 for alerts -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script>
-$(document).ready(function() {
-    // Initialize DataTable
-    $('#dataTable').DataTable();
-
-    // Change header background on scroll
-    $(window).scroll(function() {
-        $('header').toggleClass('scrolled', $(this).scrollTop() > 50);
+$(document).ready(function () {
+    // Handle row status for each row on page load
+    $('#dataTable tbody tr').each(function () {
+        const row = $(this);
+        const documentStatus = row.find('td').eq(21).find('button').text().trim();
+        handleRowStatus(row, documentStatus);
     });
 
-    // Show/Hide date inputs based on refund initiated status
-    $('#dataTable').on('change', 'select', function() {
+    // Attach the toggleDateVisibility function to the change event of the refund status dropdowns
+    $('#dataTable').on('change', 'select', function () {
         const row = $(this).closest('tr');
         toggleDateVisibility(row);
-    }).trigger('change'); // Trigger change event on page load to set initial visibility
+    });
+
+    // Attach the saveData function to the save button
+    $('#saveButton').on('click', function () {
+        saveData();
+    });
 });
 
+function toggleInitialRegistration(button) {
+    const currentStatus = $(button).text().trim();
+    const newStatus = currentStatus === '✔' ? 'Incorrect' : 'Correct';
+    const newClass = currentStatus === '✔' ? 'btn-incorrect' : 'btn-correct';
+    const newText = newStatus === 'Correct' ? '✔' : '✘';
+
+    $(button).text(newText)
+        .removeClass('btn-correct btn-incorrect')
+        .addClass(newClass);
+
+    const row = $(button).closest('tr');
+    const rowData = getRowData(row);
+    rowData.initialRegistration = newStatus;
+
+    console.log('Row Data:', rowData);
+}
+
 function toggleDateVisibility(row) {
-    // Get refund statuses from the row
     const status = {
-        unirefund: row.find('td').eq(18).find('select').val(),
-        iehrefund: row.find('td').eq(20).find('select').val()
+        unirefund: row.find('td').eq(22).find('select').val(),
+        iehrefund: row.find('td').eq(24).find('select').val()
     };
 
-    // Show/Hide date inputs based on refund statuses
-    const uniDateInput = row.find('td').eq(19).find('input');
-    const iehDateInput = row.find('td').eq(21).find('input');
+    const uniDateInput = row.find('td').eq(23).find('input');
+    const iehDateInput = row.find('td').eq(25).find('input');
 
     uniDateInput.toggleClass('d-none', status.unirefund !== 'success');
     iehDateInput.toggleClass('d-none', status.iehrefund !== 'success');
 
-    // Add required attribute if the status is 'success'
     uniDateInput.prop('required', status.unirefund === 'success');
     iehDateInput.prop('required', status.iehrefund === 'success');
 }
 
-function toggleStatus(button, type) {
+function toggleStatuss(button, type) {
     const currentText = $(button).text().trim();
     const statusConfig = {
         'Not Paid': { text: 'Paid', newClass: 'btn-paid' },
         'Paid': { text: 'Not Paid', newClass: 'btn-not-paid' },
-        'Not Approved': { text: 'Approved', newClass: 'btn-approved' },
-        'Approved': { text: 'Not Approved', newClass: 'btn-not-approved' },
+
         'Not Done': { text: 'Done', newClass: 'btn-done' },
         'Done': { text: 'Not Done', newClass: 'btn-not-done' }
     };
@@ -556,17 +815,66 @@ function toggleStatus(button, type) {
     const newStatus = statusConfig[currentText];
     if (newStatus) {
         $(button).text(newStatus.text)
-            .removeClass('btn-not-paid btn-paid btn-not-approved btn-approved btn-not-done btn-done')
+            .removeClass('btn-not-paid btn-paid ')
             .addClass(newStatus.newClass);
 
         const row = $(button).closest('tr');
         const rowData = getRowData(row);
 
         if (type === 'ID Approved') {
-            handleIdApproval(row, rowData);
+            handleIdApproval(row, rowData, newStatus.text);
         }
     }
 }
+
+function toggleStatus(button, type) {
+    const currentText = $(button).text().trim();
+    const statusConfig = {
+        'Not Approved': { text: 'Approved', newClass: 'btn-approved' },
+        'Approved': { text: 'Not Approved', newClass: 'btn-not-approved' }
+    };
+
+    const newStatus = statusConfig[currentText];
+    if (newStatus) {
+        $(button).text(newStatus.text)
+            .removeClass('btn-not-approved btn-approved')
+            .addClass(newStatus.newClass);
+
+        const row = $(button).closest('tr');
+        handleRowStatus(row, newStatus.text);  // Updated to handle row status
+
+        if (type === 'ID Approved') {
+            handleIdApproval(row, getRowData(row), newStatus.text);
+        }
+    }
+}
+
+function handleRowStatus(row, documentStatus) {
+    if (documentStatus === 'Approved') {
+        // Disable and hide specific columns related to refund statuses
+        row.find('td').each(function () {
+            const index = $(this).index();
+
+            if (index === 22 || index === 24) {
+                $(this).find('select').prop('disabled', true).hide();
+            } else if (index === 23 || index === 25) {
+                $(this).find('input[type="date"]').prop('disabled', true).hide();
+            }
+        });
+    } else {
+        // Show and enable specific columns related to refund statuses
+        row.find('td').each(function () {
+            const index = $(this).index();
+
+            if (index === 22 || index === 24) {
+                $(this).find('select').prop('disabled', false).show();
+            } else if (index === 23 || index === 25) {
+                $(this).find('input[type="date"]').prop('disabled', false).show();
+            }
+        });
+    }
+}
+
 
 function getRowData(row) {
     return {
@@ -579,113 +887,235 @@ function getRowData(row) {
         specialization: row.find('td').eq(6).text().trim(),
         email: row.find('td').eq(7).text().trim(),
         mobile: row.find('td').eq(8).text().trim(),
-        role: row.find('td').eq(9).text().trim(),
-        specificName: row.find('td').eq(10).text().trim(),
-        servicePack: row.find('td').eq(11).text().trim(),
-        intake: row.find('td').eq(12).find('select').val() || '',
-        university: row.find('td').eq(13).text().trim(),
-        mentorshipStatus: row.find('td').eq(14).find('button').text().trim(),
-        universityPaid: row.find('td').eq(15).find('button').text().trim(),
-        universityPaidDate: row.find('td').eq(16).find('input').val() || '',
-        documentStatus: row.find('td').eq(17).find('button').text().trim(),
-        unirefundinitiated: row.find('td').eq(18).find('select').val() || '',
-        dateOfRefundInitiateduni: row.find('td').eq(19).find('input').val() || '',
-        iehrefundinitiated: row.find('td').eq(20).find('select').val() || '',
-        dateOfRefundInitiatedieh: row.find('td').eq(21).find('input').val() || '',
-        feepaid: row.find('td').eq(22).find('select').val() || '',
-        feePaidAmount: row.find('td').eq(23).find('input').val() || '',
-        semesterStatus: row.find('td').eq(24).find('select').val() || '',
-        batch: row.find('td').eq(25).find('select').val() || '',
-        enrollmentNo: row.find('td').eq(26).find('input').val() || '',
-        idApproved: row.find('td').eq(27).find('button').text().trim()
+        state: row.find('td').eq(9).text().trim(),
+        city: row.find('td').eq(10).text().trim(),
+        role: row.find('td').eq(11).text().trim(),
+        specificName: row.find('td').eq(12).text().trim(),
+        servicePack: row.find('td').eq(13).text().trim(),
+        intake: row.find('td').eq(14).find('select').val() || '',
+        mentorshipStatus: row.find('td').eq(15).text().trim(),
+        university: row.find('td').eq(16).text().trim(),
+        initialRegistration: row.find('td').eq(17).find('button').text().trim(),
+        message: row.find('td').eq(18).find('button').text().trim(),
+        universityPaid: row.find('td').eq(19).find('button').text().trim(),
+        universityPaidDate: row.find('td').eq(20).find('input').val() || '',
+        documentStatus: row.find('td').eq(21).find('button').text().trim(),
+        unirefundinitiated: row.find('td').eq(22).find('select').val() || '',
+        dateOfRefundInitiateduni: row.find('td').eq(23).find('input').val() || '',
+        iehrefundinitiated: row.find('td').eq(24).find('select').val() || '',
+        dateOfRefundInitiatedieh: row.find('td').eq(25).find('input').val() || '',
+        scholarship: row.find('td').eq(26).text().trim(),
+        feepaid: row.find('td').eq(27).find('select').val() || '',
+        feePaidAmount: row.find('td').eq(28).find('input').val() || '',
+        semesterStatus: row.find('td').eq(29).find('select').val() || '',
+        batch: row.find('td').eq(30).find('select').val() || '',
+        enrollmentNo: row.find('td').eq(31).find('input').val() || '',
+        idApproved: row.find('td').eq(32).find('button').text().trim(),
+        action: row.find('td').eq(33).find('button').text().trim()
     };
 }
 
-function handleIdApproval(row, rowData) {
-    Swal.fire({
-        title: 'Are you sure?',
-        text: 'Do you want to approve this ID?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, approve it!',
-        cancelButtonText: 'Cancel'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const missingFields = validateFields(rowData);
-            console.log('Row Data:', rowData); // Log row data
-            console.log('Missing Fields:', missingFields); // Log missing fields
+function toggleAssignment(button) {
+    const row = $(button).closest('tr');
+    const rowData = getRowData(row);
 
-            if (missingFields.length) {
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Please fill in all required fields before approving ID. Missing fields: ' + missingFields.join(', '),
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-                return;
-            }
+    const isAssigned = $(button).text().trim() === 'Assigned to accounts department';
+    const newAssignStatus = isAssigned ? 'Assign to accounts department' : 'Assigned to accounts department';
+    const newButtonClass = isAssigned ? 'btn-not-paid' : 'btn-paid';
 
-            $.post('/update-client-details', rowData)
-                .done(() => {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: 'ID has been approved successfully.',
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    });
-                })
-                .fail(() => {
+    $(button).text(newAssignStatus)
+        .removeClass('btn-paid btn-not-paid')
+        .addClass(newButtonClass);
+
+    rowData.assignaccounts = newAssignStatus;
+
+    $.post('/update-client-details', rowData)
+        .done(() => {
+            Swal.fire({
+                title: 'Success!',
+                text: 'Assignment status updated successfully.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        })
+        .fail(() => {
+            Swal.fire({
+                title: 'Error!',
+                text: 'Update failed. Please try again.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        });
+}
+
+function handleIdApproval(row, rowData, newStatus) {
+    if (newStatus === 'Approved') {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Do you want to approve this ID?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, approve it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const missingFields = validateFields(rowData);
+
+                if (missingFields.length) {
                     Swal.fire({
                         title: 'Error!',
-                        text: 'Update failed. Please try again.',
+                        text: 'Please fill in all required fields before approving ID. Missing fields: ' + missingFields.join(', '),
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
+                    return;
+                }
+
+                const randomPassword = Math.random().toString(36).slice(-8);
+                rowData.password = randomPassword;
+                rowData.idApproved = 'Approved';
+
+                $.post('/update-client-details', rowData)
+                    .done(() => {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: 'ID has been approved successfully. Password: ' + randomPassword,
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        });
+                    })
+                    .fail(() => {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Update failed. Please try again.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    });
+            }
+        });
+    } else if (newStatus === 'Not Approved') {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Do you want to reject this ID?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, reject it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                rowData.idApproved = 'Not Approved';
+
+                $.post('/update-client-details', rowData)
+                    .done(() => {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: 'ID has been rejected successfully.',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        });
+                    })
+                    .fail(() => {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Update failed. Please try again.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    });
+            }
+        });
+    }
+}
+
+function validateFields(data) {
+    // Define the required fields
+    const requiredFields = [
+        'id',
+        'date',
+        'studentid',
+        'mentor',
+        'name',
+        'course',
+        'specialization',
+        'email',
+        'mobile',
+        'state',
+        'city',
+        'role',
+        'specificName',
+        'servicePack',
+        'intake',
+        'mentorshipStatus',
+        'university',
+        'initialRegistration',
+        'universityPaid',
+        'universityPaidDate',
+        'documentStatus',
+        'scholarship',
+        'feepaid',
+        'feePaidAmount',
+        'semesterStatus',
+        'batch',
+        'enrollmentNo',
+        'idApproved',
+        'action'
+    ];
+
+    // Define the fields that should be required only if documentStatus is 'Not Approved'
+    const conditionalRequiredFields = [
+        'unirefundinitiated',
+        'dateOfRefundInitiateduni',
+        'iehrefundinitiated',
+        'dateOfRefundInitiatedieh'
+    ];
+
+    // Check if documentStatus is 'Not Approved'
+    if (data.documentStatus === 'Not Approved') {
+        // When documentStatus is 'Not Approved', include the conditional fields in validation
+        return requiredFields.filter(field => !data[field]) // Ensure all required fields are filled
+            .concat(conditionalRequiredFields.filter(field => !data[field])); // Include conditional fields if not filled
+    } else {
+        // When documentStatus is 'Approved', only validate the required fields without conditional fields
+        return requiredFields.filter(field => !data[field]);
+    }
+}
+
+
+function saveData() {
+    $('#dataTable tbody tr').each(function() {
+        // Get the row data
+        let rowData = getRowData($(this));
+
+        // Remove or ignore the idApproved field
+        delete rowData.idApproved;
+
+        // Make the AJAX request to save the data
+        $.post('/update-client-details', rowData)
+            .done(() => {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'All changes have been saved successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
                 });
-        }
+            })
+            .fail(() => {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Save failed. Please try again.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            });
     });
 }
 
-function validateFields(rowData) {
-    const requiredFields = [
-        { name: 'Student Name', field: rowData.name },
-        { name: 'Course', field: rowData.course },
-        { name: 'Specialization', field: rowData.specialization },
-        { name: 'Email', field: rowData.email },
-        { name: 'Mobile Number', field: rowData.mobile },
-        { name: 'Role', field: rowData.role },
-        { name: 'Specific Name', field: rowData.specificName },
-        { name: 'Service Pack', field: rowData.servicePack },
-        { name: 'Intake', field: rowData.intake },
-        { name: 'University', field: rowData.university },
-        { name: 'Semester Status', field: rowData.semesterStatus },
-        { name: 'Mentorship Status', field: rowData.mentorshipStatus },
-        { name: 'University Paid', field: rowData.universityPaid },
-        { name: 'University Paid Date', field: rowData.universityPaidDate },
-        { name: 'Document Status', field: rowData.documentStatus },
-        { name: 'Batch', field: rowData.batch },
-        { name: 'Enrollment No', field: rowData.enrollmentNo },
-        { name: 'Student ID', field: rowData.studentid },
-        { name: 'Date', field: rowData.date },
-        { name: 'Mentor', field: rowData.mentor },
-        { name: 'Fee Paid', field: rowData.feepaid },
-        { name: 'Fee Paid Amount', field: rowData.feePaidAmount }
-    ];
-
-    // Include the new required fields if the status is 'success'
-    if (rowData.unirefundinitiated === 'success') {
-        requiredFields.push({ name: 'Date of Refund Initiated (Uni)', field: rowData.dateOfRefundInitiateduni });
-    }
-    if (rowData.iehrefundinitiated === 'success') {
-        requiredFields.push({ name: 'Date of Refund Initiated (IEH)', field: rowData.dateOfRefundInitiatedieh });
-    }
-
-    return requiredFields.filter(field => !field.field || field.field.trim() === '').map(field => field.name);
-}
 </script>
-
 
  
   <!-- Additional JavaScript Libraries -->

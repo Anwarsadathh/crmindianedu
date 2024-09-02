@@ -186,6 +186,15 @@ function verifyLogin(req, res, next) {
   }
 }
 
+// Middleware for verifying super admin login
+function verifySuper(req, res, next) {
+  if (req.session && req.session.super) {
+    next();
+  } else {
+    res.redirect("/super-admin");
+  }
+}
+
 function verifyPartner(req, res, next) {
   if (req.session && req.session.partner) {
     next();
@@ -1394,12 +1403,14 @@ router.post("/update-client-details", async (req, res) => {
       state,
       city,
       initialRegistration,
+      initialDate,
     } = req.body;
 
     // Build the updateFields object with only the provided fields
     const updateFields = {};
     if (name !== undefined) updateFields.name = name;
     if (scholarship !== undefined) updateFields.scholarship = scholarship;
+    if (initialDate !== undefined) updateFields.initialDate = initialDate;
     if (state !== undefined) updateFields.state = state;
     if (city !== undefined) updateFields.city = city;
     if (course !== undefined) updateFields.course = course;
@@ -1509,10 +1520,45 @@ router.post("/update-client-details", async (req, res) => {
   }
 });
 
-router.get("/students-login", (req, res) => {
-  res.render("user/studentslogin", { user: true });
+// Super Admin Dashboard route
+router.get("/super-admin-dashboard", verifySuper, (req, res) => {
+  res.render("user/super-dashboard", { user: true });
 });
 
+// Super Admin Login route
+router.get("/super-admin", (req, res) => {
+  res.render("user/super-admin", { user: true });
+});
+
+router.post("/super-admin", (req, res) => {
+  const { email, password } = req.body;
+  const validEmail = process.env.ADMINSUPER_EMAIL;
+  const validPassword = process.env.ADMINSUPER_PASSWORD;
+
+  if (email === validEmail && password === validPassword) {
+    req.session.super = email;
+    req.session.save((err) => {
+      if (err) {
+        console.error(err);
+        return res
+          .status(500)
+          .json({ success: false, message: "Internal server error" });
+      }
+      res.redirect("/super-admin-dashboard");
+    });
+  } else {
+    res.render("user/super-admin", {
+      user: true,
+      error: "Invalid email or password",
+    });
+  }
+}); 
+
+router.get("/students-login", (req, res) => {
+  res.render("user/studentslogin", { user: true });
+}); 
+
+   
 router.post("/studentslogin", async (req, res) => {
   const { email, password } = req.body;
 
