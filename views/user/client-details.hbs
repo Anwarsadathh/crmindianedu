@@ -467,7 +467,40 @@
                                   <td>
                                    {{this.mentorshipStatus}}
                                 </td>
-                                <td>{{this.university}}</td>
+                                <td>
+  {{#if (eq this.university "Manipal Jaipur University")}}
+    <a href="https://login.leadsquared.com/" target="_blank">{{this.university}}</a>
+  {{else if (eq this.university "Manipal Sikkim University")}}
+    <a href="https://login.nopaperforms.io/" target="_blank">{{this.university}}</a>
+  {{else if (eq this.university "Jain Online University")}}
+    <a href="https://login.nopaperforms.io/" target="_blank">{{this.university}}</a>
+  {{else if (eq this.university "Jain ODL University")}}
+    <a href="https://login.nopaperforms.io/" target="_blank">{{this.university}}</a>
+  {{else if (eq this.university "Vignan University")}}
+    <a href="https://marvin.leadsquared.com" target="_blank">{{this.university}}</a>
+  {{else if (eq this.university "Amity University")}}
+    <a href="https://asodl.amizone.net/affiliatemanagement/clients/cDashboard" target="_blank">{{this.university}}</a>
+  {{else if (eq this.university "SVSU")}}
+    <a href="https://newiits.s2code.com/users/centers" target="_blank">{{this.university}}</a>
+  {{else if (eq this.university "Aligarh Muslim University Online")}}
+    <a href="http://partner.schoolguru.in" target="_blank">{{this.university}}</a>
+  {{else if (eq this.university "KLU Online")}}
+    <a href="#" target="http://partner.schoolguru.in">{{this.university}}</a> <!-- Add the correct URL here -->
+  {{else if (eq this.university "Mizoram University")}}
+    <a href="http://partner.schoolguru.in" target="_blank">{{this.university}}</a>
+  {{else if (eq this.university "Jamia Hamdard University")}}
+    <a href="http://partner.schoolguru.in" target="_blank">{{this.university}}</a> <!-- Add the correct URL here -->
+  {{else if (eq this.university "Uttaranchal University")}}
+    <a href="http://partner.schoolguru.in" target="_blank">{{this.university}}</a>
+  {{else if (eq this.university "Andhra University")}}
+    <a href="http://partner.schoolguru.in" target="_blank">{{this.university}}</a> <!-- Add the correct URL here -->
+  {{else if (eq this.university "LPU")}}
+    <a href="http://partner.schoolguru.in" target="_blank">{{this.university}}</a> <!-- Add the correct URL here -->
+  {{else}}
+    {{this.university}}
+  {{/if}}
+</td>
+
              <td>
     <!-- Initial Registration Field -->
     <button class="btn btn-status {{#if (eq this.initialRegistration "✔")}}btn-correct{{else}}btn-incorrect{{/if}}"
