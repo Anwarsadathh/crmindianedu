@@ -204,15 +204,243 @@
   </div>
 </div>
 
+{{!-- <div class="container-fluid pt-4 px-4">
+  <div class="row g-4">
+    <!-- Lead Owner Dropdown -->
+    <div class="col-12 col-md-12 d-flex">
+      <div class="filter-card glassmorphism p-4 shadow-lg d-flex">
+        <div class="floating-label-wrapper">
+          <label for="leadOwner" class="floating-label">Select Lead Owner</label>
+          <select id="leadOwner" class="form-control shadow-sm circular-input">
+            <option value="">Select Lead Owner</option>
+            {{#each leadOwners}}
+              <option value="{{this.email}}" {{#if (eq this.email ../selectedLeadOwner)}}selected{{/if}}>{{this.email}}</option>
+            {{/each}}
+          </select>
+        </div>
+        <div class="floating-label-wrapper ms-3">
+          <label for="dateRange" class="floating-label">Date Range</label>
+          <input type="text" id="dateRange" class="form-control shadow-sm circular-input" placeholder="Select Date Range">
+        </div>
+        <button class="btn btn-glass shadow-sm circular-btn ms-3" id="filterBtn">
+          <i class="bi bi-filter-circle"></i>
+        </button>
+        <button class="btn btn-danger shadow-sm circular-btn ms-3" id="clearBtn">
+          <i class="bi bi-x-circle"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div> --}}
+{{!-- <div class="container-fluid pt-4 px-4">
+  <div class="row g-4">
+    <!-- Lead Owner Dropdown -->
+    <div class="col-12 col-md-12 d-flex">
+      <div class="filter-card glassmorphism p-4 shadow-lg d-flex">
+        <div class="floating-label-wrapper">
+          <label for="leadOwner" class="floating-label">Select Lead Owner</label>
+          <select id="leadOwner" class="form-control shadow-sm circular-input">
+            <option value="">Select Lead Owner</option>
+            {{#each leadOwners}}
+              <option value="{{this.email}}" {{#if (eq this.email ../selectedLeadOwner)}}selected{{/if}}>{{this.email}}</option>
+            {{/each}}
+          </select>
+        </div>
+        <div class="floating-label-wrapper ms-3">
+          <label for="dateRange" class="floating-label">Date Range</label>
+          <input type="text" id="dateRange" class="form-control shadow-sm circular-input" placeholder="Select Date Range">
+        </div>
+        <button class="btn btn-glass shadow-sm circular-btn ms-3" id="filterBtn">
+          <i class="bi bi-filter-circle"></i>
+        </button>
+        <button class="btn btn-danger shadow-sm circular-btn ms-3" id="clearBtn">
+          <i class="bi bi-x-circle"></i>
+        </button>
+      </div>
+    </div> --}}
+    <div class="col-12 col-xl-12">
+    <div style="width: 10%;">
+        <button type="button" class="btn-sm btn-secondary icon-only-btn" id="backBtn">
+            <i class="fa fa-arrow-left"></i> 
+        </button>
+    </div>
+</div>
 
+<style>
+   .icon-only-btn {
+    background-color: #343a40;
+    color: #ffffff;
+    padding: 8px;
+    font-size: 14px;
+    border-radius: 50%;
+    border: 2px solid #28a745;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease-in-out;
+    width: 40px;
+    height: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    position: relative;
+}
 
+.icon-only-btn i {
+    transition: transform 0.2s ease-in-out;
+}
 
+.icon-only-btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 300%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(40, 167, 69, 0.5), transparent);
+    transition: all 0.5s ease-in-out;
+}
 
-  
+.icon-only-btn:hover::before {
+    left: -50%;
+}
 
+.icon-only-btn:hover {
+    background-color: #28a745;
+    color: #ffffff;
+    border-color: #343a40;
+    transform: scale(1.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+}
 
+.icon-only-btn:hover i {
+    transform: translateX(-3px);
+}
 
-        <!-- Lead Statistics -->
+.icon-only-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.5);
+}
+
+</style>
+
+ <div class="col-6 col-xl-3">
+      <div class="stat-card bg-gradient-primary text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+        <i class="fa fa-chart-line fa-3x neon-icon"></i>
+        <div class="ms-3">
+          <p class="mb-2 counts">Total Leads</p>
+          <h6 class="mb-0">{{totalLeads}}</h6>
+        </div>
+      </div>
+    </div> 
+    <!-- Main Stage Cards -->
+    {{#each mainStageCounts}}
+      <div class="col-6 col-xl-3">
+        <div class="stat-card bg-gradient-neon text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl main-stage-card" 
+            data-stage="{{mainStage}}" 
+            data-documents='{{json this.documents}}'>
+          <i class="fa fa-briefcase fa-3x neon-icon"></i>
+          <div class="ms-3">
+            <p class="mb-2 counts">{{mainStage}}</p>
+            <h6 class="mb-0">{{count}}</h6>
+          </div>
+        </div>
+      </div>
+    {{/each}}
+
+    <!-- Stage Cards -->
+    {{#each stageCounts}}
+      <div class="col-6 col-xl-3 stage-card d-none" 
+           data-main-stage="{{mainStage}}" 
+           data-stage="{{stage}}" 
+           data-documents='{{json this.documents}}'>
+        <div class="stat-card bg-gradient-success text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+          <i class="fa fa-layer-group fa-3x neon-icon"></i>
+          <div class="ms-3">
+            <p class="mb-2 counts">{{stage}}</p>
+            <h6 class="mb-0">{{count}}</h6>
+          </div>
+        </div>
+      </div>
+    {{/each}}
+
+    <!-- Sub-Stage Cards -->
+    {{#each subStageCounts}}
+      <div class="col-6 col-xl-3 sub-stage-card d-none" 
+           data-stage="{{stage}}" 
+           data-sub-stage="{{subStage}}" 
+           data-documents='{{json this.documents}}'>
+        <div class="stat-card bg-gradient-white text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+          <i class="fa fa-tags fa-3x neon-icon"></i>
+          <div class="ms-3">
+            <p class="mb-2 counts">{{subStage}}</p>
+            <h6 class="mb-0 black">{{count}}</h6>
+          </div>
+        </div>
+      </div>
+    {{/each}}
+
+     
+   
+  </div>
+</div>
+
+<!-- Modal for Choosing Action -->
+<div class="modal fade" id="actionModal" tabindex="-1" aria-labelledby="actionModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="actionModalLabel">Choose Action</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Please choose what you want to do:</p>
+        <button type="button" class="btn btn-primary" id="showCardsBtn">Show Stages</button>
+        <button type="button" class="btn btn-secondary" id="showTableBtn">Show Table</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Displaying Table -->
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="detailsModalLabel">Document Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Course</th>
+              <th scope="col">Specialization</th>
+              <th scope="col">Status</th>
+              <th scope="col">Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Mobile</th>
+              <th scope="col">Budget</th>
+              <!-- Add more headers as needed -->
+            </tr>
+          </thead>
+          <tbody id="modalTableBody">
+            <!-- Rows will be populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{!-- <!-- Back Button -->
+<button id="backBtn" class="btn btn-secondary" style="display: none;">
+  <i class="fa fa-arrow-left"></i> Back
+</button> --}}
+
+   {{!-- <!-- Lead Statistics -->
         <div class="col-6 col-xl-3">
             <div class="stat-card bg-gradient-primary text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
                 <i class="fa fa-chart-line fa-3x neon-icon"></i>
@@ -222,7 +450,521 @@
                 </div>
             </div>
         </div>
-      <div class="col-6 col-xl-3">
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="detailsModalLabel">Document Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Course</th>
+              <th scope="col">Specialization</th>
+              <th scope="col">Status</th>
+              <th scope="col">Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Mobile</th>
+              <th scope="col">budget</th>
+              <!-- Add more headers as needed -->
+            </tr>
+          </thead>
+          <tbody id="modalTableBody">
+            <!-- Rows will be populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Main Stage Cards -->
+{{#each mainStageCounts}}
+    <div class="col-6 col-xl-3">
+        <div class="stat-card bg-gradient-neon text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl main-stage-card" 
+            data-stage="{{mainStage}}" 
+            data-documents='{{json this.documents}}'>
+            <i class="fa fa-briefcase fa-3x neon-icon"></i>
+            <div class="ms-3">
+                <p class="mb-2 counts">{{mainStage}}</p>
+                <h6 class="mb-0">{{count}}</h6>
+            </div>
+        </div>
+    </div>
+{{/each}}
+
+<!-- Stage Cards -->
+{{#each stageCounts}}
+    <div class="col-6 col-xl-3 stage-card d-none" 
+         data-main-stage="{{mainStage}}" 
+         data-stage="{{stage}}" 
+         data-documents='{{json this.documents}}'>
+        <div class="stat-card bg-gradient-info text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+            <i class="fa fa-layer-group fa-3x neon-icon"></i>
+            <div class="ms-3">
+                <p class="mb-2 counts">{{stage}}</p>
+                <h6 class="mb-0">{{count}}</h6>
+            </div>
+        </div>
+    </div>
+{{/each}}
+
+<!-- Sub-Stage Cards -->
+{{#each subStageCounts}}
+    <div class="col-6 col-xl-3 sub-stage-card d-none" 
+         data-stage="{{stage}}" 
+         data-sub-stage="{{subStage}}" 
+         data-documents='{{json this.documents}}'>
+        <div class="stat-card bg-gradient-success text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
+            <i class="fa fa-tags fa-3x neon-icon"></i>
+            <div class="ms-3">
+                <p class="mb-2 counts">{{subStage}}</p>
+                <h6 class="mb-0">{{count}}</h6>
+            </div>
+        </div>
+    </div>
+{{/each}}
+
+
+  
+
+<div class="modal fade" id="actionModal" tabindex="-1" aria-labelledby="actionModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="actionModalLabel">Choose Action</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Please choose what you want to do:</p>
+        <button type="button" class="btn btn-primary" id="showCardsBtn">Show Stages</button>
+        <button type="button" class="btn btn-secondary" id="showTableBtn">Show Table</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Displaying Table -->
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="detailsModalLabel">Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Course</th>
+              <th>Specialization</th>
+              <th>Status</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Mobile</th>
+              <th>Budget</th>
+              <!-- Add more headers as needed -->
+            </tr>
+          </thead>
+          <tbody id="modalTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    let selectedMainStage = null;
+    let selectedStage = null;
+    let documents = null;
+    const backBtn = document.getElementById("backBtn");
+
+    // Initialize Back Button
+    backBtn.style.display = "none";
+
+    function showBackButton() {
+        backBtn.style.display = "block";
+    }
+
+    function hideBackButton() {
+        backBtn.style.display = "none";
+    }
+
+    function resetView() {
+        document.querySelectorAll(".main-stage-card, .stage-card, .sub-stage-card").forEach(function(card) {
+            card.classList.add("d-none");
+        });
+        document.querySelectorAll(".main-stage-card").forEach(function(card) {
+            card.classList.remove("d-none");
+        });
+        hideBackButton();
+    }
+
+    // Handle Back Button Click
+    backBtn.addEventListener("click", function() {
+        if (selectedStage) {
+            // If sub-stages are being viewed, go back to stage view
+            document.querySelectorAll(".sub-stage-card").forEach(function(card) {
+                card.classList.add("d-none");
+            });
+            document.querySelectorAll(`.stage-card[data-main-stage="${selectedMainStage}"]`).forEach(function(card) {
+                card.classList.remove("d-none");
+            });
+            selectedStage = null;
+        } else if (selectedMainStage) {
+            // If stages are being viewed, go back to main stage view
+            document.querySelectorAll(".stage-card, .sub-stage-card").forEach(function(card) {
+                card.classList.add("d-none");
+            });
+            document.querySelectorAll(".main-stage-card").forEach(function(card) {
+                card.classList.remove("d-none");
+            });
+            selectedMainStage = null;
+        } else {
+            // If at the main stage view, reset everything
+            resetView();
+        }
+    });
+
+    // Handle main stage card click
+    document.querySelectorAll(".main-stage-card").forEach(function(mainStageCard) {
+        mainStageCard.addEventListener("click", function() {
+            selectedMainStage = this.dataset.stage;
+            documents = JSON.parse(this.getAttribute('data-documents'));
+
+            showBackButton();
+
+            // Show the action modal
+            new bootstrap.Modal(document.getElementById('actionModal')).show();
+
+            // Update button text to "Show Stages"
+            document.getElementById("showCardsBtn").textContent = "Show Stages";
+
+            // Attach action listeners
+            document.getElementById("showCardsBtn").onclick = function() {
+                // Show stage cards related to the selected main stage
+                document.querySelectorAll(".stage-card, .sub-stage-card").forEach(function(card) {
+                    card.classList.add("d-none");
+                });
+                document.querySelectorAll(`.stage-card[data-main-stage="${selectedMainStage}"]`).forEach(function(stageCard) {
+                    stageCard.classList.remove("d-none");
+                });
+                bootstrap.Modal.getInstance(document.getElementById('actionModal')).hide();
+            };
+
+            document.getElementById("showTableBtn").onclick = function() {
+                // Display the table in the modal
+                const modalTableBody = document.getElementById('modalTableBody');
+                modalTableBody.innerHTML = ''; // Clear previous data
+                documents.forEach(doc => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${doc.course}</td>
+                        <td>${doc.specialization}</td>
+                        <td>${doc.status}</td>
+                        <td>${doc.name}</td>
+                        <td>${doc.email}</td>
+                        <td>${doc.mobile}</td>
+                        <td>${doc.budget}</td>
+                        <!-- Add more cells as needed -->
+                    `;
+                    modalTableBody.appendChild(row);
+                });
+                bootstrap.Modal.getInstance(document.getElementById('actionModal')).hide();
+                new bootstrap.Modal(document.getElementById('detailsModal')).show();
+            };
+        });
+    });
+
+    // Handle stage card click
+    document.querySelectorAll(".stage-card").forEach(function(stageCard) {
+        stageCard.addEventListener("click", function() {
+            selectedStage = this.dataset.stage;
+            documents = JSON.parse(this.getAttribute('data-documents'));
+
+            showBackButton();
+
+            // Show the action modal
+            new bootstrap.Modal(document.getElementById('actionModal')).show();
+
+            // Update button text to "Show Sub-Stages"
+            document.getElementById("showCardsBtn").textContent = "Show Sub-Stages";
+
+            // Attach action listeners
+            document.getElementById("showCardsBtn").onclick = function() {
+                // Hide all other stages and sub-stages
+                document.querySelectorAll(".stage-card, .sub-stage-card").forEach(function(card) {
+                    card.classList.add("d-none");
+                });
+
+                // Show the clicked stage count
+                document.querySelectorAll(`.stage-card[data-stage="${selectedStage}"]`).forEach(function(stageCard) {
+                    stageCard.classList.remove("d-none");
+                });
+
+                // Show sub-stage cards related to the selected stage
+                document.querySelectorAll(`.sub-stage-card[data-stage="${selectedStage}"]`).forEach(function(subStageCard) {
+                    subStageCard.classList.remove("d-none");
+                });
+
+                bootstrap.Modal.getInstance(document.getElementById('actionModal')).hide();
+            };
+
+            document.getElementById("showTableBtn").onclick = function() {
+                // Display the table in the modal
+                const modalTableBody = document.getElementById('modalTableBody');
+                modalTableBody.innerHTML = ''; // Clear previous data
+                documents.forEach(doc => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${doc.course}</td>
+                        <td>${doc.specialization}</td>
+                        <td>${doc.status}</td>
+                        <td>${doc.name}</td>
+                        <td>${doc.email}</td>
+                        <td>${doc.mobile}</td>
+                        <td>${doc.budget}</td>
+                        <!-- Add more cells as needed -->
+                    `;
+                    modalTableBody.appendChild(row);
+                });
+                bootstrap.Modal.getInstance(document.getElementById('actionModal')).hide();
+                new bootstrap.Modal(document.getElementById('detailsModal')).show();
+            };
+        });
+    });
+
+    // Handle sub-stage card click
+    document.querySelectorAll(".sub-stage-card").forEach(function(subStageCard) {
+        subStageCard.addEventListener("click", function() {
+            documents = JSON.parse(this.getAttribute('data-documents'));
+
+            // Display the table in the modal directly
+            const modalTableBody = document.getElementById('modalTableBody');
+            modalTableBody.innerHTML = ''; // Clear previous data
+            documents.forEach(doc => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${doc.course}</td>
+                    <td>${doc.specialization}</td>
+                    <td>${doc.status}</td>
+                    <td>${doc.name}</td>
+                    <td>${doc.email}</td>
+                    <td>${doc.mobile}</td>
+                    <td>${doc.budget}</td>
+                    <!-- Add more cells as needed -->
+                `;
+                modalTableBody.appendChild(row);
+            });
+            new bootstrap.Modal(document.getElementById('detailsModal')).show();
+        });
+    });
+});
+</script> --}}
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    let selectedMainStage = null;
+    let selectedStage = null;
+    let documents = null;
+    const backBtn = document.getElementById("backBtn");
+
+    // Initialize Back Button
+    backBtn.style.display = "none";
+
+    function showBackButton() {
+        backBtn.style.display = "block";
+    }
+
+    function hideBackButton() {
+        backBtn.style.display = "none";
+    }
+
+    function resetView() {
+        document.querySelectorAll(".main-stage-card, .stage-card, .sub-stage-card").forEach(function(card) {
+            card.classList.add("d-none");
+        });
+        document.querySelectorAll(".main-stage-card").forEach(function(card) {
+            card.classList.remove("d-none");
+        });
+        hideBackButton();
+    }
+
+    // Handle Back Button Click
+    backBtn.addEventListener("click", function() {
+        if (selectedStage) {
+            // If sub-stages are being viewed, go back to stage view
+            document.querySelectorAll(".sub-stage-card").forEach(function(card) {
+                card.classList.add("d-none");
+            });
+            document.querySelectorAll(`.stage-card[data-main-stage="${selectedMainStage}"]`).forEach(function(card) {
+                card.classList.remove("d-none");
+            });
+            selectedStage = null;
+        } else if (selectedMainStage) {
+            // If stages are being viewed, go back to main stage view
+            document.querySelectorAll(".stage-card, .sub-stage-card").forEach(function(card) {
+                card.classList.add("d-none");
+            });
+            document.querySelectorAll(".main-stage-card").forEach(function(card) {
+                card.classList.remove("d-none");
+            });
+            selectedMainStage = null;
+        } else {
+            // If at the main stage view, reset everything
+            resetView();
+        }
+    });
+
+    // Handle main stage card click
+    document.querySelectorAll(".main-stage-card").forEach(function(mainStageCard) {
+        mainStageCard.addEventListener("click", function() {
+            selectedMainStage = this.dataset.stage;
+            documents = JSON.parse(this.getAttribute('data-documents'));
+
+            showBackButton();
+
+            // Show the action modal
+            new bootstrap.Modal(document.getElementById('actionModal')).show();
+
+            // Update button text to "Show Stages"
+            document.getElementById("showCardsBtn").textContent = "Show Stages";
+
+            // Attach action listeners
+            document.getElementById("showCardsBtn").onclick = function() {
+                // Show stage cards related to the selected main stage
+                document.querySelectorAll(".stage-card, .sub-stage-card").forEach(function(card) {
+                    card.classList.add("d-none");
+                });
+                document.querySelectorAll(`.stage-card[data-main-stage="${selectedMainStage}"]`).forEach(function(stageCard) {
+                    stageCard.classList.remove("d-none");
+                });
+                bootstrap.Modal.getInstance(document.getElementById('actionModal')).hide();
+            };
+
+            document.getElementById("showTableBtn").onclick = function() {
+                // Display the table in the modal
+                const modalTableBody = document.getElementById('modalTableBody');
+                modalTableBody.innerHTML = ''; // Clear previous data
+                documents.forEach(doc => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${doc.course}</td>
+                        <td>${doc.specialization}</td>
+                        <td>${doc.status}</td>
+                        <td>${doc.name}</td>
+                        <td>${doc.email}</td>
+                        <td>${doc.mobile}</td>
+                        <td>${doc.budget}</td>
+                        <!-- Add more cells as needed -->
+                    `;
+                    modalTableBody.appendChild(row);
+                });
+                bootstrap.Modal.getInstance(document.getElementById('actionModal')).hide();
+                new bootstrap.Modal(document.getElementById('detailsModal')).show();
+            };
+        });
+    });
+
+    // Handle stage card click
+    document.querySelectorAll(".stage-card").forEach(function(stageCard) {
+        stageCard.addEventListener("click", function() {
+            selectedStage = this.dataset.stage;
+            documents = JSON.parse(this.getAttribute('data-documents'));
+
+            showBackButton();
+
+            // Show the action modal
+            new bootstrap.Modal(document.getElementById('actionModal')).show();
+
+            // Update button text to "Show Sub-Stages"
+            document.getElementById("showCardsBtn").textContent = "Show Sub-Stages";
+
+            // Attach action listeners
+            document.getElementById("showCardsBtn").onclick = function() {
+                // Hide all other stages and sub-stages
+                document.querySelectorAll(".stage-card, .sub-stage-card").forEach(function(card) {
+                    card.classList.add("d-none");
+                });
+
+                // Show the clicked stage count
+                document.querySelectorAll(`.stage-card[data-stage="${selectedStage}"]`).forEach(function(stageCard) {
+                    stageCard.classList.remove("d-none");
+                });
+
+                // Show sub-stage cards related to the selected stage
+                document.querySelectorAll(`.sub-stage-card[data-stage="${selectedStage}"]`).forEach(function(subStageCard) {
+                    subStageCard.classList.remove("d-none");
+                });
+
+                bootstrap.Modal.getInstance(document.getElementById('actionModal')).hide();
+            };
+
+            document.getElementById("showTableBtn").onclick = function() {
+                // Display the table in the modal
+                const modalTableBody = document.getElementById('modalTableBody');
+                modalTableBody.innerHTML = ''; // Clear previous data
+                documents.forEach(doc => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${doc.course}</td>
+                        <td>${doc.specialization}</td>
+                        <td>${doc.status}</td>
+                        <td>${doc.name}</td>
+                        <td>${doc.email}</td>
+                        <td>${doc.mobile}</td>
+                        <td>${doc.budget}</td>
+                        <!-- Add more cells as needed -->
+                    `;
+                    modalTableBody.appendChild(row);
+                });
+                bootstrap.Modal.getInstance(document.getElementById('actionModal')).hide();
+                new bootstrap.Modal(document.getElementById('detailsModal')).show();
+            };
+        });
+    });
+
+    // Handle sub-stage card click
+    document.querySelectorAll(".sub-stage-card").forEach(function(subStageCard) {
+        subStageCard.addEventListener("click", function() {
+            documents = JSON.parse(this.getAttribute('data-documents'));
+
+            // Display the table in the modal directly
+            const modalTableBody = document.getElementById('modalTableBody');
+            modalTableBody.innerHTML = ''; // Clear previous data
+            documents.forEach(doc => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${doc.course}</td>
+                    <td>${doc.specialization}</td>
+                    <td>${doc.status}</td>
+                    <td>${doc.name}</td>
+                    <td>${doc.email}</td>
+                    <td>${doc.mobile}</td>
+                    <td>${doc.budget}</td>
+                    <!-- Add more cells as needed -->
+                `;
+                modalTableBody.appendChild(row);
+            });
+            new bootstrap.Modal(document.getElementById('detailsModal')).show();
+        });
+    });
+});
+</script>
+     
+      {{!-- <div class="col-6 col-xl-3">
             <div class="stat-card bg-gradient-success text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
                 <i class="fa fa-star fa-3x neon-icon"></i>
                 <div class="ms-3">
@@ -362,9 +1104,9 @@
                     <h6 class="mb-0 black">{{totalRegular}}</h6>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
-        <div class="col-6 col-xl-3">
+        {{!-- <div class="col-6 col-xl-3">
             <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
                 <i class="fa-brands fa-whatsapp fa-3x neon-icon"></i>
                 <div class="ms-3">
@@ -372,7 +1114,7 @@
                     <h6 class="mb-0 black">{{totalWhatsAppConnected}}</h6>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>  
 </div>
 
@@ -492,6 +1234,7 @@
   }
 
 
+
 .bg-gradient-white {
     color: black !important;
     background: linear-gradient(45deg, #ffffff, #f0f0f0) !important;
@@ -525,7 +1268,10 @@
       background: linear-gradient(45deg, #007bff, #0056b3) !important;
       color: white !important;
   }
-
+  .bg-gradient-neon {
+      background: linear-gradient(45deg, #007bff, #0056b3) !important;
+      color: white !important;
+  }
   .back-to-top {
       position: fixed !important;
       bottom: 20px !important;
@@ -538,7 +1284,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-<script>
+{{!-- <script>
 flatpickr("#dateRange", {
   mode: "range",
   dateFormat: "Y-m-d", // Ensure this matches your expected format
@@ -568,6 +1314,54 @@ document.getElementById("filterBtn").addEventListener("click", function() {
 
   console.log("Query String:", query);
 
+  window.location.href = `/crm-tl-dashboard?${query}`;
+});
+
+document.getElementById("clearBtn").addEventListener("click", function() {
+  // Reset the filters
+  document.getElementById("leadOwner").value = "";
+  document.getElementById("dateRange").value = "";
+
+  // Redirect to the dashboard without query parameters
+  window.location.href = "/crm-tl-dashboard";
+});
+</script> --}}
+<script>
+flatpickr("#dateRange", {
+  mode: "range",
+  dateFormat: "Y-m-d", // Ensure this matches your expected format
+  onChange: function(selectedDates, dateStr, instance) {
+    console.log("Flatpickr Date Range:", dateStr); // Log the dateStr for debugging
+  }
+});
+
+document.getElementById("filterBtn").addEventListener("click", function() {
+  const leadOwner = document.getElementById("leadOwner").value;
+  const dateRange = document.getElementById("dateRange").value;
+
+  // Check if dateRange contains 'to' and split accordingly
+  let [startDate, endDate] = dateRange.split(" to ").map(date => date.trim());
+
+  // Ensure dates are correctly formatted
+  startDate = startDate || "";
+  endDate = endDate || "";
+
+  // Debugging logs
+  console.log("Selected Lead Owner:", leadOwner);
+  console.log("Selected Date Range:", dateRange);
+  console.log("Parsed Start Date:", startDate);
+  console.log("Parsed End Date:", endDate);
+
+  // Build the query string
+  const query = new URLSearchParams({
+    leadOwnerEmail: leadOwner,
+    startDate: startDate,
+    endDate: endDate
+  }).toString();
+
+  console.log("Query String:", query);
+
+  // Redirect to the dashboard with query parameters
   window.location.href = `/crm-tl-dashboard?${query}`;
 });
 

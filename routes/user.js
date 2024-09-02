@@ -272,51 +272,28 @@ router.get("/crm-tl-dashboard", async (req, res) => {
   const sessionEmail = leadOwnerEmail || null;
 
   try {
-    const { combinedCounts, totalLeads } =
-      await serviceHelpers.getLeadStatusCountsok(
-        sessionEmail,
-        startDate,
-        endDate
-      );
-
-    // Calculate specific counts from combinedCounts
-    const totalQL = combinedCounts["QL"] || 0;
-    const totalRNR = combinedCounts["RNR"] || 0;
-    const totalPQL = combinedCounts["PQL"] || 0;
-    const totalUQL = combinedCounts["UQL"] || 0;
-    const totalNextIntake = combinedCounts["Next Intake"] || 0;
-    const totalDirectUniversity = combinedCounts["Direct University"] || 0;
-    const totalHQL = combinedCounts["HQL"] || 0;
-    const totalBusy = combinedCounts["Busy"] || 0;
-    const totalCallLater = combinedCounts["Call Later"] || 0;
-    const totalQLToNR = combinedCounts["QL to NR"] || 0;
-    const totalPQLToNR = combinedCounts["PQL to NR"] || 0;
-    const totalNotInterested = combinedCounts["Not Interested"] || 0;
-    const totalJustEnquiry = combinedCounts["Just Enquiry"] || 0;
-    const totalRegular = combinedCounts["Regular"] || 0;
-    const totalWhatsAppConnected = combinedCounts["WhatsApp Connected"] || 0;
+    const {
+      mainStageCounts,
+      stageCounts,
+      subStageCounts,
+      totalLeads,
+      documents, // Ensure documents are included here
+    } = await serviceHelpers.getLeadStatusCountsok(
+      sessionEmail,
+      startDate,
+      endDate
+    );
 
     // Render the dashboard with the calculated counts
     res.render("user/crm-tl-dashboard", {
       user: true,
       totalLeads,
-      totalQL,
-      totalRNR,
-      totalPQL,
-      totalUQL,
-      totalNextIntake,
-      totalDirectUniversity,
-      totalHQL,
-      totalBusy,
-      totalCallLater,
-      totalQLToNR,
-      totalPQLToNR,
-      totalNotInterested,
-      totalJustEnquiry,
-      totalRegular,
-      totalWhatsAppConnected,
       leadOwners,
       selectedLeadOwner: sessionEmail || "", // Pass the selected lead owner or empty string
+      mainStageCounts,
+      stageCounts,
+      subStageCounts,
+      documents, // Ensure this is passed to the template
     });
   } catch (error) {
     console.error("Error fetching lead status counts:", error);
