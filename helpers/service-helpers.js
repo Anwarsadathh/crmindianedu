@@ -3047,7 +3047,7 @@ module.exports = {
 
       // Generate the base institute ID using the first 4 letters of the institute name
       const baseInstituteId =
-        "IEHI" +
+        "IEHP" +
         formData.institute_name
           .replace(/\s+/g, "") // Remove spaces
           .substring(0, 4) // Get the first 4 characters
