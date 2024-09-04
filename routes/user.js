@@ -1150,22 +1150,31 @@ router.get("/accounts-dashboard", (req, res) => {
   res.render("user/accounts-dashboard", { user: true });
 });
 
-router.get("/accounts-details", (req, res) => {
-  serviceHelpers
-    .getAllAccountsdashboard()
-    .then((formData) => {
-      console.log(formData);
+router.get("/accounts-details", async (req, res) => {
+  try {
+    // Fetch all account dashboard data
+    const formData = await serviceHelpers.getAllAccountsdashboard();
+    console.log("formData:", JSON.stringify(formData, null, 2));
 
-      res.render("user/accounts-details", {
-        admin: true,
-        formData,
-      });
-    })
-    .catch((error) => {
-      console.error("Error fetching client details:", error);
-      res.status(500).send("An error occurred while fetching client details.");
+    // Fetch all payments data
+    const payments = await serviceHelpers.getAllPayments();
+    console.log("payments:", JSON.stringify(payments, null, 2)); // Log the payments data
+
+    // Render the template with both formData and payments
+    res.render("user/accounts-details", {
+      admin: true,
+      formData,
+      payments,
     });
+  } catch (error) {
+    console.error("Error fetching account details:", error);
+    res.status(500).send("An error occurred while fetching account details.");
+  }
 });
+
+
+
+
 
 router.get("/create-partnerid", (req, res) => {
   res.render("user/create-partnerid", { user: true });
@@ -1229,6 +1238,76 @@ router.post("/se-form", async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
+
+router.get("/create-payments", async (req, res) => {
+  try {
+    const payments = await serviceHelpers.getAllPayments();
+    res.render("user/create-payments", { user: true, payments });
+  } catch (error) {
+    console.error("Error fetching payments:", error);
+    res.status(500).json({ message: "Error fetching payments" });
+  }
+});
+
+
+router.post("/create-payments", async (req, res) => {
+  try {
+    await serviceHelpers.createPayments(req.body.payments);
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error creating payments:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+
+
+router.get("/get-payment/:id", async (req, res) => {
+  try {
+    const payment = await serviceHelpers.getPaymentById(req.params.id);
+    if (payment) {
+      res.setHeader("Cache-Control", "no-store"); // Disable caching
+      res.json({ success: true, payment });
+    } else {
+      res.status(404).json({ success: false, message: "Payment not found" });
+    }
+  } catch (error) {
+    console.error("Error fetching payment:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+router.get("/payments", async (req, res) => {
+  try {
+    const payments = await serviceHelpers.getAllPayments();
+    res.json({ success: true, payments });
+  } catch (error) {
+    console.error("Error fetching payments:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+router.delete("/delete-payment/:id", async (req, res) => {
+  try {
+    await serviceHelpers.deletePayment(req.params.id);
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting payment:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+router.put("/edit-payment/:id", async (req, res) => {
+  try {
+    const updatedData = req.body.payments; // Ensure you're sending the correct data structure
+    await serviceHelpers.editPayment(req.params.id, updatedData);
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error editing payment:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
 
 // Handle form submission to create a new lead owner
 router.post("/crm-create-lead", async (req, res) => {
@@ -1404,12 +1483,17 @@ router.post("/update-client-details", async (req, res) => {
       city,
       initialRegistration,
       initialDate,
+      applicationNo,
+      degreeType,
     } = req.body;
 
     // Build the updateFields object with only the provided fields
     const updateFields = {};
     if (name !== undefined) updateFields.name = name;
     if (scholarship !== undefined) updateFields.scholarship = scholarship;
+      if (applicationNo !== undefined)
+        updateFields.applicationNo = applicationNo;
+     if (degreeType !== undefined) updateFields.degreeType = degreeType;
     if (initialDate !== undefined) updateFields.initialDate = initialDate;
     if (state !== undefined) updateFields.state = state;
     if (city !== undefined) updateFields.city = city;

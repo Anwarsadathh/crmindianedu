@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Crm Lead Stage</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+<link rel="icon" href="https://indianeduhub.in/wp-content/uploads/cropped-fevicon-32x32.jpg" sizes="32x32" />
+<link rel="icon" href="https://indianeduhub.in/wp-content/uploads/cropped-fevicon-192x192.jpg" sizes="192x192" />
+<link rel="apple-touch-icon" href="https://indianeduhub.in/wp-content/uploads/cropped-fevicon-180x180.jpg" />
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+ <!-- Add necessary meta tags and links to CSS/JS files -->
+  <!-- Add SweetAlert CSS and JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet">
+  <!-- Bootstrap JS -->
+  <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <!-- Libraries Stylesheet -->
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+     <style>
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+}
+
+header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background-color: #f8f9fa;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+header img {
+    height: 35px;
+    margin-left: 15px;
+}
+
+.dashboard-container {
+    margin-top: 80px;
+    width: 90%;
+    max-width: 1200px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.dashboard-container:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.btn-custom {
+    background-color: #007BFF;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-custom:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.table {
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 14px;
+}
+
+.table thead th {
+    background-color: #232f65;
+    color: #fff;
+    text-align: center;
+}
+
+.table tbody tr:hover {
+    background-color: #e9ecef;
+    cursor: pointer;
+}
+
+.table tbody td {
+    text-align: center;
+    background-color: white;
+}
+
+.btn-status {
+    font-size: 12px;
+    padding: 5px 10px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-not-paid {
+    background-color: #e8172c; /* Red */
+    color: #fff;
+}
+
+.btn-paid {
+    background-color: #28a745; /* Green */
+    color: #fff;
+}
+
+.btn-not-approved {
+    background-color: #ffc107; /* Yellow */
+    color: #000;
+}
+
+.btn-approved {
+    background-color: #17a2b8; /* Teal */
+    color: #fff;
+}
+
+.btn-not-done {
+    background-color: #ffc107; /* Yellow */
+    color: #000;
+}
+
+.btn-done {
+    background-color: #28a745; /* Green */
+    color: #fff;
+}
+
+.substage-item {
+    margin-bottom: 15px;
+}
+
+.substage-item .add-substage-btn,
+.substage-item .remove-substage-btn {
+    margin-top: 30px;
+}
+
+.substage-item .form-check {
+    margin-top: 10px;
+}
+
+
+.image-stack {
+    position: relative;
+    display: flex;
+}
+
+.profile-img {
+    border-radius: 50%;
+    position: relative;
+    z-index: 1;
+    margin-left: -20px;
+    transition: transform 0.3s, z-index 0.3s;
+}
+
+.profile-img:hover {
+    transform: translateX(-20px);
+    z-index: 10;
+}
+
+.image-stack .bg-success {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border-radius: 50%;
+    border: 2px solid white;
+    padding: 1px;
+}
+
+/* Custom styles for DataTables */
+.dataTables_wrapper .dataTables_filter {
+    float: right;
+    text-align: right;
+    margin-bottom: 10px;
+}
+
+.dataTables_wrapper .dataTables_filter input {
+    margin-left: 0.5em;
+    display: inline-block;
+    width: auto;
+    margin-bottom: 10px;
+}
+
+.dataTables_wrapper .dataTables_length {
+    float: left;
+    margin-bottom: 10px;
+}
+
+.dataTables_wrapper .dataTables_info {
+    float: left;
+    margin-top: 10px;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+    float: right;
+    margin-top: 10px;
+}
+
+
+    </style>
+</head>
+
+<body>
+    <div class="container-xxl position-relative bg-white d-flex p-0" style="background-color: #232f65;">
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+
+
+      <!-- Sidebar Start -->
+        <div class="sidebar pe-4 pb-3" style="background-color: #232f65;">
+            <nav class="navbar " style="background-color: #232f65;">
+                <a href="index.html" class="navbar-brand mx-4 mb-3">
+                    <h3 class="text-primary"> <img src="/images/indian-hub-logo-vert-white-e1662813826792.png" alt="Indian Edu Hub Logo" class="log"></h3>
+                </a>
+                <div class="d-flex align-items-center ms-4 mb-4" style="background-color: #232f65;">
+                      
+                    <div class="ms-3" >
+                        <h6 class="mb-0 text-white">Indianeduhub</h6>
+                        <span style="color: rgb(209, 211, 212);">Team Lead</span>
+                    </div>
+                </div>
+                <div class="navbar-nav w-100" style="background-color: #232f65;">
+                    <a href="/crm-tl-dashboard" class="nav-item nav-link text-white"><i class="fa fa-tachometer-alt me-2 text-dark "></i>Dashboard</a>
+                    <div class="nav-item dropdown">
+<a href="#" class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2 text-dark"></i>Add lead</a>
+                    <div class="dropdown-menu bg-transparent border-0">
+                            <a href="/crm-tl-details" class="dropdown-item text-white active">Lead Assign</a>
+        
+                        </div>
+                           
+                    </div>
+                     <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2 text-dark"></i> My Team</a>
+                            <div class="dropdown-menu bg-transparent border-0">
+                             <a href="/crm-tl-assigned" class="dropdown-item text-white ">Assigned</a>
+                        </div>
+                    </div>
+                        <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle text-dark active" data-bs-toggle="dropdown"><i class="fa fa-user text-dark me-2"></i>Create-Lead</a>
+                       
+                            <div class="dropdown-menu bg-transparent border-0">
+                                 <a href="/crm-create-lead" class="dropdown-item ">Create-Lead-Owner</a>
+                            <a href="/crm-leadstage" class="dropdown-item active">Create-Lead-Stage</a>
+                        </div>
+                    </div>
+                       <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown"><i class="fa fa-user text-dark me-2"></i>Rewards</a>
+                       
+                            <div class="dropdown-menu bg-transparent border-0">
+                            <a href="/crm-tl-referral" class="dropdown-item text-white">lead Stage</a>
+                            <a href="/crm-tl-referral-all" class="dropdown-item text-white">All Category</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <!-- Sidebar End -->
+
+
+        <!-- Content Start -->
+        <div class="content">
+            <!-- Navbar Start -->
+            <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
+                <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
+                    <h2 class="text-primary mb-0"><img src="/img/ie.png" alt="Indian Edu Hub Logo" style="height: 30px;"></h2>
+                </a>
+                <a href="#" class="sidebar-toggler flex-shrink-0">
+                    <i class="fa fa-bars"></i>
+                </a>
+                <form class="d-none d-md-flex ms-4">
+                    <input class="form-control border-0" type="search" placeholder="Search">
+                </form>
+                <div class="navbar-nav align-items-center ms-auto">
+                    
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="fa fa-bell me-lg-2"></i>
+                            <span class="d-none d-lg-inline-flex">Notificatin</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                            <a href="#" class="dropdown-item">
+                                <h6 class="fw-normal mb-0">Profile updated</h6>
+                                <small>15 minutes ago</small>
+                            </a>
+                       
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item text-center">See all notifications</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <img class="rounded-circle me-lg-2" src="/images/WhatsApp Image 2024-07-26 at 17.51.27_ac46e3bb.jpg" alt="" style="width: 40px; height: 40px;">
+                            <span class="d-none d-lg-inline-flex">Seyed Shahid</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                            <a href="#" class="dropdown-item">Log Out</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <!-- Navbar End -->
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <!-- Form to Create Payment Details -->
+        <div class="col-sm-12 col-xl-6">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">Create Payments Details</h6>
+                <form id="createPaymentsForm" action="/create-payments" method="POST">
+                    <input type="hidden" id="paymentId" name="paymentId" value="">
+                    <!-- Payment Steps -->
+                    <div class="payment-step mb-3" data-step="1">
+                        <h5>Payment Step 1</h5>
+                        <div class="fields-container">
+                            <!-- Fields will be dynamically added here -->
+                        </div>
+                        <button type="button" class="btn btn-secondary add-field-btn">+ Add Field</button>
+                    </div>
+                    
+                    <div class="payment-step mb-3" data-step="2">
+                        <h5>Payment Step 2</h5>
+                        <div class="fields-container">
+                            <!-- Fields will be dynamically added here -->
+                        </div>
+                        <button type="button" class="btn btn-secondary add-field-btn">+ Add Field</button>
+                    </div>
+                    
+                    <div class="payment-step mb-3" data-step="3">
+                        <h5>Payment Step 3</h5>
+                        <div class="fields-container">
+                            <!-- Fields will be dynamically added here -->
+                        </div>
+                        <button type="button" class="btn btn-secondary add-field-btn">+ Add Field</button>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Payments List -->
+        <div class="col-sm-12 col-xl-6">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">Payments List</h6>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Heading</th>
+                                <th>Fields</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Payments will be dynamically loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    // Handle adding new fields to payment steps
+    $('.add-field-btn').on('click', function() {
+        const stepElement = $(this).closest('.payment-step');
+        const stepIndex = stepElement.data('step') - 1;
+        const fieldCount = stepElement.find('.fields-container .mb-3').length + 1;
+        const newFieldHtml = `
+            <div class="mb-3">
+                <label class="form-label">Field ${fieldCount}</label>
+                <input type="text" class="form-control" name="payments[${stepIndex}][fields][]" required>
+            </div>`;
+        stepElement.find('.fields-container').append(newFieldHtml);
+    });
+
+    // Handle form submission with AJAX
+    $('#createPaymentsForm').on('submit', function(event) {
+        event.preventDefault();
+
+        const paymentId = $('#paymentId').val();
+        let payments = [];
+        $('.payment-step').each(function() {
+            let stepNumber = $(this).data('step');
+            let fields = $(this).find('.fields-container input').map(function() {
+                return $(this).val();
+            }).get();
+
+            payments.push({
+                step: stepNumber,
+                fields: fields
+            });
+        });
+
+        const url = paymentId ? `/edit-payment/${paymentId}` : '/create-payments';
+        const method = paymentId ? 'PUT' : 'POST';
+
+        $.ajax({
+            type: method,
+            url: url,
+            contentType: 'application/json',
+            data: JSON.stringify({ payments: payments }),
+            success: function(response) {
+                if (response.success) {
+                    Swal.fire('Success', 'Payments saved successfully', 'success');
+                    loadPayments();
+                } else {
+                    Swal.fire('Error', 'Failed to save payments', 'error');
+                }
+            },
+            error: function() {
+                Swal.fire('Error', 'An error occurred while saving payments', 'error');
+            }
+        });
+    });
+
+    function loadPayments() {
+        $.ajax({
+            type: 'GET',
+            url: '/payments',
+            success: function(response) {
+                if (response.success) {
+                    let paymentsList = response.payments.map((paymentDoc, index) => {
+                        return paymentDoc.payments.map((payment, stepIndex) => `
+                            <tr>
+                                <td>${index + 1}.${stepIndex + 1}</td>
+                                <td>Payment Step ${payment.step}</td>
+                                <td>${payment.fields.map(field => `<div>${field}</div>`).join('')}</td>
+                                <td><button class="btn btn-warning edit-payment" data-id="${paymentDoc._id}" data-step="${payment.step}">Edit</button></td>
+                                <td><button class="btn btn-danger delete-payment" data-id="${paymentDoc._id}" data-step="${payment.step}">Delete</button></td>
+                            </tr>
+                        `).join('');
+                    }).join('');
+                    $('tbody').html(paymentsList);
+                } else {
+                    Swal.fire('Error', 'Failed to load payments', 'error');
+                }
+            },
+            error: function() {
+                Swal.fire('Error', 'An error occurred while fetching payments', 'error');
+            }
+        });
+    }
+
+    // Load payments on page load
+    loadPayments();
+
+    // Delete payment
+    $(document).on('click', '.delete-payment', function() {
+        let paymentId = $(this).data('id');
+        $.ajax({
+            type: 'DELETE',
+            url: `/delete-payment/${paymentId}`,
+            success: function(response) {
+                if (response.success) {
+                    Swal.fire('Success', 'Payment deleted successfully', 'success');
+                    loadPayments();
+                } else {
+                    Swal.fire('Error', 'Failed to delete payment', 'error');
+                }
+            },
+            error: function() {
+                Swal.fire('Error', 'An error occurred while deleting the payment', 'error');
+            }
+        });
+    });
+
+    // Edit payment
+    $(document).on('click', '.edit-payment', function() {
+        let paymentId = $(this).data('id');
+        $.ajax({
+            type: 'GET',
+            url: `/get-payment/${paymentId}`,
+            success: function(response) {
+                if (response.success) {
+                    const paymentDoc = response.payment;
+                    $('#paymentId').val(paymentDoc._id);
+
+                    $('.payment-step').each(function() {
+                        const stepNumber = $(this).data('step');
+                        const stepData = paymentDoc.payments.find(p => p.step === stepNumber);
+                        const fieldsContainer = $(this).find('.fields-container');
+                        fieldsContainer.empty();
+
+                        if (stepData) {
+                            stepData.fields.forEach((field, index) => {
+                                const fieldHtml = `
+                                    <div class="mb-3">
+                                        <label class="form-label">Field ${index + 1}</label>
+                                        <input type="text" class="form-control" name="payments[${stepNumber - 1}][fields][]" value="${field}" required>
+                                    </div>`;
+                                fieldsContainer.append(fieldHtml);
+                            });
+                        }
+                    });
+                } else {
+                    Swal.fire('Error', 'Failed to load payment details', 'error');
+                }
+            },
+            error: function() {
+                Swal.fire('Error', 'An error occurred while fetching payment details', 'error');
+            }
+        });
+    });
+});
+</script>
+
+  <!-- Additional JavaScript Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="lib/chart/chart.min.js"></script>
+  <script src="lib/easing/easing.min.js"></script>
+  <script src="lib/waypoints/waypoints.min.js"></script>
+  <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+  <script src="lib/tempusdominus/js/moment.min.js"></script>
+  <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
+  <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+  <!-- Template Javascript -->
+  <script src="js/main.js"></script>
+</body>
+</html>

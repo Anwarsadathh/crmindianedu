@@ -60,15 +60,13 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
-    <style>
-   
- @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
-body {
-    font-family: 'Montserrat', sans-serif;
-    background-color: #f0f2f5;
-    margin: 0;
-    padding: 0;
-    font-size: 14px;
+     <style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
+
+.search{
+  
+  top:6px;
+  left:10px;
 }
 
 .form-control{
@@ -86,12 +84,11 @@ body {
     font-size: 10px;
     background-color: #007bff !important;
 }
-.btn-secondary{
-    font-size: 10px;
-    background-color: #160070 !important;
+select,textarea{
+       font-size: 13px !important;
 }
 .table-responsive{
-    margin-top: 15px;
+    padding: 10px;
 }
 .form-control:focus{
     
@@ -150,10 +147,6 @@ body {
     color: #fff;
 }
 
-.btn-glass:hover{
-color: #ffffff;
-background-color: #1c008b !important;
-}
 .btn-status.active-not-approved {
     background-color: #ffc107 !important; /* Yellow */
     color: #000;
@@ -162,7 +155,7 @@ background-color: #1c008b !important;
 .table-wrapper {
     position: relative; /* To contain the sticky header */
     overflow: auto; /* Allows the table body to scroll */
-    height: 500px; /* Set a height for the scrolling area */
+    height: 400px; /* Set a height for the scrolling area */
 }
 
 /* Ensure the table takes the full width of its container */
@@ -203,8 +196,6 @@ background-color: #1c008b !important;
 .table tbody tr:hover {
     background-color: #d0e3ff; /* Hover color for rows */
 }
-
-
 /* Adjust other table-related styles if necessary */
 
 
@@ -252,61 +243,85 @@ background-color: #1c008b !important;
     margin-top: 10px; /* Add margin above the pagination controls */
 
 }
+.btn-glass:hover{
+    background-color: #007bff !important;
+}
+    #dataTable {
+    table-layout: auto;
+    width: 50px !important;
+}
 
-
-
-.image-stack {
+#dataTable th, #dataTable td {
+    white-space: nowrap;
+    padding: 8px 12px; /* Adjust padding as needed */
+}
+.animated-btn {
     position: relative;
-    display: flex;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
 }
 
-.profile-img {
-    border-radius: 50%;
-    position: relative;
-    z-index: 1;
-    margin-left: -20px;
-    transition: transform 0.3s, z-index 0.3s;
-}
-
-.profile-img:hover {
-    transform: translateX(-20px);
-    z-index: 10;
-}
-
-.image-stack .bg-success {
+.animated-btn::before {
+    content: '';
     position: absolute;
-    bottom: 0;
-    right: 0;
-    border-radius: 50%;
-    border: 2px solid white;
-    padding: 1px;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    height: 300%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 80%);
+    transition: transform 0.3s ease-in-out;
+    transform: translate(-50%, -50%) scale(0);
+    z-index: 0;
 }
 
+.animated-btn:hover::before {
+    transform: translate(-50%, -50%) scale(1);
+}
 
- .dotted-spinner {
-        width: 2rem;
-        height: 2rem;
-        border-radius: 50%;
-        border: 3px dotted white; /* White dotted border */
-        border-top: 3px solid white; /* Solid top border to create spinner effect */
-        animation: dotted-spinner 1.5s linear infinite;
-    }
+.animated-btn:hover {
+    transform: scale(1.05);
+}
 
-    @keyframes dotted-spinner {
-        0% {
-            transform: rotate(0deg);
-        }
-        100% {
-            transform: rotate(360deg);
-        }
-    }
+.animated-btn {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+    font-weight: bold;
+}
 
-    .loading {
-        background-color: #6c757d; /* Change to a different color for the loading state */
-        color: #ffffff; /* Change text color if needed */
-    }
+.animated-btn:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,0.4);
+    transition: opacity 0.3s ease-in-out;
+    opacity: 0;
+    z-index: 1;
+}
+
+.animated-btn:hover:after {
+    opacity: 1;
+}
+
+.animated-btn {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    font-size: 10px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.date{
+    font-size: 12px; 
+    width: auto;"
+}
 </style>
-
 </head>
 
 <body>
@@ -343,7 +358,7 @@ background-color: #1c008b !important;
                             <a href="element.html" class="dropdown-item"></a>
                         </div>
                     </div>
-                    
+                     <a href="/create-payments" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Dashboard</a>
                 </div>
             </nav>
         </div>
@@ -461,187 +476,276 @@ background-color: #1c008b !important;
   opacity: 1;
   transition: all 900ms cubic-bezier(0.48, 0, 0.12, 1);
 }
+/* Define transition for hiding/showing fields and header */
+.hide-fields {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.5s ease, display 0s ease 0.5s;
+}
+
+.show-fields {
+  display: table-cell;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.hide-header {
+  display: none;
+}
+
+.show-header {
+  display: table-header-group;
+}
+ .hide {
+            display: none;
+        }
+        .fade-out {
+            opacity: 0;
+            transition: opacity 0.5s ease-out;
+        }
+        .fade-in {
+            opacity: 1;
+            transition: opacity 0.5s ease-in;
+        }
 </style>
-            <div class="container tt mt-5 px-2">
-
+<div class="container tt mt-5 px-2">
+   
     <div class="table-responsive">
-    <table class="table table-responsive table-borderless" id="dataTable">
-        <button  id="saveButton" class="button-57" role="button"><span class="text">Save Changes</span><span>Save</span></button>
-      <thead>
-        <tr class="bg-light">
-          <th style="width: 10px; !important">No.</th>
-                                <th>Date</th>
-                                <th>Student ID</th>
-                                
-                                <th>Student Name</th>
-                                <th>Course</th>
-                                <th>Specialization</th>
-                                <th>Email</th>
-                                <th>Mobile Number</th>
-                                <th>State</th>
-                                <th>City</th>
-                               
-                                <th>Mentor</th>
-                                <th>Specific Name</th>
-                                <th>Service Pack</th>
-                                <th>Intake</th>
-                                <th>Mentorship</th>
-                                <th>Uni Selected</th>
-                                <th>Initial Reg</th>
-                                <th>Message</th>
-                                <th>Uni Paid</th>
-                                <th>Uni Fee Paid Date</th>
-                                <th>Document Status</th>
-                                <th>Uni Refund Initiated</th>
-                                <th>Date of Uni Refund Initiated</th>
-                                <th>IEH Refund Initiated</th>
-                                <th>Date of IEH Refund Initiated</th>
-                                <th>Scholarship</th>
-                                <th>Fee Paid</th>
-                                <th>Amount</th>
-                                <th>Semester Status</th>
-                                <th>Batch</th>
-                                <th>Enrollment No</th>
-                                <th>ID Approved</th>
-                                <th>Action</th>
-        </tr>
-      </thead>
-  <tbody>
-                            {{#each formData}}
-                            <tr data-id="{{_id}}">
-                                <td style="width: 10px; !important">{{incrementIndex @index}}</td>
-                                <td class="text-danger">{{this.date}}</td>
-                                <td>{{this.studentid}}</td>
-                                <td>{{this.mentor}}</td>
-                                <td>{{this.name}}</td>
-                                <td>{{this.course}}</td>
-                                <td>{{this.specialization}}</td>
-                                <td>{{this.email}}</td>
-                                <td>{{this.mobile}}</td>
-                                <td>{{this.state}}</td>
-                                <td>{{this.city}}</td>
-                               
-                                <td>{{this.specificName}}</td>
-                                <td>{{this.servicePack}}</td>
-                                <td>
-                                    <select class="form-select" style="width: 110px;">
-                                        <option value="" {{#if (eq this.intake "")}}selected{{/if}}>None</option>
-                                        <option value="Next Week" {{#if (eq this.intake "Next Week")}}selected{{/if}}>Next Week</option>
-                                        <option value="This Week" {{#if (eq this.intake "This Week")}}selected{{/if}}>This Week</option>
-                                        <option value="Month End" {{#if (eq this.intake "Month End")}}selected{{/if}}>Month End</option>
-                                        <option value="Next Intake" {{#if (eq this.intake "Next Intake")}}selected{{/if}}>Next Intake</option>
-                                    </select>
-                                </td>
-                                  <td>
-                                   {{this.mentorshipStatus}}
-                                </td>
-                                <td>{{this.university}}</td>
-             <td>
-    <!-- Initial Registration Field -->
-    <button class="btn btn-status {{#if (eq this.initialRegistration "✔")}}btn-correct{{else}}btn-incorrect{{/if}}"
-            onclick="toggleInitialRegistration(this)">
-        {{#if (eq this.initialRegistration "✔")}}✔{{else}}✘{{/if}}
-    </button>
-</td>
+        <table class="table table-responsive table-borderless" id="dataTable">
+            <button id="saveButton" class="button-57" role="button">
+                <span class="text">Save Changes</span>
+                <span>Save</span>
+                 <button id="hideFieldsButton" class="button-57  mx-2" role="button">    <span class="text">Show hidden fields</span>
+                <span>Hide</span></button>
 
-
-<td>
-    <!-- Message Field with Icon -->
-    <button class="btn btn-icon" onclick="openMessageModal('{{this.mobile}}', '{{this.email}}')">
-        <i class="fas fa-comment-dots"></i>
-    </button>
-</td>
-
-                                <td>
-                                    <button class="btn btn-status {{#if (eq this.universityPaid "Paid")}}btn-paid{{else}}btn-not-paid{{/if}}" onclick="toggleStatuss(this, 'University Paid')">
-                                        {{#if (eq this.universityPaid "Paid")}}Paid{{else}}Not Paid{{/if}}
-                                    </button>
-                                </td>
-                                <td><input type="date" class="form-control" value="{{this.universityPaidDate}}" /></td>
-                        <td>
-    <button class="btn btn-status {{#if (eq this.documentStatus "Approved")}}btn-approved{{else}}btn-not-approved{{/if}}" onclick="toggleStatus(this, 'Document Status')">
-        {{#if (eq this.documentStatus "Approved")}}Approved{{else}}Not Approved{{/if}}
-    </button>
-</td>
-<td class="detail-row">
-    <select class="form-select">
-        <option value="" {{#if (eq this.unirefundinitiated "")}}selected{{/if}}>Select</option>
-        <option value="initiated" {{#if (eq this.unirefundinitiated "initiated")}}selected{{/if}}>Initiated</option>
-        <option value="success" {{#if (eq this.unirefundinitiated "success")}}selected{{/if}}>Success</option>
+            </button>
+            <thead>
+                <tr class="bg-light">
+                    <th>No.</th>
+                    <th>Date</th>
+                    <th>Student ID</th>
+                    <th>Student Name</th>
+                    <th>Course</th>
+                    <th class="toggle-column">Email</th>
+                    <th class="toggle-column">Mobile Number</th>
+                    <th class="toggle-column">State</th>
+                    <th class="toggle-column">Counselor Name</th>
+                    <th >Service Pack</th>
+                    <th class="toggle-column">Intake</th>
+                    
+                    <th class="toggle-column">Initial Reg</th>
+                    <th class="toggle-column">Initial Reg Date</th>
+                    <th class="toggle-column">Uni Paid</th>
+                    <th >Uni Fee Paid Date</th>
+                    <th class="toggle-column">Document Status</th>
+                    <th class="toggle-column">Uni Refund Initiated</th>
+                    <th class="toggle-column">Date of Uni Refund Initiated</th>
+                    <th class="toggle-column">IEH Refund Initiated</th>
+                    <th class="toggle-column">Date of IEH Refund Initiated</th>
+                    <th class="toggle-column">Scholarship</th>
+                    <th >Mode</th>
+                    <th >Amount</th>
+                    <th class="toggle-column">Semester Status</th>
+                    <th class="toggle-column">Batch</th>
+                    <th class="toggle-column">Enrollment No</th>
+                    <th>Degree Type</th>
+                    <th>University</th>
+                    <th>Study Status</th>
+                         <th>Payment Step 1</th> <!-- New header -->
+    <th>Details for Step 1</th> <!-- New header -->
+    <th>Payment Step 2</th> <!-- New header -->
+    <th>Details for Step 2</th> <!-- New header -->
+    <th>Payment Step 3</th> <!-- New header -->
+    <th>Details for Step 3</th> <!-- New header -->
+                </tr>
+            </thead>
+            <tbody>
+                {{#each formData}}
+             <tr data-id="{{_id}}">
+                    <td>{{incrementIndex @index}}</td>
+                    <td class="text-danger font-weight-bold">{{this.date}}</td>
+                    <td class="text-dark font-weight-bold">{{this.studentid}}</td>
+                    <td>{{this.name}}</td>
+                    <td >{{this.course}}</td>
+                    <td class="hideable">{{this.email}}</td>
+                    <td class="hideable">{{this.mobile}}</td>
+                    <td class="hideable" >{{this.state}}</td>
+                    <td class="hideable">{{this.specificName}}</td>
+                    <td >{{this.servicePack}}</td>
+                    <td class="hideable">{{this.intake}}</td>
+                   
+                    <td class="hideable">{{this.initialRegistration}}</td>
+                    <td class="hideable">{{this.initialDate}}</td>
+                    <td class="hideable">
+                        <button class="btn btn-status btn-paid">{{this.universityPaid}}</button>
+                    </td>
+                    <td >{{this.universityPaidDate}}</td>
+                    <td class="hideable">
+                        <button class="btn btn-status btn-approved">{{this.documentStatus}}</button>
+                    </td>
+                    <td class="hideable detail-row">
+                        {{#if this.unirefundinitiated}}
+                        {{this.unirefundinitiated}}
+                        {{else}}
+                        N/A
+                        {{/if}}
+                    </td>
+                    <td class="hideable refund-cell detail-row">
+                        {{#if this.unirefundinitiated}}
+                        {{this.unirefundinitiated}}
+                        {{else}}
+                        N/A
+                        {{/if}}
+                    </td>
+                    <td class="hideable detail-row">
+                        {{#if this.iehrefundinitiated}}
+                        {{this.iehrefundinitiated}}
+                        {{else}}
+                        N/A
+                        {{/if}}
+                    </td>
+                    <td class="hideable refund-cell detail-row">
+                        {{#if this.iehrefundinitiated}}
+                        {{this.iehrefundinitiated}}
+                        {{else}}
+                        N/A
+                        {{/if}}
+                    </td>
+                    <td class="hideable">{{this.scholarship}}</td>
+                    <td >{{this.feepaid}}</td>
+                    <td >{{this.feePaidAmount}}</td>
+                    <td class="hideable">{{this.semesterStatus}}</td>
+                    <td class="hideable">{{this.batch}}</td>
+                    <td class="hideable">{{this.enrollmentNo}}</td>
+                                       <td>
+        <select class="form-select">
+            <option value="" {{#if (eq this.degreeType "")}}selected{{/if}}>Select Degree</option>
+            <option value="UG" {{#if (eq this.degreeType "UG")}}selected{{/if}}>UG</option>
+            <option value="PG" {{#if (eq this.degreeType "PG")}}selected{{/if}}>PG</option>
+        </select>
+    </td>
+                     <td >
+                        {{#if (eq this.university "Manipal Jaipur University")}}
+                        <a href="https://login.leadsquared.com/" target="_blank">{{this.university}}</a>
+                        {{else if (eq this.university "Manipal Sikkim University")}}
+                        <a href="https://login.nopaperforms.io/" target="_blank">{{this.university}}</a>
+                        {{else if (eq this.university "Jain Online University")}}
+                        <a href="https://login.nopaperforms.io/" target="_blank">{{this.university}}</a>
+                        {{else if (eq this.university "Jain ODL University")}}
+                        <a href="https://login.nopaperforms.io/" target="_blank">{{this.university}}</a>
+                        {{else if (eq this.university "Vignan University")}}
+                        <a href="https://marvin.leadsquared.com" target="_blank">{{this.university}}</a>
+                        {{else if (eq this.university "Amity University")}}
+                        <a href="https://asodl.amizone.net/affiliatemanagement/clients/cDashboard" target="_blank">{{this.university}}</a>
+                        {{else if (eq this.university "SVSU")}}
+                        <a href="https://newiits.s2code.com/users/centers" target="_blank">{{this.university}}</a>
+                        {{else if (eq this.university "Aligarh Muslim University Online")}}
+                        <a href="http://partner.schoolguru.in" target="_blank">{{this.university}}</a>
+                        {{else if (eq this.university "KLU Online")}}
+                        <a href="#" target="http://partner.schoolguru.in">{{this.university}}</a> <!-- Add the correct URL here -->
+                        {{else if (eq this.university "Mizoram University")}}
+                        <a href="http://partner.schoolguru.in" target="_blank">{{this.university}}</a>
+                        {{else if (eq this.university "Jamia Hamdard University")}}
+                        <a href="http://partner.schoolguru.in" target="_blank">{{this.university}}</a> <!-- Add the correct URL here -->
+                        {{else if (eq this.university "Uttaranchal University")}}
+                        <a href="http://partner.schoolguru.in" target="_blank">{{this.university}}</a>
+                        {{else if (eq this.university "Andhra University")}}
+                        <a href="http://partner.schoolguru.in" target="_blank">{{this.university}}</a> <!-- Add the correct URL here -->
+                        {{else if (eq this.university "LPU")}}
+                        <a href="http://partner.schoolguru.in" target="_blank">{{this.university}}</a> <!-- Add the correct URL here -->
+                        {{else}}
+                        {{this.university}}
+                        {{/if}}
+                    </td>
+                    <td>
+  <!-- Study Status Dropdown -->
+  <div class="d-flex flex-column">
+    <select id="semester" class="form-select mb-2">
+      <option value="" disabled selected>Select Semester</option>
+      <option value="semester1">Semester 1</option>
+      <option value="semester2">Semester 2</option>
+      <option value="semester3">Semester 3</option>
+      <option value="semester4">Semester 4</option>
+      <option value="semester5">Semester 5</option>
+      <option value="semester6">Semester 6</option>
+      <option value="1st_year">1st Year</option>
+      <option value="2nd_year">2nd Year</option>
+      <option value="3rd_year">3rd Year</option>
+      <option value="Full Fee">Full Fee</option>
     </select>
-</td>
-<td class="refund-cell detail-row">
-    <input type="date" class="form-control {{#unless (eq this.unirefundinitiated "success")}}d-none{{/unless}}" value="{{this.dateOfRefundInitiateduni}}" />
-</td>
-<td class="detail-row">
-    <select class="form-select">
-        <option value="" {{#if (eq this.iehrefundinitiated "")}}selected{{/if}}>Select</option>
-        <option value="initiated" {{#if (eq this.iehrefundinitiated "initiated")}}selected{{/if}}>Initiated</option>
-        <option value="success" {{#if (eq this.iehrefundinitiated "success")}}selected{{/if}}>Success</option>
-    </select>
-</td>
-<td class="refund-cell detail-row">
-    <input type="date" class="form-control {{#unless (eq this.iehrefundinitiated "success")}}d-none{{/unless}}" value="{{this.dateOfRefundInitiatedieh}}" />
-</td>
 
-
-                                  <td>{{this.scholarship}}</td>
-                                <td>
-                                    <select class="form-select">
-                                        <option value="" {{#if (eq this.feepaid "")}}selected{{/if}}>Select</option>
-                                        <option value="Semester" {{#if (eq this.feepaid "Semester")}}selected{{/if}}>Semester</option>
-                                        <option value="First Year" {{#if (eq this.feepaid "First Year")}}selected{{/if}}>First Year</option>
-                                        <option value="Full Fee" {{#if (eq this.feepaid "Full Fee")}}selected{{/if}}>Full Fee</option>
-                                    </select>
-                                </td>
-                                <td><input type="number" class="form-control" value="{{this.feePaidAmount}}" /></td>
-                                <td>
-                                    <select class="form-select">
-                                        <option value="" {{#if (eq this.semesterStatus "")}}selected{{/if}}>Select</option>
-                                        <option value="Semester 1" {{#if (eq this.semesterStatus "Semester 1")}}selected{{/if}}>Semester 1</option>
-                                        <option value="Semester 2" {{#if (eq this.semesterStatus "Semester 2")}}selected{{/if}}>Semester 2</option>
-                                        <option value="Semester 3" {{#if (eq this.semesterStatus "Semester 3")}}selected{{/if}}>Semester 3</option>
-                                        <option value="Semester 4" {{#if (eq this.semesterStatus "Semester 4")}}selected{{/if}}>Semester 4</option>
-                                        <option value="Semester 5" {{#if (eq this.semesterStatus "Semester 5")}}selected{{/if}}>Semester 5</option>
-                                        <option value="Semester 6" {{#if (eq this.semesterStatus "Semester 6")}}selected{{/if}}>Semester 6</option>
-                                        <option value="Drop out" {{#if (eq this.semesterStatus "Drop out")}}selected{{/if}} class="text-danger">Drop out</option>
-                                        <option value="Course completed" {{#if (eq this.semesterStatus "Course completed")}}selected{{/if}} class="text-success">Course completed</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select class="form-select">
-                                        <option value="" {{#if (or (eq this.batch "") (eq this.batch null))}}selected{{/if}}>None</option>
-                                        <option value="JAN BATCH" {{#if (eq this.batch "JAN BATCH")}}selected{{/if}}>JAN BATCH</option>
-                                        <option value="JULY BATCH" {{#if (eq this.batch "JULY BATCH")}}selected{{/if}}>JULY BATCH</option>
-                                    </select>
-                                </td>
-                                <td><input type="text" class="form-control" value="{{this.enrollmentNo}}" /></td>
-                                
-                                <td>
-                                    <button class="btn btn-status {{#if (eq this.idApproved "Approved")}}btn-approved{{else}}btn-not-approved{{/if}}" onclick="toggleStatus(this, 'ID Approved')">
-                                        {{#if (eq this.idApproved "Approved")}}Approved{{else}}Not Approved{{/if}}
-                                    </button>
-                                </td>
-   <td>
-    <button class="btn btn-status {{#if (eq assignaccounts 'Assigned to accounts department')}}btn-paid{{else}}btn-not-paid{{/if}}" 
-            onclick="toggleAssignment(this)">
-        {{#if (eq assignaccounts 'Assigned to accounts department')}}Assigned to accounts department{{else}}Assign to accounts department{{/if}}
-    </button>
-</td>
-
-
-
-
-                            </tr>
-                            {{/each}}
-                        </tbody>
-</table>
-  
+ 
   </div>
-    
+</td>
+
+             <!-- Payment Step 1 -->
+    <td>
+      <select class="form-select date">
+        {{#each ../payments.[0].payments.[0].fields}}
+        <option value="{{this}}">{{this}}</option>
+        {{else}}
+        <option>No Data</option>
+        {{/each}}
+      </select>
+    </td>
+    <td>
+      <textarea class="form-control" placeholder="Enter details..."></textarea>
+      <div class="d-flex align-items-center mt-2">
+        <input type="date" class="form-control me-2 date" />
+        <a href="your-drive-link" target="_blank" class="upload-icon">
+          <i class="fas fa-upload"></i>
+        </a>
+      </div>
+    </td>
+
+    <!-- Payment Step 2 -->
+    <td>
+      <select class="form-select date">
+        {{#each ../payments.[0].payments.[1].fields}}
+        <option value="{{this}}">{{this}}</option>
+        {{else}}
+        <option>No Data</option>
+        {{/each}}
+      </select>
+    </td>
+    <td>
+      <textarea class="form-control" placeholder="Enter details..."></textarea>
+      <div class="d-flex align-items-center mt-2">
+        <input type="date" class="form-control me-2 date" />
+        <a href="your-drive-link" target="_blank" class="upload-icon">
+          <i class="fas fa-upload"></i>
+        </a>
+      </div>
+    </td>
+
+    <!-- Payment Step 3 -->
+    <td> 
+      <select class="form-select date">
+        {{#each ../payments.[0].payments.[2].fields}}
+        <option value="{{this}}">{{this}}</option>
+        {{else}}
+        <option>No Data</option>
+        {{/each}}
+      </select>
+    </td>
+    <td>
+      <textarea class="form-control" placeholder="Enter details..."></textarea>
+      <div class="d-flex align-items-center mt-2">
+        <input type="date" class="form-control date me-2" style="font-size: 12px; width: auto;"/>
+        <a href="your-drive-link" target="_blank" class="upload-icon">
+          <i class="fas fa-upload"></i>
+        </a>
+      </div>
+    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
 </div>
 
-   
+
+
         <script>
  $('#dataTable').DataTable({
     layout: {
@@ -666,456 +770,45 @@ background-color: #1c008b !important;
     select: true
 });
 
+
 </script>
 
 
-<!-- Modal Structure -->
-<div class="modal" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="messageModalLabel">Send Message</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label for="whatsappMessage" class="form-label">WhatsApp Message</label>
-                    <input type="text" class="form-control" id="whatsappMessage" placeholder="Enter your WhatsApp message">
-                </div>
-                <div class="mb-3">
-                    <label for="emailMessage" class="form-label">Email Message</label>
-                    <textarea class="form-control" id="emailMessage" rows="3" placeholder="Enter your Email message"></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="sendMessages()">Send</button>
-            </div>
-        </div>
-    </div>
-</div>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    function openMessageModal(mobile, email) {
-    // Set the data in the modal
-    document.getElementById('whatsappMessage').value = '';
-    document.getElementById('emailMessage').value = '';
-    
-    // Store mobile and email for later use
-    document.getElementById('messageModal').dataset.mobile = mobile;
-    document.getElementById('messageModal').dataset.email = email;
-    
-    // Show the modal
-    var myModal = new bootstrap.Modal(document.getElementById('messageModal'));
-    myModal.show();
-}
+    $(document).ready(function() {
+        $('#hideFieldsButton').on('click', function() {
+            const columnsToToggle = $('.toggle-column, .hideable');
+            const isHidden = columnsToToggle.first().is(':hidden');
 
-function sendMessages() {
-    const mobile = document.getElementById('messageModal').dataset.mobile;
-    const email = document.getElementById('messageModal').dataset.email;
-    const whatsappMessage = document.getElementById('whatsappMessage').value;
-    const emailMessage = document.getElementById('emailMessage').value;
-    
-    // Redirect to WhatsApp with a pre-filled message
-    const whatsappUrl = `https://wa.me/${mobile}?text=${encodeURIComponent(whatsappMessage)}`;
-    window.open(whatsappUrl, '_blank');
-    
-    // Send email using an API or directly via server-side
-    fetch('/send-emailclient', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            email: email,
-            message: emailMessage
-        })
-    }).then(response => response.json())
-      .then(data => {
-          if(data.success) {
-              alert('Email sent successfully');
-          } else {
-              alert('Failed to send email');
-          }
-      }).catch(error => {
-          console.error('Error:', error);
-          alert('Error sending email');
-      });
-}
+            // Faster speed: 200ms for animation and delay
+            const speed = 10;
+            
+            if (isHidden) {
+                // Show columns with animation
+                columnsToToggle.each(function(index) {
+                    $(this).delay(index * speed).slideDown(speed);
+                });
+                $(this).text('Hide Fields');
+            } else {
+                // Hide columns with animation
+                columnsToToggle.each(function(index) {
+                    $(this).delay(index * speed).slideUp(speed);
+                });
+                $(this).text('Show Fields');
+            }
+        });
 
+        // Initially hide the columns
+        $('.toggle-column, .hideable').hide();
+    });
 </script>
+
 
 
 <!-- Include SweetAlert2 for alerts -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-$(document).ready(function () {
-    // Handle row status for each row on page load
-    $('#dataTable tbody tr').each(function () {
-        const row = $(this);
-        const documentStatus = row.find('td').eq(21).find('button').text().trim();
-        handleRowStatus(row, documentStatus);
-    });
 
-    // Attach the toggleDateVisibility function to the change event of the refund status dropdowns
-    $('#dataTable').on('change', 'select', function () {
-        const row = $(this).closest('tr');
-        toggleDateVisibility(row);
-    });
-
-    // Attach the saveData function to the save button
-    $('#saveButton').on('click', function () {
-        saveData();
-    });
-});
-
-function toggleInitialRegistration(button) {
-    const currentStatus = $(button).text().trim();
-    const newStatus = currentStatus === '✔' ? 'Incorrect' : 'Correct';
-    const newClass = currentStatus === '✔' ? 'btn-incorrect' : 'btn-correct';
-    const newText = newStatus === 'Correct' ? '✔' : '✘';
-
-    $(button).text(newText)
-        .removeClass('btn-correct btn-incorrect')
-        .addClass(newClass);
-
-    const row = $(button).closest('tr');
-    const rowData = getRowData(row);
-    rowData.initialRegistration = newStatus;
-
-    console.log('Row Data:', rowData);
-}
-
-function toggleDateVisibility(row) {
-    const status = {
-        unirefund: row.find('td').eq(22).find('select').val(),
-        iehrefund: row.find('td').eq(24).find('select').val()
-    };
-
-    const uniDateInput = row.find('td').eq(23).find('input');
-    const iehDateInput = row.find('td').eq(25).find('input');
-
-    uniDateInput.toggleClass('d-none', status.unirefund !== 'success');
-    iehDateInput.toggleClass('d-none', status.iehrefund !== 'success');
-
-    uniDateInput.prop('required', status.unirefund === 'success');
-    iehDateInput.prop('required', status.iehrefund === 'success');
-}
-
-function toggleStatuss(button, type) {
-    const currentText = $(button).text().trim();
-    const statusConfig = {
-        'Not Paid': { text: 'Paid', newClass: 'btn-paid' },
-        'Paid': { text: 'Not Paid', newClass: 'btn-not-paid' },
-
-        'Not Done': { text: 'Done', newClass: 'btn-done' },
-        'Done': { text: 'Not Done', newClass: 'btn-not-done' }
-    };
-
-    const newStatus = statusConfig[currentText];
-    if (newStatus) {
-        $(button).text(newStatus.text)
-            .removeClass('btn-not-paid btn-paid ')
-            .addClass(newStatus.newClass);
-
-        const row = $(button).closest('tr');
-        const rowData = getRowData(row);
-
-        if (type === 'ID Approved') {
-            handleIdApproval(row, rowData, newStatus.text);
-        }
-    }
-}
-
-function toggleStatus(button, type) {
-    const currentText = $(button).text().trim();
-    const statusConfig = {
-        'Not Approved': { text: 'Approved', newClass: 'btn-approved' },
-        'Approved': { text: 'Not Approved', newClass: 'btn-not-approved' }
-    };
-
-    const newStatus = statusConfig[currentText];
-    if (newStatus) {
-        $(button).text(newStatus.text)
-            .removeClass('btn-not-approved btn-approved')
-            .addClass(newStatus.newClass);
-
-        const row = $(button).closest('tr');
-        handleRowStatus(row, newStatus.text);  // Updated to handle row status
-
-        if (type === 'ID Approved') {
-            handleIdApproval(row, getRowData(row), newStatus.text);
-        }
-    }
-}
-
-function handleRowStatus(row, documentStatus) {
-    if (documentStatus === 'Approved') {
-        // Disable and hide specific columns related to refund statuses
-        row.find('td').each(function () {
-            const index = $(this).index();
-
-            if (index === 22 || index === 24) {
-                $(this).find('select').prop('disabled', true).hide();
-            } else if (index === 23 || index === 25) {
-                $(this).find('input[type="date"]').prop('disabled', true).hide();
-            }
-        });
-    } else {
-        // Show and enable specific columns related to refund statuses
-        row.find('td').each(function () {
-            const index = $(this).index();
-
-            if (index === 22 || index === 24) {
-                $(this).find('select').prop('disabled', false).show();
-            } else if (index === 23 || index === 25) {
-                $(this).find('input[type="date"]').prop('disabled', false).show();
-            }
-        });
-    }
-}
-
-
-function getRowData(row) {
-    return {
-        id: row.data('id'),
-        date: row.find('td').eq(1).text().trim(),
-        studentid: row.find('td').eq(2).text().trim(),
-        mentor: row.find('td').eq(3).text().trim(),
-        name: row.find('td').eq(4).text().trim(),
-        course: row.find('td').eq(5).text().trim(),
-        specialization: row.find('td').eq(6).text().trim(),
-        email: row.find('td').eq(7).text().trim(),
-        mobile: row.find('td').eq(8).text().trim(),
-        state: row.find('td').eq(9).text().trim(),
-        city: row.find('td').eq(10).text().trim(),
-        role: row.find('td').eq(11).text().trim(),
-        specificName: row.find('td').eq(12).text().trim(),
-        servicePack: row.find('td').eq(13).text().trim(),
-        intake: row.find('td').eq(14).find('select').val() || '',
-        mentorshipStatus: row.find('td').eq(15).text().trim(),
-        university: row.find('td').eq(16).text().trim(),
-        initialRegistration: row.find('td').eq(17).find('button').text().trim(),
-        message: row.find('td').eq(18).find('button').text().trim(),
-        universityPaid: row.find('td').eq(19).find('button').text().trim(),
-        universityPaidDate: row.find('td').eq(20).find('input').val() || '',
-        documentStatus: row.find('td').eq(21).find('button').text().trim(),
-        unirefundinitiated: row.find('td').eq(22).find('select').val() || '',
-        dateOfRefundInitiateduni: row.find('td').eq(23).find('input').val() || '',
-        iehrefundinitiated: row.find('td').eq(24).find('select').val() || '',
-        dateOfRefundInitiatedieh: row.find('td').eq(25).find('input').val() || '',
-        scholarship: row.find('td').eq(26).text().trim(),
-        feepaid: row.find('td').eq(27).find('select').val() || '',
-        feePaidAmount: row.find('td').eq(28).find('input').val() || '',
-        semesterStatus: row.find('td').eq(29).find('select').val() || '',
-        batch: row.find('td').eq(30).find('select').val() || '',
-        enrollmentNo: row.find('td').eq(31).find('input').val() || '',
-        idApproved: row.find('td').eq(32).find('button').text().trim(),
-        action: row.find('td').eq(33).find('button').text().trim()
-    };
-}
-
-function toggleAssignment(button) {
-    const row = $(button).closest('tr');
-    const rowData = getRowData(row);
-
-    const isAssigned = $(button).text().trim() === 'Assigned to accounts department';
-    const newAssignStatus = isAssigned ? 'Assign to accounts department' : 'Assigned to accounts department';
-    const newButtonClass = isAssigned ? 'btn-not-paid' : 'btn-paid';
-
-    $(button).text(newAssignStatus)
-        .removeClass('btn-paid btn-not-paid')
-        .addClass(newButtonClass);
-
-    rowData.assignaccounts = newAssignStatus;
-
-    $.post('/update-client-details', rowData)
-        .done(() => {
-            Swal.fire({
-                title: 'Success!',
-                text: 'Assignment status updated successfully.',
-                icon: 'success',
-                confirmButtonText: 'OK'
-            });
-        })
-        .fail(() => {
-            Swal.fire({
-                title: 'Error!',
-                text: 'Update failed. Please try again.',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
-        });
-}
-
-function handleIdApproval(row, rowData, newStatus) {
-    if (newStatus === 'Approved') {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: 'Do you want to approve this ID?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, approve it!',
-            cancelButtonText: 'Cancel'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const missingFields = validateFields(rowData);
-
-                if (missingFields.length) {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Please fill in all required fields before approving ID. Missing fields: ' + missingFields.join(', '),
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
-                    return;
-                }
-
-                const randomPassword = Math.random().toString(36).slice(-8);
-                rowData.password = randomPassword;
-                rowData.idApproved = 'Approved';
-
-                $.post('/update-client-details', rowData)
-                    .done(() => {
-                        Swal.fire({
-                            title: 'Success!',
-                            text: 'ID has been approved successfully. Password: ' + randomPassword,
-                            icon: 'success',
-                            confirmButtonText: 'OK'
-                        });
-                    })
-                    .fail(() => {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'Update failed. Please try again.',
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        });
-                    });
-            }
-        });
-    } else if (newStatus === 'Not Approved') {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: 'Do you want to reject this ID?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, reject it!',
-            cancelButtonText: 'Cancel'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                rowData.idApproved = 'Not Approved';
-
-                $.post('/update-client-details', rowData)
-                    .done(() => {
-                        Swal.fire({
-                            title: 'Success!',
-                            text: 'ID has been rejected successfully.',
-                            icon: 'success',
-                            confirmButtonText: 'OK'
-                        });
-                    })
-                    .fail(() => {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'Update failed. Please try again.',
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        });
-                    });
-            }
-        });
-    }
-}
-
-function validateFields(data) {
-    // Define the required fields
-    const requiredFields = [
-        'id',
-        'date',
-        'studentid',
-        'mentor',
-        'name',
-        'course',
-        'specialization',
-        'email',
-        'mobile',
-        'state',
-        'city',
-        'role',
-        'specificName',
-        'servicePack',
-        'intake',
-        'mentorshipStatus',
-        'university',
-        'initialRegistration',
-        'universityPaid',
-        'universityPaidDate',
-        'documentStatus',
-        'scholarship',
-        'feepaid',
-        'feePaidAmount',
-        'semesterStatus',
-        'batch',
-        'enrollmentNo',
-        'idApproved',
-        'action'
-    ];
-
-    // Define the fields that should be required only if documentStatus is 'Not Approved'
-    const conditionalRequiredFields = [
-        'unirefundinitiated',
-        'dateOfRefundInitiateduni',
-        'iehrefundinitiated',
-        'dateOfRefundInitiatedieh'
-    ];
-
-    // Check if documentStatus is 'Not Approved'
-    if (data.documentStatus === 'Not Approved') {
-        // When documentStatus is 'Not Approved', include the conditional fields in validation
-        return requiredFields.filter(field => !data[field]) // Ensure all required fields are filled
-            .concat(conditionalRequiredFields.filter(field => !data[field])); // Include conditional fields if not filled
-    } else {
-        // When documentStatus is 'Approved', only validate the required fields without conditional fields
-        return requiredFields.filter(field => !data[field]);
-    }
-}
-
-
-function saveData() {
-    $('#dataTable tbody tr').each(function() {
-        // Get the row data
-        let rowData = getRowData($(this));
-
-        // Remove or ignore the idApproved field
-        delete rowData.idApproved;
-
-        // Make the AJAX request to save the data
-        $.post('/update-client-details', rowData)
-            .done(() => {
-                Swal.fire({
-                    title: 'Success!',
-                    text: 'All changes have been saved successfully.',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                });
-            })
-            .fail(() => {
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Save failed. Please try again.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            });
-    });
-}
-
-</script>
 
  
   <!-- Additional JavaScript Libraries -->

@@ -294,34 +294,83 @@ module.exports = {
       }
     });
   },
+  getPaymentById: async (id) => {
+    try {
+      console.log(`Fetching payment with ID: ${id}`);
+      const payment = await db
+        .get()
+        .collection(collection.PAYMENTS_COLLECTION)
+        .findOne({ _id: ObjectId(id) });
+      console.log("Fetched payment:", payment);
+      return payment;
+    } catch (error) {
+      console.error("Error in getPaymentById:", error);
+      throw error;
+    }
+  },
 
-  createLeadOwner: (leadOwnerData) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        // Check if the email already exists
-        const existingLeadOwner = await db
-          .get()
-          .collection(collection.CRM_LEAD_COLLECTION)
-          .findOne({ email: leadOwnerData.email });
+  createPayments: async (payments) => {
+    try {
+      if (Array.isArray(payments)) {
+        const paymentDocument = {
+          payments: payments.map((payment, index) => ({
+            step: index + 1,
+            fields: payment.fields,
+          })),
+        };
 
-        if (existingLeadOwner) {
-          return reject({ message: "Email already exists" });
-        }
-
-        // Encrypt the password
-        const hashedPassword = await bcrypt.hash(leadOwnerData.password, 10);
-        leadOwnerData.password = hashedPassword;
-
-        // Save the lead owner details into the database
         await db
           .get()
-          .collection(collection.CRM_LEAD_COLLECTION)
-          .insertOne(leadOwnerData);
-        resolve();
-      } catch (error) {
-        reject(error);
+          .collection(collection.PAYMENTS_COLLECTION)
+          .insertOne(paymentDocument);
+      } else {
+        throw new Error("Invalid payments data format");
       }
-    });
+    } catch (error) {
+      console.error("Error in createPayments:", error);
+      throw error;
+    }
+  },
+
+  getAllPayments: async () => {
+    try {
+      const payments = await db
+        .get()
+        .collection(collection.PAYMENTS_COLLECTION)
+        .find()
+        .toArray();
+      return payments;
+    } catch (error) {
+      console.error("Error in getAllPayments:", error);
+      throw error;
+    }
+  },
+
+  deletePayment: async (id) => {
+    try {
+      await db
+        .get()
+        .collection(collection.PAYMENTS_COLLECTION)
+        .deleteOne({ _id: ObjectId(id) });
+    } catch (error) {
+      console.error("Error in deletePayment:", error);
+      throw error;
+    }
+  },
+
+  editPayment: async (id, updatedData) => {
+    try {
+      await db
+        .get()
+        .collection(collection.PAYMENTS_COLLECTION)
+        .updateOne(
+          { _id: ObjectId(id) },
+          { $set: { payments: updatedData } } // Replace the whole array
+        );
+    } catch (error) {
+      console.error("Error in editPayment:", error);
+      throw error;
+    }
   },
 
   // getLeadStatusCounts: async (

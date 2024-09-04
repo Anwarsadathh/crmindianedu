@@ -429,11 +429,13 @@
                                 <th>IEH Refund Initiated</th>
                                 <th>Date of IEH Refund Initiated</th>
                                 <th>Scholarship</th>
-                                <th>Fee Paid</th>
+                                <th>Mode</th>
                                 <th>Amount</th>
+                                <th>UG/PG</th>
                                 <th>Semester Status</th>
                                 <th>Batch</th>
                                 <th>Enrollment No</th>
+                                <th>Application No</th>
                                 <th>ID Approved</th>
                                 <th>Action</th>
         </tr>
@@ -565,6 +567,13 @@
                                     </select>
                                 </td>
                                 <td><input type="number" class="form-control" value="{{this.feePaidAmount}}" /></td>
+                                    <td>
+        <select class="form-select">
+            <option value="" {{#if (eq this.degreeType "")}}selected{{/if}}>Select Degree</option>
+            <option value="UG" {{#if (eq this.degreeType "UG")}}selected{{/if}}>UG</option>
+            <option value="PG" {{#if (eq this.degreeType "PG")}}selected{{/if}}>PG</option>
+        </select>
+    </td>
                                 <td>
                                     <select class="form-select">
                                         <option value="" {{#if (eq this.semesterStatus "")}}selected{{/if}}>Select</option>
@@ -586,7 +595,7 @@
                                     </select>
                                 </td>
                                 <td><input type="text" class="form-control" value="{{this.enrollmentNo}}" /></td>
-                                
+                                 <td><input type="text" class="form-control" value="{{this.applicationNo}}" /></td>
                                 <td>
                                     <button class="btn btn-status {{#if (eq this.idApproved "Approved")}}btn-approved{{else}}btn-not-approved{{/if}}" onclick="toggleStatus(this, 'ID Approved')">
                                         {{#if (eq this.idApproved "Approved")}}Approved{{else}}Not Approved{{/if}}
@@ -887,7 +896,7 @@ $(document).ready(function () {
     // Handle row status for each row on page load
     $('#dataTable tbody tr').each(function () {
         const row = $(this);
-        const documentStatus = row.find('td').eq(21).find('button').text().trim();
+        const documentStatus = row.find('td').eq(22).find('button').text().trim();
         handleRowStatus(row, documentStatus);
     });
 
@@ -922,12 +931,12 @@ function toggleInitialRegistration(button) {
 
 function toggleDateVisibility(row) {
     const status = {
-        unirefund: row.find('td').eq(22).find('select').val(),
-        iehrefund: row.find('td').eq(24).find('select').val()
+        unirefund: row.find('td').eq(23).find('select').val(),
+        iehrefund: row.find('td').eq(25).find('select').val()
     };
 
-    const uniDateInput = row.find('td').eq(23).find('input');
-    const iehDateInput = row.find('td').eq(25).find('input');
+    const uniDateInput = row.find('td').eq(24).find('input');
+    const iehDateInput = row.find('td').eq(26).find('input');
 
     uniDateInput.toggleClass('d-none', status.unirefund !== 'success');
     iehDateInput.toggleClass('d-none', status.iehrefund !== 'success');
@@ -1013,43 +1022,45 @@ function handleRowStatus(row, documentStatus) {
 function getRowData(row) {
     return {
         id: row.data('id'),
-date: row.find('td').eq(1).text().trim(),
-studentid: row.find('td').eq(2).text().trim(),
-mentor: row.find('td').eq(3).text().trim(),
-name: row.find('td').eq(4).text().trim(),
-course: row.find('td').eq(5).text().trim(),
-specialization: row.find('td').eq(6).text().trim(),
-email: row.find('td').eq(7).text().trim(),
-mobile: row.find('td').eq(8).text().trim(),
-state: row.find('td').eq(9).text().trim(),
-city: row.find('td').eq(10).text().trim(),
-role: row.find('td').eq(11).text().trim(),
-specificName: row.find('td').eq(12).text().trim(),
-servicePack: row.find('td').eq(13).text().trim(),
-intake: row.find('td').eq(14).find('select').val() || '',
-mentorshipStatus: row.find('td').eq(15).text().trim(),
-university: row.find('td').eq(16).text().trim(),
-initialRegistration: row.find('td').eq(17).find('button').text().trim(),
-initialDate: row.find('td').eq(18).find('input').val() || '',
-message: row.find('td').eq(19).find('button').text().trim(),
-universityPaid: row.find('td').eq(20).find('button').text().trim(),
-universityPaidDate: row.find('td').eq(21).find('input').val() || '',
-documentStatus: row.find('td').eq(22).find('button').text().trim(),
-unirefundinitiated: row.find('td').eq(23).find('select').val() || '',
-dateOfRefundInitiateduni: row.find('td').eq(24).find('input').val() || '',
-iehrefundinitiated: row.find('td').eq(25).find('select').val() || '',
-dateOfRefundInitiatedieh: row.find('td').eq(26).find('input').val() || '',
-scholarship: row.find('td').eq(27).text().trim(),
-feepaid: row.find('td').eq(28).find('select').val() || '',
-feePaidAmount: row.find('td').eq(29).find('input').val() || '',
-semesterStatus: row.find('td').eq(30).find('select').val() || '',
-batch: row.find('td').eq(31).find('select').val() || '',
-enrollmentNo: row.find('td').eq(32).find('input').val() || '',
-idApproved: row.find('td').eq(33).find('button').text().trim(),
-action: row.find('td').eq(34).find('button').text().trim()
-
+        date: row.find('td').eq(1).text().trim(),
+        studentid: row.find('td').eq(2).text().trim(),
+        mentor: row.find('td').eq(3).text().trim(),
+        name: row.find('td').eq(4).text().trim(),
+        course: row.find('td').eq(5).text().trim(),
+        specialization: row.find('td').eq(6).text().trim(),
+        email: row.find('td').eq(7).text().trim(),
+        mobile: row.find('td').eq(8).text().trim(),
+        state: row.find('td').eq(9).text().trim(),
+        city: row.find('td').eq(10).text().trim(),
+        role: row.find('td').eq(11).text().trim(),
+        specificName: row.find('td').eq(12).text().trim(),
+        servicePack: row.find('td').eq(13).text().trim(),
+        intake: row.find('td').eq(14).find('select').val() || '',
+        mentorshipStatus: row.find('td').eq(15).text().trim(),
+        university: row.find('td').eq(16).text().trim(),
+        initialRegistration: row.find('td').eq(17).find('button').text().trim(),
+        initialDate: row.find('td').eq(18).find('input').val() || '',
+        message: row.find('td').eq(19).find('button').text().trim(),
+        universityPaid: row.find('td').eq(20).find('button').text().trim(),
+        universityPaidDate: row.find('td').eq(21).find('input').val() || '',
+        documentStatus: row.find('td').eq(22).find('button').text().trim(),
+        unirefundinitiated: row.find('td').eq(23).find('select').val() || '',
+        dateOfRefundInitiateduni: row.find('td').eq(24).find('input').val() || '',
+        iehrefundinitiated: row.find('td').eq(25).find('select').val() || '',
+        dateOfRefundInitiatedieh: row.find('td').eq(26).find('input').val() || '',
+        scholarship: row.find('td').eq(27).text().trim(),
+        feepaid: row.find('td').eq(28).find('select').val() || '',
+        feePaidAmount: row.find('td').eq(29).find('input').val() || '',
+        degreeType: row.find('td').eq(30).find('select').val() || '', // Added degreeType
+        semesterStatus: row.find('td').eq(31).find('select').val() || '', // Updated index for semesterStatus
+        batch: row.find('td').eq(32).find('select').val() || '',
+        enrollmentNo: row.find('td').eq(33).find('input').val() || '',
+        applicationNo: row.find('td').eq(34).find('input').val() || '',
+        idApproved: row.find('td').eq(35).find('button').text().trim(),
+        assignaccounts: row.find('td').eq(36).find('button').text().trim()
     };
 }
+
 
 function toggleAssignment(button) {
     const row = $(button).closest('tr');
@@ -1199,8 +1210,10 @@ function validateFields(data) {
         'semesterStatus',
         'batch',
         'enrollmentNo',
+        'applicationNo',
         'idApproved',
-        'action'
+        'degreeType',
+       
     ];
 
     // Define the fields that should be required only if documentStatus is 'Not Approved'
