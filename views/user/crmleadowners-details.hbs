@@ -469,6 +469,7 @@ select,textarea{
                                 <!-- Define table headers -->
                                 <th hidden>ID</th>
                                 <th hidden>Assign date</th>
+                                <th hidden>ReferredBy</th>
                                 <th>ID</th>
                                 <th>Time Stamp</th>
                                 <th>Source</th>
@@ -513,6 +514,7 @@ select,textarea{
                            <tr data-assign-date="{{this.assignDate}}">
                                 <td hidden>{{this._id}}</td>
                               <td hidden>{{this.assignDate}} </td>
+                                 <td hidden>{{this.ReferredBy}}</td>
                                 <td>{{this.id}}</td>
                                 <td>{{this.timeStamp}}</td>
                                 <td>{{this.source}}</td>
@@ -613,59 +615,6 @@ select,textarea{
     </div>
 </div>
 
-{{!-- <script>
-    $(document).ready(function() {
-        // Initialize DataTable
-        const table = $('#dataTable').DataTable({
-            pageLength: 100,
-            lengthMenu: [[100, 25, 10, -1], [100, 25, 10, "All"]],
-            order: [[2, 'desc']] // Adjust column index if needed
-        });
-
-        // Filter rows based on date selection
-        $('#dateFilter').on('change', function() {
-            const filterValue = $(this).val();
-            const today = new Date();
-            let startDate, endDate;
-
-            switch (filterValue) {
-                case 'today':
-                    startDate = new Date(today.setHours(0, 0, 0, 0));
-                    endDate = new Date(today.setHours(23, 59, 59, 999));
-                    break;
-                case 'yesterday':
-                    startDate = new Date(today.setDate(today.getDate() - 1));
-                    startDate.setHours(0, 0, 0, 0);
-                    endDate = new Date(today.setHours(23, 59, 59, 999));
-                    break;
-                case 'this-week':
-                    const firstDayOfWeek = today.getDate() - today.getDay();
-                    startDate = new Date(today.setDate(firstDayOfWeek));
-                    startDate.setHours(0, 0, 0, 0);
-                    endDate = new Date(today.setDate(firstDayOfWeek + 6));
-                    endDate.setHours(23, 59, 59, 999);
-                    break;
-                case 'last-month':
-                    startDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-                    endDate = new Date(today.getFullYear(), today.getMonth(), 0);
-                    endDate.setHours(23, 59, 59, 999);
-                    break;
-                default:
-                    table.search('').draw(); // Show all rows if no filter selected
-                    return;
-            }
-
-            table.rows().every(function() {
-                const rowDate = new Date($(this.node()).data('assign-date'));
-                if (rowDate >= startDate && rowDate <= endDate) {
-                    $(this.node()).show();
-                } else {
-                    $(this.node()).hide();
-                }
-            });
-        });
-    });
-</script> --}}
 
 
 
@@ -1132,14 +1081,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function redirectToSEForm(button) {
     const row = button.closest('tr');
-     const name = row.querySelector('td:nth-child(7)').textContent.trim();
-    const email = row.querySelector('td:nth-child(19)').textContent.trim();
-    const whatsapp = row.querySelector('td:nth-child(8)').textContent.trim();
-    const course = row.querySelector('td:nth-child(16)').textContent.trim();
-    const specialization = row.querySelector('td:nth-child(27)').textContent.trim();
-    const city = row.querySelector('td:nth-child(15)').textContent.trim();
-    const state = row.querySelector('td:nth-child(6)').textContent.trim();
-     const budget = row.querySelector('td:nth-child(14)').textContent.trim();
+    const name = row.querySelector('td:nth-child(8)').textContent.trim();
+    const email = row.querySelector('td:nth-child(20)').textContent.trim();
+    const whatsapp = row.querySelector('td:nth-child(9)').textContent.trim();
+    const course = row.querySelector('td:nth-child(17)').textContent.trim();
+    const specialization = row.querySelector('td:nth-child(28)').textContent.trim();
+    const city = row.querySelector('td:nth-child(16)').textContent.trim();
+    const state = row.querySelector('td:nth-child(7)').textContent.trim();
+    const budget = row.querySelector('td:nth-child(15)').textContent.trim();
+    const referredBy = row.querySelector('td:nth-child(3)').textContent.trim(); // ReferredBy
 
     // Construct URL with query parameters
     const url = new URL('/se-form', window.location.origin);
@@ -1151,9 +1101,12 @@ function redirectToSEForm(button) {
     url.searchParams.append('city', encodeURIComponent(city)); // Add city
     url.searchParams.append('state', encodeURIComponent(state)); // Add state
     url.searchParams.append('budget', encodeURIComponent(budget));
+    url.searchParams.append('referredBy', encodeURIComponent(referredBy)); // Add ReferredBy
+
     // Redirect to SE Form page
     window.location.href = url.toString();
 }
+
 </script>
 <script>document.addEventListener('DOMContentLoaded', () => {
     // Event listener for the follow-up date input

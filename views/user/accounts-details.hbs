@@ -62,6 +62,25 @@
     <link href="css/style.css" rel="stylesheet">
      <style>
     @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
+body {
+    color: #000 !important; /* Ensure all text is black */
+}
+
+select {
+    color: #000 !important; /* Ensure select text is black */
+}
+
+{{!-- ::placeholder {
+    color: #000 !important; /* Ensure placeholder text is black */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: #000 !important;
+} --}}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+    color: #000 !important;
+}
 
 .search{
   
@@ -349,16 +368,16 @@ select,textarea{
                     </div>
                 </div>
                 <div class="navbar-nav w-100" style="background-color: #232f65;">
-                    <a href="/client-dashboard" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Dashboard</a>
+                    <a href="/accounts-dashboard" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Dashboard</a>
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>SE Form</a>
+                        <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Leads</a>
                         <div class="dropdown-menu bg-transparent border-0">
-                            <a href="/client-details" class="dropdown-item active">Se-form-details</a>
+                            <a href="/accounts-details" class="dropdown-item active">Leads Details</a>
                             <a href="typography.html" class="dropdown-item"></a>
                             <a href="element.html" class="dropdown-item"></a>
                         </div>
                     </div>
-                     <a href="/create-payments" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Dashboard</a>
+                     <a href="/create-payments" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Create Pay Steps</a>
                 </div>
             </nav>
         </div>
@@ -557,6 +576,7 @@ select,textarea{
     <th>Details for Step 2</th> <!-- New header -->
     <th>Payment Step 3</th> <!-- New header -->
     <th>Details for Step 3</th> <!-- New header -->
+    <th>Final Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -624,59 +644,56 @@ select,textarea{
             <option value="PG" {{#if (eq this.degreeType "PG")}}selected{{/if}}>PG</option>
         </select>
     </td>
-                     <td >
-                        {{#if (eq this.university "Manipal Jaipur University")}}
-                        <a href="https://login.leadsquared.com/" target="_blank">{{this.university}}</a>
-                        {{else if (eq this.university "Manipal Sikkim University")}}
-                        <a href="https://login.nopaperforms.io/" target="_blank">{{this.university}}</a>
-                        {{else if (eq this.university "Jain Online University")}}
-                        <a href="https://login.nopaperforms.io/" target="_blank">{{this.university}}</a>
-                        {{else if (eq this.university "Jain ODL University")}}
-                        <a href="https://login.nopaperforms.io/" target="_blank">{{this.university}}</a>
-                        {{else if (eq this.university "Vignan University")}}
-                        <a href="https://marvin.leadsquared.com" target="_blank">{{this.university}}</a>
-                        {{else if (eq this.university "Amity University")}}
-                        <a href="https://asodl.amizone.net/affiliatemanagement/clients/cDashboard" target="_blank">{{this.university}}</a>
-                        {{else if (eq this.university "SVSU")}}
-                        <a href="https://newiits.s2code.com/users/centers" target="_blank">{{this.university}}</a>
-                        {{else if (eq this.university "Aligarh Muslim University Online")}}
-                        <a href="http://partner.schoolguru.in" target="_blank">{{this.university}}</a>
-                        {{else if (eq this.university "KLU Online")}}
-                        <a href="#" target="http://partner.schoolguru.in">{{this.university}}</a> <!-- Add the correct URL here -->
-                        {{else if (eq this.university "Mizoram University")}}
-                        <a href="http://partner.schoolguru.in" target="_blank">{{this.university}}</a>
-                        {{else if (eq this.university "Jamia Hamdard University")}}
-                        <a href="http://partner.schoolguru.in" target="_blank">{{this.university}}</a> <!-- Add the correct URL here -->
-                        {{else if (eq this.university "Uttaranchal University")}}
-                        <a href="http://partner.schoolguru.in" target="_blank">{{this.university}}</a>
-                        {{else if (eq this.university "Andhra University")}}
-                        <a href="http://partner.schoolguru.in" target="_blank">{{this.university}}</a> <!-- Add the correct URL here -->
-                        {{else if (eq this.university "LPU")}}
-                        <a href="http://partner.schoolguru.in" target="_blank">{{this.university}}</a> <!-- Add the correct URL here -->
-                        {{else}}
-                        {{this.university}}
-                        {{/if}}
-                    </td>
-                    <td>
-  <!-- Study Status Dropdown -->
-  <div class="d-flex flex-column">
-    <select id="semester" class="form-select mb-2">
-      <option value="" disabled selected>Select Semester</option>
-      <option value="semester1">Semester 1</option>
-      <option value="semester2">Semester 2</option>
-      <option value="semester3">Semester 3</option>
-      <option value="semester4">Semester 4</option>
-      <option value="semester5">Semester 5</option>
-      <option value="semester6">Semester 6</option>
-      <option value="1st_year">1st Year</option>
-      <option value="2nd_year">2nd Year</option>
-      <option value="3rd_year">3rd Year</option>
-      <option value="Full Fee">Full Fee</option>
-    </select>
-
- 
-  </div>
+                   <td>
+  {{#if (eq this.university "Manipal Jaipur University")}}
+    <a href="mailto:Soubin.sukumaran@onlinemanipal.com" target="_blank">Manipal Jaipur University</a>
+  {{else if (eq this.university "Manipal Sikkim University")}}
+    <a href="mailto:Soubin.sukumaran@onlinemanipal.com" target="_blank">Manipal Sikkim University</a>
+  {{else if (eq this.university "Jain Online University")}}
+    <a href="mailto:adarsh.kh@usdcglobal.com" target="_blank">Jain Online University</a>
+  {{else if (eq this.university "Jain ODL University")}}
+    <a href="mailto:Syed.imran@teamlease.com" target="_blank">Jain ODL University</a>
+  {{else if (eq this.university "Vignan University")}}
+    <a href="mailto:adarsh.kh@usdcglobal.com" target="_blank">Vignan University</a>
+  {{else if (eq this.university "Amity University")}}
+    <a href="mailto:billing@univoedtech.com" target="_blank">Amity University</a>
+  {{else if (eq this.university "SVSU")}}
+    <a href="mailto:syed.imran@teamlease.com" target="_blank">SVSU</a>
+  {{else if (eq this.university "Aligarh Muslim University Online")}}
+    <a href="mailto:syed.imran@teamlease.com" target="_blank">Aligarh Muslim University Online</a>
+  {{else if (eq this.university "KLU Online")}}
+    <a href="mailto:syed.imran@teamlease.com" target="_blank">KLU Online</a>
+  {{else if (eq this.university "Mizoram University")}}
+    <a href="mailto:syed.imran@teamlease.com" target="_blank">Mizoram University</a>
+  {{else if (eq this.university "Jamia Hamdard University")}}
+    <a href="mailto:syed.imran@teamlease.com" target="_blank">Jamia Hamdard University</a>
+  {{else if (eq this.university "Uttaranchal University")}}
+    <a href="mailto:syed.imran@teamlease.com" target="_blank">Uttaranchal University</a>
+  {{else if (eq this.university "Andhra University")}}
+    <a href="mailto:syed.imran@teamlease.com" target="_blank">Andhra University</a>
+  {{else if (eq this.university "LPU")}}
+    <a href="mailto:connectprashantraghuvanshi@gmail.com" target="_blank">LPU</a>
+  {{else}}
+    {{this.university}}
+  {{/if}}
 </td>
+
+             <td>
+    <select id="sem" class="form-select mb-2 date">
+        <option value="" disabled {{#if (eq this.studyStage "")}}selected{{/if}}>Select Sem</option>
+        <option value="sem1" {{#if (eq this.studyStage "sem1")}}selected{{/if}}>Sem 1</option>
+        <option value="sem2" {{#if (eq this.studyStage "sem2")}}selected{{/if}}>Sem 2</option>
+        <option value="sem3" {{#if (eq this.studyStage "sem3")}}selected{{/if}}>Sem 3</option>
+        <option value="sem4" {{#if (eq this.studyStage "sem4")}}selected{{/if}}>Sem 4</option>
+        <option value="sem5" {{#if (eq this.studyStage "sem5")}}selected{{/if}}>Sem 5</option>
+        <option value="sem6" {{#if (eq this.studyStage "sem6")}}selected{{/if}}>Sem 6</option>
+        <option value="1st_year" {{#if (eq this.studyStage "1st_year")}}selected{{/if}}>1st Year</option>
+        <option value="2nd_year" {{#if (eq this.studyStage "2nd_year")}}selected{{/if}}>2nd Year</option>
+        <option value="3rd_year" {{#if (eq this.studyStage "3rd_year")}}selected{{/if}}>3rd Year</option>
+        <option value="Full Fee" {{#if (eq this.studyStage "Full Fee")}}selected{{/if}}>Full Fee</option>
+    </select>
+</td>
+
 
              <!-- Payment Step 1 -->
     <td>
@@ -737,6 +754,21 @@ select,textarea{
         </a>
       </div>
     </td>
+     <!-- Semester Status Dropdown -->
+            <td>
+                <select class="form-select date">
+                    <option value="" {{#if (eq this.finalStatus "")}}selected{{/if}}>Select Status</option>
+                    <option value="Waiting for Sem 2" {{#if (eq this.finalStatus "Waiting for Sem 2")}}selected{{/if}}>Waiting for Sem 2</option>
+                    <option value="Waiting for Sem 3" {{#if (eq this.finalStatus "Waiting for Sem 3")}}selected{{/if}}>Waiting for Sem 3</option>
+                    <option value="Waiting for Sem 4" {{#if (eq this.finalStatus "Waiting for Sem 4")}}selected{{/if}}>Waiting for Sem 4</option>
+                    <option value="Waiting for Sem 5" {{#if (eq this.finalStatus "Waiting for Sem 5")}}selected{{/if}}>Waiting for Sem 5</option>
+                    <option value="Waiting for Sem 6" {{#if (eq this.finalStatus "Waiting for Sem 6")}}selected{{/if}}>Waiting for Sem 6</option>
+                    <option value="Completed" {{#if (eq this.finalStatus "Completed")}}selected{{/if}} class="text-success">Completed</option>
+                    <option value="Dropout" {{#if (eq this.finalStatus "Dropout")}}selected{{/if}} class="text-danger">Dropout</option>
+                    <option value="Waiting for 2nd Year" {{#if (eq this.finalStatus "Waiting for 2nd Year")}}selected{{/if}}>Waiting for 2nd Year</option>
+                    <option value="Waiting for 3rd Year" {{#if (eq this.finalStatus "Waiting for 3rd Year")}}selected{{/if}}>Waiting for 3rd Year</option>
+                </select>
+            </td>
                 </tr>
                 {{/each}}
             </tbody>

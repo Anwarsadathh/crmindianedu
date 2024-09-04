@@ -2057,9 +2057,7 @@ router.post("/partner-creation", async (req, res) => {
     // Extract necessary fields from request body
     const { email, otp, ...otherFields } = req.body;
 
-    // Assuming OTP verification is handled in the /verify-otp route,
-    // you might want to validate the OTP here as needed or rely on
-    // external logic if OTP verification is done elsewhere.
+    // OTP verification logic can be added here if needed
 
     // Proceed with partner creation
     const result = await serviceHelpers.createPartner({
@@ -2079,6 +2077,7 @@ router.post("/partner-creation", async (req, res) => {
       .json({ message: "Internal Server Error: " + error.message });
   }
 });
+
 
 
 

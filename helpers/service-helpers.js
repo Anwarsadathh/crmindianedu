@@ -2856,15 +2856,10 @@ module.exports = {
         collection.AFFILIATE_COLLECTION
       );
 
-      // Generate the base institute ID
-      const namePart = formData.name
-        .split(" ")
-        .join("")
-        .substring(0, 4)
-        .toUpperCase();
-      const baseInstituteId = `IEHAP-${namePart}`;
+      // Define the base part of the institute ID
+      const baseInstituteId = "IEHAP";
 
-      // Find the latest institute ID with the same base
+      // Find the highest numeric suffix across all institute IDs
       const latestPartner = await partnersCollection
         .find({ instituteid: { $regex: `^${baseInstituteId}-\\d{5}$` } })
         .sort({ instituteid: -1 })
@@ -2873,7 +2868,7 @@ module.exports = {
 
       let nextInstituteId;
       if (latestPartner.length > 0) {
-        // Extract the number part and increment it
+        // Extract the highest numeric part and increment it
         const latestNumber = parseInt(
           latestPartner[0].instituteid.split("-").pop(),
           10
@@ -2882,22 +2877,32 @@ module.exports = {
           .toString()
           .padStart(5, "0")}`;
       } else {
-        // Start with the first number 00313 if no previous IDs are found
+        // Start with the first number if no previous IDs are found
         nextInstituteId = `${baseInstituteId}-00313`;
       }
 
-      // Check if the email or institute ID already exists
-      const existingPartner = await partnersCollection.findOne({
-        $or: [{ email: formData.email }, { instituteid: nextInstituteId }],
+      // Ensure the new institute ID is unique across all records
+      let existingPartner = await partnersCollection.findOne({
+        instituteid: nextInstituteId,
       });
 
-      if (existingPartner) {
-        if (existingPartner.email === formData.email) {
-          return { success: false, message: "Email already exists" };
-        }
-        if (existingPartner.instituteid === nextInstituteId) {
-          return { success: false, message: "Institute ID already exists" };
-        }
+      while (existingPartner) {
+        // If the generated ID is already taken, increment the number
+        const newNumber = parseInt(nextInstituteId.split("-").pop(), 10) + 1;
+        nextInstituteId = `${baseInstituteId}-${newNumber
+          .toString()
+          .padStart(5, "0")}`;
+        existingPartner = await partnersCollection.findOne({
+          instituteid: nextInstituteId,
+        });
+      }
+
+      // Check if the email already exists
+      const emailExists = await partnersCollection.findOne({
+        email: formData.email,
+      });
+      if (emailExists) {
+        return { success: false, message: "Email already exists" };
       }
 
       // Hash the password before storing it
@@ -2907,14 +2912,14 @@ module.exports = {
       const newPartner = {
         name: formData.name,
         email: formData.email,
-        mobNumber: formData.mobile_number, // Corrected field name
-        workingStatus: formData.working_status, // Corrected field name
+        mobNumber: formData.mobile_number,
+        workingStatus: formData.working_status,
         position: formData.position,
-        presentCompany: formData.present_company, // Corrected field name
+        presentCompany: formData.present_company,
         state: formData.state,
         city: formData.city,
-        password: hashedPassword, // Store the hashed password
-        instituteid: nextInstituteId, // Use the generated institute ID
+        password: hashedPassword,
+        instituteid: nextInstituteId,
       };
 
       // Insert the new partner document into the collection
@@ -3040,47 +3045,52 @@ module.exports = {
         collection.PATNER_COLLECTION
       );
 
-      // Generate the base institute ID
+      // Generate the base institute ID using the first 4 letters of the institute name
       const baseInstituteId =
-        "IEHI-" +
+        "IEHI" +
         formData.institute_name
-          .split(" ")
-          .join("")
-          .substring(0, 4)
+          .replace(/\s+/g, "") // Remove spaces
+          .substring(0, 4) // Get the first 4 characters
           .toUpperCase();
 
-      // Find the latest institute ID with the same base
-      const latestPartner = await partnersCollection
-        .find({ instituteid: { $regex: `^${baseInstituteId}-\\d{5}$` } })
-        .sort({ instituteid: -1 })
-        .limit(1)
-        .toArray();
-
       let nextInstituteId;
-      if (latestPartner.length > 0) {
-        const latestNumber = parseInt(
-          latestPartner[0].instituteid.split("-").pop(),
-          10
-        );
-        nextInstituteId = `${baseInstituteId}-${(latestNumber + 1)
+      let isUnique = false;
+
+      // Fetch all institute IDs and find the highest numeric part globally
+      const allPartners = await partnersCollection.find({}).toArray();
+      const highestCounter = allPartners.reduce((max, partner) => {
+        const numberPart = parseInt(partner.instituteid.split("-")[1], 10);
+        return numberPart > max ? numberPart : max;
+      }, 786); // Start from 786 if no records are found
+
+      // Increment the counter
+      let counter = highestCounter + 1;
+
+      while (!isUnique) {
+        // Generate the next institute ID using the global highest counter
+        nextInstituteId = `${baseInstituteId}-${counter
           .toString()
           .padStart(5, "0")}`;
-      } else {
-        nextInstituteId = `${baseInstituteId}-00786`;
+
+        // Check if the generated institute ID already exists
+        const existingInstitute = await partnersCollection.findOne({
+          instituteid: nextInstituteId,
+        });
+
+        if (!existingInstitute) {
+          isUnique = true; // ID is unique, exit the loop
+        } else {
+          counter++; // Increment the number and try again
+        }
       }
 
-      // Check if the email or institute ID already exists
+      // Check if the email already exists
       const existingPartner = await partnersCollection.findOne({
-        $or: [{ email: formData.email }, { instituteid: nextInstituteId }],
+        email: formData.email,
       });
 
       if (existingPartner) {
-        if (existingPartner.email === formData.email) {
-          return { success: false, message: "Email already exists" };
-        }
-        if (existingPartner.instituteid === nextInstituteId) {
-          return { success: false, message: "Institute ID already exists" };
-        }
+        return { success: false, message: "Email already exists" };
       }
 
       // Hash the password before storing it

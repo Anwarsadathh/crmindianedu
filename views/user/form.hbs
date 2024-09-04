@@ -275,7 +275,7 @@
                             <label for="date">Date of Admission</label>
                             <input type="date" class="form-control" id="date" name="date" required>
                         </div>
-                        
+                            <input type="referredBy" class="form-control" id="referredBy" name="referredBy" required hidden>
                         <div class="form-group col-md-6">
                             <label for="servicePack">Service Paid</label>
                             <select id="servicePack" name="servicePack" class="form-control" required>
@@ -303,8 +303,8 @@
                             <label for="scholarship">Scholarship Applied</label>
                              <select id="scholarship" name="scholarship" class="form-control" required>
                                 <option value="">Select Scholarship</option>
-                                <option value="Done">Done</option>
-                                <option value="Not Done">Not Done</option>
+                                <option value="Applied">Applied</option>
+                                <option value="Not Applied">Not Applied</option>
                             </select>
                         </div>
                          
@@ -370,6 +370,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const city = decodeURIComponent(urlParams.get('city') || '');
         const state = decodeURIComponent(urlParams.get('state') || '');
    const budget = decodeURIComponent(urlParams.get('budget') || '');
+ const referredBy = decodeURIComponent(urlParams.get('referredBy') || '');
 
         // Log the extracted values for debugging
         console.log('Extracted URL Parameters:', {
@@ -380,7 +381,8 @@ document.addEventListener('DOMContentLoaded', function () {
             mobile,
             city,
             state,
-            budget
+            budget,
+            referredBy
         });
 
         // Set form values
@@ -392,6 +394,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('city').value = city;
         document.getElementById('state').value = state;
         document.getElementById('budget').value = budget;
+        document.getElementById('referredBy').value = referredBy;
     } catch (error) {
         console.error('Error populating form:', error);
         Swal.fire({
