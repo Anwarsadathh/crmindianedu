@@ -466,6 +466,7 @@ background-color: #1c008b !important;
                     <th hidden>d</th>
                     
                     <th>Time Stamp</th>
+                    <th>BDA</th>
                     <th hidden>Assign date</th>
                       <th >Source</th>
                     <th >ReferredBy</th>
@@ -488,6 +489,7 @@ background-color: #1c008b !important;
                     <td class="font-weight-bold" data-id="{{this._id}}" data-source="{{this.source}}" hidden>{{this._id}}</td>
                    
           <td>{{this.timeStamp}}</td>
+          <td>{{this.BDA}}</td>
                     <td hidden>{{this.assignDate}}</td>
                     <td>{{#if this.source}}{{this.source}}{{else}}N/A{{/if}}</td>
 <td >{{this.ReferredBy}}</td>
@@ -1118,11 +1120,11 @@ $(document).ready(function() {
         // Add custom filter
         $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
             const rowLeadOwner = $(table.row(dataIndex).node()).find('span').text().toLowerCase();
-            const rowState = data[9].toLowerCase(); // Column index for State
-            const rowCity = data[10].toLowerCase(); // Column index for City
-            const rowCourse = data[8].toLowerCase(); // Column index for Course
+            const rowState = data[10].toLowerCase(); // Column index for State
+            const rowCity = data[11].toLowerCase(); // Column index for City
+            const rowCourse = data[9].toLowerCase(); // Column index for Course
             const timeStampText = data[2]; // Column index for Time Stamp
-            const assignDateText = $(table.row(dataIndex).node()).find('td').eq(3).text(); // Access hidden Assign Date via index
+            const assignDateText = $(table.row(dataIndex).node()).find('td').eq(4).text(); // Access hidden Assign Date via index
 
             // Function to parse different date formats
             function parseDate(dateString) {
