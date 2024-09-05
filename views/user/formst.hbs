@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IEH Form</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        header {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        header img {
+            height: 40px;
+            margin-left: 20px;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+            margin: 100px 0 50px 0; /* Adjust top margin to accommodate fixed header */
+            background-color: #ffffff;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .content {
+            display: flex;
+            width: 100%;
+        }
+
+        .image-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+        }
+
+        .form-container {
+            flex: 1;
+            padding: 30px;
+            border-radius: 15px !important;
+            color: #fff;
+            opacity: 0;
+            transform: scale(0.5);
+            animation: fadeIn 1s forwards, scaleUp 1s forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes scaleUp {
+            to {
+                transform: scale(1);
+            }
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #fff;
+            animation: slideIn 1s forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            animation: slideUp 0.6s forwards;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            box-sizing: border-box;
+            background-color: #eeeeee;
+            color: #000000;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        input:focus, select:focus {
+            background-color: #ffffff;
+            transform: scale(1.05);
+        }
+
+        input[type="radio"] {
+            width: auto;
+        }
+
+        .form-group.radio-group {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .form-group.radio-group label {
+            display: inline;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .options-container {
+            margin-top: 15px;
+        }
+
+        .options-container select {
+            width: 100%;
+            padding: 10px;
+        }
+        .form-row {
+    display: flex;
+    gap: 15px; /* Space between the fields */
+}
+
+.form-row .form-group {
+    flex: 1; /* Make the fields take equal width */
+}
+
+    </style>
+</head>
+<body>
+  
+   <header>
+        <img src="/images/ieh-logo.png" alt="Indian Edu Hub Logo">
+    </header>
+
+    <div class="container my-5 pt-5">
+        <div class="row">
+            <div class="col-md-6 d-flex align-items-center">
+                <img src="/images/istockphoto-2156078937-612x612.jpg" alt="Indian Edu Hub Image" class="img-fluid rounded">
+            </div>
+            <div class="col-md-6">
+               <div class=" form-container text-white p-4 rounded" style="background-color: #232f65 !important;">
+                    <h2 class="text-center mb-4">SE Form</h2>
+                    <form id="seForm" onsubmit="return submitForm(event)">
+                        <div class="form-group">
+                            <label for="name">Name of Student</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="form-row ">
+                            <div class="form-group col-md-6">
+                            <label for="course">Course</label>
+                            <input type="text" class="form-control" id="course" name="course" required>
+                        </div>
+                            <div class="form-group col-md-6">
+                            <label for="specialization">Specialization</label>
+                            <input type="text" class="form-control" id="specialization" name="specialization" required>
+                        </div>
+                         </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mobile">Mobile Number</label>
+                            <input type="text" class="form-control" id="mobile" name="mobile" required>
+                        </div>
+                        
+         
+                        <div class="form-row ">
+                            <div class="form-group col-md-6">
+                                <label for="state">State</label>
+                                <input type="text" class="form-control" id="state" name="state" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="city">City</label>
+                                <input type="text" class="form-control" id="city" name="city" required>
+                            </div>
+                        </div>
+                          <!-- New fields -->
+                    <div class="form-group ">
+                        <label for="purpose">Purpose of Doing</label>
+                        <textarea class="form-control" id="purpose" name="purpose" rows="2" required></textarea>
+                    </div>
+ <div class="form-row">
+
+                    <div class="form-group col-md-6">
+                        <label for="budget">Budget</label>
+                        <select id="budget" name="budget" class="form-control" required>
+                            <option value="">Select Budget</option>
+                            <option value="50,000 - 80,000">50,000 - 80,000</option>
+                             <option value="50,000 - 1,00,000">50,000 - 1,00,000</option>
+                              <option value="80,000 - 1,00,000">80,000 - 1,00,000</option>
+                                <option value="1,00,000 - 1,20,000">1,00,000 - 1,20,000</option>
+                                 <option value="1,00,000 - 1,50,000">1,00,000 - 1,50,000</option>
+                            <option value="1,00,000 - 1,50,000">1,00,000 - 1,50,000</option>
+                            <option value="1,50,000 - 2,00,000">1,50,000 - 2,00,000</option>
+                            <option value="2,00,000 - 2,50,000">2,00,000 - 2,50,000</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="domain">Present Domain</label>
+                        <input type="text" class="form-control" id="domain" name="domain" required>
+                    </div>
+                    </div>
+                           <div class="form-row ">
+                            <div class="form-group col-md-6 col-md-6">
+                            <label for="date">Date of Admission</label>
+                            <input type="date" class="form-control" id="date" name="date" required>
+                        </div>
+                            <input type="referredBy" class="form-control" id="referredBy" name="referredBy"  hidden>
+                        <div class="form-group col-md-6">
+                            <label for="servicePack">Service Paid</label>
+                            <select id="servicePack" name="servicePack" class="form-control" required>
+                                 <option value="1000">1000</option>
+                                <option value="1999">1999</option>
+                                <option value="4999">4999</option>
+                                <option value="6999">6999</option>
+                                <option value="8999">8999</option>
+                                <option value="8999 with EMI">8999 with EMI</option>
+                                <option value="16999">16999</option>
+                                <option value="18999">18999</option>
+                            </select>
+                        </div>
+                         </div>
+                            <div class="form-row ">
+                            <div class="form-group col-md-6 col-md-6">
+                            <label for="batch">Batch</label>
+                            <select id="batch" name="batch" class="form-control" required>
+                                <option value="">Select BATCH</option>
+                                <option value="JAN BATCH">JAN BATCH</option>
+                                <option value="JULY BATCH">JULY BATCH</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="scholarship">Scholarship Applied</label>
+                             <select id="scholarship" name="scholarship" class="form-control" required>
+                                <option value="">Select Scholarship</option>
+                                <option value="Applied">Applied</option>
+                                <option value="Not Applied">Not Applied</option>
+                            </select>
+                        </div>
+                         
+                         </div>
+                           <div class="form-row ">
+                            <div class="form-group col-md-6">
+                            <label for="role">Counselor or Institute</label>
+                            <select id="role" name="role" class="form-control" onchange="updateOptions()">
+                                <option value="">Select Role</option>
+                                <option value="counselor">Counselor</option>
+                                <option value="institute">Institute</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label id="specificNameLabel" for="specificName">Select Name</label>
+                            <select id="specificName" name="specificName" class="form-control" required>
+                                <!-- Options will be populated by JavaScript -->
+                            </select>
+                        </div>
+                         </div>
+                    <div class="form-group">
+    <label>Intake</label>
+    <div class="d-flex flex-wrap">
+        <div class="form-check mr-3">
+            <input type="radio" class="form-check-input" id="thisWeek" name="intake" value="This Week" required>
+            <label class="form-check-label" for="thisWeek">This Week</label>
+        </div>
+        <div class="form-check mr-3">
+            <input type="radio" class="form-check-input" id="nextWeek" name="intake" value="Next Week" required>
+            <label class="form-check-label" for="nextWeek">Next Week</label>
+        </div>
+        <div class="form-check mr-3">
+            <input type="radio" class="form-check-input" id="monthEnd" name="intake" value="Month End" required>
+            <label class="form-check-label" for="monthEnd">Month End</label>
+        </div>
+        <div class="form-check">
+            <input type="radio" class="form-check-input" id="nextIntake" name="intake" value="Next Intake" required>
+            <label class="form-check-label" for="nextIntake">Next Intake</label>
+        </div>
+    </div>
+</div>
+
+                        <button type="submit" class="btn btn-primary w-100">Assign to Mentor</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+
+        // Extract and decode values from URL parameters
+        const name = decodeURIComponent(urlParams.get('name') || '');
+        const course = decodeURIComponent(urlParams.get('course') || '');
+        const specialization = decodeURIComponent(urlParams.get('specialization') || '');
+        const email = decodeURIComponent(urlParams.get('email') || '');
+        const mobile = decodeURIComponent(urlParams.get('whatsapp') || '');
+        const city = decodeURIComponent(urlParams.get('city') || '');
+        const state = decodeURIComponent(urlParams.get('state') || '');
+   const budget = decodeURIComponent(urlParams.get('budget') || '');
+ const referredBy = decodeURIComponent(urlParams.get('referredBy') || '');
+
+        // Log the extracted values for debugging
+        console.log('Extracted URL Parameters:', {
+            name,
+            course,
+            specialization,
+            email,
+            mobile,
+            city,
+            state,
+            budget,
+            referredBy
+        });
+
+        // Set form values
+        document.getElementById('name').value = name;
+        document.getElementById('course').value = course;
+        document.getElementById('specialization').value = specialization;
+        document.getElementById('email').value = email;
+        document.getElementById('mobile').value = mobile;
+        document.getElementById('city').value = city;
+        document.getElementById('state').value = state;
+        document.getElementById('budget').value = budget;
+        document.getElementById('referredBy').value = referredBy;
+    } catch (error) {
+        console.error('Error populating form:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'There was an error loading the form data.',
+        });
+    }
+});
+</script>
+
+
+
+<script>
+  function updateOptions() {
+    const role = document.getElementById('role').value;
+    const specificNameSelect = document.getElementById('specificName');
+    const specificNameLabel = document.getElementById('specificNameLabel');
+
+    let options = [];
+    let labelText = 'Select Name';
+
+    if (role === 'counselor') {
+        options = [
+            { value: 'Amala', text: 'Amala (Malayalam)' },
+            { value: 'Raghavendra', text: 'Ragavendra (Telugu)' },
+            { value: 'Fouziya', text: 'Fousiya (Hindi)' },
+            { value: 'Nourin', text: 'Nouri (Malayalam)' },
+            { value: 'Nithin', text: 'Nithin (Malayalam)' },
+            { value: 'Lia', text: 'Lia (Malayalam)' },
+            { value: 'Anas', text: 'Anas (Malayalam)' }
+        ];
+        labelText = 'Select Counselor Name';
+    } else if (role === 'institute') {
+        options = [
+            { value: 'mes', text: 'MES' },
+            { value: 'naimu', text: 'Naimu' }
+        ];
+        labelText = 'Select Institute Name';
+    } else {
+        options = [];
+    }
+
+    specificNameLabel.textContent = labelText;
+    specificNameSelect.innerHTML = '<option value="">Select Name</option>'; // Reset options
+    options.forEach(option => {
+        const opt = document.createElement('option');
+        opt.value = option.value;
+        opt.textContent = option.text;
+        specificNameSelect.appendChild(opt);
+    });
+}
+
+async function submitForm(event) {
+    event.preventDefault();
+
+    if (!validateForm()) {
+        return;
+    }
+
+    const form = document.getElementById('seForm');
+    const formData = new FormData(form);
+    const formObject = {};
+    formData.forEach((value, key) => formObject[key] = value);
+
+    try {
+        const response = await fetch('/se-form-temp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formObject)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            await Swal.fire({
+                title: 'Success!',
+                text: 'Form submitted successfully!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+            form.reset();
+        } else {
+            await Swal.fire({
+                title: 'Failed!',
+                text: `Form submission failed: ${result.message}`,
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    } catch (error) {
+        console.error('Error submitting form:', error);
+        await Swal.fire({
+            title: 'Error!',
+            text: 'An error occurred while submitting the form.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    }
+}
+
+function validateForm() {
+    const role = document.getElementById('role').value;
+    const specificName = document.getElementById('specificName').value;
+
+    if (!role) {
+        Swal.fire({
+            title: 'Warning!',
+            text: 'Please select a role first.',
+            icon: 'warning',
+            confirmButtonText: 'OK'
+        });
+        return false; // Prevent form submission
+    }
+
+    if (!specificName) {
+        Swal.fire({
+            title: 'Warning!',
+            text: 'Please select a counselor or institute name.',
+            icon: 'warning',
+            confirmButtonText: 'OK'
+        });
+        return false; // Prevent form submission
+    }
+
+    return true; // Allow form submission
+}
+
+</script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>

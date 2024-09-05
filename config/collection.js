@@ -7,5 +7,6 @@ module.exports = {
   PATNER_COLLECTION: "patner",
   AFFILIATE_COLLECTION: "affiliate",
   LEADSTAGE_COLLECTION: "leadstage",
-  PAYMENTS_COLLECTION:"payments",
+  PAYMENTS_COLLECTION: "payments",
+  CLIENTTMEP: "clienttemp",
 };

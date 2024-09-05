@@ -3391,7 +3391,89 @@ module.exports = {
       callback(null, error.message);
     }
   },
+ addClienttemp: async (client, callback) => {
+    try {
+      const database = db.get();
+      const clientsCollection = database.collection("clienttemp");
 
+      // Check if mobile number or email already exists
+      const existingClient = await clientsCollection.findOne({
+        $or: [{ mobile: client.mobile }, { email: client.email }],
+      });
+
+      if (existingClient) {
+        return callback(null, "Mobile number or email already exists");
+      }
+
+      let newStudentId = "";
+      const defaultPrefixIEHP = "IEHP"; // Default prefix for IEHP-prefixed IDs
+      const defaultStartIdIEHP = 3001; // Default starting ID for IEHP-prefixed IDs
+      const defaultPrefixIEH = "IEH"; // Default prefix for non-IEHP IDs
+      const defaultStartIdIEH = 5643; // Default starting ID for non-IEHP IDs
+      let lastIdNum = defaultStartIdIEH; // Initialize starting ID for non-IEHP
+
+      // Determine the prefix and starting ID based on referredBy
+      if (client.referredBy && client.referredBy.startsWith("IEHP")) {
+        // Extract the prefix after "IEHP" (e.g., "IEHPVNWA" or "IEHPANWA")
+        const referredPrefix = client.referredBy.split("-")[0]; // Get the prefix before the dash
+        const prefix = referredPrefix ? referredPrefix : defaultPrefixIEHP;
+
+        // Find the last client with any IEHP prefix
+        const maxClient = await clientsCollection
+          .find({ studentid: { $regex: `^IEHP.*-` } }) // Match any studentid starting with "IEHP"
+          .sort({ studentid: -1 })
+          .limit(1)
+          .toArray();
+
+        if (maxClient.length > 0) {
+          // Extract the last number used in the studentid
+          const lastIdMatch = maxClient[0].studentid.match(/IEHP.*-(\d+)$/);
+          lastIdNum = lastIdMatch
+            ? parseInt(lastIdMatch[1], 10)
+            : defaultStartIdIEHP;
+        }
+
+        // Generate the new student ID by incrementing the last number
+        newStudentId = `${prefix}-${lastIdNum + 1}`;
+      } else {
+        // Handle the case for non-IEHP referredBy (default to IEH prefix)
+        const prefix = defaultPrefixIEH;
+
+        // Find the last client with the IEH prefix
+        const lastClient = await clientsCollection
+          .find({ studentid: { $regex: `^IEH-` } }) // Match any studentid starting with "IEH"
+          .sort({ studentid: -1 })
+          .limit(1)
+          .toArray();
+
+        if (lastClient.length > 0) {
+          // Extract the last number used in the studentid
+          const lastIdMatch = lastClient[0].studentid.match(/^IEH-(\d+)$/);
+          lastIdNum = lastIdMatch
+            ? parseInt(lastIdMatch[1], 10)
+            : defaultStartIdIEH;
+        }
+
+        // Generate the new student ID by incrementing the last number
+        newStudentId = `${prefix}-${lastIdNum + 1}`;
+      }
+
+      // Log the generated student ID for debugging
+      console.log("Generated new student ID:", newStudentId);
+
+      // Add the new student ID to the client object
+      client.studentid = newStudentId;
+
+      // Insert the client with the new student ID
+      const result = await clientsCollection.insertOne(client);
+
+      console.log("Client inserted:", result);
+      callback(result.insertedId, null);
+    } catch (error) {
+      console.error("Error adding client:", error);
+      callback(null, error.message);
+    }
+  },
   saveAllClientDetails: async (allData) => {
     try {
       const insertPromises = allData.map(async (client) => {

@@ -1242,6 +1242,38 @@ router.post("/se-form", async (req, res) => {
   }
 });
 
+router.get("/se-form-temp", (req, res) => {
+  res.render("user/formst", { user: true });
+});
+
+router.post("/se-form-temp", async (req, res) => {
+  try {
+    serviceHelpers.addClienttemp(req.body, (id, error) => {
+      if (error) {
+        if (error === "Mobile number or email already exists") {
+          console.log("Duplicate detected:", error);
+          res.status(400).json({ success: false, message: error });
+        } else {
+          res.status(500).json({
+            success: false,
+            message: `Failed to insert client: ${error}`,
+          });
+        }
+      } else if (id) {
+        console.log("Form Data:", req.body);
+        res.status(200).json({ success: true });
+      } else {
+        res
+          .status(500)
+          .json({ success: false, message: "Failed to insert client" });
+      }
+    });
+  } catch (error) {
+    console.error("Error handling form submission:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
+
 
 router.get("/create-payments", async (req, res) => {
   try {
