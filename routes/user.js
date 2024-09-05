@@ -1222,7 +1222,10 @@ router.post("/se-form", async (req, res) => {
         } else {
           res
             .status(500)
-            .json({ success: false, message: "Failed to insert client" });
+            .json({
+              success: false,
+              message: `Failed to insert client: ${error}`,
+            });
         }
       } else if (id) {
         console.log("Form Data:", req.body);
@@ -1238,6 +1241,7 @@ router.post("/se-form", async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
+
 
 router.get("/create-payments", async (req, res) => {
   try {

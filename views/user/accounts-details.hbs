@@ -542,6 +542,7 @@ select,textarea{
                 <tr class="bg-light">
                     <th>No.</th>
                     <th>Date</th>
+                    <th>ReferredBy</th>
                     <th>Student ID</th>
                     <th>Student Name</th>
                     <th>Course</th>
@@ -584,6 +585,7 @@ select,textarea{
              <tr data-id="{{_id}}">
                     <td>{{incrementIndex @index}}</td>
                     <td class="text-danger font-weight-bold">{{this.date}}</td>
+                     <td class="text-success font-weight-bold">{{this.referredBy}}</td>
                     <td class="text-dark font-weight-bold">{{this.studentid}}</td>
                     <td>{{this.name}}</td>
                     <td >{{this.course}}</td>
