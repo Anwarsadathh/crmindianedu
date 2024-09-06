@@ -9,6 +9,74 @@ const bodyParser = require("body-parser");
 
 
 module.exports = {
+  signUpSuperAdmin: async (name, email, password) => {
+    try {
+      const superCollection = db.get().collection(collection.SUPER_COLLECTION);
+
+      // Check if email already exists
+      const existingSuper = await superCollection.findOne({ email });
+      if (existingSuper) {
+        return {
+          success: false,
+          message: "Super Admin with this email already exists.",
+        };
+      }
+
+      // Hash the password
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Insert the new Super Admin into the collection
+      await superCollection.insertOne({
+        name,
+        email,
+        password: hashedPassword,
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error("Error during Super Admin sign-up:", error);
+      throw new Error("Internal server error");
+    }
+  },
+  validateSuperAdminLogin: async (email, password) => {
+    try {
+      const superCollection = db.get().collection(collection.SUPER_COLLECTION);
+
+      // Check if the email exists in the Super Admin collection
+      const superAdmin = await superCollection.findOne({ email });
+      if (!superAdmin) {
+        return { success: false, message: "Invalid email or password" };
+      }
+
+      // Check if the password matches
+      const isPasswordValid = await bcrypt.compare(
+        password,
+        superAdmin.password
+      );
+      if (!isPasswordValid) {
+        return { success: false, message: "Invalid email or password" };
+      }
+
+      // If valid, return the Super Admin details
+      return { success: true, superAdmin };
+    } catch (error) {
+      console.error("Error in validating Super Admin login:", error);
+      return { success: false, message: "Internal server error" };
+    }
+  },
+  // Function to create a session for Super Admin
+  createSuperAdminSession: (req, email) => {
+    return new Promise((resolve, reject) => {
+      req.session.super = email;
+      req.session.save((err) => {
+        if (err) {
+          console.error("Error saving session:", err);
+          return reject({ success: false, message: "Internal server error" });
+        }
+        resolve({ success: true });
+      });
+    });
+  },
   getAllClient: () => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -371,7 +439,19 @@ module.exports = {
       throw error;
     }
   },
-
+  getAllSuper: async () => {
+    try {
+      const supers = await db
+        .get()
+        .collection(collection.SUPER_COLLECTION)
+        .find()
+        .toArray();
+      return supers;
+    } catch (error) {
+      console.error("Error in getAllsuper:", error);
+      throw error;
+    }
+  },
   getAllAFPartners: async () => {
     try {
       const afpartners = await db
@@ -400,6 +480,40 @@ module.exports = {
       throw error;
     }
   },
+  updateWalletInSuper: async (instituteId, walletEntry) => {
+  try {
+    // Update wallet for instituteid
+    const result1 = await db
+      .get()
+      .collection(collection.SUPER_COLLECTION)
+      .updateOne(
+        { instituteid: instituteId },
+        { $push: { wallet: walletEntry } }
+      );
+
+    // Update wallet for instituteidP
+    const result2 = await db
+      .get()
+      .collection(collection.SUPER_COLLECTION)
+      .updateOne(
+        { instituteidP: instituteId },
+        { $push: { wallet: walletEntry } }
+      );
+
+    // Check if at least one update was successful
+    if (result1.matchedCount > 0 || result2.matchedCount > 0) {
+      return { success: true, matched: result1.matchedCount > 0 || result2.matchedCount > 0 };
+    }
+
+    return { success: false, matched: false };
+  } catch (error) {
+    console.error("Error in updateWalletInSuper:", error);
+    throw error;
+  }
+},
+
+
+
 
   updateWalletInAFPartners: async (instituteId, walletEntry) => {
     try {

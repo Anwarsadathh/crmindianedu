@@ -1520,10 +1520,10 @@ $(document).ready(function() {
         }
 
         $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-            const rowState = data[5].toLowerCase();
-            const rowCity = data[14].toLowerCase();
-            const rowCourse = data[15].toLowerCase(); // Assuming course is in the 15th column
-            const rowDate = new Date(data[3]);
+            const rowState = data[6].toLowerCase();
+            const rowCity = data[15].toLowerCase();
+            const rowCourse = data[16].toLowerCase(); // Assuming course is in the 15th column
+            const rowDate = new Date(data[4]);
 
             rowDate.setHours(0, 0, 0, 0);
 

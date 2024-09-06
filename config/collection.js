@@ -10,4 +10,5 @@ module.exports = {
   PAYMENTS_COLLECTION: "payments",
   CLIENTTMEP: "clienttemp",
   WALLET_COLLECTION: "wallets",
+  SUPER_COLLECTION: "super",
 };

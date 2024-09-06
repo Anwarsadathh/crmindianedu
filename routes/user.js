@@ -13,6 +13,9 @@ const { log } = require("console");
 const collection = require("../config/collection");
 const db = require("../config/connection");
 // const checkFollowUps = require("../utils/followUpChecker"); // Import the follow-up checker
+const bcrypt = require("bcrypt");
+const saltRounds = 10; // Define saltRounds
+
 
 // // Call the function periodically (e.g., every minute)
 // setInterval(checkFollowUps, 10000);
@@ -1179,6 +1182,42 @@ router.get("/accounts-details", async (req, res) => {
   }
 });
 
+router.get("/find-supers/:referredBy", async (req, res) => {
+  const { referredBy } = req.params;
+
+  try {
+    const supers = await serviceHelpers.getAllSuper();
+
+    // Find the institute by either instituteid or instituteidP
+    const institute = supers.find(
+      (sup) => sup.instituteid === referredBy || sup.instituteidP === referredBy
+    );
+
+    if (institute) {
+      // Calculate total wallet amount
+      const totalWalletAmount = institute.wallet
+        ? institute.wallet.reduce(
+            (sum, transaction) => sum + transaction.amount,
+            0
+          )
+        : 0;
+
+      // Send the institute details along with the total wallet amount
+      res.json({
+        ...institute,
+        totalWalletAmount,
+      });
+    } else {
+      res.status(404).json({ message: "Institute not found" });
+    }
+  } catch (error) {
+    console.error("Error finding institute:", error);
+    res.status(500).json({
+      message: "An error occurred while finding the institute.",
+    });
+  }
+});
+
 
 
 
@@ -1276,6 +1315,55 @@ router.post("/add-to-wallet/:instituteId", async (req, res) => {
       .json({ message: "An error occurred while adding to the wallet." });
   }
 });
+
+
+router.post("/add-to-wallet-super/:instituteId", async (req, res) => {
+  const { instituteId } = req.params;
+  const { amount, student } = req.body;
+
+  try {
+    if (!amount || amount <= 0) {
+      return res.status(400).json({ message: "Invalid amount." });
+    }
+
+    const walletEntry = {
+      date: new Date().toISOString(),
+      amount: parseFloat(amount),
+      studentDetails: {
+        studentid: student.studentid,
+        name: student.name,
+        course: student.course,
+        email: student.email,
+        mobile: student.mobile,
+        state: student.state,
+        submissionDate: student.date,
+      },
+    };
+
+    // Check and update the wallet in SUPER_COLLECTION
+    const result = await serviceHelpers.updateWalletInSuper(
+      instituteId,
+      walletEntry
+    );
+    if (result.success && result.matched) {
+      return res.json({
+        success: true,
+        message: "Wallet updated successfully in SUPER_COLLECTION.",
+      });
+    }
+
+    return res
+      .status(404)
+      .json({ message: "Institute not found in SUPER_COLLECTION." });
+  } catch (error) {
+    console.error("Error adding to wallet:", error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while adding to the wallet." });
+  }
+});
+
+
 
 
 
@@ -1749,34 +1837,72 @@ router.get("/super-admin-dashboard", verifySuper, (req, res) => {
   res.render("user/super-dashboard", { user: true });
 });
 
-// Super Admin Login route
+// // Super Admin Sign-Up Route
+// router.get("/super-admin-signup", (req, res) => {
+//   res.render("user/super", { user: true });
+// });
+
+// router.post("/super-admin-signup", async (req, res) => {
+//   const { name, email, password } = req.body;
+
+//   try {
+//     const result = await serviceHelpers.signUpSuperAdmin(
+//       name,
+//       email,
+//       password
+//     );
+
+//     if (!result.success) {
+//       return res.render("user/super-admin-signup", {
+//         user: true,
+//         error: result.message,
+//       });
+//     }
+
+//     res.redirect("/super-admin");
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).render("user/super-admin-signup", {
+//       user: true,
+//       error: "Internal server error. Please try again.",
+//     });
+//   }
+// });
+
+
+// Super Admin Login Route
 router.get("/super-admin", (req, res) => {
   res.render("user/super-admin", { user: true });
 });
 
-router.post("/super-admin", (req, res) => {
+router.post("/super-admin", async (req, res) => {
   const { email, password } = req.body;
-  const validEmail = process.env.ADMINSUPER_EMAIL;
-  const validPassword = process.env.ADMINSUPER_PASSWORD;
 
-  if (email === validEmail && password === validPassword) {
-    req.session.super = email;
-    req.session.save((err) => {
-      if (err) {
-        console.error(err);
-        return res
-          .status(500)
-          .json({ success: false, message: "Internal server error" });
-      }
-      res.redirect("/super-admin-dashboard");
-    });
-  } else {
-    res.render("user/super-admin", {
+  try {
+    // Validate the Super Admin login using the helper
+    const loginResult = await serviceHelpers.validateSuperAdminLogin(email, password);
+    
+    if (!loginResult.success) {
+      return res.render("user/super-admin", {
+        user: true,
+        error: loginResult.message,
+      });
+    }
+
+    // Create session for the Super Admin
+    await serviceHelpers.createSuperAdminSession(req, email);
+
+    // Redirect to the dashboard after successful login
+    res.redirect("/super-admin-dashboard");
+  } catch (err) {
+    console.error(err);
+    res.status(500).render("user/super-admin", {
       user: true,
-      error: "Invalid email or password",
+      error: "Internal server error. Please try again.",
     });
   }
-}); 
+});
+
 
 router.get("/students-login", (req, res) => {
   res.render("user/studentslogin", { user: true });

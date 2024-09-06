@@ -800,6 +800,10 @@ h3 {
             opacity: 1;
             transition: opacity 0.5s ease-in;
         }
+        .amt{
+            width: 100px !important;
+            font-size: 12px;
+        }
 </style>
 <div class="container tt mt-5 px-2">
    
@@ -853,6 +857,7 @@ h3 {
     <th>Final Status</th>
     <th>Referral Wallet</th>
     <th>Partner Wallet</th>
+    <th>Own Wallet</th>
                 </tr>
             </thead>
             <tbody>
@@ -982,15 +987,17 @@ h3 {
         {{/each}}
       </select>
     </td>
-    <td>
-      <textarea class="form-control" placeholder="Enter details..."></textarea>
-      <div class="d-flex align-items-center mt-2">
-        <input type="date" class="form-control me-2 date" />
-        <a href="your-drive-link" target="_blank" class="upload-icon">
-          <i class="fas fa-upload"></i>
-        </a>
-      </div>
-    </td>
+   <td>
+  <textarea class="form-control" placeholder="Enter details..."></textarea>
+  <div class="d-flex align-items-center mt-2">
+    <input type="number" class="form-control me-2 amt" placeholder="Amount" />
+    <input type="date" class="form-control me-2 date" />
+    <a href="your-drive-link" target="_blank" class="upload-icon">
+      <i class="fas fa-upload"></i>
+    </a>
+  </div>
+</td>
+
 
     <!-- Payment Step 2 -->
     <td>
@@ -1002,15 +1009,16 @@ h3 {
         {{/each}}
       </select>
     </td>
-    <td>
-      <textarea class="form-control" placeholder="Enter details..."></textarea>
-      <div class="d-flex align-items-center mt-2">
-        <input type="date" class="form-control me-2 date" />
-        <a href="your-drive-link" target="_blank" class="upload-icon">
-          <i class="fas fa-upload"></i>
-        </a>
-      </div>
-    </td>
+   <td>
+  <textarea class="form-control" placeholder="Enter details..."></textarea>
+  <div class="d-flex align-items-center mt-2">
+    <input type="number" class="form-control me-2 amt" placeholder="Amount" />
+    <input type="date" class="form-control me-2 date" />
+    <a href="your-drive-link" target="_blank" class="upload-icon">
+      <i class="fas fa-upload"></i>
+    </a>
+  </div>
+</td>
 
     <!-- Payment Step 3 -->
     <td> 
@@ -1023,14 +1031,15 @@ h3 {
       </select>
     </td>
     <td>
-      <textarea class="form-control" placeholder="Enter details..."></textarea>
-      <div class="d-flex align-items-center mt-2">
-        <input type="date" class="form-control date me-2" style="font-size: 12px; width: auto;"/>
-        <a href="your-drive-link" target="_blank" class="upload-icon">
-          <i class="fas fa-upload"></i>
-        </a>
-      </div>
-    </td>
+  <textarea class="form-control" placeholder="Enter details..."></textarea>
+  <div class="d-flex align-items-center mt-2">
+    <input type="number" class="form-control me-2 amt" placeholder="Amount" />
+    <input type="date" class="form-control me-2 date" />
+    <a href="your-drive-link" target="_blank" class="upload-icon">
+      <i class="fas fa-upload"></i>
+    </a>
+  </div>
+</td>
      <!-- Semester Status Dropdown -->
             <td>
                 <select class="form-select date">
@@ -1059,7 +1068,7 @@ h3 {
       {{this.referredBy}}
     </td>
        <td>
-            <select class="form-control" id="instituteSelect-{{this.id}}"
+            <select class="form-control amt" id="instituteSelect-{{this.id}}"
               data-studentid="{{this.studentid}}"
               data-name="{{this.name}}"
               data-course="{{this.course}}"
@@ -1077,6 +1086,25 @@ h3 {
               {{/each}}
             </select>
           </td>
+      <td>
+  <select class="form-control amt" id="dropdown-{{this.id}}"
+    data-studentid="{{this.studentid}}"
+    data-name="{{this.name}}"
+    data-course="{{this.course}}"
+    data-email="{{this.email}}"
+    data-mobile="{{this.mobile}}"
+    data-state="{{this.state}}"
+    data-date="{{this.date}}"
+    data-amount="{{feePaidAmount}}"
+    onchange="fetchInstituteDetailss(this)">
+    <option value="">Select</option>
+    <option value="IEHD" class="text-success font-weight-bold">IEHD</option>
+    <option value="IEHP" class="text-dark font-weight-bold">IEHP</option>
+  </select>
+</td>
+
+
+
                 </tr>
                 {{/each}}
             </tbody>
@@ -1092,6 +1120,111 @@ h3 {
     </div>
   </div>
 </div>
+<script>
+ function fetchInstituteDetailss(selectElement) {
+  const instituteId = selectElement.value;
+  const studentDetails = {
+    studentid: selectElement.dataset.studentid,
+    name: selectElement.dataset.name,
+    course: selectElement.dataset.course,
+    email: selectElement.dataset.email,
+    mobile: selectElement.dataset.mobile,
+    state: selectElement.dataset.state,
+    date: selectElement.dataset.date,
+    amount: selectElement.dataset.amount
+  };
+
+  if (instituteId) {
+    fetch(`/find-supers/${instituteId}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.message) {
+          alert(data.message); // Handle case when no institute is found
+        } else {
+          // Display the details in the modal
+          displayInstituteDetailss(data, studentDetails);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching institute details:', error);
+      });
+  }
+}
+
+
+  function displayInstituteDetailss(institute, student) {
+    const details = `
+      <div class="row g-4">
+        <div class="card">
+          <div class="info">
+            <h2 class="mb-3">${institute.institutename}</h2>
+            <p><strong>Owner Name:</strong> ${institute.owner_name}</p>
+            <p><strong>Email:</strong> ${institute.email}</p>
+            <p><strong>Institute Place:</strong> ${institute.state}, ${institute.city}</p>
+            <p><strong>Institute ID:</strong> ${institute.instituteid}</p>
+            <b class="text-warning"><strong>Student ID:</strong> ${student.studentid}, Amount: ${student.amount}</b>
+            <div class="photo-container ms-auto" style="border-radius: 10px;">
+              <img id="profilePhoto" src="${institute.profilePhoto || '/images/anon.webp'}" class="photo-placeholder" alt="Profile Photo" />
+              <div class="edit-icon" onclick="document.getElementById('fileInput').click();">
+                <i class="fa fa-edit"></i>
+              </div>
+            </div>
+            <div class="links mt-5 mb-3">
+              <form id="sendMoneyForm">
+                <div class="form-group mb-3">
+                  <label for="amount">Send Wallet Money:</label>
+                  <input type="number" id="amount" class="form-control" placeholder="Enter amount" required />
+                </div>
+                <button type="submit" class="btn btn-primary">Send</button>
+              </form>
+            </div>
+            <div class="total-wallet mt-3 float-end text-white">
+              <h5 style="margin-top: -130px; color: #c3cbdc;"><strong>Wallet Amount:</strong></h5>
+              <center><h4 class="text-white"><span id="totalWalletAmount">${institute.totalWalletAmount || 0}</span></h4></center>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    document.getElementById('modalContent').innerHTML = details;
+    document.getElementById('instituteModal').style.display = 'block';
+
+    document.getElementById('sendMoneyForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const amount = document.getElementById('amount').value;
+      handleSendMoneys(institute.instituteid, amount, student);
+    });
+  }
+
+  function handleSendMoneys(instituteId, amount, student) {
+    fetch(`/add-to-wallet-super/${instituteId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ amount, student })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert('Money added successfully!');
+        const totalWalletElement = document.getElementById('totalWalletAmount');
+        const newTotal = parseFloat(totalWalletElement.textContent) + parseFloat(amount);
+        totalWalletElement.textContent = newTotal;
+      } else {
+        alert('Failed to add money: ' + data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error adding money:', error);
+    });
+  }
+
+  function closeModal() {
+    document.getElementById('instituteModal').style.display = 'none';
+  }
+</script>
+
 
     <script>
     function fetchInstituteDetails(selectElement) {
