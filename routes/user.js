@@ -1345,7 +1345,8 @@ router.post("/add-to-wallet-super/:instituteId", async (req, res) => {
       instituteId,
       walletEntry
     );
-    if (result.success && result.matched) {
+
+    if (result.modifiedCount > 0) {
       return res.json({
         success: true,
         message: "Wallet updated successfully in SUPER_COLLECTION.",
@@ -1362,6 +1363,7 @@ router.post("/add-to-wallet-super/:instituteId", async (req, res) => {
       .json({ message: "An error occurred while adding to the wallet." });
   }
 });
+
 
 
 

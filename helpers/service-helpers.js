@@ -480,39 +480,32 @@ module.exports = {
       throw error;
     }
   },
-  updateWalletInSuper: async (instituteId, walletEntry) => {
-  try {
-    // Update wallet for instituteid
-    const result1 = await db
-      .get()
-      .collection(collection.SUPER_COLLECTION)
-      .updateOne(
-        { instituteid: instituteId },
-        { $push: { wallet: walletEntry } }
-      );
+ updateWalletInSuper: async (instituteId, walletEntry) => {
+    try {
+      // Add the instituteId to the walletEntry
+      const updatedWalletEntry = {
+        ...walletEntry,
+        instituteId, // Add the instituteId to the wallet entry
+      };
 
-    // Update wallet for instituteidP
-    const result2 = await db
-      .get()
-      .collection(collection.SUPER_COLLECTION)
-      .updateOne(
-        { instituteidP: instituteId },
-        { $push: { wallet: walletEntry } }
-      );
+      // Update the document in SUPER_COLLECTION
+      const result = await db
+        .get()
+        .collection(collection.SUPER_COLLECTION)
+        .updateOne(
+          { $or: [{ instituteid: instituteId }, { instituteidP: instituteId }] },
+          {
+            $push: { wallet: updatedWalletEntry },
+            $inc: { totalWalletAmount: walletEntry.amount }
+          }
+        );
 
-    // Check if at least one update was successful
-    if (result1.matchedCount > 0 || result2.matchedCount > 0) {
-      return { success: true, matched: result1.matchedCount > 0 || result2.matchedCount > 0 };
+      return result;
+    } catch (error) {
+      console.error("Error in updateWalletInSuper:", error);
+      throw error;
     }
-
-    return { success: false, matched: false };
-  } catch (error) {
-    console.error("Error in updateWalletInSuper:", error);
-    throw error;
-  }
-},
-
-
+  },
 
 
   updateWalletInAFPartners: async (instituteId, walletEntry) => {

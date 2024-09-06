@@ -802,6 +802,14 @@ select,textarea{
               </div>
             </div>
           </div>
+          <div class="col-md-6">
+            <div class="card mb-3" onclick="sendDraftMessage('new_lead')">
+              <div class="card-body">
+                <h5 class="card-title">Draft Not Contacted</h5>
+                <p class="card-text">Hi ${currentLeadName},\n\nI’m {{userName}} from Indian Edu Hub. We help students find the perfect university based on their needs and goals.\n\nI noticed you’re available [mention their available time] . Would you like to chat then to see how we can assist you? Let me know!\n\nBest,\n{{userName}}</p>
+              </div>
+            </div>
+          </div>
           <!-- Placeholder or Empty Space -->
           <div class="col-md-6"></div>
         </div>
@@ -824,7 +832,8 @@ function sendDraftMessage(draftKey, name) {
         'PQL-NR': `Hello ${currentLeadName},\n\nI hope you’re well!\n\nI noticed we missed a few calls, but I’m very enthusiastic about the potential for us to work together. Your interest in our Premium Membership plan is important to us, and I want to ensure we address all your needs.\n\nCould you let me know your preferred time for a call? (Please mention the Time & Date). I’m flexible and happy to accommodate your schedule.\n\nLooking forward to your response and to moving forward together!\n\nBest regards,\n{{userName}}\nIndian Edu Hub`,
         Busy: `Hello ${currentLeadName},\n\nI understand you’re currently on another call. Just wanted to let you know that I’m here and ready to connect whenever it’s convenient for you.\n\nPlease let me know a suitable time for us to speak, or if you prefer, I can follow up at a later time that works better for you.\n\nLooking forward to our conversation!\n\nBest regards,\n{{userName}}\nIndian Edu Hub`,
         UQL: `Hello ${currentLeadName},\n\nThank you for considering our services. After reviewing your needs, it seems our offerings might not be the best fit at this time.\n\nIf you have any referrals for online UG/PG programs or know someone who might benefit from our services, please let us know.\n\nBest of luck with your search!\n\nBest regards,\n{{userName}}\nIndian Edu Hub`,
-        Special_offer: `Hello ${currentLeadName},\n\nExciting news!\n\nWe’re offering our premium membership plan, worth ₹7,0000, for free to the first 500 sign-ups.\n\nThis is a fantastic chance to access top-tier benefits at no cost. It will help you grow & succeed.\n\nInterested or know someone who might be? Let us know to secure your spot!\n\nBest regards,\n{{userName}}\nIndian Edu Hub\nIndianeduhub.in`
+        Special_offer: `Hello ${currentLeadName},\n\nExciting news!\n\nWe’re offering our premium membership plan, worth ₹7,0000, for free to the first 500 sign-ups.\n\nThis is a fantastic chance to access top-tier benefits at no cost. It will help you grow & succeed.\n\nInterested or know someone who might be? Let us know to secure your spot!\n\nBest regards,\n{{userName}}\nIndian Edu Hub\nIndianeduhub.in`,
+        new_lead: `Hi ${currentLeadName},\n\nI’m {{userName}} from Indian Edu Hub. We help students find the perfect university based on their needs and goals.\n\nI noticed you’re available [mention their available time] . Would you like to chat then to see how we can assist you? Let me know!\n\nBest,\n{{userName}}`
     };
 
    const message = draftMessages[draftKey];

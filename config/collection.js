@@ -11,4 +11,5 @@ module.exports = {
   CLIENTTMEP: "clienttemp",
   WALLET_COLLECTION: "wallets",
   SUPER_COLLECTION: "super",
+  TEST_COLLECTION:'test'
 };
