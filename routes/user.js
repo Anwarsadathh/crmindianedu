@@ -1154,17 +1154,24 @@ router.get("/accounts-details", async (req, res) => {
   try {
     // Fetch all account dashboard data
     const formData = await serviceHelpers.getAllAccountsdashboard();
-    console.log("formData:", JSON.stringify(formData, null, 2));
 
     // Fetch all payments data
     const payments = await serviceHelpers.getAllPayments();
-    console.log("payments:", JSON.stringify(payments, null, 2)); // Log the payments data
 
-    // Render the template with both formData and payments
+    // Fetch partners data
+    const partner = await serviceHelpers.getAllPartners();
+    const afpartner = await serviceHelpers.getAllAFPartners();
+
+    // Combine partner and afpartner arrays
+    const combinedPartners = [...partner, ...afpartner];
+
+    // Render the template with formData, payments, and combined partners
     res.render("user/accounts-details", {
       admin: true,
       formData,
       payments,
+      combinedPartners,
+      partner,
     });
   } catch (error) {
     console.error("Error fetching account details:", error);
@@ -1172,6 +1179,103 @@ router.get("/accounts-details", async (req, res) => {
   }
 });
 
+
+
+
+router.get("/find-institute/:referredBy", async (req, res) => {
+  const { referredBy } = req.params;
+
+  try {
+    const partners = await serviceHelpers.getAllPartners();
+    const afpartners = await serviceHelpers.getAllAFPartners();
+
+    const combinedPartners = [...partners, ...afpartners];
+
+    const institute = combinedPartners.find(
+      (partner) => partner.instituteid === referredBy
+    );
+
+    if (institute) {
+      // Calculate total wallet amount
+      const totalWalletAmount = institute.wallet
+        ? institute.wallet.reduce(
+            (sum, transaction) => sum + transaction.amount,
+            0
+          )
+        : 0;
+
+      // Send the institute details along with the total wallet amount
+      res.json({
+        ...institute,
+        totalWalletAmount,
+      });
+    } else {
+      res.status(404).json({ message: "Institute not found" });
+    }
+  } catch (error) {
+    console.error("Error finding institute:", error);
+    res.status(500).json({
+      message: "An error occurred while finding the institute.",
+    });
+  }
+});
+
+
+router.post("/add-to-wallet/:instituteId", async (req, res) => {
+  const { instituteId } = req.params;
+  const { amount, student } = req.body;
+
+  try {
+    if (!amount || amount <= 0) {
+      return res.status(400).json({ message: "Invalid amount." });
+    }
+
+    const walletEntry = {
+      date: new Date().toISOString(),
+      amount: parseFloat(amount),
+      studentDetails: {
+        studentid: student.studentid,
+        name: student.name,
+        course: student.course,
+        email: student.email,
+        mobile: student.mobile,
+        state: student.state,
+        submissionDate: student.date,
+      },
+    };
+
+    // Check and update the wallet in partners collection
+    const partnersUpdateResult = await serviceHelpers.updateWalletInPartners(
+      instituteId,
+      walletEntry
+    );
+    if (partnersUpdateResult.matchedCount > 0) {
+      return res.json({
+        success: true,
+        message: "Wallet updated in partners collection",
+      });
+    }
+
+    // Check and update the wallet in affiliate partners collection
+    const afpartnersUpdateResult =
+      await serviceHelpers.updateWalletInAFPartners(instituteId, walletEntry);
+    if (afpartnersUpdateResult.matchedCount > 0) {
+      return res.json({
+        success: true,
+        message: "Wallet updated in affiliate partners collection",
+      });
+    }
+
+    return res
+      .status(404)
+      .json({ message: "Institute not found in either collection." });
+  } catch (error) {
+    console.error("Error adding to wallet:", error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while adding to the wallet." });
+  }
+});
 
 
 

@@ -9,4 +9,5 @@ module.exports = {
   LEADSTAGE_COLLECTION: "leadstage",
   PAYMENTS_COLLECTION: "payments",
   CLIENTTMEP: "clienttemp",
+  WALLET_COLLECTION: "wallets",
 };

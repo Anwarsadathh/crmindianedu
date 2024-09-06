@@ -345,7 +345,77 @@ module.exports = {
       throw error;
     }
   },
+  getAllPartners: async () => {
+    try {
+      const partners = await db
+        .get()
+        .collection(collection.PATNER_COLLECTION)
+        .find()
+        .toArray();
+      return partners;
+    } catch (error) {
+      console.error("Error in getAllpartners:", error);
+      throw error;
+    }
+  },
+  getInstituteById: async (instituteId) => {
+    try {
+      console.log("Fetching Institute with ID:", instituteId); // Debugging output
+      const institute = await db
+        .get()
+        .collection(collection.PATNER_COLLECTION) // Ensure this is the correct collection name
+        .findOne({ instituteid: instituteId });
+      return institute;
+    } catch (error) {
+      console.error("Error in getInstituteById:", error);
+      throw error;
+    }
+  },
 
+  getAllAFPartners: async () => {
+    try {
+      const afpartners = await db
+        .get()
+        .collection(collection.AFFILIATE_COLLECTION)
+        .find()
+        .toArray();
+      return afpartners;
+    } catch (error) {
+      console.error("Error in getAllafpartners:", error);
+      throw error;
+    }
+  },
+  updateWalletInPartners: async (instituteId, walletEntry) => {
+    try {
+      const result = await db
+        .get()
+        .collection(collection.PATNER_COLLECTION)
+        .updateOne(
+          { instituteid: instituteId },
+          { $push: { wallet: walletEntry } }
+        );
+      return result;
+    } catch (error) {
+      console.error("Error in updateWalletInPartners:", error);
+      throw error;
+    }
+  },
+
+  updateWalletInAFPartners: async (instituteId, walletEntry) => {
+    try {
+      const result = await db
+        .get()
+        .collection(collection.AFFILIATE_COLLECTION)
+        .updateOne(
+          { instituteid: instituteId },
+          { $push: { wallet: walletEntry } }
+        );
+      return result;
+    } catch (error) {
+      console.error("Error in updateWalletInAFPartners:", error);
+      throw error;
+    }
+  },
   deletePayment: async (id) => {
     try {
       await db
@@ -3391,7 +3461,7 @@ module.exports = {
       callback(null, error.message);
     }
   },
- addClienttemp: async (client, callback) => {
+  addClienttemp: async (client, callback) => {
     try {
       const database = db.get();
       const clientsCollection = database.collection("clienttemp");
