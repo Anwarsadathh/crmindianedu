@@ -1182,19 +1182,95 @@ router.get("/accounts-details", async (req, res) => {
   }
 });
 
+router.post("/update-accounts-details", async (req, res) => {
+  console.log("Request Body:", req.body);
+
+  try {
+    const {
+      studyStatus,
+      paymentStep1,
+      paymentStep1Details,
+      paymentStep1Amount,
+      paymentStep1Date,
+      paymentStep2,
+      paymentStep2Details,
+      paymentStep2Amount,
+      paymentStep2Date,
+      paymentStep3,
+      paymentStep3Details,
+      paymentStep3Amount,
+      paymentStep3Date,
+      semesterStatus,
+      totalAMt,
+      totalAMtDate,
+      _id,
+    } = req.body;
+
+    if (!_id) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Account ID is required" });
+    }
+
+    const updateFields = {
+      studyStage: studyStatus,
+      finalStatus: semesterStatus,
+      totalAmount: {
+        amount: totalAMt,
+        date: totalAMtDate,
+      },
+      payments: [
+        {
+          step: paymentStep1,
+          details: paymentStep1Details,
+          amount: paymentStep1Amount,
+          date: paymentStep1Date,
+        },
+        {
+          step: paymentStep2,
+          details: paymentStep2Details,
+          amount: paymentStep2Amount,
+          date: paymentStep2Date,
+        },
+        {
+          step: paymentStep3,
+          details: paymentStep3Details,
+          amount: paymentStep3Amount,
+          date: paymentStep3Date,
+        },
+      ],
+    };
+
+    // Use the helper to update student details
+    const result = await serviceHelpers.updateClientDetailsa(_id, updateFields);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error updating account details:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error updating account details",
+      error: error.message,
+    });
+  }
+});
+
+
+
+
 router.get("/find-supers/:referredBy", async (req, res) => {
   const { referredBy } = req.params;
 
   try {
     const supers = await serviceHelpers.getAllSuper();
 
-    // Find the institute by either instituteid or instituteidP
+    // Find institute based on instituteid or instituteidP
     const institute = supers.find(
-      (sup) => sup.instituteid === referredBy || sup.instituteidP === referredBy
+      (supers) =>
+        supers.instituteid === referredBy || supers.instituteidP === referredBy
     );
 
     if (institute) {
-      // Calculate total wallet amount
+      // Calculate total wallet amounts for instituteid and instituteidP
       const totalWalletAmount = institute.wallet
         ? institute.wallet.reduce(
             (sum, transaction) => sum + transaction.amount,
@@ -1202,10 +1278,17 @@ router.get("/find-supers/:referredBy", async (req, res) => {
           )
         : 0;
 
-      // Send the institute details along with the total wallet amount
+      const totalWalletAmountP = institute.walletP
+        ? institute.walletP.reduce(
+            (sum, transaction) => sum + transaction.amount,
+            0
+          )
+        : 0;
+
       res.json({
         ...institute,
         totalWalletAmount,
+        totalWalletAmountP,
       });
     } else {
       res.status(404).json({ message: "Institute not found" });
@@ -1217,6 +1300,8 @@ router.get("/find-supers/:referredBy", async (req, res) => {
     });
   }
 });
+
+
 
 
 
@@ -1340,16 +1425,41 @@ router.post("/add-to-wallet-super/:instituteId", async (req, res) => {
       },
     };
 
-    // Check and update the wallet in SUPER_COLLECTION
     const result = await serviceHelpers.updateWalletInSuper(
       instituteId,
       walletEntry
     );
+    console.log("Update result:", result);
 
     if (result.modifiedCount > 0) {
+      // Fetch the updated institute to get new wallet totals
+      const supers = await serviceHelpers.getAllSuper();
+      const institute = supers.find(
+        (supers) =>
+          supers.instituteid === instituteId ||
+          supers.instituteidP === instituteId
+      );
+
+      // Calculate new total wallet amounts
+      const totalWalletAmount = institute.wallet
+        ? institute.wallet.reduce(
+            (sum, transaction) => sum + transaction.amount,
+            0
+          )
+        : 0;
+
+      const totalWalletAmountP = institute.walletP
+        ? institute.walletP.reduce(
+            (sum, transaction) => sum + transaction.amount,
+            0
+          )
+        : 0;
+
       return res.json({
         success: true,
         message: "Wallet updated successfully in SUPER_COLLECTION.",
+        totalWalletAmount,
+        totalWalletAmountP,
       });
     }
 
@@ -1363,6 +1473,9 @@ router.post("/add-to-wallet-super/:instituteId", async (req, res) => {
       .json({ message: "An error occurred while adding to the wallet." });
   }
 });
+
+
+
 
 
 

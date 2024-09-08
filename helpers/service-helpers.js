@@ -9,6 +9,33 @@ const bodyParser = require("body-parser");
 
 
 module.exports = {
+  updateAccountsDetails: async (
+    clientId,
+    { studyStage, payments, finalStatus, additionalAmount, additionalDate }
+  ) => {
+    try {
+      const client = await db.get().collection(collection.CLIENT_COLLECTION);
+
+      // Update client details in MongoDB
+      await client.updateOne(
+        { _id: new ObjectId(clientId) }, // Convert clientId to ObjectId if it's not already
+        {
+          $set: {
+            studyStage,
+            payments,
+            finalStatus,
+            additionalAmount,
+            additionalDate,
+          },
+        }
+      );
+
+      return { success: true, message: "Client details updated successfully." };
+    } catch (error) {
+      console.error("Error updating client details:", error);
+      return { success: false, message: "Failed to update client details." };
+    }
+  },
   signUpSuperAdmin: async (name, email, password) => {
     try {
       const superCollection = db.get().collection(collection.SUPER_COLLECTION);
@@ -480,33 +507,31 @@ module.exports = {
       throw error;
     }
   },
- updateWalletInSuper: async (instituteId, walletEntry) => {
+  // In your serviceHelpers or wherever you have defined your helper functions
+  updateWalletInSuper: async (instituteId, walletEntry) => {
     try {
-      // Add the instituteId to the walletEntry
-      const updatedWalletEntry = {
-        ...walletEntry,
-        instituteId, // Add the instituteId to the wallet entry
-      };
-
-      // Update the document in SUPER_COLLECTION
       const result = await db
         .get()
         .collection(collection.SUPER_COLLECTION)
         .updateOne(
-          { $or: [{ instituteid: instituteId }, { instituteidP: instituteId }] },
           {
-            $push: { wallet: updatedWalletEntry },
-            $inc: { totalWalletAmount: walletEntry.amount }
+            $or: [
+              { instituteid: instituteId }, // Matches IEHD
+              { instituteidP: instituteId }, // Matches IEHP
+            ],
+          },
+          {
+            $push: {
+              [instituteId === "IEHD" ? "wallet" : "walletP"]: walletEntry,
+            },
           }
         );
-
       return result;
     } catch (error) {
-      console.error("Error in updateWalletInSuper:", error);
+      console.error("Error updating wallet:", error);
       throw error;
     }
   },
-
 
   updateWalletInAFPartners: async (instituteId, walletEntry) => {
     try {
@@ -3700,5 +3725,25 @@ module.exports = {
       console.error("Error updating client details:", error);
       throw new Error("Error updating client details");
     }
+  },
+  updateClientDetailsa: async (id, updates) => {
+     try {
+       const result = await db
+         .get()
+         .collection(collection.CLIENT_COLLECTION)
+         .updateOne(
+           { _id: ObjectId(id) },
+           { $set: updates } // $set should be used here to update fields
+         );
+
+       if (result.matchedCount === 0) {
+         throw new Error("Client not found");
+       }
+
+       return { success: true, message: "Client details updated successfully" };
+     } catch (error) {
+       console.error("Error updating client details:", error);
+       throw new Error("Error updating client details");
+     }
   },
 };

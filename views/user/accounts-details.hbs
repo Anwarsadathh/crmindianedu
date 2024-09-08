@@ -82,6 +82,112 @@ select {
     color: #000 !important;
 }
 
+
+/* CSS */
+.button-57 {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #18181a;
+  color: #18181a;
+  display: inline-block;
+  font-size: 15px;
+  line-height: 15px;
+  border-radius: 7px;
+  padding: 12px 12px 11px;
+  text-decoration: none;
+  cursor: pointer;
+  background: #fff;
+  user-select: none;
+  margin-bottom: ;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-57 span:first-child {
+  position: relative;
+  transition: color 600ms cubic-bezier(0.48, 0, 0.12, 1);
+  z-index: 10;
+}
+
+.button-57 span:last-child {
+  color: white;
+  display: block;
+  position: absolute;
+  bottom: 0;
+  transition: all 500ms cubic-bezier(0.48, 0, 0.12, 1);
+  z-index: 100;
+  opacity: 0;
+  top: 50%;
+  left: 50%;
+  transform: translateY(225%) translateX(-50%);
+  height: 14px;
+  line-height: 13px;
+}
+
+.button-57:after {
+  content: "";
+  position: absolute;
+  bottom: -50%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  transform-origin: bottom center;
+  transition: transform 600ms cubic-bezier(0.48, 0, 0.12, 1);
+  transform: skewY(9.3deg) scaleY(0);
+  z-index: 50;
+}
+
+.button-57:hover:after {
+  transform-origin: bottom center;
+  transform: skewY(9.3deg) scaleY(2);
+}
+
+.button-57:hover span:last-child {
+  transform: translateX(-50%) translateY(-100%);
+  opacity: 1;
+  transition: all 900ms cubic-bezier(0.48, 0, 0.12, 1);
+}
+/* Define transition for hiding/showing fields and header */
+.hide-fields {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.5s ease, display 0s ease 0.5s;
+}
+
+.show-fields {
+  display: table-cell;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.hide-header {
+  display: none;
+}
+
+.show-header {
+  display: table-header-group;
+}
+ .hide {
+            display: none;
+        }
+        .fade-out {
+            opacity: 0;
+            transition: opacity 0.5s ease-out;
+        }
+        .fade-in {
+            opacity: 1;
+            transition: opacity 0.5s ease-in;
+        }
+        .amt{
+            width: 100px !important;
+            font-size: 12px;
+        }
+         .amts{
+            width: 150px !important;
+            font-size: 12px;
+        }
+
 .search{
   
   top:6px;
@@ -340,95 +446,8 @@ select,textarea{
     font-size: 12px; 
     width: auto;"
 }
-</style>
-</head>
 
-<body>
-    <div class="container-xxl position-relative bg-white d-flex p-0" style="background-color: #232f65;">
-        <!-- Spinner Start -->
-        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-        </div>
-        <!-- Spinner End -->
-
-
-        <!-- Sidebar Start -->
-        <div class="sidebar pe-4 pb-3" style="background-color: #232f65;">
-            <nav class="navbar " style="background-color: #232f65;">
-                <a href="index.html" class="navbar-brand mx-4 mb-3">
-                    <h3 class="text-primary"> <img src="/images/indian-hub-logo-vert-white-e1662813826792.png" alt="Indian Edu Hub Logo" class="log"></h3>
-                </a>
-                <div class="d-flex align-items-center ms-4 mb-4" style="background-color: #232f65;">
-                      
-                    <div class="ms-3" >
-                        <h6 class="mb-0 text-white">Indianeduhub</h6>
-                        <span style="color: rgb(209, 211, 212);">Client</span>
-                    </div>
-                </div>
-                <div class="navbar-nav w-100" style="background-color: #232f65;">
-                    <a href="/accounts-dashboard" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Dashboard</a>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Leads</a>
-                        <div class="dropdown-menu bg-transparent border-0">
-                            <a href="/accounts-details" class="dropdown-item active">Leads Details</a>
-                            <a href="typography.html" class="dropdown-item"></a>
-                            <a href="element.html" class="dropdown-item"></a>
-                        </div>
-                    </div>
-                     <a href="/create-payments" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Create Pay Steps</a>
-                </div>
-            </nav>
-        </div>
-        <!-- Sidebar End -->
-
-
-        <!-- Content Start -->
-        <div class="content">
-            <!-- Navbar Start -->
-            <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
-                <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
-                    <h2 class="text-primary mb-0"><img src="/img/ie.png" alt="Indian Edu Hub Logo" style="height: 30px;"></h2>
-                </a>
-                <a href="#" class="sidebar-toggler flex-shrink-0">
-                    <i class="fa fa-bars"></i>
-                </a>
-                <form class="d-none d-md-flex ms-4">
-                    <input class="form-control border-0" type="search" placeholder="Search">
-                </form>
-                <div class="navbar-nav align-items-center ms-auto">
-                    
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="fa fa-bell me-lg-2"></i>
-                            <span class="d-none d-lg-inline-flex">Notificatin</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item">
-                                <h6 class="fw-normal mb-0">Profile updated</h6>
-                                <small>15 minutes ago</small>
-                            </a>
-                       
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item text-center">See all notifications</a>
-                        </div>
-                    </div>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img class="rounded-circle me-lg-2" src="/images/anon.webp" alt="" style="width: 40px; height: 40px;">
-                            <span class="d-none d-lg-inline-flex">Client</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item">Log Out</a>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-            <!-- Navbar End -->
-
- <style>
-  /* Modal Container */
+ /* Modal Container */
 .modal {
   display: none;
   position: fixed;
@@ -637,7 +656,9 @@ h3 {
 .edit-icon:hover {
     background: #0056b3;
 }
-
+.text-white{
+    color: white !important;
+}
 #profilePhoto {
 
     border-radius: 50%;
@@ -701,127 +722,108 @@ h3 {
     justify-content: center;
         }
        
-    </style>
-<style>
-
-/* CSS */
-.button-57 {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid #18181a;
-  color: #18181a;
-  display: inline-block;
-  font-size: 15px;
-  line-height: 15px;
-  border-radius: 7px;
-  padding: 12px 12px 11px;
-  text-decoration: none;
-  cursor: pointer;
-  background: #fff;
-  user-select: none;
-  margin-bottom: ;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-}
-
-.button-57 span:first-child {
-  position: relative;
-  transition: color 600ms cubic-bezier(0.48, 0, 0.12, 1);
-  z-index: 10;
-}
-
-.button-57 span:last-child {
-  color: white;
-  display: block;
-  position: absolute;
-  bottom: 0;
-  transition: all 500ms cubic-bezier(0.48, 0, 0.12, 1);
-  z-index: 100;
-  opacity: 0;
-  top: 50%;
-  left: 50%;
-  transform: translateY(225%) translateX(-50%);
-  height: 14px;
-  line-height: 13px;
-}
-
-.button-57:after {
-  content: "";
-  position: absolute;
-  bottom: -50%;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: black;
-  transform-origin: bottom center;
-  transition: transform 600ms cubic-bezier(0.48, 0, 0.12, 1);
-  transform: skewY(9.3deg) scaleY(0);
-  z-index: 50;
-}
-
-.button-57:hover:after {
-  transform-origin: bottom center;
-  transform: skewY(9.3deg) scaleY(2);
-}
-
-.button-57:hover span:last-child {
-  transform: translateX(-50%) translateY(-100%);
-  opacity: 1;
-  transition: all 900ms cubic-bezier(0.48, 0, 0.12, 1);
-}
-/* Define transition for hiding/showing fields and header */
-.hide-fields {
-  display: none;
-  opacity: 0;
-  transition: opacity 0.5s ease, display 0s ease 0.5s;
-}
-
-.show-fields {
-  display: table-cell;
-  opacity: 1;
-  transition: opacity 0.5s ease;
-}
-
-.hide-header {
-  display: none;
-}
-
-.show-header {
-  display: table-header-group;
-}
- .hide {
-            display: none;
-        }
-        .fade-out {
-            opacity: 0;
-            transition: opacity 0.5s ease-out;
-        }
-        .fade-in {
-            opacity: 1;
-            transition: opacity 0.5s ease-in;
-        }
-        .amts{
-            width: 100px !important;
-            font-size: 12px;
-        }
-         .amts{
-            width: 150px !important;
-            font-size: 12px;
-        }
 </style>
+</head>
+
+<body>
+    <div class="container-xxl position-relative bg-white d-flex p-0" style="background-color: #232f65;">
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+
+
+        <!-- Sidebar Start -->
+        <div class="sidebar pe-4 pb-3" style="background-color: #232f65;">
+            <nav class="navbar " style="background-color: #232f65;">
+                <a href="index.html" class="navbar-brand mx-4 mb-3">
+                    <h3 class="text-primary"> <img src="/images/indian-hub-logo-vert-white-e1662813826792.png" alt="Indian Edu Hub Logo" class="log"></h3>
+                </a>
+                <div class="d-flex align-items-center ms-4 mb-4" style="background-color: #232f65;">
+                      
+                    <div class="ms-3" >
+                        <h6 class="mb-0 text-white">Indianeduhub</h6>
+                        <span style="color: rgb(209, 211, 212);">Client</span>
+                    </div>
+                </div>
+                <div class="navbar-nav w-100" style="background-color: #232f65;">
+                    <a href="/accounts-dashboard" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Dashboard</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Leads</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="/accounts-details" class="dropdown-item active">Leads Details</a>
+                            <a href="typography.html" class="dropdown-item"></a>
+                            <a href="element.html" class="dropdown-item"></a>
+                        </div>
+                    </div>
+                     <a href="/create-payments" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Create Pay Steps</a>
+                </div>
+            </nav>
+        </div>
+        <!-- Sidebar End -->
+
+
+        <!-- Content Start -->
+        <div class="content">
+            <!-- Navbar Start -->
+            <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
+                <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
+                    <h2 class="text-primary mb-0"><img src="/img/ie.png" alt="Indian Edu Hub Logo" style="height: 30px;"></h2>
+                </a>
+                <a href="#" class="sidebar-toggler flex-shrink-0">
+                    <i class="fa fa-bars"></i>
+                </a>
+                <form class="d-none d-md-flex ms-4">
+                    <input class="form-control border-0" type="search" placeholder="Search">
+                </form>
+                <div class="navbar-nav align-items-center ms-auto">
+                    
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="fa fa-bell me-lg-2"></i>
+                            <span class="d-none d-lg-inline-flex">Notificatin</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                            <a href="#" class="dropdown-item">
+                                <h6 class="fw-normal mb-0">Profile updated</h6>
+                                <small>15 minutes ago</small>
+                            </a>
+                       
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item text-center">See all notifications</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <img class="rounded-circle me-lg-2" src="/images/anon.webp" alt="" style="width: 40px; height: 40px;">
+                            <span class="d-none d-lg-inline-flex">Client</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                            <a href="#" class="dropdown-item">Log Out</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <!-- Navbar End -->
+
+
 <div class="container tt mt-5 px-2">
+<button id="saveChangesBtn" class="btn btn-primary">Save Changes</button>
    
     <div class="table-responsive">
         <table class="table table-responsive table-borderless" id="dataTable">
             <button id="saveButton" class="button-57" role="button">
                 <span class="text">Save Changes</span>
-                <span>Save</span>
+                <span>Save</span>  </button>
                  <button id="hideFieldsButton" class="button-57  mx-2" role="button">    <span class="text">Show hidden fields</span>
                 <span>Hide</span></button>
-
-            </button>
+          
             <thead>
                 <tr class="bg-light">
+                    <th hidden>id</th>
                     <th>No.</th>
                     <th>Date</th>
                     <th>Student ID</th>
@@ -863,11 +865,13 @@ h3 {
     <th>Referral Wallet</th>
     <th>Partner Wallet</th>
     <th>Own Wallet</th>
+    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 {{#each formData}}
              <tr data-id="{{_id}}">
+                <td hidden>{{this._id}}</td>
                     <td>{{incrementIndex @index}}</td>
                     <td class="text-danger font-weight-bold">{{this.date}}</td>
                     <td class="text-dark font-weight-bold">{{this.studentid}}</td>
@@ -966,108 +970,115 @@ h3 {
 
 
              <td>
-    <select id="sem" class="form-select mb-2 date">
-        <option value="" disabled {{#if (eq this.studyStage "")}}selected{{/if}}>Select Sem</option>
-        <option value="sem1" {{#if (eq this.studyStage "sem1")}}selected{{/if}}>Sem 1</option>
-        <option value="sem2" {{#if (eq this.studyStage "sem2")}}selected{{/if}}>Sem 2</option>
-        <option value="sem3" {{#if (eq this.studyStage "sem3")}}selected{{/if}}>Sem 3</option>
-        <option value="sem4" {{#if (eq this.studyStage "sem4")}}selected{{/if}}>Sem 4</option>
-        <option value="sem5" {{#if (eq this.studyStage "sem5")}}selected{{/if}}>Sem 5</option>
-        <option value="sem6" {{#if (eq this.studyStage "sem6")}}selected{{/if}}>Sem 6</option>
-        <option value="1st_year" {{#if (eq this.studyStage "1st_year")}}selected{{/if}}>1st Year</option>
-        <option value="2nd_year" {{#if (eq this.studyStage "2nd_year")}}selected{{/if}}>2nd Year</option>
-        <option value="3rd_year" {{#if (eq this.studyStage "3rd_year")}}selected{{/if}}>3rd Year</option>
-        <option value="Full Fee" {{#if (eq this.studyStage "Full Fee")}}selected{{/if}}>Full Fee</option>
-    </select>
+  <select id="studyStatus" class="form-select mb-2 date" name="studyStatus">
+      <option value="" disabled {{#if (eq this.studyStage "")}}selected{{/if}}>Select Sem</option>
+      <option value="sem1" {{#if (eq this.studyStage "sem1")}}selected{{/if}}>Sem 1</option>
+      <option value="sem2" {{#if (eq this.studyStage "sem2")}}selected{{/if}}>Sem 2</option>
+      <option value="sem3" {{#if (eq this.studyStage "sem3")}}selected{{/if}}>Sem 3</option>
+      <option value="sem4" {{#if (eq this.studyStage "sem4")}}selected{{/if}}>Sem 4</option>
+      <option value="sem5" {{#if (eq this.studyStage "sem5")}}selected{{/if}}>Sem 5</option>
+      <option value="sem6" {{#if (eq this.studyStage "sem6")}}selected{{/if}}>Sem 6</option>
+      <option value="1st_year" {{#if (eq this.studyStage "1st_year")}}selected{{/if}}>1st Year</option>
+      <option value="2nd_year" {{#if (eq this.studyStage "2nd_year")}}selected{{/if}}>2nd Year</option>
+      <option value="3rd_year" {{#if (eq this.studyStage "3rd_year")}}selected{{/if}}>3rd Year</option>
+      <option value="Full Fee" {{#if (eq this.studyStage "Full Fee")}}selected{{/if}}>Full Fee</option>
+  </select>
 </td>
+
 
 
              <!-- Payment Step 1 -->
-    <td>
-      <select class="form-select date">
-        {{#each ../payments.[0].payments.[0].fields}}
-        <option value="{{this}}">{{this}}</option>
-        {{else}}
-        <option>No Data</option>
-        {{/each}}
-      </select>
-    </td>
-   <td>
-  <textarea class="form-control" placeholder="Enter details..."></textarea>
+<td>
+  <select id="paymentStep1" class="form-select date">
+    {{#each ../payments.[0].payments.[0].fields}}
+    <option value="{{this}}">{{this}}</option>
+    {{else}}
+    <option>No Data</option>
+    {{/each}}
+  </select>
+</td>
+
+  <td>
+  <textarea id="paymentStep1Details" class="form-control" placeholder="Enter details..."></textarea>
   <div class="d-flex align-items-center mt-2">
-    <input type="number" class="form-control me-2 amt" placeholder="Amount" />
-    <input type="date" class="form-control me-2 date" />
+    <input type="number" id="paymentStep1Amount" class="form-control me-2 amt" placeholder="Amount" />
+    <input type="date" id="paymentStep1Date" class="form-control me-2 date" />
     <a href="your-drive-link" target="_blank" class="upload-icon">
       <i class="fas fa-upload"></i>
     </a>
   </div>
 </td>
+
 
 
     <!-- Payment Step 2 -->
-    <td>
-      <select class="form-select date">
-        {{#each ../payments.[0].payments.[1].fields}}
-        <option value="{{this}}">{{this}}</option>
-        {{else}}
-        <option>No Data</option>
-        {{/each}}
-      </select>
-    </td>
    <td>
-  <textarea class="form-control" placeholder="Enter details..."></textarea>
+  <select id="paymentStep2" class="form-select date">
+    {{#each ../payments.[0].payments.[1].fields}}
+    <option value="{{this}}">{{this}}</option>
+    {{else}}
+    <option>No Data</option>
+    {{/each}}
+  </select>
+</td>
+
+   <td>
+  <textarea id="paymentStep2Details" class="form-control" placeholder="Enter details..."></textarea>
   <div class="d-flex align-items-center mt-2">
-    <input type="number" class="form-control me-2 amt" placeholder="Amount" />
-    <input type="date" class="form-control me-2 date" />
+    <input type="number" id="paymentStep2Amount" class="form-control me-2 amt" placeholder="Amount" />
+    <input type="date" id="paymentStep2Date" class="form-control me-2 date" />
     <a href="your-drive-link" target="_blank" class="upload-icon">
       <i class="fas fa-upload"></i>
     </a>
   </div>
 </td>
 
+
     <!-- Payment Step 3 -->
-    <td> 
-      <select class="form-select date">
-        {{#each ../payments.[0].payments.[2].fields}}
-        <option value="{{this}}">{{this}}</option>
-        {{else}}
-        <option>No Data</option>
-        {{/each}}
-      </select>
-    </td>
-    <td>
-  <textarea class="form-control" placeholder="Enter details..."></textarea>
+   <td>
+  <select id="paymentStep3" class="form-select date">
+    {{#each ../payments.[0].payments.[2].fields}}
+    <option value="{{this}}">{{this}}</option>
+    {{else}}
+    <option>No Data</option>
+    {{/each}}
+  </select>
+</td>
+
+   <td>
+  <textarea id="paymentStep3Details" class="form-control" placeholder="Enter details..."></textarea>
   <div class="d-flex align-items-center mt-2">
-    <input type="number" class="form-control me-2 amt" placeholder="Amount" />
-    <input type="date" class="form-control me-2 date" />
+    <input type="number" id="paymentStep3Amount" class="form-control me-2 amt" placeholder="Amount" />
+    <input type="date" id="paymentStep3Date" class="form-control me-2 date" />
     <a href="your-drive-link" target="_blank" class="upload-icon">
       <i class="fas fa-upload"></i>
     </a>
   </div>
 </td>
+
      <!-- Semester Status Dropdown -->
             <td>
-                <select class="form-select date">
-                    <option value="" {{#if (eq this.finalStatus "")}}selected{{/if}}>Select Status</option>
-                    <option value="Waiting for Sem 2" {{#if (eq this.finalStatus "Waiting for Sem 2")}}selected{{/if}}>Waiting for Sem 2</option>
-                    <option value="Waiting for Sem 3" {{#if (eq this.finalStatus "Waiting for Sem 3")}}selected{{/if}}>Waiting for Sem 3</option>
-                    <option value="Waiting for Sem 4" {{#if (eq this.finalStatus "Waiting for Sem 4")}}selected{{/if}}>Waiting for Sem 4</option>
-                    <option value="Waiting for Sem 5" {{#if (eq this.finalStatus "Waiting for Sem 5")}}selected{{/if}}>Waiting for Sem 5</option>
-                    <option value="Waiting for Sem 6" {{#if (eq this.finalStatus "Waiting for Sem 6")}}selected{{/if}}>Waiting for Sem 6</option>
-                    <option value="Completed" {{#if (eq this.finalStatus "Completed")}}selected{{/if}} class="text-success">Completed</option>
-                    <option value="Dropout" {{#if (eq this.finalStatus "Dropout")}}selected{{/if}} class="text-danger">Dropout</option>
-                    <option value="Waiting for 2nd Year" {{#if (eq this.finalStatus "Waiting for 2nd Year")}}selected{{/if}}>Waiting for 2nd Year</option>
-                    <option value="Waiting for 3rd Year" {{#if (eq this.finalStatus "Waiting for 3rd Year")}}selected{{/if}}>Waiting for 3rd Year</option>
-                </select>
-            </td>
+  <select id="semesterStatus" class="form-select date">
+    <option value="" {{#if (eq this.finalStatus "")}}selected{{/if}}>Select Status</option>
+    <option value="Waiting for Sem 2" {{#if (eq this.finalStatus "Waiting for Sem 2")}}selected{{/if}}>Waiting for Sem 2</option>
+    <option value="Waiting for Sem 3" {{#if (eq this.finalStatus "Waiting for Sem 3")}}selected{{/if}}>Waiting for Sem 3</option>
+    <option value="Waiting for Sem 4" {{#if (eq this.finalStatus "Waiting for Sem 4")}}selected{{/if}}>Waiting for Sem 4</option>
+    <option value="Waiting for Sem 5" {{#if (eq this.finalStatus "Waiting for Sem 5")}}selected{{/if}}>Waiting for Sem 5</option>
+    <option value="Waiting for Sem 6" {{#if (eq this.finalStatus "Waiting for Sem 6")}}selected{{/if}}>Waiting for Sem 6</option>
+    <option value="Completed" {{#if (eq this.finalStatus "Completed")}}selected{{/if}} class="text-success">Completed</option>
+    <option value="Dropout" {{#if (eq this.finalStatus "Dropout")}}selected{{/if}} class="text-danger">Dropout</option>
+    <option value="Waiting for 2nd Year" {{#if (eq this.finalStatus "Waiting for 2nd Year")}}selected{{/if}}>Waiting for 2nd Year</option>
+    <option value="Waiting for 3rd Year" {{#if (eq this.finalStatus "Waiting for 3rd Year")}}selected{{/if}}>Waiting for 3rd Year</option>
+  </select>
+</td>
+
              <td>
-                 <input type="number" class="form-control me-2 amts" placeholder="Amount" />
+  <input type="number" id="totalAMt" class="form-control me-2 amts" placeholder="Amount" />
   <div class="d-flex align-items-center mt-2">
-   
-    <input type="date" class="form-control me-2 date" />
-   
+    <input type="date" id="totalAMtDate" class="form-control me-2 date" />
   </div>
 </td>
+
             <td class="text-success font-weight-bold" onclick="findInstitute('{{this.referredBy}}', {
       studentid: '{{this.studentid}}',
       name: '{{this.name}}',
@@ -1116,7 +1127,9 @@ h3 {
   </select>
 </td>
 
-
+   <td>
+            <button class="btn btn-primary saveChangesBtn">Save Changes</button>
+        </td>
 
                 </tr>
                 {{/each}}
@@ -1124,6 +1137,8 @@ h3 {
         </table>
     </div>
 </div>
+
+
 <!-- Modal Container -->
 <div id="instituteModal" class="modal">
   <div class="modal-content">
@@ -1134,7 +1149,7 @@ h3 {
   </div>
 </div>
 <script>
- function fetchInstituteDetailss(selectElement) {
+function fetchInstituteDetailss(selectElement) {
   const instituteId = selectElement.value;
   const studentDetails = {
     studentid: selectElement.dataset.studentid,
@@ -1155,7 +1170,7 @@ h3 {
           alert(data.message); // Handle case when no institute is found
         } else {
           // Display the details in the modal
-          displayInstituteDetailss(data, studentDetails);
+          displayInstituteDetailss(data, studentDetails, instituteId);
         }
       })
       .catch(error => {
@@ -1165,57 +1180,68 @@ h3 {
 }
 
 
-  function displayInstituteDetailss(institute, student) {
-    const details = `
-      <div id="modalContent" class="container-fluid pt-4 px-4">
-  <!-- The card will be dynamically injected here by JavaScript -->
-  <div class="row g-4">
-    <div class="card">
-      <div class="info">
-        <h2 class="mb-3">${institute.institutename}</h2>
-        <p><strong>Owner Name:</strong> ${institute.owner_name}</p>
-        <p><strong>Email:</strong> ${institute.email}</p>
-        <p><strong>Institute Place:</strong> ${institute.state}, ${institute.city}</p>
-        <p><strong>Institute ID:</strong> ${institute.instituteid}</p>
-        <b class="text-warning"><strong>Student ID:</strong> ${student.studentid}, Amount: ${student.amount}</b>
-        <div class="photo-container ms-auto" style="border-radius: 10px;">
-          <img id="profilePhoto" src="${institute.profilePhoto || '/images/anon.webp'}" class="photo-placeholder" alt="Profile Photo" />
-          <div class="edit-icon" onclick="document.getElementById('fileInput').click();">
-            <i class="fa fa-edit"></i>
-          </div>
-        </div>
-        <div class="links mt-5 mb-3">
-          <form id="sendMoneyForm">
-            <div class="form-group mb-3">
-              <label for="amount">Send Wallet Money:</label>
-              <input type="number" id="amount" class="form-control" placeholder="Enter amount" required />
+
+function displayInstituteDetailss(institute, student, instituteId) {
+  const walletField = instituteId === 'IEHD' ? 'wallet' : 'walletP';
+  const totalWalletAmount = instituteId === 'IEHD' ? institute.totalWalletAmount : 0;
+  const totalWalletAmountP = instituteId === 'IEHP' ? institute.totalWalletAmountP : 0;
+  
+  const instituteIdDisplay = instituteId === 'IEHD' ? institute.instituteid : institute.instituteidP;
+
+  const details = `
+    <div class="container-fluid pt-4 px-4">
+      <div class="row g-4">
+        <div class="card">
+          <div class="info">
+            <h2 class="mb-3">${institute.name}</h2>
+            <p><strong>Owner Name:</strong> ${institute.owner_name || ''}</p>
+            <p><strong>Email:</strong> ${institute.email}</p>
+            <p><strong>Institute Place:</strong> ${institute.state || ''}, ${institute.city || ''}</p>
+            <p class="text-white"><strong>Institute ID:</strong> <b class="text-white">${instituteIdDisplay}</b> </p>
+            <b class="text-warning"><strong>Student ID:</strong> ${student.studentid}, Amount: ${student.amount}</b>
+            <div class="photo-container ms-auto" style="border-radius: 10px;">
+              <img id="profilePhoto" src="${institute.profilePhoto || '/images/anon.webp'}" class="photo-placeholder" alt="Profile Photo" />
+              <div class="edit-icon" onclick="document.getElementById('fileInput').click();">
+                <i class="fa fa-edit"></i>
+              </div>
             </div>
-            <button type="submit" class="btn btn-primary">Send</button>
-          </form>
-        </div>
-        <div class="total-wallet mt-3 float-end text-white">
-          <h5 style="margin-top: -130px; color: #c3cbdc;"><strong>Total Wallet Amount:</strong></h5>
-          <center><h4 class="text-white"><span id="totalWalletAmount">${institute.totalWalletAmount || 0}</span></h4></center>
-          <h5 style="color: #c3cbdc;"><strong>Total Wallet Amount P:</strong></h5>
-          <center><h4 class="text-white"><span id="totalWalletAmountP">${institute.totalWalletAmountP || 0}</span></h4></center>
+            <div class="links mt-5 mb-3">
+              <form id="sendMoneyForm">
+                <div class="form-group mb-3">
+                  <label for="amount">Send Wallet Money:</label>
+                  <input type="number" id="amount" class="form-control" placeholder="Enter amount" required />
+                </div>
+                <button type="submit" class="btn btn-primary">Send</button>
+              </form>
+            </div>
+            <div class="total-wallet mt-3 float-end text-white">
+              ${instituteId === 'IEHD' ? `
+                <h6 style="margin-top: -130px; color: #c3cbdc;"><strong>Wallet Amount (IEHD):</strong></h6>
+                <center><h4 class="text-white"><span id="totalWalletAmount">${totalWalletAmount}</span></h4></center>
+              ` : ''}
+              ${instituteId === 'IEHP' ? `
+                <h6 style="margin-top: -130px; color: #c3cbdc;"><strong>Wallet Amount (IEHP):</strong></h6>
+                <center><h4 class="text-white"><span id="totalWalletAmountP">${totalWalletAmountP}</span></h4></center>
+              ` : ''}
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
+  `;
+  document.getElementById('modalContent').innerHTML = details;
+  document.getElementById('instituteModal').style.display = 'block';
 
-    `;
-    document.getElementById('modalContent').innerHTML = details;
-    document.getElementById('instituteModal').style.display = 'block';
+  document.getElementById('sendMoneyForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+    const amount = document.getElementById('amount').value;
+    handleSendMoneyss(instituteId, amount, student);
+  });
+}
 
-    document.getElementById('sendMoneyForm').addEventListener('submit', function (event) {
-      event.preventDefault();
-      const amount = document.getElementById('amount').value;
-      handleSendMoneyss(institute.instituteid, amount, student);
-    });
-  }
 
-  function handleSendMoneyss(instituteId, amount, student) {
+
+function handleSendMoneyss(instituteId, amount, student) {
   fetch(`/add-to-wallet-super/${instituteId}`, {
     method: 'POST',
     headers: {
@@ -1227,11 +1253,13 @@ h3 {
   .then(data => {
     if (data.success) {
       alert('Money added successfully!');
+
       // Update total wallet amounts in the modal
-      const totalWalletElement = document.getElementById('totalWalletAmount');
-      const totalWalletElementP = document.getElementById('totalWalletAmountP');
-      totalWalletElement.textContent = data.totalWalletAmount || 0;
-      totalWalletElementP.textContent = data.totalWalletAmountP || 0;
+      if (instituteId === 'IEHD') {
+        document.getElementById('totalWalletAmount').textContent = data.totalWalletAmount || 0;
+      } else if (instituteId === 'IEHP') {
+        document.getElementById('totalWalletAmountP').textContent = data.totalWalletAmountP || 0;
+      }
     } else {
       alert('Failed to add money: ' + data.message);
     }
@@ -1514,6 +1542,59 @@ function closeModal() {
 
 <!-- Include SweetAlert2 for alerts -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+$(document).on('click', '.saveChangesBtn', function(e) {
+    e.preventDefault(); // Prevent the form from submitting traditionally
+
+    // Get the closest row
+    let $row = $(this).closest('tr');
+
+    // Gather form data from the specific row
+    let formData = {
+        _id: $row.data('id'),
+        studyStatus: $row.find('#studyStatus').val(),
+        paymentStep1: $row.find('#paymentStep1').val(),
+        paymentStep1Details: $row.find('#paymentStep1Details').val(),
+        paymentStep1Amount: $row.find('#paymentStep1Amount').val(),
+        paymentStep1Date: $row.find('#paymentStep1Date').val(),
+        paymentStep2: $row.find('#paymentStep2').val(),
+        paymentStep2Details: $row.find('#paymentStep2Details').val(),
+        paymentStep2Amount: $row.find('#paymentStep2Amount').val(),
+        paymentStep2Date: $row.find('#paymentStep2Date').val(),
+        paymentStep3: $row.find('#paymentStep3').val(),
+        paymentStep3Details: $row.find('#paymentStep3Details').val(),
+        paymentStep3Amount: $row.find('#paymentStep3Amount').val(),
+        paymentStep3Date: $row.find('#paymentStep3Date').val(),
+        semesterStatus: $row.find('#semesterStatus').val(),
+        totalAMt: $row.find('#totalAMt').val(),
+        totalAMtDate: $row.find('#totalAMtDate').val()
+    };
+
+    // Log formData for debugging
+    console.log(formData);
+
+    // Send the data using AJAX
+    $.ajax({
+        url: '/update-accounts-details',
+        type: 'POST',
+        data: JSON.stringify(formData),
+        contentType: 'application/json',
+        success: function(response) {
+            alert('Changes saved successfully!');
+        },
+        error: function(xhr, status, error) {
+            console.error("Error details:", xhr.responseText); // Log the full response
+            alert('An error occurred while saving changes: ' + xhr.responseJSON.message);
+        }
+    });
+});
+
+
+
+
+</script>
+
 
 
  
