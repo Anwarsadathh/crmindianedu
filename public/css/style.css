@@ -278,7 +278,9 @@ body {
 .mhead{
     font-size: 12px !important;
 }
-
+.text-dark{
+    color: #000 !important;
+}
   .filter-card {
       background: rgba(255, 255, 255, 0.2) !important;
       border-radius: 20px !important;
