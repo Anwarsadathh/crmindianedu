@@ -9,6 +9,27 @@ const bodyParser = require("body-parser");
 
 
 module.exports = {
+  getPaymentStepsByStudyStage : async (studyStage) => {
+    if (!studyStage) {
+      throw new Error("Study stage is required");
+    }
+
+    try {
+      const database = db.get(); // Get the database instance
+      const clientCollection = database.collection(collection.CLIENT_COLLECTION); // Get the collection
+
+      // Fetch payment steps based on studyStage
+      const paymentSteps = await clientCollection.findOne({ studyStage: studyStage });
+
+      if (!paymentSteps) {
+        throw new Error("No payment steps found for this study stage");
+      }
+
+      return paymentSteps;
+    } catch (error) {
+      throw new Error(`Error fetching payment steps: ${error.message}`);
+    }
+  },
   updateAccountsDetails: async (
     clientId,
     { studyStage, payments, finalStatus, additionalAmount, additionalDate }

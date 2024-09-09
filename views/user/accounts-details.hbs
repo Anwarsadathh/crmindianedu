@@ -853,6 +853,7 @@ h3 {
                     <th class="toggle-column">Enrollment No</th>
                     <th>Degree Type</th>
                     <th>University</th>
+                    <th>TEA</th>
                     <th>Study Status</th>
                          <th>Payment Step 1</th> <!-- New header -->
     <th>Details for Step 1</th> <!-- New header -->
@@ -861,17 +862,17 @@ h3 {
     <th>Payment Step 3</th> <!-- New header -->
     <th>Details for Step 3</th> <!-- New header -->
     <th>Final Status</th>
-    <th>Total Amount</th>
+    <th>TGA</th>
     <th>Referral Wallet</th>
     <th>Partner Wallet</th>
     <th>Own Wallet</th>
-    <th>Action</th>
+    {{!-- <th>Action</th> --}}
                 </tr>
             </thead>
             <tbody>
                 {{#each formData}}
-             <tr data-id="{{_id}}">
-                <td hidden>{{this._id}}</td>
+               <tr data-id="{{this._id}}">
+        <td hidden>{{this._id}}</td> <!-- The ID is stored in a hidden cell for reference -->
                     <td>{{incrementIndex @index}}</td>
                     <td class="text-danger font-weight-bold">{{this.date}}</td>
                     <td class="text-dark font-weight-bold">{{this.studentid}}</td>
@@ -967,10 +968,27 @@ h3 {
     {{this.university}}
   {{/if}}
 </td>
-
+<td>
+  <input 
+    type="number" 
+    id="totalExpectedAMt" 
+    class="form-control me-2 amts" 
+    placeholder="{{#if (eq this.totalExpectedAMt "")}}Enter Expected Amount{{else}}Expected Amount{{/if}}" 
+    value="{{this.totalExpectedAMt}}" 
+  />
+  <div class="d-flex align-items-center mt-2">
+    <input 
+      type="date" 
+      id="totalExpectedAMtDate" 
+      class="form-control me-2 date" 
+      placeholder="{{#if (eq this.totalExpectedAMtDate "")}}Select Expected Date{{else}}Expected Date{{/if}}" 
+      value="{{this.totalExpectedAMtDate}}" 
+    />
+  </div>
+</td>
 
              <td>
-  <select id="studyStatus" class="form-select mb-2 date" name="studyStatus">
+  <select id="studyStage" class="form-select mb-2 date" name="studyStage">
       <option value="" disabled {{#if (eq this.studyStage "")}}selected{{/if}}>Select Sem</option>
       <option value="sem1" {{#if (eq this.studyStage "sem1")}}selected{{/if}}>Sem 1</option>
       <option value="sem2" {{#if (eq this.studyStage "sem2")}}selected{{/if}}>Sem 2</option>
@@ -1071,13 +1089,25 @@ h3 {
     <option value="Waiting for 3rd Year" {{#if (eq this.finalStatus "Waiting for 3rd Year")}}selected{{/if}}>Waiting for 3rd Year</option>
   </select>
 </td>
-
-             <td>
-  <input type="number" id="totalAMt" class="form-control me-2 amts" placeholder="Amount" />
+<td>
+  <input 
+    type="number" 
+    id="totalAMt" 
+    class="form-control me-2 amts" 
+    placeholder="{{#if (eq this.totalAMt "")}}Enter Amount{{else}}Amount{{/if}}" 
+    value="{{this.totalAMt}}" 
+  />
   <div class="d-flex align-items-center mt-2">
-    <input type="date" id="totalAMtDate" class="form-control me-2 date" />
+    <input 
+      type="date" 
+      id="totalAMtDate" 
+      class="form-control me-2 date" 
+      placeholder="{{#if (eq this.totalAMtDate "")}}Select Date{{else}}Date{{/if}}" 
+      value="{{this.totalAMtDate}}" 
+    />
   </div>
 </td>
+
 
             <td class="text-success font-weight-bold" onclick="findInstitute('{{this.referredBy}}', {
       studentid: '{{this.studentid}}',
@@ -1127,9 +1157,9 @@ h3 {
   </select>
 </td>
 
-   <td>
+   {{!-- <td>
             <button class="btn btn-primary saveChangesBtn">Save Changes</button>
-        </td>
+        </td> --}}
 
                 </tr>
                 {{/each}}
@@ -1544,56 +1574,93 @@ function closeModal() {
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-$(document).on('click', '.saveChangesBtn', function(e) {
-    e.preventDefault(); // Prevent the form from submitting traditionally
+$(document).on('click', '#saveChangesBtn', function(e) {
+    e.preventDefault(); // Prevent default form submission
 
-    // Get the closest row
-    let $row = $(this).closest('tr');
+    let updatedData = [];
 
-    // Gather form data from the specific row
-    let formData = {
-        _id: $row.data('id'),
-        studyStatus: $row.find('#studyStatus').val(),
-        paymentStep1: $row.find('#paymentStep1').val(),
-        paymentStep1Details: $row.find('#paymentStep1Details').val(),
-        paymentStep1Amount: $row.find('#paymentStep1Amount').val(),
-        paymentStep1Date: $row.find('#paymentStep1Date').val(),
-        paymentStep2: $row.find('#paymentStep2').val(),
-        paymentStep2Details: $row.find('#paymentStep2Details').val(),
-        paymentStep2Amount: $row.find('#paymentStep2Amount').val(),
-        paymentStep2Date: $row.find('#paymentStep2Date').val(),
-        paymentStep3: $row.find('#paymentStep3').val(),
-        paymentStep3Details: $row.find('#paymentStep3Details').val(),
-        paymentStep3Amount: $row.find('#paymentStep3Amount').val(),
-        paymentStep3Date: $row.find('#paymentStep3Date').val(),
-        semesterStatus: $row.find('#semesterStatus').val(),
-        totalAMt: $row.find('#totalAMt').val(),
-        totalAMtDate: $row.find('#totalAMtDate').val()
-    };
+    // Iterate over each row
+    $('#dataTable tbody tr').each(function() {
+        let $row = $(this);
 
-    // Log formData for debugging
-    console.log(formData);
+        // Retrieve the account ID from data-id attribute
+        let accountId = $row.data('id');
+        if (!accountId) {
+            console.error('Account ID is missing for this row:', $row);
+            return;
+        }
 
-    // Send the data using AJAX
+        // Retrieve the selected study stage
+        let studyStage = $row.find('#studyStage').val();
+        if (!studyStage) {
+            console.warn('Study Stage is not selected for this row.');
+            return;
+        }
+
+        // Collect payment step details for the current row
+       let paymentDetails = [
+  {
+    step: 'paymentStep1',
+    details: $row.find('#paymentStep1Details').val(),
+    amount: $row.find('#paymentStep1Amount').val(),
+    date: $row.find('#paymentStep1Date').val()
+  },
+  {
+    step: 'paymentStep2',
+    details: $row.find('#paymentStep2Details').val(),
+    amount: $row.find('#paymentStep2Amount').val(),
+    date: $row.find('#paymentStep2Date').val()
+  },
+  {
+    step: 'paymentStep3',
+    details: $row.find('#paymentStep3Details').val(),
+    amount: $row.find('#paymentStep3Amount').val(),
+    date: $row.find('#paymentStep3Date').val()
+  }
+];
+
+
+        // Fetch the current row data if it exists, or initialize a new object
+        let existingRow = updatedData.find(data => data._id === accountId);
+        if (!existingRow) {
+            existingRow = {
+                _id: accountId,
+                studyStatus: $row.find('#studyStatus').val(),
+                semesterStatus: $row.find('#semesterStatus').val(),
+                totalAMt: $row.find('#totalAMt').val(),
+                totalAMtDate: $row.find('#totalAMtDate').val(),
+                totalExpectedAMt: $row.find('#totalExpectedAMt').val(),
+                totalExpectedAMtDate: $row.find('#totalExpectedAMtDate').val(),
+                paymentDetails: {} // Initialize an empty object for payment details
+            };
+            updatedData.push(existingRow);
+        }
+
+        // Merge existing payment details for the selected study stage with the new payment details
+        existingRow.paymentDetails[studyStage] = existingRow.paymentDetails[studyStage] || []; // Preserve old stage data if it exists
+        existingRow.paymentDetails[studyStage] = paymentDetails; // Store new details for the current study stage
+    });
+
+    // Log updatedData array for debugging
+    console.log('Updated Data:', updatedData);
+
+    // Send data via AJAX
     $.ajax({
         url: '/update-accounts-details',
         type: 'POST',
-        data: JSON.stringify(formData),
+        data: JSON.stringify(updatedData), // Send the updated data
         contentType: 'application/json',
         success: function(response) {
             alert('Changes saved successfully!');
         },
         error: function(xhr, status, error) {
-            console.error("Error details:", xhr.responseText); // Log the full response
-            alert('An error occurred while saving changes: ' + xhr.responseJSON.message);
+            console.error("Error details:", xhr.responseText); // Log full error
+            alert('Error: ' + xhr.responseJSON.message);
         }
     });
 });
-
-
-
-
 </script>
+
 
 
 

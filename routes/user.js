@@ -1186,73 +1186,95 @@ router.post("/update-accounts-details", async (req, res) => {
   console.log("Request Body:", req.body);
 
   try {
-    const {
-      studyStatus,
-      paymentStep1,
-      paymentStep1Details,
-      paymentStep1Amount,
-      paymentStep1Date,
-      paymentStep2,
-      paymentStep2Details,
-      paymentStep2Amount,
-      paymentStep2Date,
-      paymentStep3,
-      paymentStep3Details,
-      paymentStep3Amount,
-      paymentStep3Date,
-      semesterStatus,
-      totalAMt,
-      totalAMtDate,
-      _id,
-    } = req.body;
+    const updates = req.body;
 
-    if (!_id) {
+    if (!Array.isArray(updates) || updates.length === 0) {
       return res
         .status(400)
-        .json({ success: false, message: "Account ID is required" });
+        .json({ success: false, message: "No data provided" });
     }
 
-    const updateFields = {
-      studyStage: studyStatus,
-      finalStatus: semesterStatus,
-      totalAmount: {
-        amount: totalAMt,
-        date: totalAMtDate,
-      },
-      payments: [
-        {
-          step: paymentStep1,
-          details: paymentStep1Details,
-          amount: paymentStep1Amount,
-          date: paymentStep1Date,
-        },
-        {
-          step: paymentStep2,
-          details: paymentStep2Details,
-          amount: paymentStep2Amount,
-          date: paymentStep2Date,
-        },
-        {
-          step: paymentStep3,
-          details: paymentStep3Details,
-          amount: paymentStep3Amount,
-          date: paymentStep3Date,
-        },
-      ],
-    };
+    const updateResults = await Promise.all(
+      updates.map(async (update) => {
+        const {
+          _id,
+          studyStatus,
+          totalAMt,
+          totalAMtDate,
+          totalExpectedAMt,
+          totalExpectedAMtDate,
+          paymentDetails,
+          semesterStatus,
+        } = update;
 
-    // Use the helper to update student details
-    const result = await serviceHelpers.updateClientDetailsa(_id, updateFields);
-    res.status(200).json(result);
+        if (!_id) {
+          return { success: false, message: "Account ID is required" };
+        }
+
+        // Fetch the existing record to merge the payment details
+        const existingClient = await db
+          .get()
+          .collection(collection.CLIENT_COLLECTION)
+          .findOne({ _id: ObjectId(_id) });
+
+        if (!existingClient) {
+          return { success: false, message: "Client not found" };
+        }
+
+        // Merge existing payment details with the new ones
+        let mergedPaymentDetails = existingClient.paymentDetails || {};
+
+        // Iterate over new payment details and merge
+        for (const stage in paymentDetails) {
+          if (paymentDetails.hasOwnProperty(stage)) {
+            mergedPaymentDetails[stage] = paymentDetails[stage]; // Overwrite or add new stage details
+          }
+        }
+
+        // Fields to update
+        const updateFields = {
+          studyStatus,
+          finalStatus: semesterStatus,
+          totalAMt,
+          totalAMtDate,
+          totalExpectedAMt,
+          totalExpectedAMtDate,
+          paymentDetails: mergedPaymentDetails, // Save the merged payment details
+        };
+
+        try {
+          const result = await db
+            .get()
+            .collection(collection.CLIENT_COLLECTION)
+            .updateOne({ _id: ObjectId(_id) }, { $set: updateFields });
+
+          if (result.matchedCount === 0) {
+            return { success: false, message: "Client not found" };
+          }
+
+          return {
+            success: true,
+            message: "Client details updated successfully",
+          };
+        } catch (error) {
+          console.error("Error updating client details:", error);
+          return { success: false, message: "Error updating client details" };
+        }
+      })
+    );
+
+    res.status(200).json(updateResults);
   } catch (error) {
-    console.error("Error updating account details:", error);
+    console.error("Error processing updates:", error);
     res.status(500).json({
       success: false,
-      message: "Error updating account details",
+      message: "Error processing updates",
       error: error.message,
     });
   }
 });
+
+
 
 
 
