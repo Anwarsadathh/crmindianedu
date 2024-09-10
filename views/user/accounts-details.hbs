@@ -1005,9 +1005,9 @@ h3 {
 
 
 
-             <!-- Payment Step 1 -->
+           <!-- Payment Step 1 -->
 <td>
-  <select id="paymentStep1" class="form-select date">
+  <select id="paymentStep1Dropdown" class="form-select date">
     {{#each ../payments.[0].payments.[0].fields}}
     <option value="{{this}}">{{this}}</option>
     {{else}}
@@ -1016,7 +1016,7 @@ h3 {
   </select>
 </td>
 
-  <td>
+<td>
   <textarea id="paymentStep1Details" class="form-control" placeholder="Enter details..."></textarea>
   <div class="d-flex align-items-center mt-2">
     <input type="number" id="paymentStep1Amount" class="form-control me-2 amt" placeholder="Amount" />
@@ -1027,11 +1027,9 @@ h3 {
   </div>
 </td>
 
-
-
-    <!-- Payment Step 2 -->
-   <td>
-  <select id="paymentStep2" class="form-select date">
+<!-- Payment Step 2 -->
+<td>
+  <select id="paymentStep2Dropdown" class="form-select date">
     {{#each ../payments.[0].payments.[1].fields}}
     <option value="{{this}}">{{this}}</option>
     {{else}}
@@ -1040,7 +1038,7 @@ h3 {
   </select>
 </td>
 
-   <td>
+<td>
   <textarea id="paymentStep2Details" class="form-control" placeholder="Enter details..."></textarea>
   <div class="d-flex align-items-center mt-2">
     <input type="number" id="paymentStep2Amount" class="form-control me-2 amt" placeholder="Amount" />
@@ -1051,10 +1049,9 @@ h3 {
   </div>
 </td>
 
-
-    <!-- Payment Step 3 -->
-   <td>
-  <select id="paymentStep3" class="form-select date">
+<!-- Payment Step 3 -->
+<td>
+  <select id="paymentStep3Dropdown" class="form-select date">
     {{#each ../payments.[0].payments.[2].fields}}
     <option value="{{this}}">{{this}}</option>
     {{else}}
@@ -1063,7 +1060,7 @@ h3 {
   </select>
 </td>
 
-   <td>
+<td>
   <textarea id="paymentStep3Details" class="form-control" placeholder="Enter details..."></textarea>
   <div class="d-flex align-items-center mt-2">
     <input type="number" id="paymentStep3Amount" class="form-control me-2 amt" placeholder="Amount" />
@@ -1073,6 +1070,7 @@ h3 {
     </a>
   </div>
 </td>
+
 
      <!-- Semester Status Dropdown -->
             <td>
@@ -1568,7 +1566,52 @@ function closeModal() {
     });
 </script>
 
+<script>
+  $(document).on('change', '#studyStage', function () {
+    const $row = $(this).closest('tr'); // Get the closest row
+    const studyStage = $(this).val();
+    const clientId = $row.data('id'); // Get the client ID from the row's data-id attribute
 
+    // Log the clientId to ensure it's correctly retrieved
+    console.log("Client ID:", clientId);
+    
+    if (studyStage && clientId) {
+      $.ajax({
+        url: `/get-payment-details/${clientId}/${studyStage}`,
+        method: 'GET',
+        success: function (response) {
+          if (response.success) {
+            const paymentDetails = response.paymentDetails;
+
+            // Update the payment steps fields with fetched data
+            $row.find('#paymentStep1Dropdown').val(paymentDetails[0]?.selectedValue || '');
+            $row.find('#paymentStep1Details').val(paymentDetails[0]?.details || '');
+            $row.find('#paymentStep1Amount').val(paymentDetails[0]?.amount || '');
+            $row.find('#paymentStep1Date').val(paymentDetails[0]?.date || '');
+
+            $row.find('#paymentStep2Dropdown').val(paymentDetails[1]?.selectedValue || '');
+            $row.find('#paymentStep2Details').val(paymentDetails[1]?.details || '');
+            $row.find('#paymentStep2Amount').val(paymentDetails[1]?.amount || '');
+            $row.find('#paymentStep2Date').val(paymentDetails[1]?.date || '');
+
+            $row.find('#paymentStep3Dropdown').val(paymentDetails[2]?.selectedValue || '');
+            $row.find('#paymentStep3Details').val(paymentDetails[2]?.details || '');
+            $row.find('#paymentStep3Amount').val(paymentDetails[2]?.amount || '');
+            $row.find('#paymentStep3Date').val(paymentDetails[2]?.date || '');
+          } else {
+            console.warn('No payment details found for this study stage.');
+          }
+        },
+        error: function (err) {
+          console.error('Error fetching payment details:', err);
+        }
+      });
+    } else {
+      console.error("Client ID or study stage is missing.");
+    }
+  });
+
+</script>
 
 <!-- Include SweetAlert2 for alerts -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -1598,27 +1641,29 @@ $(document).on('click', '#saveChangesBtn', function(e) {
         }
 
         // Collect payment step details for the current row
-       let paymentDetails = [
-  {
-    step: 'paymentStep1',
-    details: $row.find('#paymentStep1Details').val(),
-    amount: $row.find('#paymentStep1Amount').val(),
-    date: $row.find('#paymentStep1Date').val()
-  },
-  {
-    step: 'paymentStep2',
-    details: $row.find('#paymentStep2Details').val(),
-    amount: $row.find('#paymentStep2Amount').val(),
-    date: $row.find('#paymentStep2Date').val()
-  },
-  {
-    step: 'paymentStep3',
-    details: $row.find('#paymentStep3Details').val(),
-    amount: $row.find('#paymentStep3Amount').val(),
-    date: $row.find('#paymentStep3Date').val()
-  }
-];
-
+        let paymentDetails = [
+            {
+                step: 'paymentStep1',
+                selectedValue: $row.find('#paymentStep1Dropdown').val(),
+                details: $row.find('#paymentStep1Details').val(),
+                amount: $row.find('#paymentStep1Amount').val(),
+                date: $row.find('#paymentStep1Date').val()
+            },
+            {
+                step: 'paymentStep2',
+                selectedValue: $row.find('#paymentStep2Dropdown').val(),
+                details: $row.find('#paymentStep2Details').val(),
+                amount: $row.find('#paymentStep2Amount').val(),
+                date: $row.find('#paymentStep2Date').val()
+            },
+            {
+                step: 'paymentStep3',
+                selectedValue: $row.find('#paymentStep3Dropdown').val(),
+                details: $row.find('#paymentStep3Details').val(),
+                amount: $row.find('#paymentStep3Amount').val(),
+                date: $row.find('#paymentStep3Date').val()
+            }
+        ];
 
         // Fetch the current row data if it exists, or initialize a new object
         let existingRow = updatedData.find(data => data._id === accountId);
@@ -1659,6 +1704,7 @@ $(document).on('click', '#saveChangesBtn', function(e) {
         }
     });
 });
+
 </script>
 
 

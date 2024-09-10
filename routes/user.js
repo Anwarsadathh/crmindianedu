@@ -1211,38 +1211,36 @@ router.post("/update-accounts-details", async (req, res) => {
           return { success: false, message: "Account ID is required" };
         }
 
-        // Fetch the existing record to merge the payment details
-        const existingClient = await db
-          .get()
-          .collection(collection.CLIENT_COLLECTION)
-          .findOne({ _id: ObjectId(_id) });
-
-        if (!existingClient) {
-          return { success: false, message: "Client not found" };
-        }
-
-        // Merge existing payment details with the new ones
-        let mergedPaymentDetails = existingClient.paymentDetails || {};
-
-        // Iterate over new payment details and merge
-        for (const stage in paymentDetails) {
-          if (paymentDetails.hasOwnProperty(stage)) {
-            mergedPaymentDetails[stage] = paymentDetails[stage]; // Overwrite or add new stage details
-          }
-        }
-
-        // Fields to update
-        const updateFields = {
-          studyStatus,
-          finalStatus: semesterStatus,
-          totalAMt,
-          totalAMtDate,
-          totalExpectedAMt,
-          totalExpectedAMtDate,
-          paymentDetails: mergedPaymentDetails, // Save the merged payment details
-        };
-
         try {
+          const existingClient = await db
+            .get()
+            .collection(collection.CLIENT_COLLECTION)
+            .findOne({ _id: ObjectId(_id) });
+
+          if (!existingClient) {
+            return { success: false, message: "Client not found" };
+          }
+
+          let mergedPaymentDetails = existingClient.paymentDetails || {};
+
+          if (paymentDetails && typeof paymentDetails === "object") {
+            for (const stage in paymentDetails) {
+              if (paymentDetails.hasOwnProperty(stage)) {
+                mergedPaymentDetails[stage] = paymentDetails[stage]; // Overwrite or add new stage details
+              }
+            }
+          }
+
+          const updateFields = {
+            studyStatus,
+            finalStatus: semesterStatus,
+            totalAMt,
+            totalAMtDate,
+            totalExpectedAMt,
+            totalExpectedAMtDate,
+            paymentDetails: mergedPaymentDetails, // Save the merged payment details
+          };
+
           const result = await db
             .get()
             .collection(collection.CLIENT_COLLECTION)
@@ -2504,7 +2502,37 @@ const instituteid = req.session.partner.instituteid; // Get the instituteid from
     });
 });
 
+router.get("/get-payment-details/:id/:studyStage", async (req, res) => {
+  const { id, studyStage } = req.params;
 
+  // Validate id
+  if (!ObjectId.isValid(id)) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid client ID" });
+  }
+
+  try {
+    const clientData = await db
+      .get()
+      .collection(collection.CLIENT_COLLECTION)
+      .findOne({ _id: new ObjectId(id) });
+
+    if (!clientData) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Client not found" });
+    }
+
+    const paymentDetails = clientData.paymentDetails[studyStage] || [];
+    res.status(200).json({ success: true, paymentDetails });
+  } catch (error) {
+    console.error("Error fetching payment details:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Error fetching payment details" });
+  }
+});
 
 router.get("/partner-creation",  (req, res) => {
   res.render("user/partner-creating", { user: false, layout: false });
