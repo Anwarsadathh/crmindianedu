@@ -262,11 +262,7 @@ header img {
                 <div class="navbar-nav w-100" style="background-color: #232f65;">
                     <a href="/affiliate-partner-dashboard" class="nav-item nav-link text-white"><i class="fa fa-tachometer-alt me-2 text-dark"></i>Dashboard</a>
                     <div class="nav-item dropdown">
-                          <a href="#" class="nav-link dropdown-toggle text-white " data-bs-toggle="dropdown"><i class="fas fa-user-plus me-2 text-dark"></i>Referral</a>
-                        <div class="dropdown-menu bg-transparent border-0">
-                            <a href="/affiliate-partner-referral-details" class="dropdown-item active">Lead Details</a>
-                        </div>
-                           
+                          <a href="/affiliate-partner-referral-details" class="nav-link  text-white " ><i class="fas fa-user-plus me-2 text-dark"></i>Client Track</a>
                     </div>
                      <div class="nav-item dropdown">
                         <a href="/affiliate-partner-client-status" class="nav-link  text-white" ><i class="fa fa-users text-dark me-2"></i>Client Status</a>
@@ -329,6 +325,7 @@ header img {
             </nav>
             <!-- Navbar End -->
 
+
 <!-- Table End -->
 <div class="container-fluid pt-4 px-4" style=" width: 100%;">
     <div class="row g-4">
@@ -341,30 +338,38 @@ header img {
                 <h4 class="card-title"><i class="fa fa-money-check-alt me-2"></i>Payout History</h4>
                 <table class="table table-striped mt-3">
                     <thead>
+                                      {{#each referredBy}}
                         <tr>
                             <th>Date</th>
-                            <th>Payout ID</th>
+                            <th>Student ID</th>
+                            <th>Student Name</th>
+                            <th>Course</th>
                             <th>Amount</th>
-                            <th>Method</th>
-                            <th>Status</th>
+                            <th>University</th>
+                            <th>Received Amount</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>20 Aug 2024</td>
                             <td>#123456</td>
-                            <td>$300.00</td>
-                            <td>Bank Transfer</td>
+                            <td>Anas</td>
+                            <td>BCOM</td>
+                            <td>₹450000</td>
+                            <td>Jain University</td>
                             <td><span class="badge bg-success">Completed</span></td>
                         </tr>
                         <tr>
                             <td>10 Aug 2024</td>
                             <td>#123455</td>
-                            <td>$150.00</td>
-                            <td>PayPal</td>
+                            <td>Vishnu</td>
+                            <td>BCA</td>
+                            <td>₹800000</td>
+                            <td>Andhra University</td>
                             <td><span class="badge bg-warning text-dark">Pending</span></td>
                         </tr>
                         <!-- More payout records here -->
+                                   {{/each}}
                     </tbody>
                 </table>
             </div>

@@ -2248,13 +2248,14 @@ router.post("/partner-signin", async (req, res) => {
        id: result.partner._id,
        email: result.partner.email,
        institutename: result.partner.institutename,
-       institute_place: result.partner.institute_place,
+       state: result.partner.state,
+       city: result.partner.city,
        instituteid: result.partner.instituteid,
        owner_name: result.partner.owner_name,
-         account_holder_name: result.partner.account_holder_name,
-         account_number: result.partner.account_number,
-         ifsc_code: result.partner.ifsc_code,
-         branch: result.partner.branch,
+       account_holder_name: result.partner.account_holder_name,
+       account_number: result.partner.account_number,
+       ifsc_code: result.partner.ifsc_code,
+       branch: result.partner.branch,
        profilePhoto: result.partner.profilePhoto || "/images/anon.webp", // Default image if not set
      };
 
@@ -2378,9 +2379,29 @@ router.get("/affiliate-partner-wallet", verifyAffiliate, (req, res) => {
   res.render("user/affiliate-partner-wallet", { user: true,affiliate: req.session.affiliate });
 });
 
+// Route handler
 router.get("/affiliate-partner-client-status", verifyAffiliate, (req, res) => {
-  res.render("user/affiliate-partner-client-status", { user: true,affiliate: req.session.affiliate });
+  const instituteid = req.session.affiliate.instituteid; // Get the instituteid from session
+
+  serviceHelpers
+    .getAllPatnerTrack(instituteid)
+    .then((referredBy) => {
+      res.render("user/affiliate-partner-client-status", {
+        admin: true,
+        referredBy, // Pass the filtered referredBy data to the view
+        affiliate: req.session.affiliate,
+      });
+    })
+    .catch((error) => {
+      console.error("Error fetching referral details:", error);
+      res
+        .status(500)
+        .send("An error occurred while fetching referral details.");
+    });
 });
+
+
+
 router.get("/affiliate-partner-payout-track", verifyAffiliate, (req, res) => {
   res.render("user/affiliate-partner-payout-track", { user: true,affiliate: req.session.affiliate });
 });
@@ -2389,7 +2410,7 @@ router.get("/affiliate-partner-referral-details", verifyAffiliate, (req, res) =>
   const instituteid = req.session.affiliate.instituteid; // Get the instituteid from session
 
   serviceHelpers
-    .getAllPatnerReferral(instituteid)
+    .getAllPatnerTrack(instituteid)
     .then((referral) => {
       res.render("user/affiliate-partner-referral-details", {
         admin: true,
@@ -2410,8 +2431,26 @@ router.get("/partner-wallet", verifyPartner, (req, res) => {
 });
 
 router.get("/partner-client-status", verifyPartner, (req, res) => {
-  res.render("user/partner-client-status", { user: true,partner: req.session.partner });
+  const instituteid = req.session.partner.instituteid; // Get the instituteid from session
+
+  serviceHelpers
+    .getAllPatnerTrack(instituteid)
+    .then((referredBy) => {
+      res.render("user/partner-client-status", {
+        admin: true,
+        referredBy, // Pass the filtered referredBy data to the view
+        partner: req.session.partner,
+      });
+    })
+    .catch((error) => {
+      console.error("Error fetching referral details:", error);
+      res
+        .status(500)
+        .send("An error occurred while fetching referral details.");
+    });
 });
+
+
 
 
 router.get("/partner-dashboard", verifyPartner, async (req, res) => {
@@ -2446,8 +2485,26 @@ router.get("/testimonials", (req, res) => {
 
 
 router.get("/partner-payout-track", verifyPartner, (req, res) => {
-  res.render("user/partner-payout-track", { user: true });
+const instituteid = req.session.partner.instituteid; // Get the instituteid from session
+
+  serviceHelpers
+    .getAllPatnerTrack(instituteid)
+    .then((referredBy) => {
+      res.render("user/partner-payout-track", {
+        admin: true,
+        referredBy, // Pass the filtered referredBy data to the view
+        partner: req.session.partner,
+      });
+    })
+    .catch((error) => {
+      console.error("Error fetching referral details:", error);
+      res
+        .status(500)
+        .send("An error occurred while fetching referral details.");
+    });
 });
+
+
 
 router.get("/partner-creation",  (req, res) => {
   res.render("user/partner-creating", { user: false, layout: false });

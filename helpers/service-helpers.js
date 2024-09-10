@@ -9,17 +9,21 @@ const bodyParser = require("body-parser");
 
 
 module.exports = {
-  getPaymentStepsByStudyStage : async (studyStage) => {
+  getPaymentStepsByStudyStage: async (studyStage) => {
     if (!studyStage) {
       throw new Error("Study stage is required");
     }
 
     try {
       const database = db.get(); // Get the database instance
-      const clientCollection = database.collection(collection.CLIENT_COLLECTION); // Get the collection
+      const clientCollection = database.collection(
+        collection.CLIENT_COLLECTION
+      ); // Get the collection
 
       // Fetch payment steps based on studyStage
-      const paymentSteps = await clientCollection.findOne({ studyStage: studyStage });
+      const paymentSteps = await clientCollection.findOne({
+        studyStage: studyStage,
+      });
 
       if (!paymentSteps) {
         throw new Error("No payment steps found for this study stage");
@@ -2872,6 +2876,22 @@ module.exports = {
       }
     });
   },
+  // Helper function
+  getAllPatnerTrack: (instituteid) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let referredBy = await db
+          .get()
+          .collection(collection.CLIENT_COLLECTION)
+          .find({ referredBy: instituteid }) // Match referredBy with instituteid
+          .toArray();
+        resolve(referredBy);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+
   getUniqueReferredByCount: async (instituteid) => {
     try {
       console.log("Fetching ReferredBy count for instituteid:", instituteid);
@@ -3748,23 +3768,23 @@ module.exports = {
     }
   },
   updateClientDetailsa: async (id, updates) => {
-     try {
-       const result = await db
-         .get()
-         .collection(collection.CLIENT_COLLECTION)
-         .updateOne(
-           { _id: ObjectId(id) },
-           { $set: updates } // $set should be used here to update fields
-         );
+    try {
+      const result = await db
+        .get()
+        .collection(collection.CLIENT_COLLECTION)
+        .updateOne(
+          { _id: ObjectId(id) },
+          { $set: updates } // $set should be used here to update fields
+        );
 
-       if (result.matchedCount === 0) {
-         throw new Error("Client not found");
-       }
+      if (result.matchedCount === 0) {
+        throw new Error("Client not found");
+      }
 
-       return { success: true, message: "Client details updated successfully" };
-     } catch (error) {
-       console.error("Error updating client details:", error);
-       throw new Error("Error updating client details");
-     }
+      return { success: true, message: "Client details updated successfully" };
+    } catch (error) {
+      console.error("Error updating client details:", error);
+      throw new Error("Error updating client details");
+    }
   },
 };

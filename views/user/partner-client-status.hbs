@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Referral Leads</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+ <!-- Add necessary meta tags and links to CSS/JS files -->
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet">
+  <!-- Bootstrap JS -->
+  <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <!-- Libraries Stylesheet -->
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+     <style>
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 0;
+    font-size: 14px; /* Smaller font size for overall content */
+}
+
+header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background-color: #f8f9fa;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+header img {
+    height: 35px;
+    margin-left: 15px;
+}
+
+.dashboard-container {
+    margin-top: 80px; /* Space for fixed header */
+    width: 90%;
+    max-width: 1200px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.dashboard-container:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.btn-custom {
+    background-color: #007BFF;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-custom:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+
+.table-responsive {
+    margin-top: 20px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table thead th {
+    background-color: #232f65;
+    border-bottom: 2px solid #dee2e6;
+    color: #ffffff;
+    text-align: left;
+    padding: 10px;
+    width: auto !important;
+    font-size: 10px; /* Smaller font size for table headers */
+}
+
+.table tbody td {
+    border-bottom: 1px solid #dee2e6;
+    padding: 8px;
+    font-size: 10px !important; /* Smaller font size for table content */
+}
+
+
+
+
+
+.image-stack {
+    position: relative;
+    display: flex;
+}
+
+.profile-img {
+    border-radius: 50%;
+    position: relative;
+    z-index: 1;
+    margin-left: -20px; /* Adjust based on the desired overlap */
+    transition: transform 0.3s, z-index 0.3s;
+}
+
+.profile-img:hover {
+    transform: translateX(-20px); /* Adjust based on the desired hover effect */
+    z-index: 10;
+}
+
+.image-stack .bg-success {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border-radius: 50%;
+    border: 2px solid white;
+    padding: 1px;
+}
+
+/* Custom styles for DataTables */
+.dataTables_wrapper .dataTables_filter {
+    float: right;
+    text-align: right;
+    margin-bottom: 10px; /* Add margin below the search bar */
+}
+
+.dataTables_wrapper .dataTables_filter input {
+    margin-left: 0.5em;
+    display: inline-block;
+    width: auto;
+    margin-bottom: 10px; /* Add margin below the search bar */
+}
+
+.dataTables_wrapper .dataTables_length {
+    float: left;
+    margin-bottom: 10px; /* Add margin below the length dropdown */
+}
+
+.dataTables_wrapper .dataTables_info {
+    float: left;
+    margin-top: 10px; /* Add margin above the info text */
+}
+
+.dataTables_wrapper .dataTables_paginate {
+    float: right;
+    margin-top: 10px; /* Add margin above the pagination controls */
+}
+
+    .modal-content {
+        border-radius: 15px; /* Rounded corners */
+        background: linear-gradient(135deg, #f5f7fa, #c3cfe2); /* Gradient background */
+    }
+
+    .modal-dialog {
+        max-width: 900px; /* Set a custom max width */
+    }
+
+    .card {
+        border: none; /* Remove card border */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Card shadow */
+        border-radius: 10px; /* Rounded corners for cards */
+    }
+
+    .card-header {
+        border-bottom: 2px solid #007bff; /* Add a blue bottom border */
+        border-top-left-radius: 10px; /* Rounded top corners */
+        border-top-right-radius: 10px; /* Rounded top corners */
+    }
+
+    .card-body {
+        padding: 20px; /* More padding for content */
+         font-size: 12px !important;
+    }
+ .card-body p{
+         font-size: 10px !important;
+    }
+    
+    .card:hover {
+        transform: scale(1.05); /* Scale effect on hover */
+        transition: transform 0.3s; /* Smooth transition */
+    }
+
+    .container {
+        
+        margin: 10px; /* Margin around the container */
+    }
+
+    .modal-header {
+         font-size: 12px !important;
+        border-bottom: 2px solid #007bff; /* Add a blue line at the bottom of header */
+    }
+
+    .modal-title {
+        font-weight: bold;
+     font-size: 12px !important;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .card {
+            margin-bottom: 15px; /* Space between cards on smaller screens */
+        }
+    }
+
+    </style>
+</head>
+
+<body>
+    <div class="container-xxl position-relative bg-white d-flex p-0" style="background-color: #232f65;">
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+
+  <!-- Sidebar Start -->
+        <div class="sidebar pe-4 pb-3" style="background-color: #232f65;">
+            <nav class="navbar " style="background-color: #232f65;">
+                <a href="index.html" class="navbar-brand mx-4 mb-3">
+                    <h3 class="text-primary"> <img src="/images/indian-hub-logo-vert-white-e1662813826792.png" alt="Indian Edu Hub Logo" class="log"></h3>
+                </a>
+                <div class="d-flex align-items-center ms-4 mb-4" style="background-color: #232f65;">
+                      
+                    <div class="ms-3" >
+                        <h6 class="mb-0 text-white">Indianeduhub</h6>
+                        <span style="color: rgb(209, 211, 212);">Partner</span>
+                    </div>
+                </div>
+                <div class="navbar-nav w-100" style="background-color: #232f65;">
+                    <a href="/partner-dashboard" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Dashboard</a>
+                    <div class="nav-item dropdown">
+                        <a href="/partner-referral-details" class="nav-link  text-white" ><i class="fas fa-user-plus me-2 text-dark"></i>Client Track</a>
+                    </div>
+                     <div class="nav-item dropdown">
+                        <a href="/partner-client-status" class="nav-link  text-dark active" ><i class="fa fa-users text-dark me-2"></i>Client Status</a>
+                    </div>
+                        <div class="nav-item dropdown">
+                        <a href="/partner-payout-track" class="nav-link  text-white" ><i class="fa fa-chart-line text-dark me-2"></i>Payout Track</a>
+                    </div>
+                       <div class="nav-item dropdown">
+                        <a href="/partner-wallet" class="nav-link  text-white" ><i class="fa fa-wallet text-dark me-2"></i>Wallet</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <!-- Sidebar End -->
+
+
+
+        <!-- Content Start -->
+        <div class="content">
+            <!-- Navbar Start -->
+            <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
+                <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
+                    <h2 class="text-primary mb-0"> <img src="/img/ie.png" alt="Indian Edu Hub Logo" style="height: 30px;"></h2>
+                </a>
+                <a href="#" class="sidebar-toggler flex-shrink-0">
+                    <i class="fa fa-bars"></i>
+                </a>
+                <form class="d-none d-md-flex ms-4">
+                    <input class="form-control border-0" type="search" placeholder="Search">
+                </form>
+                <div class="navbar-nav align-items-center ms-auto">
+                    
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="fa fa-bell me-lg-2"></i>
+                            <span class="d-none d-lg-inline-flex">Notificatin</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                           <a href="#" class="dropdown-item text-dark">
+                                <h6 class="fw-normal mb-0">Profile updated</h6>
+                                <small class="text-dark">15 minutes ago</small>
+                            </a>
+                       
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item text-center" style="color: black !important;">See all notifications</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                             <img class="rounded-circle me-lg-2" src="{{defaultImage affiliate.profilePhoto '/images/anon.webp'}}" alt="" style="width: 40px; height: 40px;">
+                            <span class="d-none d-lg-inline-flex">{{affiliate.owner_name}}</span>
+                        </a>
+ <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                            <a href="#" class="dropdown-item " style="color: black !important;">Log Out</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <!-- Navbar End -->
+
+<!-- Table End -->
+<div class="container-fluid pt-4 px-4" style=" width: 100%;">
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="bg-light rounded h-100 p-4" >
+                   <h6 class="mb-4">Leads</h6>
+                <!-- Update Button -->
+                <div class="table-responsive" >
+                      <table class="table table-responsive table-borderless" id="dataTable">
+
+      <thead>
+        <tr class="bg-light">
+          <th>No.</th>
+                                <th>Date</th>
+                                <th>Student ID</th>
+                                <th>Student Name</th>
+                                <th>Course</th>
+                                <th>Intake</th>
+                                <th>Uni Suggested</th>
+                                <th>Uni Paid</th>
+                                <th>Document Status</th>
+                                <th>ID Approved</th>
+                             
+        </tr>
+      </thead>
+  <tbody>
+                            {{#each referredBy}}
+                            <tr data-id="{{_id}}">
+                                <td>{{incrementIndex @index}}</td>
+                                <td class="text-danger">{{this.date}}</td>
+                                <td>{{this.studentid}}</td>
+                                <td>{{this.name}}</td>
+                                <td>{{this.course}}</td>
+                         
+                                <td>
+                                    {{this.intake}}
+                                </td>
+                                 
+                                <td>{{this.university}}</td>
+
+           
+
+
+                             <td>
+  <button class="btn btn-status {{#if (eq this.universityPaid "Paid")}}btn-paid{{else}}btn-not-paid{{/if}}" onclick="toggleStatuss(this, 'University Paid')">
+    {{#if (eq this.universityPaid "Paid")}}
+       <span style="color: rgb(0, 212, 7);">&#10004; </span><!-- Tick icon (✔️) -->
+    {{else}}
+      <span style="color: red;">&#10008;</span> <!-- Cross icon (✖️) with red color -->
+    {{/if}}
+  </button>
+</td>
+
+                       <!-- Button for Document Status -->
+<!-- Button for Document Status with red cross -->
+<td>
+  <button class="btn btn-status {{#if (eq this.documentStatus "Approved")}}btn-approved{{else}}btn-not-approved{{/if}}" onclick="toggleStatus(this, 'Document Status')">
+    {{#if (eq this.documentStatus "Approved")}}
+        <span style="color: rgb(0, 212, 7);">&#10004; </span><!-- Tick icon (✔️) -->
+    {{else}}
+      <span style="color: red;">&#10008;</span> <!-- Cross icon (✖️) with red color -->
+    {{/if}}
+  </button>
+</td>
+
+<!-- Button for ID Approved with red cross -->
+<td>
+  <button class="btn btn-status {{#if (eq this.idApproved "Approved")}}btn-approved{{else}}btn-not-approved{{/if}}" onclick="toggleStatus(this, 'ID Approved')">
+    {{#if (eq this.idApproved "Approved")}}
+       <span style="color: rgb(0, 212, 7);">&#10004; </span><!-- Tick icon (✔️) -->
+    {{else}}
+      <span style="color: red;">&#10008;</span> <!-- Cross icon (✖️) with red color -->
+    {{/if}}
+  </button>
+</td>
+
+
+
+
+                            </tr>
+                            {{/each}}
+                        </tbody>
+</table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Include SweetAlert2 for alerts -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<script>$(document).ready(function() {
+    $('#dataTable').DataTable();
+
+    // Change header background on scroll
+    $(window).scroll(function() {
+        if ($(this).scrollTop() > 50) {
+            $('header').addClass('scrolled');
+        } else {
+            $('header').removeClass('scrolled');
+        }
+    });
+});</script>
+ 
+  <!-- Additional JavaScript Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="lib/chart/chart.min.js"></script>
+  <script src="lib/easing/easing.min.js"></script>
+  <script src="lib/waypoints/waypoints.min.js"></script>
+  <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+  <script src="lib/tempusdominus/js/moment.min.js"></script>
+  <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
+  <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+  <!-- Template Javascript -->
+  <script src="js/main.js"></script>
+</body>
+</html>
