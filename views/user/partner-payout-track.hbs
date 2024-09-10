@@ -303,7 +303,7 @@ header img {
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                             <i class="fa fa-bell me-lg-2"></i>
-                            <span class="d-none d-lg-inline-flex">Notificatin</span>
+                            <span class="d-none d-lg-inline-flex">Notification</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
                            <a href="#" class="dropdown-item text-dark">
@@ -329,16 +329,19 @@ header img {
             <!-- Navbar End -->
 
 <!-- Table End -->
-<div class="container-fluid pt-4 px-4" style=" width: 100%;">
+<div class="container-fluid pt-4 px-4" style="width: 100%;">
     <div class="row g-4">
-          <div class="container mt-5">
-        <h1 class="text-center mb-4">Payout Track</h1>
-        
-        <!-- Payout History -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <h4 class="card-title"><i class="fa fa-money-check-alt me-2"></i>Payout History</h4>
-                <table class="table table-striped mt-3">
+        <div class="container mt-5">
+            <h1 class="text-center mb-4">Payout Track</h1>
+            
+            <!-- Payout History -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h4 class="card-title"><i class="fa fa-money-check-alt me-2"></i>Payout History</h4>
+                    
+                    <!-- Responsive Table -->
+                    <div class="table-responsive">
+                        <table class="table table-striped mt-3">
                     <thead>
                                       {{#each referredBy}}
                         <tr>
@@ -374,8 +377,9 @@ header img {
                                    {{/each}}
                     </tbody>
                 </table>
+                    </div>
+                </div>
             </div>
-        </div>
 
         <!-- Filters and Search -->
         <div class="card mb-4">
