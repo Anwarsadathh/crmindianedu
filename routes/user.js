@@ -1848,6 +1848,7 @@ router.post("/update-client-details", async (req, res) => {
       initialDate,
       applicationNo,
       degreeType,
+      docApprovedDate,
     } = req.body;
 
     // Build the updateFields object with only the provided fields
@@ -1861,6 +1862,8 @@ router.post("/update-client-details", async (req, res) => {
     if (state !== undefined) updateFields.state = state;
     if (city !== undefined) updateFields.city = city;
     if (course !== undefined) updateFields.course = course;
+    if (docApprovedDate !== undefined)
+      updateFields.docApprovedDate = docApprovedDate;
     if (unirefundinitiated !== undefined)
       updateFields.unirefundinitiated = unirefundinitiated;
     if (iehrefundinitiated !== undefined)

@@ -424,6 +424,7 @@
                                 <th>Uni Paid</th>
                                 <th>Uni Fee Paid Date</th>
                                 <th>Document Status</th>
+                                <th>Doc Approved Date</th>
                                 <th>Uni Refund Initiated</th>
                                 <th>Date of Uni Refund Initiated</th>
                                 <th>IEH Refund Initiated</th>
@@ -535,6 +536,13 @@
         {{#if (eq this.documentStatus "Approved")}}Approved{{else}}Not Approved{{/if}}
     </button>
 </td>
+<td>
+    <!-- Initial Registration Date Field (docApprovedDate) -->
+    <input type="date" name="docApprovedDate" class="form-control date-input"
+           value="{{this.docApprovedDate}}" 
+           {{#unless (eq this.documentStatus "Approved")}}style="display:none;"{{/unless}}>
+</td>
+
 <td class="detail-row">
     <select class="form-select">
         <option value="" {{#if (eq this.unirefundinitiated "")}}selected{{/if}}>Select</option>
@@ -998,25 +1006,33 @@ function handleRowStatus(row, documentStatus) {
         row.find('td').each(function () {
             const index = $(this).index();
 
-            if (index === 23 || index === 25) {
+            if (index === 24 || index === 26) {
                 $(this).find('select').prop('disabled', true).hide();
-            } else if (index === 24 || index === 26) {
+            } else if (index === 25 || index === 27) {
                 $(this).find('input[type="date"]').prop('disabled', true).hide();
             }
         });
+
+        // Show the docApprovedDate field if the document status is 'Approved'
+        row.find('input[name="docApprovedDate"]').prop('disabled', false).show();
     } else {
         // Show and enable specific columns related to refund statuses
         row.find('td').each(function () {
             const index = $(this).index();
 
-            if (index === 23 || index === 25) {
+            if (index === 24 || index === 26) {
                 $(this).find('select').prop('disabled', false).show();
-            } else if (index === 24 || index === 26) {
+            } else if (index === 25 || index === 27) {
                 $(this).find('input[type="date"]').prop('disabled', false).show();
             }
         });
+
+        // Hide the docApprovedDate field if the document status is 'Not Approved'
+        row.find('input[name="docApprovedDate"]').prop('disabled', true).hide();
     }
 }
+
+ 
 
 
 function getRowData(row) {
@@ -1044,22 +1060,24 @@ function getRowData(row) {
         universityPaid: row.find('td').eq(20).find('button').text().trim(),
         universityPaidDate: row.find('td').eq(21).find('input').val() || '',
         documentStatus: row.find('td').eq(22).find('button').text().trim(),
-        unirefundinitiated: row.find('td').eq(23).find('select').val() || '',
-        dateOfRefundInitiateduni: row.find('td').eq(24).find('input').val() || '',
-        iehrefundinitiated: row.find('td').eq(25).find('select').val() || '',
-        dateOfRefundInitiatedieh: row.find('td').eq(26).find('input').val() || '',
-        scholarship: row.find('td').eq(27).text().trim(),
-        feepaid: row.find('td').eq(28).find('select').val() || '',
-        feePaidAmount: row.find('td').eq(29).find('input').val() || '',
-        degreeType: row.find('td').eq(30).find('select').val() || '', // Added degreeType
-        semesterStatus: row.find('td').eq(31).find('select').val() || '', // Updated index for semesterStatus
-        batch: row.find('td').eq(32).find('select').val() || '',
-        enrollmentNo: row.find('td').eq(33).find('input').val() || '',
-        applicationNo: row.find('td').eq(34).find('input').val() || '',
-        idApproved: row.find('td').eq(35).find('button').text().trim(),
-        assignaccounts: row.find('td').eq(36).find('button').text().trim()
+        docApprovedDate: row.find('td').eq(23).find('input[type="date"]').val() || '', // docApprovedDate added right after documentStatus
+        unirefundinitiated: row.find('td').eq(24).find('select').val() || '',
+        dateOfRefundInitiateduni: row.find('td').eq(25).find('input').val() || '',
+        iehrefundinitiated: row.find('td').eq(26).find('select').val() || '',
+        dateOfRefundInitiatedieh: row.find('td').eq(27).find('input').val() || '',
+        scholarship: row.find('td').eq(28).text().trim(),
+        feepaid: row.find('td').eq(29).find('select').val() || '',
+        feePaidAmount: row.find('td').eq(30).find('input').val() || '',
+        degreeType: row.find('td').eq(31).find('select').val() || '',
+        semesterStatus: row.find('td').eq(32).find('select').val() || '',
+        batch: row.find('td').eq(33).find('select').val() || '',
+        enrollmentNo: row.find('td').eq(34).find('input').val() || '',
+        applicationNo: row.find('td').eq(35).find('input').val() || '',
+        idApproved: row.find('td').eq(36).find('button').text().trim(),
+        assignaccounts: row.find('td').eq(37).find('button').text().trim()
     };
 }
+
 
 
 function toggleAssignment(button) {
@@ -1212,8 +1230,7 @@ function validateFields(data) {
         'enrollmentNo',
         'applicationNo',
         'idApproved',
-        'degreeType',
-       
+        'degreeType'
     ];
 
     // Define the fields that should be required only if documentStatus is 'Not Approved'
@@ -1224,16 +1241,25 @@ function validateFields(data) {
         'dateOfRefundInitiatedieh'
     ];
 
-    // Check if documentStatus is 'Not Approved'
+    // Define the fields that should be required if documentStatus is 'Approved'
+    const approvedStatusRequiredFields = [
+        'docApprovedDate'
+    ];
+
     if (data.documentStatus === 'Not Approved') {
         // When documentStatus is 'Not Approved', include the conditional fields in validation
         return requiredFields.filter(field => !data[field]) // Ensure all required fields are filled
             .concat(conditionalRequiredFields.filter(field => !data[field])); // Include conditional fields if not filled
+    } else if (data.documentStatus === 'Approved') {
+        // When documentStatus is 'Approved', make docApprovedDate required
+        return requiredFields.filter(field => !data[field]) // Ensure all required fields are filled
+            .concat(approvedStatusRequiredFields.filter(field => !data[field])); // Include docApprovedDate if not filled
     } else {
-        // When documentStatus is 'Approved', only validate the required fields without conditional fields
+        // When documentStatus is something else, only validate the required fields
         return requiredFields.filter(field => !data[field]);
     }
 }
+
 
 
 function saveData() {

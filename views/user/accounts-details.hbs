@@ -825,6 +825,7 @@ h3 {
                 <tr class="bg-light">
                     <th hidden>id</th>
                     <th>No.</th>
+                    <th>Doc Date</th>
                     <th>Date</th>
                     <th>Student ID</th>
                     <th>Student Name</th>
@@ -874,6 +875,7 @@ h3 {
                <tr data-id="{{this._id}}">
         <td hidden>{{this._id}}</td> <!-- The ID is stored in a hidden cell for reference -->
                     <td>{{incrementIndex @index}}</td>
+                    <td class="text-danger font-weight-bold">{{this.docApprovedDate}}</td>
                     <td class="text-danger font-weight-bold">{{this.date}}</td>
                     <td class="text-dark font-weight-bold">{{this.studentid}}</td>
                     <td>{{this.name}}</td>
