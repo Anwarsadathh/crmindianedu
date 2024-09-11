@@ -60,7 +60,7 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
-    <style>
+ <style>
     @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
 
 .search{
@@ -160,13 +160,24 @@
     background-color: #ffc107 !important; /* Yellow */
     color: #000;
 }
+/* Ensure the table takes the full width of its container */
 .table {
     width: 100%;
+    height: 500px !important;
     border-collapse: collapse;
     font-size: 10px; /* Smaller font size for table content */
     table-layout: fixed; /* Ensures fixed widths are respected */
 }
 
+/* Ensure the table header stays fixed at the top */
+.table thead {
+    position: sticky;
+    top: 0;
+    background-color: #fff; /* Solid background color for visibility */
+    z-index: 2; /* Ensure it stays on top of other content */
+}
+
+/* Table header and cells styling */
 .table thead th,
 .table tbody td {
     text-align: left;
@@ -186,8 +197,9 @@
 }
 
 .table tbody tr:hover {
-    background-color: #d0e3ff; /* Use your chosen color here */
+    background-color: #d0e3ff; /* Hover color for rows */
 }
+
 
 
 /* Adjust other table-related styles if necessary */
@@ -236,6 +248,12 @@
     float: right;
     margin-top: 10px; /* Add margin above the pagination controls */
 
+}
+/* Container for table */
+.table-wrapper {
+    position: relative; /* To contain the sticky header */
+    overflow: auto; /* Allows the table body to scroll */
+    height: 430px; /* Set a height for the scrolling area */
 }
 </style>
 
@@ -394,10 +412,11 @@
   transition: all 900ms cubic-bezier(0.48, 0, 0.12, 1);
 }
 </style>
-            <div class="container tt mt-5 px-2">
+            <div class="container tt  px-2">
 
-    <div class="table-responsive">
-    <table class="table table-responsive table-borderless" id="dataTable">
+      <div class="table-responsive">
+ <div class="table-wrapper ">
+    <table class="table" id="dataTable">
         <button  id="saveButton" class="button-57" role="button"><span class="text">Save Changes</span><span>Save</span></button>
       <thead>
         <tr class="bg-light">
@@ -625,34 +644,10 @@
 </table>
   
   </div>
-    
+     </div>
 </div>
 
-        <script>
- $('#dataTable').DataTable({
-    layout: {
-        topStart: {
-            buttons: [
-                'copy',
-                'csv',
-                'excel',
-                'pdf',
-                {
-                    extend: 'print',
-                    text: 'Print all (not just selected)',
-                    exportOptions: {
-                        modifier: {
-                            selected: null
-                        }
-                    }
-                }
-            ]
-        }
-    },
-    select: true
-});
-
-</script>
+ 
 
 
 <!-- Modal Structure -->
@@ -730,175 +725,20 @@ function sendMessages() {
 }
 
 </script>
-{{!-- <!-- Table Start -->
-<div class="container-fluid pt-4 px-4">
-    <div class="row g-4">
-        <div class="col-12">
-            <div class="bg-light rounded h-100 p-4">
-                <h6 class="mb-4">Mentor Details</h6>
-                   <div class="table-responsive">
-    <table class="table table-responsive table-borderless" id="dataTable">
-        
-                        <thead>
-                            <tr>
-                                <th>No.</th>
-                                <th>Date</th>
-                                <th>Student ID</th>
-                                <th>Mentor</th>
-                                <th>Student Name</th>
-                                <th>Course</th>
-                                <th>Specialization</th>
-                                <th>Email</th>
-                                <th>Mobile Number</th>
-                                <th>State</th>
-                                <th>City</th>
-                                <th>Role</th>
-                                <th>Specific Name</th>
-                                <th>Service Pack</th>
-                                <th>Intake</th>
-                                <th>Uni Selected</th>
-                                <th>Mentorship</th>
-                                <th>Uni Paid</th>
-                                <th>Uni Fee Paid Date</th>
-                                <th>Document Status</th>
-                                <th>Uni Refund Initiated</th>
-                                <th>Date of Uni Refund Initiated</th>
-                                <th>IEH Refund Initiated</th>
-                                <th>Date of IEH Refund Initiated</th>
-                                <th>Scholarship</th>
-                                <th>Fee Paid</th>
-                                <th>Amount</th>
-                                <th>Semester Status</th>
-                                <th>Batch</th>
-                                <th>Enrollment No</th>
-                                <th>ID Approved</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#each formData}}
-                            <tr data-id="{{_id}}">
-                                <td>{{incrementIndex @index}}</td>
-                                <td class="text-danger">{{this.date}}</td>
-                                <td>{{this.studentid}}</td>
-                                <td>{{this.mentor}}</td>
-                                <td>{{this.name}}</td>
-                                <td>{{this.course}}</td>
-                                <td>{{this.specialization}}</td>
-                                <td>{{this.email}}</td>
-                                <td>{{this.mobile}}</td>
-                                <td>{{this.state}}</td>
-                                <td>{{this.city}}</td>
-                                <td>{{this.role}}</td>
-                                <td>{{this.specificName}}</td>
-                                <td>{{this.servicePack}}</td>
-                                <td>
-                                    <select class="form-select" style="width: 110px;">
-                                        <option value="" {{#if (eq this.intake "")}}selected{{/if}}>None</option>
-                                        <option value="Next Week" {{#if (eq this.intake "Next Week")}}selected{{/if}}>Next Week</option>
-                                        <option value="This Week" {{#if (eq this.intake "This Week")}}selected{{/if}}>This Week</option>
-                                        <option value="Month End" {{#if (eq this.intake "Month End")}}selected{{/if}}>Month End</option>
-                                        <option value="Next Intake" {{#if (eq this.intake "Next Intake")}}selected{{/if}}>Next Intake</option>
-                                    </select>
-                                </td>
-                                <td>{{this.university}}</td>
-                                <td>
-                                    <button class="btn btn-status {{#if (eq this.mentorshipStatus "Done")}}btn-done{{else}}btn-not-done{{/if}}" onclick="toggleStatus(this, 'Mentorship')">
-                                        {{#if (eq this.mentorshipStatus "Done")}}Done{{else}}Not Done{{/if}}
-                                    </button>
-                                </td>
-                                <td>
-                                    <button class="btn btn-status {{#if (eq this.universityPaid "Paid")}}btn-paid{{else}}btn-not-paid{{/if}}" onclick="toggleStatus(this, 'University Paid')">
-                                        {{#if (eq this.universityPaid "Paid")}}Paid{{else}}Not Paid{{/if}}
-                                    </button>
-                                </td>
-                                <td><input type="date" class="form-control" value="{{this.universityPaidDate}}" /></td>
-                                <td>
-                                    <button class="btn btn-status {{#if (eq this.documentStatus "Approved")}}btn-approved{{else}}btn-not-approved{{/if}}" onclick="toggleStatus(this, 'Document Status')">
-                                        {{#if (eq this.documentStatus "Approved")}}Approved{{else}}Not Approved{{/if}}
-                                    </button>
-                                </td>
-                                <td>
-                                    <select class="form-select">
-                                        <option value="" {{#if (eq this.unirefundinitiated "")}}selected{{/if}}>Select</option>
-                                        <option value="initiated" {{#if (eq this.unirefundinitiated "initiated")}}selected{{/if}}>Initiated</option>
-                                        <option value="success" {{#if (eq this.unirefundinitiated "success")}}selected{{/if}}>Success</option>
-                                    </select>
-                                </td>
-                                <td class="refund-cell">
-                                    <input type="date" class="form-control {{#unless (eq this.unirefundinitiated "success")}}d-none{{/unless}}" value="{{this.dateOfRefundInitiateduni}}" />
-                                </td>
-                                <td>
-                                    <select class="form-select">
-                                        <option value="" {{#if (eq this.iehrefundinitiated "")}}selected{{/if}}>Select</option>
-                                        <option value="initiated" {{#if (eq this.iehrefundinitiated "initiated")}}selected{{/if}}>Initiated</option>
-                                        <option value="success" {{#if (eq this.iehrefundinitiated "success")}}selected{{/if}}>Success</option>
-                                    </select>
-                                </td>
-                                <td class="refund-cell">
-                                    <input type="date" class="form-control {{#unless (eq this.iehrefundinitiated "success")}}d-none{{/unless}}" value="{{this.dateOfRefundInitiatedieh}}" />
-                                </td>
-                                  <td>{{this.scholarship}}</td>
-                                <td>
-                                    <select class="form-select">
-                                        <option value="" {{#if (eq this.feepaid "")}}selected{{/if}}>Select</option>
-                                        <option value="Semester" {{#if (eq this.feepaid "Semester")}}selected{{/if}}>Semester</option>
-                                        <option value="First Year" {{#if (eq this.feepaid "First Year")}}selected{{/if}}>First Year</option>
-                                        <option value="Full Fee" {{#if (eq this.feepaid "Full Fee")}}selected{{/if}}>Full Fee</option>
-                                    </select>
-                                </td>
-                                <td><input type="number" class="form-control" value="{{this.feePaidAmount}}" /></td>
-                                <td>
-                                    <select class="form-select">
-                                        <option value="" {{#if (eq this.semesterStatus "")}}selected{{/if}}>Select</option>
-                                        <option value="Semester 1" {{#if (eq this.semesterStatus "Semester 1")}}selected{{/if}}>Semester 1</option>
-                                        <option value="Semester 2" {{#if (eq this.semesterStatus "Semester 2")}}selected{{/if}}>Semester 2</option>
-                                        <option value="Semester 3" {{#if (eq this.semesterStatus "Semester 3")}}selected{{/if}}>Semester 3</option>
-                                        <option value="Semester 4" {{#if (eq this.semesterStatus "Semester 4")}}selected{{/if}}>Semester 4</option>
-                                        <option value="Semester 5" {{#if (eq this.semesterStatus "Semester 5")}}selected{{/if}}>Semester 5</option>
-                                        <option value="Semester 6" {{#if (eq this.semesterStatus "Semester 6")}}selected{{/if}}>Semester 6</option>
-                                        <option value="Drop out" {{#if (eq this.semesterStatus "Drop out")}}selected{{/if}} class="text-danger">Drop out</option>
-                                        <option value="Course completed" {{#if (eq this.semesterStatus "Course completed")}}selected{{/if}} class="text-success">Course completed</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select class="form-select">
-                                        <option value="" {{#if (or (eq this.batch "") (eq this.batch null))}}selected{{/if}}>None</option>
-                                        <option value="JAN BATCH" {{#if (eq this.batch "JAN BATCH")}}selected{{/if}}>JAN BATCH</option>
-                                        <option value="JULY BATCH" {{#if (eq this.batch "JULY BATCH")}}selected{{/if}}>JULY BATCH</option>
-                                    </select>
-                                </td>
-                                <td><input type="text" class="form-control" value="{{this.enrollmentNo}}" /></td>
-                                
-                                <td>
-                                    <button class="btn btn-status {{#if (eq this.idApproved "Approved")}}btn-approved{{else}}btn-not-approved{{/if}}" onclick="toggleStatus(this, 'ID Approved')">
-                                        {{#if (eq this.idApproved "Approved")}}Approved{{else}}Not Approved{{/if}}
-                                    </button>
-                                </td>
-   <td>
-    <button class="btn btn-status {{#if (eq assignaccounts 'Assigned to accounts department')}}btn-paid{{else}}btn-not-paid{{/if}}" 
-            onclick="toggleAssignment(this)">
-        {{#if (eq assignaccounts 'Assigned to accounts department')}}Assigned to accounts department{{else}}Assign to accounts department{{/if}}
-    </button>
-</td>
 
-
-
-
-                            </tr>
-                            {{/each}}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Table End --> --}}
 
 
 <!-- Include SweetAlert2 for alerts -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+       <script>
+$(document).ready(function() {
+   const table = $('#dataTable').DataTable({
+        pageLength: 100, // Default to showing 100 entries
+        lengthMenu: [[100, 25, 10, -1], [100, 25, 10, "All"]] // Options for 100, 25, 10, and All entries per page
+    });
+});
+
+</script>
 <script>
 $(document).ready(function () {
     // Handle row status for each row on page load

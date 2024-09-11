@@ -36,7 +36,10 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
-     <style>
+   <style>
+
+
+ @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
 body {
     font-family: 'Montserrat', sans-serif;
     background-color: #f0f2f5;
@@ -45,78 +48,42 @@ body {
     font-size: 14px;
 }
 
-header {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    padding: 15px;
-    background-color: #f8f9fa;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
+.form-control{
+    
+    border:none;
+    padding-left:32px;
+}
+.tt {
+    margin-top: 20px;
+    padding: 70px;
+    border-radius: 10px;background-color: #f2f9f6; /* Very pale mint green */
+
+}
+.btn-primary{
+    font-size: 10px;
+    background-color: #007bff !important;
+}
+.btn-secondary{
+    font-size: 10px;
+    background-color: #160070 !important;
+}
+.table-responsive{
+    margin-top: 15px;
+}
+.form-control:focus{
+    
+    border:none;
+    box-shadow:none;
 }
 
-header img {
-    height: 35px;
-    margin-left: 15px;
+.green{
+    
+    color:green;
 }
-
-.dashboard-container {
-    margin-top: 80px;
-    width: 90%;
-    max-width: 1200px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-}
-
-.dashboard-container:hover {
-    transform: scale(1.02);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-}
-
-.btn-custom {
-    background-color: #007BFF;
-    color: #fff;
-    border-radius: 5px;
-    font-size: 14px;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.btn-custom:hover {
-    background-color: #0056b3;
-    transform: scale(1.05);
-}
-
-.table {
-    border-radius: 8px;
-    overflow: hidden;
-    font-size: 14px;
-}
-
-.table thead th {
-    background-color: #232f65;
-    color: #fff;
-    text-align: center;
-}
-
-.table tbody tr:hover {
-    background-color: #e9ecef;
-    cursor: pointer;
-}
-
-.table tbody td {
-    text-align: center;
-    background-color: white;
-}
-
+/* Button styles */
 .btn-status {
-    font-size: 12px;
-    padding: 5px 10px;
+    font-size: 10px; /* Smaller font size for buttons */
+    padding: 4px 8px; /* Smaller padding for buttons */
     transition: background-color 0.3s ease;
 }
 
@@ -150,6 +117,121 @@ header img {
     color: #fff;
 }
 
+.btn-status.active-paid {
+    background-color: #28a745 !important; /* Green */
+    color: #fff;
+}
+
+.btn-status.active-not-paid {
+    background-color: #dc3545 !important; /* Red */
+    color: #fff;
+}
+
+.btn-glass:hover{
+color: #ffffff;
+background-color: #1c008b !important;
+}
+.btn-status.active-not-approved {
+    background-color: #ffc107 !important; /* Yellow */
+    color: #000;
+}
+/* Container for table */
+.table-wrapper {
+    position: relative; /* To contain the sticky header */
+    overflow: auto; /* Allows the table body to scroll */
+    height: 430px; /* Set a height for the scrolling area */
+}
+
+/* Ensure the table takes the full width of its container */
+.table {
+    width: 100%;
+    height: 500px !important;
+    border-collapse: collapse;
+    font-size: 10px; /* Smaller font size for table content */
+    table-layout: fixed; /* Ensures fixed widths are respected */
+}
+
+/* Ensure the table header stays fixed at the top */
+.table thead {
+    position: sticky;
+    top: 0;
+    background-color: #fff; /* Solid background color for visibility */
+    z-index: 2; /* Ensure it stays on top of other content */
+}
+
+/* Table header and cells styling */
+.table thead th,
+.table tbody td {
+    text-align: left;
+    padding: 6px; /* Reduced padding for a smaller appearance */
+    border: 1px solid #dee2e6;
+    font-size: 12px; /* Consistent smaller font size */
+    width: 120px; /* Fixed width for consistency */
+    font-family: Arial, Helvetica, sans-serif;
+    overflow: hidden; /* Prevent overflow for fixed-width cells */
+    text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+.table thead th {
+    background-color: #232f65;
+    color: #ffffff;
+}
+
+.table tbody tr:hover {
+    background-color: #d0e3ff; /* Hover color for rows */
+}
+
+
+/* Adjust other table-related styles if necessary */
+
+
+.btn-status.active-approved {
+    background-color: #17a2b8 !important; /* Teal */
+    color: #fff;
+}
+
+.btn-status.active-not-done {
+    background-color: #ffc107 !important; /* Yellow */
+    color: #000;
+}
+
+.btn-status.active-done {
+    background-color: #28a745 !important; /* Green */
+    color: #fff;
+}
+/* DataTables styles */
+.dataTables_wrapper .dataTables_filter {
+    float: right;
+    text-align: right;
+    margin-bottom: 10px; /* Add margin below the search bar */
+}
+
+.dataTables_wrapper .dataTables_filter input {
+    margin-left: 0.5em;
+    display: inline-block;
+    width: auto;
+    margin-bottom: 10px; /* Add margin below the search bar */
+        position: sticky !important;
+}
+
+.dataTables_wrapper .dataTables_length {
+    float: left;
+    margin-bottom: 10px; /* Add margin below the length dropdown */
+}
+
+.dataTables_wrapper .dataTables_info {
+    float: left;
+    margin-top: 10px; /* Add margin above the info text */
+}
+
+.dataTables_wrapper .dataTables_paginate {
+    float: right;
+    margin-top: 10px; /* Add margin above the pagination controls */
+
+}
+
+
 
 .image-stack {
     position: relative;
@@ -178,53 +260,6 @@ header img {
     padding: 1px;
 }
 
-/* Custom styles for DataTables */
-.dataTables_wrapper .dataTables_filter {
-    float: right;
-    text-align: right;
-    margin-bottom: 10px;
-}
-
-.dataTables_wrapper .dataTables_filter input {
-    margin-left: 0.5em;
-    display: inline-block;
-    width: auto;
-    margin-bottom: 10px;
-}
-
-.dataTables_wrapper .dataTables_length {
-    float: left;
-    margin-bottom: 10px;
-}
-
-.dataTables_wrapper .dataTables_info {
-    float: left;
-    margin-top: 10px;
-}
-
-.dataTables_wrapper .dataTables_paginate {
-    float: right;
-    margin-top: 10px;
-}
-
-input, select {
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    box-sizing: border-box;
-    background-color: #eeeeee;
-    color: #000000;
-    transition: background-color 0.3s, transform 0.3s, width 0.3s;
-}
-
-input:focus, select:focus {
-    background-color: #ffffff;
-    transform: scale(1.05);
-    width: 180%; /* Adjust the percentage as needed */
-}
-.form-control{
-    width: 100px;
-}
 
     </style>
 </head>
@@ -329,7 +364,8 @@ input:focus, select:focus {
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">Mentor Details</h6>
                 <div class="table-responsive">
-                    <table class="table" id="dataTable">
+ <div class="table-wrapper ">
+    <table class="table" id="dataTable">
                         <thead>
                             <tr>
                                 <th>No.</th>
@@ -422,6 +458,7 @@ input:focus, select:focus {
                     </table>
                 </div>
             </div>
+             </div>
         </div>
     </div>
 </div>
@@ -429,7 +466,10 @@ input:focus, select:focus {
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).ready(function() {
-    $('#dataTable').DataTable();
+   const table = $('#dataTable').DataTable({
+        pageLength: 100, // Default to showing 100 entries
+        lengthMenu: [[100, 25, 10, -1], [100, 25, 10, "All"]] // Options for 100, 25, 10, and All entries per page
+    });
 
     // Change header background on scroll
     $(window).scroll(function() {
