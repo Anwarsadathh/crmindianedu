@@ -1149,9 +1149,80 @@ router.get("/student-referral-details",verifyLoginStudent, (req, res) => {
 });
 
 
-router.get("/accounts-dashboard", (req, res) => {
-  res.render("user/accounts-dashboard", { user: true });
+router.get("/accounts-dashboard", async (req, res) => {
+  try {
+    const clientCollection = await db
+      .get()
+      .collection(collection.CLIENT_COLLECTION)
+      .find()
+      .toArray();
+
+    // Object to hold unique dropdown values and their counts
+    const dropdownValueCounts = {};
+
+    clientCollection.forEach((client) => {
+      // Create a set to track unique dropdown values for each client
+      const uniqueValues = new Set();
+
+      Object.keys(client.paymentDetails || {}).forEach((studyStage) => {
+        const paymentDetails = client.paymentDetails[studyStage];
+
+        // Loop through the payment steps and add unique dropdown values to the set
+        [0, 1, 2].forEach((stepIndex) => {
+          const selectedValue = paymentDetails[stepIndex]?.selectedValue;
+          if (selectedValue) {
+            uniqueValues.add(selectedValue);
+          }
+        });
+      });
+
+      // Update counts for unique values found in this client
+      uniqueValues.forEach((value) => {
+        dropdownValueCounts[value] = (dropdownValueCounts[value] || 0) + 1;
+      });
+    });
+
+    // Pass the aggregated counts to the view
+    res.render("user/accounts-dashboard", {
+      user: true,
+      dropdownValueCounts, // Send the dropdown value counts to the view
+    });
+  } catch (error) {
+    console.error("Error fetching account details for dashboard:", error);
+    res.status(500).send("Error loading the dashboard");
+  }
 });
+
+
+
+router.get("/get-details-by-dropdown/:value", async (req, res) => {
+  const { value } = req.params;
+
+  try {
+    const clientCollection = await db
+      .get()
+      .collection(collection.CLIENT_COLLECTION)
+      .find()
+      .toArray();
+
+    // Filter the collection to get the records matching the dropdown value
+    const filteredClients = clientCollection.filter((client) => {
+      return Object.values(client.paymentDetails || {}).some((paymentDetails) =>
+        paymentDetails.some((step) => step.selectedValue === value)
+      );
+    });
+
+    // Send the filtered client data as a response
+    res.status(200).json({ success: true, clients: filteredClients });
+  } catch (error) {
+    console.error("Error fetching client details:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Error fetching client details" });
+  }
+});
+
+
 
 router.get("/accounts-details", async (req, res) => {
   try {
@@ -1975,37 +2046,37 @@ router.get("/super-admin-dashboard", verifySuper, (req, res) => {
   res.render("user/super-dashboard", { user: true });
 });
 
-// // Super Admin Sign-Up Route
-// router.get("/super-admin-signup", (req, res) => {
-//   res.render("user/super", { user: true });
-// });
+// Super Admin Sign-Up Route
+router.get("/super-admin-signup", (req, res) => {
+  res.render("user/super", { user: true });
+});
 
-// router.post("/super-admin-signup", async (req, res) => {
-//   const { name, email, password } = req.body;
+router.post("/super-admin-signup", async (req, res) => {
+  const { name, email, password } = req.body;
 
-//   try {
-//     const result = await serviceHelpers.signUpSuperAdmin(
-//       name,
-//       email,
-//       password
-//     );
+  try {
+    const result = await serviceHelpers.signUpSuperAdmin(
+      name,
+      email,
+      password
+    );
 
-//     if (!result.success) {
-//       return res.render("user/super-admin-signup", {
-//         user: true,
-//         error: result.message,
-//       });
-//     }
+    if (!result.success) {
+      return res.render("user/super-admin-signup", {
+        user: true,
+        error: result.message,
+      });
+    }
 
-//     res.redirect("/super-admin");
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).render("user/super-admin-signup", {
-//       user: true,
-//       error: "Internal server error. Please try again.",
-//     });
-//   }
-// });
+    res.redirect("/super-admin");
+  } catch (err) {
+    console.error(err);
+    res.status(500).render("user/super-admin-signup", {
+      user: true,
+      error: "Internal server error. Please try again.",
+    });
+  }
+});
 
 
 // Super Admin Login Route
