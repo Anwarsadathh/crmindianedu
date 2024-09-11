@@ -337,44 +337,46 @@ header img {
             <!-- Payout History -->
             <div class="card mb-4">
                 <div class="card-body">
-                    <h4 class="card-title"><i class="fa fa-money-check-alt me-2"></i>Payout History</h4>
+                    {{!-- <h4 class="card-title"><i class="fa fa-money-check-alt me-2"></i></h4> --}}
                     
                     <!-- Responsive Table -->
                     <div class="table-responsive">
                         <table class="table table-striped mt-3">
                     <thead>
-                                      {{#each referredBy}}
+                                      {{!-- {{#each referredBy}} --}}
                         <tr>
-                            <th>Date</th>
+                            {{!-- <th>Date</th> --}}
                             <th>Student ID</th>
                             <th>Student Name</th>
                             <th>Course</th>
-                            <th>Amount</th>
                             <th>University</th>
-                            <th>Received Amount</th>
+                            <th>Amount</th>
+                            <th>Final Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>20 Aug 2024</td>
+                            {{!-- <td>20 Aug 2024</td> --}}
                             <td>#123456</td>
                             <td>Anas</td>
                             <td>BCOM</td>
-                            <td>₹450000</td>
+                           
                             <td>Jain University</td>
+                             <td>₹450000</td>
                             <td><span class="badge bg-success">Completed</span></td>
                         </tr>
                         <tr>
-                            <td>10 Aug 2024</td>
+                            {{!-- <td>10 Aug 2024</td> --}}
                             <td>#123455</td>
                             <td>Vishnu</td>
                             <td>BCA</td>
-                            <td>₹800000</td>
+                           
                             <td>Andhra University</td>
-                            <td><span class="badge bg-warning text-dark">Pending</span></td>
+                             <td>₹800000</td>
+                            <td><span class="badge bg-danger ">Drop Out</span></td>
                         </tr>
                         <!-- More payout records here -->
-                                   {{/each}}
+                                   {{!-- {{/each}} --}}
                     </tbody>
                 </table>
                     </div>
