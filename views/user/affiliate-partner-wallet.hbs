@@ -327,84 +327,86 @@ header img {
 
 <!-- Table End -->
 <div class="container-fluid pt-4 px-4" style="width: 100%;">
-    <div class="row g-4">
-        <div class="container mt-5">
-            <h1 class="text-center mb-4">Wallet</h1>
-            
-            <!-- Wallet Balance -->
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h4 class="card-title"><i class="fa fa-wallet me-2"></i>Current Balance</h4>
-                    <h2 class="card-text">₹0</h2>
-                    <p class="text-muted">Last updated: 23 Aug 2024</p>
-                </div>
-            </div>
+  <div class="row g-4">
+    <div class="container mt-5">
+      <h1 class="text-center mb-4">Wallet</h1>
 
-            <!-- Transaction History -->
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h4 class="card-title"><i class="fa fa-history me-2"></i>Transaction History</h4>
-                    
-               <!-- Responsive Table -->
-        <div class="table-responsive">
+      <!-- Wallet Balance -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h4 class="card-title"><i class="fa fa-wallet me-2"></i>Current Balance</h4>
+          <h2 class="card-text">₹{{totalRaisedAmount}}</h2> <!-- Display total raised amount -->
+          <p class="text-muted">Last updated: {{formatDate currentDate}}</p> <!-- You might want to pass currentDate if needed -->
+        </div>
+      </div>
+
+      <!-- Transaction History -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h4 class="card-title"><i class="fa fa-history me-2"></i>Transaction History</h4>
+          
+          <!-- Responsive Table -->
+          <div class="table-responsive">
             <table class="table table-striped mt-3">
-                <thead>
-                    <tr>
-                        <th><input type="checkbox" id="select-all"></th> <!-- Select All Checkbox -->
-                        <th>Date</th>
-                        <th>Student ID</th>
-                        <th>Student Name</th>
-                        <th>Course</th>
-                        <th>Email</th>
-                        <th>Mobile</th>
-                        <th>State</th>
-                        <th>Amount</th>
-                        <th>Request</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                   {{#each wallet}}
-<tr>
-    <td><input type="checkbox" class="select-row" data-index="{{@index}}" {{#if this.isRaised}}disabled{{/if}}></td> <!-- Row Checkbox -->
-    <td>{{formatDate this.date}}</td>
-    <td>{{this.studentDetails.studentid}}</td>
-    <td>{{this.studentDetails.name}}</td>
-    <td>{{this.studentDetails.course}}</td>
-    <td>{{this.studentDetails.email}}</td>
-    <td>{{this.studentDetails.mobile}}</td>
-    <td>{{this.studentDetails.state}}</td>
-    <td>₹{{this.amount}}</td>
-    <td>
-        {{#if this.isRaised}}
-        <span class="badge bg-success raised-status">Raised</span>
-        {{else}}
-        <span class="badge bg-danger raised-status">Not Raised</span>
-        {{/if}}
-    </td>
-    <td>
-        {{#if this.isCredited}}
-        <span class="badge bg-success">Credited</span>
-        {{else}}
-        <span class="badge bg-warning text-dark">Pending</span>
-        {{/if}}
-    </td>
-</tr>
-{{/each}}
-
-                </tbody>
+              <thead>
+                <tr>
+                  <th><input type="checkbox" id="select-all"></th> <!-- Select All Checkbox -->
+                  <th>Date</th>
+                  <th>Student ID</th>
+                  <th>Student Name</th>
+                  <th>Course</th>
+                  <th>Email</th>
+                  <th>Mobile</th>
+                  <th>State</th>
+                  <th>Amount</th>
+                  <th>Request</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each wallet}}
+                <tr>
+                  <td><input type="checkbox" class="select-row" data-index="{{@index}}" {{#if this.isRaised}}disabled{{/if}}></td> <!-- Row Checkbox -->
+                  <td>{{formatDate this.date}}</td>
+                  <td>{{this.studentDetails.studentid}}</td>
+                  <td>{{this.studentDetails.name}}</td>
+                  <td>{{this.studentDetails.course}}</td>
+                  <td>{{this.studentDetails.email}}</td>
+                  <td>{{this.studentDetails.mobile}}</td>
+                  <td>{{this.studentDetails.state}}</td>
+                  <td>₹{{this.amount}}</td>
+                  <td>
+                    {{#if this.isRaised}}
+                    <span class="badge bg-success raised-status">Raised</span>
+                    {{else}}
+                    <span class="badge bg-danger raised-status">Not Raised</span>
+                    {{/if}}
+                  </td>
+                  <td>
+                    {{#if this.isCredited}}
+                    <span class="badge bg-success">Credited</span>
+                    {{else}}
+                    <span class="badge bg-warning text-dark">Pending</span>
+                    {{/if}}
+                  </td>
+                </tr>
+                {{/each}}
+              </tbody>
             </table>
+          </div>
         </div>
+      </div>
+
+      <!-- Deposit/Withdraw Buttons -->
+      <div class="d-flex justify-content-center">
+        <a href="#" id="raise-invoice-btn" class="btn btn-secondary"><i class="fa fa-minus-circle me-1"></i>Raise Invoice</a>
+      </div>
     </div>
+  </div>
 </div>
 
-<!-- Deposit/Withdraw Buttons -->
-<div class="d-flex justify-content-center">
-    <a href="#" id="raise-invoice-btn" class="btn btn-secondary"><i class="fa fa-minus-circle me-1"></i>Raise Invoice</a>
-</div>
-        </div>
-    </div>
-</div>
+
+
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const selectAllCheckbox = document.getElementById('select-all');

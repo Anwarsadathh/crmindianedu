@@ -2552,7 +2552,6 @@ router.get("/affiliate-partner-dashboard", verifyAffiliate, async (req, res) => 
   }
 });
 
-// Route handler for displaying affiliate partner wallet
 router.get("/affiliate-partner-wallet", verifyAffiliate, async (req, res) => {
   try {
     const instituteid = req.session.affiliate.instituteid;
@@ -2563,21 +2562,28 @@ router.get("/affiliate-partner-wallet", verifyAffiliate, async (req, res) => {
       return res.status(404).send("No affiliate partners found");
     }
 
-    const affiliate = afpartners[0];  // Assuming you're interested in the first affiliate
+    const affiliate = afpartners[0]; // Assuming you're interested in the first affiliate
     const wallet = affiliate.wallet || [];
+
+    // Calculate the total raised amount
+    const totalRaisedAmount = wallet
+      .filter((entry) => entry.isRaised) // Filter raised entries
+      .reduce((total, entry) => total + entry.amount, 0); // Sum the amounts
 
     console.log("Affiliate Wallet Data:", wallet);
 
     res.render("user/affiliate-partner-wallet", {
       user: true,
       affiliate: req.session.affiliate,
-      wallet,  // Pass wallet data to template
+      wallet, // Pass wallet data to template
+      totalRaisedAmount, // Pass total raised amount to template
     });
   } catch (error) {
     console.error("Error fetching affiliate wallet details:", error);
     res.status(500).send("Internal Server Error");
   }
 });
+
 
 // Bulk update wallet status
 router.post("/update-wallet-status-bulk", async (req, res) => {
@@ -2684,17 +2690,24 @@ router.get("/partner-wallet", verifyPartner, async (req, res) => {
     const partner = partners[0]; // Assuming you're interested in the first partner
     const wallet = partner.wallet || [];
 
+    // Calculate the total raised amount
+    const totalRaisedAmount = wallet
+      .filter((entry) => entry.isRaised) // Filter raised entries
+      .reduce((total, entry) => total + entry.amount, 0); // Sum the amounts
+
     console.log("Wallet Data:", wallet);
 
     res.render("user/partner-wallet", {
       partner: req.session.partner,
       wallet,
+      totalRaisedAmount, // Pass total raised amount to template
     });
   } catch (error) {
     console.error("Error fetching wallet details:", error);
     res.status(500).send("Internal Server Error");
   }
 });
+
 
 
 router.post("/update-wallet-status-bulk-p", verifyPartner, async (req, res) => {
