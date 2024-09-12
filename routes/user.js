@@ -1151,41 +1151,86 @@ router.get("/student-referral-details",verifyLoginStudent, (req, res) => {
 
 router.get("/accounts-dashboard", async (req, res) => {
   try {
+    const { startDate, endDate } = req.query;
+
+    // Log the received date filters
+    console.log("Start Date:", startDate);
+    console.log("End Date:", endDate);
+
     const clientCollection = await db
       .get()
       .collection(collection.CLIENT_COLLECTION)
       .find()
       .toArray();
 
-    // Object to hold unique dropdown values and their counts
     const dropdownValueCounts = {};
 
     clientCollection.forEach((client) => {
-      // Create a set to track unique dropdown values for each client
-      const uniqueValues = new Set();
+      const paymentDetails = client.paymentDetails || {};
 
-      Object.keys(client.paymentDetails || {}).forEach((studyStage) => {
-        const paymentDetails = client.paymentDetails[studyStage];
+      const studyStages = Object.keys(paymentDetails);
+      if (studyStages.length === 0) return; // No payment details available
 
-        // Loop through the payment steps and add unique dropdown values to the set
-        [0, 1, 2].forEach((stepIndex) => {
-          const selectedValue = paymentDetails[stepIndex]?.selectedValue;
-          if (selectedValue) {
-            uniqueValues.add(selectedValue);
+      const lastStudyStage = studyStages[studyStages.length - 1];
+      const steps = paymentDetails[lastStudyStage];
+
+      let lastValue = null;
+      let lastDate = null;
+
+      for (let i = steps.length - 1; i >= 0; i--) {
+        if (steps[i].selectedValue) {
+          lastValue = steps[i].selectedValue;
+          lastDate = steps[i].date;
+          break;
+        }
+      }
+
+      // Log the found lastValue and lastDate
+      console.log(
+        `Client: ${client.name}, Last Value: ${lastValue}, Last Date: ${lastDate}`
+      );
+
+      if (lastValue && lastDate) {
+        const lastDateObj = new Date(lastDate);
+        console.log("Last Date Object:", lastDateObj);
+
+        if (startDate && endDate) {
+          const startDateObj = new Date(startDate);
+          const endDateObj = new Date(endDate);
+          console.log(
+            "Start Date Object:",
+            startDateObj,
+            "End Date Object:",
+            endDateObj
+          );
+
+          if (lastDateObj >= startDateObj && lastDateObj <= endDateObj) {
+            console.log(`Counted: ${lastValue} (within date range)`);
+            dropdownValueCounts[lastValue] =
+              (dropdownValueCounts[lastValue] || 0) + 1;
           }
-        });
-      });
+        } else if (startDate && !endDate) {
+          const startDateObj = new Date(startDate);
+          console.log("Single Start Date Object:", startDateObj);
 
-      // Update counts for unique values found in this client
-      uniqueValues.forEach((value) => {
-        dropdownValueCounts[value] = (dropdownValueCounts[value] || 0) + 1;
-      });
+          if (lastDateObj.getTime() === startDateObj.getTime()) {
+            console.log(`Counted: ${lastValue} (on single date)`);
+            dropdownValueCounts[lastValue] =
+              (dropdownValueCounts[lastValue] || 0) + 1;
+          }
+        } else {
+          console.log(`Counted: ${lastValue} (no date filter applied)`);
+          dropdownValueCounts[lastValue] =
+            (dropdownValueCounts[lastValue] || 0) + 1;
+        }
+      }
     });
 
-    // Pass the aggregated counts to the view
+    console.log("Final Dropdown Counts:", dropdownValueCounts);
+
     res.render("user/accounts-dashboard", {
       user: true,
-      dropdownValueCounts, // Send the dropdown value counts to the view
+      dropdownValueCounts,
     });
   } catch (error) {
     console.error("Error fetching account details for dashboard:", error);
@@ -1195,25 +1240,83 @@ router.get("/accounts-dashboard", async (req, res) => {
 
 
 
+
+
+
+
+
+
+
+
+
 router.get("/get-details-by-dropdown/:value", async (req, res) => {
   const { value } = req.params;
+  const { startDate, endDate } = req.query;
 
   try {
+    // Fetch client data
     const clientCollection = await db
       .get()
       .collection(collection.CLIENT_COLLECTION)
       .find()
       .toArray();
 
-    // Filter the collection to get the records matching the dropdown value
-    const filteredClients = clientCollection.filter((client) => {
-      return Object.values(client.paymentDetails || {}).some((paymentDetails) =>
-        paymentDetails.some((step) => step.selectedValue === value)
-      );
+    // Initialize an array to hold filtered clients
+    let filteredClients = [];
+
+    // Process each client in the collection
+    clientCollection.forEach((client) => {
+      const paymentDetails = client.paymentDetails || {};
+      const studyStages = Object.keys(paymentDetails);
+
+      // Process each study stage
+      studyStages.forEach((stage) => {
+        const details = paymentDetails[stage];
+
+        // Process each detail entry
+        details.forEach((detail) => {
+          if (detail.selectedValue === value) {
+            const detailDate = new Date(detail.date);
+
+            // Apply date range filters if provided
+            if (
+              (!startDate || detailDate >= new Date(startDate)) &&
+              (!endDate || detailDate <= new Date(endDate))
+            ) {
+              filteredClients.push({
+                date: detail.date,
+                studentid: client.studentid,
+                name: client.name,
+                course: client.course,
+                email: client.email,
+                mobile: client.mobile,
+                state: client.state,
+                specificName: client.specificName,
+              });
+            }
+          }
+        });
+      });
     });
 
-    // Send the filtered client data as a response
-    res.status(200).json({ success: true, clients: filteredClients });
+    // Remove duplicate entries based on student ID and keep the latest entry
+    const latestEntries = filteredClients.reduce((acc, curr) => {
+      if (
+        !acc[curr.studentid] ||
+        new Date(curr.date) > new Date(acc[curr.studentid].date)
+      ) {
+        acc[curr.studentid] = curr;
+      }
+      return acc;
+    }, {});
+
+    const finalClients = Object.values(latestEntries);
+
+    // Log the final clients and their count
+    console.log(`Filtered clients count: ${finalClients.length}`);
+    console.log("Final clients:", finalClients);
+
+    res.status(200).json({ success: true, clients: finalClients });
   } catch (error) {
     console.error("Error fetching client details:", error);
     res
@@ -1221,6 +1324,8 @@ router.get("/get-details-by-dropdown/:value", async (req, res) => {
       .json({ success: false, message: "Error fetching client details" });
   }
 });
+
+
 
 
 
@@ -2046,37 +2151,37 @@ router.get("/super-admin-dashboard", verifySuper, (req, res) => {
   res.render("user/super-dashboard", { user: true });
 });
 
-// Super Admin Sign-Up Route
-router.get("/super-admin-signup", (req, res) => {
-  res.render("user/super", { user: true });
-});
+// // Super Admin Sign-Up Route
+// router.get("/super-admin-signup", (req, res) => {
+//   res.render("user/super", { user: true });
+// });
 
-router.post("/super-admin-signup", async (req, res) => {
-  const { name, email, password } = req.body;
+// router.post("/super-admin-signup", async (req, res) => {
+//   const { name, email, password } = req.body;
 
-  try {
-    const result = await serviceHelpers.signUpSuperAdmin(
-      name,
-      email,
-      password
-    );
+//   try {
+//     const result = await serviceHelpers.signUpSuperAdmin(
+//       name,
+//       email,
+//       password
+//     );
 
-    if (!result.success) {
-      return res.render("user/super-admin-signup", {
-        user: true,
-        error: result.message,
-      });
-    }
+//     if (!result.success) {
+//       return res.render("user/super-admin-signup", {
+//         user: true,
+//         error: result.message,
+//       });
+//     }
 
-    res.redirect("/super-admin");
-  } catch (err) {
-    console.error(err);
-    res.status(500).render("user/super-admin-signup", {
-      user: true,
-      error: "Internal server error. Please try again.",
-    });
-  }
-});
+//     res.redirect("/super-admin");
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).render("user/super-admin-signup", {
+//       user: true,
+//       error: "Internal server error. Please try again.",
+//     });
+//   }
+// });
 
 
 // Super Admin Login Route
