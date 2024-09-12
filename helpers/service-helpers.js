@@ -465,6 +465,51 @@ module.exports = {
       throw error;
     }
   },
+  // Adjusting getAllPartners function to handle the query correctly
+  getAllPartnersW: async (instituteid) => {
+    try {
+      const partners = await db
+        .get()
+        .collection(collection.PATNER_COLLECTION)
+        .find({ instituteid: instituteid }) // Ensure you're filtering by instituteid
+        .toArray();
+      return partners;
+    } catch (error) {
+      console.error("Error in getAllPartners:", error);
+      throw error;
+    }
+  },
+  // Helper to update partner wallet
+  updatePartnerWallet: async (instituteid, updatedWallet) => {
+    try {
+      await db // Assuming you're using the `db` object for MongoDB operations
+        .get()
+        .collection(collection.PATNER_COLLECTION)
+        .updateOne(
+          { instituteid: instituteid },
+          { $set: { wallet: updatedWallet } }
+        );
+    } catch (error) {
+      console.error("Error updating partner wallet:", error);
+      throw error;
+    }
+  },
+
+  // Function to get all affiliate partners' wallet data
+  getAllAfPartnersW: async (instituteid) => {
+    try {
+      const afpartners = await db
+        .get()
+        .collection(collection.AFFILIATE_COLLECTION)
+        .find({ instituteid: instituteid }) // Ensure you're filtering by instituteid
+        .toArray();
+      return afpartners;
+    } catch (error) {
+      console.error("Error in getAllAfPartnersW:", error);
+      throw error;
+    }
+  },
+
   getAllPartners: async () => {
     try {
       const partners = await db

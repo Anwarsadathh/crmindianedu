@@ -2552,9 +2552,77 @@ router.get("/affiliate-partner-dashboard", verifyAffiliate, async (req, res) => 
   }
 });
 
-router.get("/affiliate-partner-wallet", verifyAffiliate, (req, res) => {
-  res.render("user/affiliate-partner-wallet", { user: true,affiliate: req.session.affiliate });
+// Route handler for displaying affiliate partner wallet
+router.get("/affiliate-partner-wallet", verifyAffiliate, async (req, res) => {
+  try {
+    const instituteid = req.session.affiliate.instituteid;
+    console.log("Institute ID from session:", instituteid);
+
+    const afpartners = await serviceHelpers.getAllAfPartnersW(instituteid);
+    if (afpartners.length === 0) {
+      return res.status(404).send("No affiliate partners found");
+    }
+
+    const affiliate = afpartners[0];  // Assuming you're interested in the first affiliate
+    const wallet = affiliate.wallet || [];
+
+    console.log("Affiliate Wallet Data:", wallet);
+
+    res.render("user/affiliate-partner-wallet", {
+      user: true,
+      affiliate: req.session.affiliate,
+      wallet,  // Pass wallet data to template
+    });
+  } catch (error) {
+    console.error("Error fetching affiliate wallet details:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
+
+// Bulk update wallet status
+router.post("/update-wallet-status-bulk", async (req, res) => {
+  try {
+    const { indexes, isRaised } = req.body; // Get indexes and isRaised status from the request
+    const instituteid = req.session.affiliate.instituteid;
+    const currentDate = new Date(); // Get the current date and time
+
+    // Create update queries to set 'isRaised' and 'raisedAt' for all selected wallet entries
+    const updateQueries = indexes.map((index) => {
+      const walletField = `wallet.${index}.isRaised`; // Path to the specific wallet entry
+      const raisedAtField = `wallet.${index}.raisedAt`; // Path to the raisedAt field
+      return {
+        [walletField]: isRaised,
+        [raisedAtField]: isRaised ? currentDate : null, // Set raisedAt only if isRaised is true
+      };
+    });
+
+    // Combine all update queries into a single update operation
+    const updateOperation = updateQueries.reduce((acc, query) => {
+      return { ...acc, ...query };
+    }, {});
+
+    const result = await db
+      .get()
+      .collection(collection.AFFILIATE_COLLECTION)
+      .updateOne(
+        { instituteid: instituteid }, // Find affiliate by instituteid
+        { $set: updateOperation } // Update isRaised and raisedAt for selected indexes
+      );
+
+    if (result.modifiedCount > 0) {
+      res.status(200).json({ success: true });
+    } else {
+      res
+        .status(400)
+        .json({ success: false, message: "Failed to update statuses" });
+    }
+  } catch (error) {
+    console.error("Error updating wallet status:", error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+});
+
+
 
 // Route handler
 router.get("/affiliate-partner-client-status", verifyAffiliate, (req, res) => {
@@ -2603,8 +2671,63 @@ router.get("/affiliate-partner-referral-details", verifyAffiliate, (req, res) =>
     });
 });
 
-router.get("/partner-wallet", verifyPartner, (req, res) => {
-  res.render("user/partner-wallet", { user: true,partner: req.session.partner });
+router.get("/partner-wallet", verifyPartner, async (req, res) => {
+  try {
+    const instituteid = req.session.partner.instituteid;
+    console.log("Institute ID from session:", instituteid);
+
+    const partners = await serviceHelpers.getAllPartnersW(instituteid);
+    if (partners.length === 0) {
+      return res.status(404).send("No partners found");
+    }
+
+    const partner = partners[0]; // Assuming you're interested in the first partner
+    const wallet = partner.wallet || [];
+
+    console.log("Wallet Data:", wallet);
+
+    res.render("user/partner-wallet", {
+      partner: req.session.partner,
+      wallet,
+    });
+  } catch (error) {
+    console.error("Error fetching wallet details:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+
+router.post("/update-wallet-status-bulk-p", verifyPartner, async (req, res) => {
+  try {
+    const instituteid = req.session.partner.instituteid;
+    const { indexes } = req.body;
+
+    // Find the partner by instituteid
+    const partners = await serviceHelpers.getAllPartnersW(instituteid);
+    if (partners.length === 0) {
+      return res.status(404).send("No partners found");
+    }
+
+    const partner = partners[0];
+    const wallet = partner.wallet || [];
+    const currentDate = new Date(); // Get the current date and time
+
+    // Update the 'isRaised' field and store the date for the selected indexes
+    indexes.forEach((index) => {
+      if (wallet[index]) {
+        wallet[index].isRaised = true;
+        wallet[index].raisedAt = currentDate; // Store the current date and time
+      }
+    });
+
+    // Save the updated partner's wallet
+    await serviceHelpers.updatePartnerWallet(instituteid, wallet);
+
+    res.status(200).json({ message: "Wallet status updated successfully" });
+  } catch (error) {
+    console.error("Error updating wallet status:", error);
+    res.status(500).json({ message: "Error updating wallet status" });
+  }
 });
 
 router.get("/partner-client-status", verifyPartner, (req, res) => {

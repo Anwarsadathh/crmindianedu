@@ -348,52 +348,57 @@ header img {
                 <div class="card-body">
                     <h4 class="card-title"><i class="fa fa-history me-2"></i>Transaction History</h4>
                     
-                    <!-- Responsive Table -->
-                    <div class="table-responsive">
-                        <table class="table table-striped mt-3">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Student ID</th>
-                                    <th>Student Name</th>
-                                    <th>Course</th>
-                                    <th>Email</th>
-                                    <th>Mobile</th>
-                                    <th>State</th>
-                                    <th>Amount</th>
-                                    <th>Request</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>6 Sep 2024</td>
-                                    <td>IEH-5802</td>
-                                    <td>Sample</td>
-                                    <td>MBA</td>
-                                    <td>sammple@gmail.com</td>
-                                    <td>99999980000</td>
-                                    <td>Kerala</td>
-                                    <td>$2.00</td>
-                                    <td><span class="badge bg-success">Raised</span></td>
-                                    <td><span class="badge bg-warning text-dark">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td>6 Sep 2024</td>
-                                    <td>IEH-5802</td>
-                                    <td>Sample</td>
-                                    <td>MBA</td>
-                                    <td>sammple@gmail.com</td>
-                                    <td>99999980000</td>
-                                    <td>Kerala</td>
-                                    <td>$2.00</td>
-                                    <td><span class="badge bg-danger">Not Raised</span></td>
-                                    <td><span class="badge bg-success">Credited</span></td>
-                                </tr>
-                                <!-- Add more transactions here if needed -->
-                            </tbody>
-                        </table>
-                    </div>
+                   <!-- Responsive Table -->
+<div class="table-responsive">
+  <table class="table table-striped mt-3">
+    <thead>
+      <tr>
+        <th><input type="checkbox" id="select-all"></th> <!-- Select All Checkbox -->
+        <th>Date</th>
+        <th>Student ID</th>
+        <th>Student Name</th>
+        <th>Course</th>
+        <th>Email</th>
+        <th>Mobile</th>
+        <th>State</th>
+        <th>Amount</th>
+        <th>Request</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each wallet}}
+<tr>
+    <td><input type="checkbox" class="select-row" {{#if this.isRaised}}disabled{{/if}}></td>
+    <td>{{formatDate this.date}}</td>
+    <td>{{this.studentDetails.studentid}}</td>
+    <td>{{this.studentDetails.name}}</td>
+    <td>{{this.studentDetails.course}}</td>
+    <td>{{this.studentDetails.email}}</td>
+    <td>{{this.studentDetails.mobile}}</td>
+    <td>{{this.studentDetails.state}}</td>
+    <td>₹{{this.amount}}</td>
+    <td>
+        {{#if this.isRaised}}
+        <span class="badge bg-success">Raised</span>
+        {{else}}
+        <span class="badge bg-danger">Not Raised</span>
+        {{/if}}
+    </td>
+    <td>
+        {{#if this.isCredited}}
+        <span class="badge bg-success">Credited</span>
+        {{else}}
+        <span class="badge bg-warning text-dark">Pending</span>
+        {{/if}}
+    </td>
+</tr>
+{{/each}}
+
+    </tbody>
+  </table>
+</div>
+
                 </div>
             </div>
 
@@ -404,6 +409,60 @@ header img {
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const raiseInvoiceBtn = document.querySelector('.btn-secondary');
+        const rowCheckboxes = document.querySelectorAll('.select-row');
+
+        raiseInvoiceBtn.addEventListener('click', async function () {
+            const selectedIndexes = [];
+
+            rowCheckboxes.forEach((checkbox, index) => {
+                if (checkbox.checked && !checkbox.disabled) {
+                    selectedIndexes.push(index); // Push index of the selected checkbox
+                }
+            });
+
+            if (selectedIndexes.length > 0) {
+                try {
+                    const response = await fetch('/update-wallet-status-bulk-p', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ indexes: selectedIndexes })
+                    });
+
+                    if (response.ok) {
+                        // Optionally, update the UI to reflect the status change before reloading
+                        selectedIndexes.forEach((index) => {
+                            const rowBadge = document.querySelectorAll('.badge')[index];
+                            rowBadge.textContent = 'Raised';
+                            rowBadge.classList.remove('bg-danger');
+                            rowBadge.classList.add('bg-success');
+
+                            // Disable the checkbox after raising
+                            const checkbox = rowCheckboxes[index];
+                            checkbox.disabled = true;
+                            checkbox.checked = false;
+                        });
+
+                        // Reload the page after successful update
+                        location.reload();
+                    } else {
+                        console.error('Failed to update wallet status');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            } else {
+                alert('Please select at least one entry to raise an invoice.');
+            }
+        });
+    });
+</script>
+
 
   <!-- Additional JavaScript Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
