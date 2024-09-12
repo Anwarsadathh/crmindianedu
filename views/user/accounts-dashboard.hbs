@@ -311,7 +311,19 @@
 .modal-body {
   padding: 10px; /* Reduce padding for a more compact look */
 }
+/* Modal width set to 70% */
+.modal-md {
+  width: 50%;
+  max-width: 50%; /* Ensures the modal takes 70% of the screen width */
+}
 
+@media (max-width: 768px) {
+  .modal-md {
+    width: 95% !important; /* On very small screens, modal takes 100% of screen width */
+    max-width: 95% !important;
+  }
+
+}
 .modal-header h5 {
   font-size: 12px; /* Slightly larger header text for visibility */
 }

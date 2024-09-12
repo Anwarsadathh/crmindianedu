@@ -1360,10 +1360,14 @@ function handleSendMoneyss(instituteId, amount, student) {
               </div>
               <div class="links mt-5 mb-3">
                 <form id="sendMoneyForm">
-                  <div class="form-group mb-3">
-                    <label for="amount">Send Wallet Money:</label>
-                    <input type="number" id="amount" class="form-control" placeholder="Enter amount" required />
-                  </div>
+                 <div class="form-group mb-3">
+  <label for="amount">Send Wallet Money:</label>
+  <input type="number" id="amount" class="form-control" placeholder="Enter amount" required />
+  <div class="invalid-feedback"> <!-- Placeholder for error messages -->
+    <!-- Error message will be dynamically inserted here -->
+  </div>
+</div>
+
                   <button type="submit" class="btn btn-primary">Send</button>
                 </form>
               </div>
@@ -1385,29 +1389,66 @@ function handleSendMoneyss(instituteId, amount, student) {
       });
     }
 
-    function handleSendMoney(instituteId, amount, student) {
-      fetch(`/add-to-wallet/${instituteId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ amount, student })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          alert('Money added successfully!');
-          const totalWalletElement = document.getElementById('totalWalletAmount');
-          const newTotal = parseFloat(totalWalletElement.textContent) + parseFloat(amount);
-          totalWalletElement.textContent = newTotal;
-        } else {
-          alert('Failed to add money: ' + data.message);
-        }
-      })
-      .catch(error => {
-        console.error('Error adding money:', error);
-      });
-    }
+  function handleSendMoney(instituteId, amount, student) {
+  const institutePrefix = instituteId.substring(0, 4); // Get the first four characters
+
+  let maxPercentage = 0;
+
+  // Check if the institute ID starts with 'IEHP'
+  if (institutePrefix === 'IEHP') {
+    maxPercentage = 15;
+  } else if (instituteId.startsWith('IEHAP')) {
+    maxPercentage = 5;
+  } else if (instituteId.startsWith('IEHA')) {
+    maxPercentage = 10;
+  } else if (instituteId.startsWith('IEH')) {
+    maxPercentage = 5;
+  } else {
+    showError(`Invalid institute ID prefix. Institute ID: ${instituteId}`);
+    return;
+  }
+
+  const maxAmount = (student.amount * maxPercentage) / 100;
+
+  // Validate that the entered amount is within the allowed range
+  if (amount > maxAmount) {
+    showError(`The maximum amount you can send is ${maxAmount} (${maxPercentage}% of ${student.amount}).`);
+    return;
+  }
+
+  // Proceed with sending the money if validation passes
+  fetch(`/add-to-wallet/${instituteId}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ amount, student })
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert('Money added successfully!');
+        const totalWalletElement = document.getElementById('totalWalletAmount');
+        const newTotal = parseFloat(totalWalletElement.textContent) + parseFloat(amount);
+        totalWalletElement.textContent = newTotal;
+      } else {
+        alert('Failed to add money: ' + data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error adding money:', error);
+    });
+}
+
+function showError(message) {
+  const amountInput = document.getElementById('amount');
+  amountInput.classList.add('is-invalid'); // Highlight input box in red
+  const errorElement = document.createElement('div');
+  errorElement.classList.add('invalid-feedback');
+  errorElement.innerText = message;
+  amountInput.parentElement.appendChild(errorElement); // Display error message below input
+}
+
 
     function closeModal() {
       document.getElementById('instituteModal').style.display = 'none';
@@ -1452,10 +1493,14 @@ function displayInstituteDetails(institute, student) {
 
           <div class="links mt-5 mb-3">
             <form id="sendMoneyForm">
-              <div class="form-group mb-3">
-                <label for="amount">Send Wallet Money:</label>
-                <input type="number" id="amount" class="form-control" placeholder="Enter amount" required />
-              </div>
+         <div class="form-group mb-3">
+  <label for="amount">Send Wallet Money:</label>
+  <input type="number" id="amount" class="form-control" placeholder="Enter amount" required />
+  <div class="invalid-feedback"> <!-- Placeholder for error messages -->
+    <!-- Error message will be dynamically inserted here -->
+  </div>
+</div>
+
               <button type="submit" class="btn btn-primary">Send</button>
             </form>
           </div>
@@ -1484,6 +1529,33 @@ function displayInstituteDetails(institute, student) {
 
 
 function handleSendMoney(instituteId, amount, student) {
+  const institutePrefix = instituteId.substring(0, 4); // Get the first four characters
+
+  let maxPercentage = 0;
+
+  // Check if the institute ID starts with 'IEHP'
+  if (institutePrefix === 'IEHP') {
+    maxPercentage = 15;
+  } else if (instituteId.startsWith('IEHAP')) {
+    maxPercentage = 5;
+  } else if (instituteId.startsWith('IEHA')) {
+    maxPercentage = 10;
+  } else if (instituteId.startsWith('IEH')) {
+    maxPercentage = 5;
+  } else {
+    showError(`Invalid institute ID prefix. Institute ID: ${instituteId}`);
+    return;
+  }
+
+  const maxAmount = (student.amount * maxPercentage) / 100;
+
+  // Validate that the entered amount is within the allowed range
+  if (amount > maxAmount) {
+    showError(`The maximum amount you can send is ${maxAmount} (${maxPercentage}% of ${student.amount}).`);
+    return;
+  }
+
+  // Proceed with sending the money if validation passes
   fetch(`/add-to-wallet/${instituteId}`, {
     method: 'POST',
     headers: {
@@ -1491,22 +1563,31 @@ function handleSendMoney(instituteId, amount, student) {
     },
     body: JSON.stringify({ amount, student })
   })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      alert('Money added successfully!');
-      // Update the wallet total in the modal
-      const totalWalletElement = document.getElementById('totalWalletAmount');
-      const newTotal = parseFloat(totalWalletElement.textContent) + parseFloat(amount);
-      totalWalletElement.textContent = newTotal;
-    } else {
-      alert('Failed to add money: ' + data.message);
-    }
-  })
-  .catch(error => {
-    console.error('Error adding money:', error);
-  });
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert('Money added successfully!');
+        const totalWalletElement = document.getElementById('totalWalletAmount');
+        const newTotal = parseFloat(totalWalletElement.textContent) + parseFloat(amount);
+        totalWalletElement.textContent = newTotal;
+      } else {
+        alert('Failed to add money: ' + data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error adding money:', error);
+    });
 }
+
+function showError(message) {
+  const amountInput = document.getElementById('amount');
+  amountInput.classList.add('is-invalid'); // Highlight input box in red
+  const errorElement = document.createElement('div');
+  errorElement.classList.add('invalid-feedback');
+  errorElement.innerText = message;
+  amountInput.parentElement.appendChild(errorElement); // Display error message below input
+}
+
 
 
 function closeModal() {
