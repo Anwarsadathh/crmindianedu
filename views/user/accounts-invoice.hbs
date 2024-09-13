@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Referral Leads</title>
+    <title>Leads</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -20,13 +20,37 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
  <!-- Add necessary meta tags and links to CSS/JS files -->
-  <!-- jQuery -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet">
-  <!-- Bootstrap JS -->
-  <!-- DataTables JS -->
-  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css">
+
+<!-- DataTables JavaScript -->
+<script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+
+<!-- DataTables Buttons CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/3.0.1/css/buttons.dataTables.css">
+
+<!-- DataTables Buttons JavaScript -->
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/dataTables.buttons.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.dataTables.js"></script>
+
+<!-- JSZip -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<!-- pdfmake -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+<!-- DataTables Buttons HTML5 and Print JavaScript -->
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.print.min.js"></script>
+
+<!-- DataTables Select JavaScript -->
+<script src="https://cdn.datatables.net/select/2.0.0/js/dataTables.select.js"></script>
+<script src="https://cdn.datatables.net/select/2.0.0/js/select.dataTables.js"></script>
+
     <!-- Libraries Stylesheet -->
     <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
@@ -36,7 +60,7 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
-     <style>
+        <style>
 body {
     font-family: 'Montserrat', sans-serif;
     background-color: #f0f2f5;
@@ -246,7 +270,9 @@ header img {
             </div>
         </div>
         <!-- Spinner End -->
- <!-- Sidebar Start -->
+
+
+        <!-- Sidebar Start -->
         <div class="sidebar pe-4 pb-3" style="background-color: #232f65;">
             <nav class="navbar " style="background-color: #232f65;">
                 <a href="index.html" class="navbar-brand mx-4 mb-3">
@@ -256,33 +282,24 @@ header img {
                       
                     <div class="ms-3" >
                         <h6 class="mb-0 text-white">Indianeduhub</h6>
-                        <span style="color: rgb(209, 211, 212);">Partner</span>
+                        <span style="color: rgb(209, 211, 212);">Client</span>
                     </div>
                 </div>
                 <div class="navbar-nav w-100" style="background-color: #232f65;">
-                    <a href="/partner-dashboard" class="nav-item nav-link text-white"><i class="fa fa-tachometer-alt me-2 text-dark"></i>Dashboard</a>
+                    <a href="/accounts-dashboard" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Dashboard</a>
                     <div class="nav-item dropdown">
-                          <a href="/partner-referral-details" class="nav-link  text-white " ><i class="fas fa-user-plus me-2 text-dark"></i>Client Track</a>
-                           
-                    </div>
-                    <div class="nav-item dropdown">
-                        <a href="/partner-client-status" class="nav-link  text-white" ><i class="fa fa-users text-dark me-2"></i>Client Status</a>
+                        <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Leads</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="/accounts-details" class="dropdown-item active">Leads Details</a>
                        
-                            
+                        </div>
                     </div>
-                          <div class="nav-item dropdown">
-                        <a href="/partner-payout-track" class="nav-link  text-white" ><i class="fa fa-chart-line text-dark me-2"></i>Payout Track</a>
-                       
-                            
-                    </div>
-                     <div class="nav-item dropdown">
-                        <a href="/partner-wallet" class="nav-link  text-dark active" ><i class="fa fa-wallet text-dark me-2"></i>Wallet</a>
-                    </div>
+                     <a href="/create-payments" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Create Pay Steps</a>
+                 <a href="/accounts-invoice" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Invoice</a>
                 </div>
             </nav>
         </div>
         <!-- Sidebar End -->
-
 
 
         <!-- Content Start -->
@@ -290,7 +307,7 @@ header img {
             <!-- Navbar Start -->
             <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
                 <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
-                    <h2 class="text-primary mb-0"> <img src="/img/ie.png" alt="Indian Edu Hub Logo" style="height: 30px;"></h2>
+                    <h2 class="text-primary mb-0"><img src="/img/ie.png" alt="Indian Edu Hub Logo" style="height: 30px;"></h2>
                 </a>
                 <a href="#" class="sidebar-toggler flex-shrink-0">
                     <i class="fa fa-bars"></i>
@@ -306,22 +323,22 @@ header img {
                             <span class="d-none d-lg-inline-flex">Notificatin</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item text-dark">
+                            <a href="#" class="dropdown-item">
                                 <h6 class="fw-normal mb-0">Profile updated</h6>
-                                <small class="text-dark">15 minutes ago</small>
+                                <small>15 minutes ago</small>
                             </a>
                        
                             <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item text-center" style="color: black !important;">See all notifications</a>
+                            <a href="#" class="dropdown-item text-center">See all notifications</a>
                         </div>
                     </div>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                             <img class="rounded-circle me-lg-2" src="{{defaultImage affiliate.profilePhoto '/images/anon.webp'}}" alt="" style="width: 40px; height: 40px;">
-                            <span class="d-none d-lg-inline-flex">{{affiliate.owner_name}}</span>
+                            <img class="rounded-circle me-lg-2" src="/images/anon.webp" alt="" style="width: 40px; height: 40px;">
+                            <span class="d-none d-lg-inline-flex">Client</span>
                         </a>
-                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item " style="color: black !important;">Log Out</a>
+                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                            <a href="#" class="dropdown-item">Log Out</a>
                         </div>
                     </div>
                 </div>
@@ -329,159 +346,120 @@ header img {
             <!-- Navbar End -->
 
 
-           <!-- Table End -->
+
+<!-- Table End -->
 <div class="container-fluid pt-4 px-4" style="width: 100%;">
   <div class="row g-4">
     <div class="container mt-5">
-      <h1 class="text-center mb-4">Wallet</h1>
 
-      <!-- Wallet Balance -->
-      <div class="card mb-4">
-        <div class="card-body">
-          <h4 class="card-title"><i class="fa fa-wallet me-2"></i>Current Balance</h4>
-          <h2 class="card-text">₹{{totalRaisedAmount}}</h2> <!-- Display total raised amount -->
-          <p class="text-muted">Last updated: {{formatDate currentDate}}</p> <!-- Optional: Display last updated date -->
-        </div>
-      </div>
-<!-- Wallet Balance -->
-{{!-- <div class="card mb-4">
-  <div class="card-body">
-    <h4 class="card-title"><i class="fa fa-wallet me-2"></i>Current Balance</h4>
-
-    <!-- Display total raised amount -->
-    <h5 class="card-text">
-      Raised Amount: ₹{{totalRaisedAmount}}
-    </h5>
-
-    <!-- Display total not raised amount -->
-    <h5 class="card-text">
-      Not Raised Amount: ₹{{totalNotRaisedAmount}}
-    </h5>
-
-    <p class="text-muted">Last updated: {{formatDate currentDate}}</p>
-  </div>
-</div> --}}
 
       <!-- Transaction History -->
       <div class="card mb-4">
         <div class="card-body">
-          <h4 class="card-title"><i class="fa fa-history me-2"></i>Transaction History</h4>
+          <h4 class="card-title"><i class="fa fa-history me-2"></i>Raised Invoice</h4>
           
-          <!-- Responsive Table -->
-          <div class="table-responsive">
-            <table class="table table-striped mt-3">
-              <thead>
-                <tr>
-                  <th><input type="checkbox" id="select-all"></th> <!-- Select All Checkbox -->
-                  <th>Date</th>
-                  <th>Student ID</th>
-                  <th>Student Name</th>
-                  <th>Course</th>
-                  <th>Email</th>
-                  <th>Mobile</th>
-                  <th>State</th>
-                  <th>Amount</th>
-                  <th>Request</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {{#each wallet}}
-                <tr>
-                  <td><input type="checkbox" class="select-row" {{#if this.isRaised}}disabled{{/if}}></td>
-                  <td>{{formatDate this.date}}</td>
-                  <td>{{this.studentDetails.studentid}}</td>
-                  <td>{{this.studentDetails.name}}</td>
-                  <td>{{this.studentDetails.course}}</td>
-                  <td>{{this.studentDetails.email}}</td>
-                  <td>{{this.studentDetails.mobile}}</td>
-                  <td>{{this.studentDetails.state}}</td>
-                  <td>₹{{this.amount}}</td>
-                  <td>
-                    {{#if this.isRaised}}
-                    <span class="badge bg-success">Raised</span>
-                    {{else}}
-                    <span class="badge bg-danger">Not Raised</span>
-                    {{/if}}
-                  </td>
-                  <td>
-                    {{#if this.isCredited}}
-                    <span class="badge bg-success">Credited</span>
-                    {{else}}
-                    <span class="badge bg-warning text-dark">Pending</span>
-                    {{/if}}
-                  </td>
-                </tr>
-                {{/each}}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+<!-- Responsive Table -->
+<div class="table-responsive">
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Select</th>
+      <th hidden>id</th>
+      <th>Date</th>
+      <th>Student ID</th>
+      <th>Name</th>
+      <th>Course</th>
+      <th>Email</th>
+      <th>Mobile</th>
+      <th>State</th>
+      <th>Amount</th>
+      <th>Status (Raised)</th>
+      <th>Status (Credited)</th>
+    </tr>
+  </thead>
+ <tbody>
+    {{#each raisedDetails}}
+      <tr>
+        <td><input type="checkbox" class="select-row" data-index="{{this._id}}" {{#if this.isCredited}}disabled{{/if}}></td> <!-- Row Checkbox -->
+        <td hidden>{{this._id}}</td>
+        <td>{{formatDate this.date}}</td>
+        <td>{{this.studentDetails.studentid}}</td>
+        <td>{{this.studentDetails.name}}</td>
+        <td>{{this.studentDetails.course}}</td>
+        <td>{{this.studentDetails.email}}</td>
+        <td>{{this.studentDetails.mobile}}</td>
+        <td>{{this.studentDetails.state}}</td>
+        <td>₹{{this.amount}}</td>
+        <td>
+          {{#if this.isRaised}}
+            <span class="badge bg-success raised-status">Raised</span>
+          {{else}}
+            <span class="badge bg-danger raised-status">Not Raised</span>
+          {{/if}}
+        </td>
+        <td>
+          {{#if this.isCredited}}
+            <span class="badge bg-success">Credited</span>
+          {{else}}
+            <span class="badge bg-warning text-dark">Pending</span>
+          {{/if}}
+        </td>
+      </tr>
+    {{/each}}
+</tbody>
 
-      <!-- Deposit/Withdraw Buttons -->
-      <div class="d-flex justify-content-center">
-        <a href="#" class="btn btn-secondary"><i class="fa fa-minus-circle me-1"></i>Raise Invoice</a>
-      </div>
+</table>
+</div>
+
+<!-- Deposit/Withdraw Buttons -->
+<!-- Button to handle Invoice Credit -->
+<div class="d-flex justify-content-center">
+  <button id="raise-invoice-btn" class="btn btn-secondary"><i class="fa fa-plus-circle me-1"></i> Invoice Credited</button>
+</div>
+
     </div>
   </div>
 </div>
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const raiseInvoiceBtn = document.querySelector('.btn-secondary');
-        const rowCheckboxes = document.querySelectorAll('.select-row');
+    document.getElementById('raise-invoice-btn').addEventListener('click', async function () {
+  const selectedIndexes = [];
 
-        raiseInvoiceBtn.addEventListener('click', async function () {
-            const selectedIndexes = [];
+  document.querySelectorAll('.select-row').forEach((checkbox) => {
+    if (checkbox.checked && !checkbox.disabled) {
+      selectedIndexes.push(checkbox.dataset.index);
+    }
+  });
 
-            rowCheckboxes.forEach((checkbox, index) => {
-                if (checkbox.checked && !checkbox.disabled) {
-                    selectedIndexes.push(index); // Push index of the selected checkbox
-                }
-            });
+  if (selectedIndexes.length > 0) {
+    try {
+      const response = await fetch('/update-wallet-status-bulk-ac', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          indexes: selectedIndexes,
+          isCredited: true
+        })
+      });
 
-            if (selectedIndexes.length > 0) {
-                try {
-                    const response = await fetch('/update-wallet-status-bulk-p', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ indexes: selectedIndexes })
-                    });
+      if (response.ok) {
+        // Update UI to reflect status change
+        location.reload();
+      } else {
+        console.error('Failed to credit invoices');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  } else {
+    alert('Please select at least one entry to credit.');
+  }
+});
 
-                    if (response.ok) {
-                        // Optionally, update the UI to reflect the status change before reloading
-                        selectedIndexes.forEach((index) => {
-                            const rowBadge = document.querySelectorAll('.badge')[index];
-                            rowBadge.textContent = 'Raised';
-                            rowBadge.classList.remove('bg-danger');
-                            rowBadge.classList.add('bg-success');
 
-                            // Disable the checkbox after raising
-                            const checkbox = rowCheckboxes[index];
-                            checkbox.disabled = true;
-                            checkbox.checked = false;
-                        });
-
-                        // Reload the page after successful update
-                        location.reload();
-                    } else {
-                        console.error('Failed to update wallet status');
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                }
-            } else {
-                alert('Please select at least one entry to raise an invoice.');
-            }
-        });
-    });
 </script>
-
-
+  
   <!-- Additional JavaScript Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="lib/chart/chart.min.js"></script>

@@ -83,6 +83,9 @@ const hbs = exphbs.create({
     keyValue: function (obj) {
   return Object.keys(obj).map(key => ({ key, value: obj[key] }));
     },
+    toString: function (id) {
+  return id.toString();
+},
     unlessEqual: function (value1, value2, options) {
       if (value1 !== value2) {
         return options.fn(this);

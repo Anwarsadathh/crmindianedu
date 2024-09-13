@@ -523,6 +523,19 @@ module.exports = {
       throw error;
     }
   },
+  //   getAllAFPartners: async () => {
+  //   try {
+  //     const partners = await db
+  //       .get()
+  //       .collection(collection.AFFILIATE_COLLECTION)
+  //       .find()
+  //       .toArray();
+  //     return partners;
+  //   } catch (error) {
+  //     console.error("Error in getAllpartners:", error);
+  //     throw error;
+  //   }
+  // },
   getInstituteById: async (instituteId) => {
     try {
       console.log("Fetching Institute with ID:", instituteId); // Debugging output
@@ -562,21 +575,24 @@ module.exports = {
       throw error;
     }
   },
-  updateWalletInPartners: async (instituteId, walletEntry) => {
-    try {
-      const result = await db
-        .get()
-        .collection(collection.PATNER_COLLECTION)
-        .updateOne(
-          { instituteid: instituteId },
-          { $push: { wallet: walletEntry } }
-        );
-      return result;
-    } catch (error) {
-      console.error("Error in updateWalletInPartners:", error);
-      throw error;
-    }
-  },
+  // updateWalletInPartners: async (instituteId, walletEntry) => {
+  //   try {
+  //     const result = await db
+  //       .get()
+  //       .collection(collection.PATNER_COLLECTION)
+  //       .updateOne(
+  //         { instituteid: instituteId },
+  //         {
+  //           $setOnInsert: { wallet: [] }, // If the wallet field doesn't exist, initialize it as an empty array
+  //           $push: { wallet: walletEntry }, // Push the new wallet entry into the array
+  //         }
+  //       );
+  //     return result;
+  //   } catch (error) {
+  //     console.error("Error in updateWalletInPartners:", error);
+  //     throw error;
+  //   }
+  // },
   // In your serviceHelpers or wherever you have defined your helper functions
   updateWalletInSuper: async (instituteId, walletEntry) => {
     try {
@@ -603,8 +619,59 @@ module.exports = {
     }
   },
 
+  updateWalletInPartners: async (instituteId, walletEntry) => {
+    try {
+      const partner = await db
+        .get()
+        .collection(collection.PATNER_COLLECTION)
+        .findOne({ instituteid: instituteId });
+
+      // Check if wallet exists and if it's not an array, convert it to an array
+      if (partner && !Array.isArray(partner.wallet)) {
+        await db
+          .get()
+          .collection(collection.PATNER_COLLECTION)
+          .updateOne(
+            { instituteid: instituteId },
+            { $set: { wallet: [] } } // Convert the wallet field to an empty array
+          );
+      }
+
+      // Now push the wallet entry
+      const result = await db
+        .get()
+        .collection(collection.PATNER_COLLECTION)
+        .updateOne(
+          { instituteid: instituteId },
+          { $push: { wallet: walletEntry } }
+        );
+
+      return result;
+    } catch (error) {
+      console.error("Error in updateWalletInPartners:", error);
+      throw error;
+    }
+  },
+
   updateWalletInAFPartners: async (instituteId, walletEntry) => {
     try {
+      const afPartner = await db
+        .get()
+        .collection(collection.AFFILIATE_COLLECTION)
+        .findOne({ instituteid: instituteId });
+
+      // Check if wallet exists and if it's not an array, convert it to an array
+      if (afPartner && !Array.isArray(afPartner.wallet)) {
+        await db
+          .get()
+          .collection(collection.AFFILIATE_COLLECTION)
+          .updateOne(
+            { instituteid: instituteId },
+            { $set: { wallet: [] } } // Convert the wallet field to an empty array
+          );
+      }
+
+      // Now push the wallet entry
       const result = await db
         .get()
         .collection(collection.AFFILIATE_COLLECTION)
@@ -612,12 +679,14 @@ module.exports = {
           { instituteid: instituteId },
           { $push: { wallet: walletEntry } }
         );
+
       return result;
     } catch (error) {
       console.error("Error in updateWalletInAFPartners:", error);
       throw error;
     }
   },
+
   deletePayment: async (id) => {
     try {
       await db

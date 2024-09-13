@@ -1149,6 +1149,124 @@ router.get("/student-referral-details",verifyLoginStudent, (req, res) => {
 });
 
 
+router.get("/accounts-invoice", async (req, res) => {
+  try {
+    // Fetch wallet data for partners and affiliates
+    const partners = await serviceHelpers.getAllPartners();
+    const afpartners = await serviceHelpers.getAllAFPartners();
+
+    // Combine wallet data from both partners and affiliates
+    const allWallets = [];
+
+    partners.forEach((partner) => {
+      if (Array.isArray(partner.wallet)) {
+        allWallets.push(...partner.wallet); // Add partner wallet data to the array if it's an array
+      }
+    });
+
+    afpartners.forEach((afpartner) => {
+      if (Array.isArray(afpartner.wallet)) {
+        allWallets.push(...afpartner.wallet); // Add affiliate wallet data to the array if it's an array
+      }
+    });
+
+    // Filter entries to only include those where isRaised is true
+    const filteredWallets = allWallets.filter(
+      (entry) => entry.isRaised === true
+    );
+
+    // Ensure that the wallet entries have default values for missing fields
+    filteredWallets.forEach((entry) => {
+      if (entry.isCredited === undefined) {
+        entry.isCredited = false;
+      }
+    });
+
+    // Pass the filtered wallet data to the template
+    res.render("user/accounts-invoice", { raisedDetails: filteredWallets });
+  } catch (error) {
+    console.error("Error fetching accounts invoice data:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+
+
+
+router.post("/update-wallet-status-bulk-ac", async (req, res) => {
+  try {
+    const { indexes, isCredited } = req.body;
+    const currentDate = new Date();
+    const objectIds = indexes.map((index) => {
+      if (!ObjectId.isValid(index)) {
+        throw new Error(`Invalid ObjectId: ${index}`);
+      }
+      return new ObjectId(index);
+    });
+
+    // Update partner wallets
+    await Promise.all(
+      objectIds.map(async (id) => {
+        const result = await db
+          .get()
+          .collection(collection.PATNER_COLLECTION)
+          .updateMany(
+            { "wallet._id": id },
+            {
+              $set: {
+                "wallet.$.isCredited": isCredited,
+                "wallet.$.creditedAt": isCredited ? currentDate : null,
+              },
+            }
+          );
+        if (result.matchedCount === 0) {
+          console.warn(
+            `No document matched for partner wallet entry with id: ${id}`
+          );
+        }
+      })
+    );
+
+    // Update affiliate wallets
+    await Promise.all(
+      objectIds.map(async (id) => {
+        const result = await db
+          .get()
+          .collection(collection.AFFILIATE_COLLECTION)
+          .updateMany(
+            { "wallet._id": id },
+            {
+              $set: {
+                "wallet.$.isCredited": isCredited,
+                "wallet.$.creditedAt": isCredited ? currentDate : null,
+              },
+            }
+          );
+        if (result.matchedCount === 0) {
+          console.warn(
+            `No document matched for affiliate wallet entry with id: ${id}`
+          );
+        }
+      })
+    );
+
+    res
+      .status(200)
+      .json({ success: true, message: "Wallet status updated successfully" });
+  } catch (error) {
+    console.error("Error updating wallet status:", error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+});
+
+
+
+
+
+
+
+
+
 router.get("/accounts-dashboard", async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
@@ -1515,23 +1633,25 @@ router.get("/find-institute/:referredBy", async (req, res) => {
       (partner) => partner.instituteid === referredBy
     );
 
-    if (institute) {
-      // Calculate total wallet amount
-      const totalWalletAmount = institute.wallet
-        ? institute.wallet.reduce(
-            (sum, transaction) => sum + transaction.amount,
-            0
-          )
-        : 0;
+   if (institute) {
+  // Check if institute.wallet is an array
+  const totalWalletAmount = Array.isArray(institute.wallet)
+    ? institute.wallet.reduce(
+        (sum, transaction) => sum + transaction.amount,
+        0
+      )
+    : 0;
 
-      // Send the institute details along with the total wallet amount
-      res.json({
-        ...institute,
-        totalWalletAmount,
-      });
-    } else {
-      res.status(404).json({ message: "Institute not found" });
-    }
+  // Send the institute details along with the total wallet amount
+  res.json({
+    ...institute,
+    totalWalletAmount,
+  });
+} else {
+  res.status(404).json({ message: "Institute not found" });
+}
+
+      
   } catch (error) {
     console.error("Error finding institute:", error);
     res.status(500).json({
@@ -1551,6 +1671,7 @@ router.post("/add-to-wallet/:instituteId", async (req, res) => {
     }
 
     const walletEntry = {
+      _id: new ObjectId(), // Generate a new ObjectId
       date: new Date().toISOString(),
       amount: parseFloat(amount),
       studentDetails: {
@@ -1596,6 +1717,7 @@ router.post("/add-to-wallet/:instituteId", async (req, res) => {
       .json({ message: "An error occurred while adding to the wallet." });
   }
 });
+
 
 
 router.post("/add-to-wallet-super/:instituteId", async (req, res) => {
@@ -2695,18 +2817,25 @@ router.get("/partner-wallet", verifyPartner, async (req, res) => {
       .filter((entry) => entry.isRaised) // Filter raised entries
       .reduce((total, entry) => total + entry.amount, 0); // Sum the amounts
 
+    // Calculate the total not raised amount
+    const totalNotRaisedAmount = wallet
+      .filter((entry) => !entry.isRaised) // Filter not raised entries
+      .reduce((total, entry) => total + entry.amount, 0); // Sum the amounts
+
     console.log("Wallet Data:", wallet);
 
     res.render("user/partner-wallet", {
       partner: req.session.partner,
       wallet,
       totalRaisedAmount, // Pass total raised amount to template
+      totalNotRaisedAmount, // Pass total not raised amount to template
     });
   } catch (error) {
     console.error("Error fetching wallet details:", error);
     res.status(500).send("Internal Server Error");
   }
 });
+
 
 
 
