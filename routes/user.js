@@ -1004,27 +1004,6 @@ router.get("/sample-report", (req, res) => {
   res.render("user/br", );
 });
 
-router.get("/partner-dashboard", verifyPartner, async (req, res) => {
-  try {
-    const instituteid = req.session.partner.instituteid;
-    console.log("Institute ID from session:", instituteid);
-
-    const referredByCount = await serviceHelpers.getUniqueReferredByCount(
-      instituteid
-    );
-
-    console.log("ReferredBy Count from Helper:", referredByCount);
-
-    // Render the dashboard with the count
-    res.render("user/partner-dashboard", {
-      partner: req.session.partner,
-      referredByCount: referredByCount,
-    });
-  } catch (error) {
-    console.error("Error fetching ReferredBy count:", error);
-    res.status(500).send("Internal Server Error");
-  }
-});
 
 
 router.post("/submit-form-sug", async (req, res) => {
@@ -2740,27 +2719,59 @@ router.post("/affiliate-partner-creation", async (req, res) => {
 
 
 
-router.get("/affiliate-partner-dashboard", verifyAffiliate, async (req, res) => {
-  try {
-    const instituteid = req.session.affiliate.instituteid;
-    console.log("Institute ID from session:", instituteid);
+router.get(
+  "/affiliate-partner-dashboard",
+  verifyAffiliate,
+  async (req, res) => {
+    try {
+      const instituteid = req.session.affiliate.instituteid;
+      console.log("Institute ID from session:", instituteid);
 
-    const referredByCount = await serviceHelpers.getUniqueReferredByCount(
-      instituteid
-    );
+      // Get the referred by count
+      const referredByCount = await serviceHelpers.getUniqueReferredByCount(
+        instituteid
+      );
 
-    console.log("ReferredBy Count from Helper:", referredByCount);
+      // Fetch the referred students or data containing `idApproved` field
+      const referredBy = await serviceHelpers.getAllPatnerTrack(instituteid);
 
-    // Render the dashboard with the count
-    res.render("user/affiliate-partner-dashboard", {
-      affiliate: req.session.affiliate,
-      referredByCount: referredByCount,
-    });
-  } catch (error) {
-    console.error("Error fetching ReferredBy count:", error);
-    res.status(500).send("Internal Server Error");
+      // Calculate the count of students whose ID is not approved
+      const notApprovedCount = referredBy.filter(
+        (student) => student.idApproved !== "Approved"
+      ).length;
+
+      // Fetch the wallet information
+      const afpartners = await serviceHelpers.getAllAfPartnersW(instituteid);
+      const affiliate = afpartners[0]; // Assuming you're interested in the first affiliate
+      const wallet = affiliate.wallet || [];
+
+      // Calculate the total credited amount
+      const totalCreditedAmount = wallet
+        .filter((entry) => entry.isCredited) // Filter credited entries
+        .reduce((total, entry) => total + entry.amount, 0); // Sum the amounts
+
+      // Calculate the total pending amount
+      const totalPendingAmount = wallet
+        .filter((entry) => !entry.isCredited) // Filter pending entries
+        .reduce((total, entry) => total + entry.amount, 0); // Sum the amounts
+
+      console.log("ReferredBy Count from Helper:", referredByCount);
+
+      // Render the dashboard with the necessary data
+      res.render("user/affiliate-partner-dashboard", {
+        affiliate: req.session.affiliate,
+        referredByCount: referredByCount,
+        notApprovedCount, // Pass the not approved count to the template
+        totalCreditedAmount, // Pass the total credited amount to the template
+        totalPendingAmount, // Pass the total pending amount to the template
+      });
+    } catch (error) {
+      console.error("Error fetching affiliate dashboard data:", error);
+      res.status(500).send("Internal Server Error");
+    }
   }
-});
+);
+
 
 router.get("/affiliate-partner-wallet", verifyAffiliate, async (req, res) => {
   try {
@@ -3020,22 +3031,55 @@ router.get("/partner-dashboard", verifyPartner, async (req, res) => {
     const instituteid = req.session.partner.instituteid;
     console.log("Institute ID from session:", instituteid);
 
+    // Fetch wallet details for the partner
+    const partners = await serviceHelpers.getAllPartnersW(instituteid);
+    if (partners.length === 0) {
+      return res.status(404).send("No partners found");
+    }
+
+    const partner = partners[0]; // Assuming you're interested in the first partner
+    const wallet = partner.wallet || [];
+
+    // Calculate the total credited amount
+    const totalCreditedAmount = wallet
+      .filter((entry) => entry.isCredited) // Filter credited entries
+      .reduce((total, entry) => total + entry.amount, 0); // Sum the amounts
+
+    // Calculate the total pending amount
+    const totalPendingAmount = wallet
+      .filter((entry) => !entry.isCredited) // Filter pending entries
+      .reduce((total, entry) => total + entry.amount, 0); // Sum the amounts
+
+    // Get the referred by count (if needed)
     const referredByCount = await serviceHelpers.getUniqueReferredByCount(
       instituteid
     );
-
     console.log("ReferredBy Count from Helper:", referredByCount);
 
-    // Render the dashboard with the count
+    // Fetch students or data that contains `idApproved` field
+    const referredBy = await serviceHelpers.getAllPatnerTrack(instituteid);
+
+    // Calculate the count of students whose ID is not approved
+    const notApprovedCount = referredBy.filter(
+      (student) => student.idApproved !== "Approved"
+    ).length;
+
+    // Render the dashboard and pass the amounts
     res.render("user/partner-dashboard", {
       partner: req.session.partner,
       referredByCount: referredByCount,
+      totalCreditedAmount, // Pass total credited amount to the template
+      totalPendingAmount, // Pass total pending amount to the template
+      notApprovedCount, // Pass the not approved count to the template
     });
   } catch (error) {
-    console.error("Error fetching ReferredBy count:", error);
+    console.error("Error fetching dashboard data:", error);
     res.status(500).send("Internal Server Error");
   }
 });
+
+
+
 
 router.get("/partner-client-track", verifyPartner, (req, res) => {
   res.render("user/partner-client-track", { user: true });

@@ -384,8 +384,8 @@
             <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                 <i class="fa fa-chart-area fa-3x text-primary"></i>
                 <div class="ms-3">
-                    <p class="mb-2">Today Receive Amount</p>
-                    <h6 class="mb-0">₹15555</h6>
+                    <p class="mb-2">Today Credited Amount</p>
+                    <h6 class="mb-0">₹{{totalCreditedAmount}}</h6>
                 </div>
             </div>
         </div>
@@ -394,7 +394,7 @@
                 <i class="fa fa-chart-bar fa-3x text-primary"></i>
                 <div class="ms-3">
                     <p class="mb-2">Total Pending Amount</p>
-                    <h6 class="mb-0">₹9999</h6>
+                    <h6 class="mb-0">₹{{totalPendingAmount}}</h6>
                 </div>
             </div>
         </div>
@@ -404,13 +404,13 @@
                 <i class="fa fa-chart-pie fa-3x text-primary"></i>
                 <div class="ms-3">
                     <p class="mb-2">Not Approved Student</p>
-                    <h6 class="mb-0">5</h6>
+                    <h6 class="mb-0">{{notApprovedCount}}</h6>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!-- Sale & Revenue End -->
+
 
 <div class="container-fluid pt-4 px-4">
   <div class="row g-4">
