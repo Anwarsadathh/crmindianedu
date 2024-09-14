@@ -2719,58 +2719,50 @@ router.post("/affiliate-partner-creation", async (req, res) => {
 
 
 
-router.get(
-  "/affiliate-partner-dashboard",
-  verifyAffiliate,
-  async (req, res) => {
-    try {
-      const instituteid = req.session.affiliate.instituteid;
-      console.log("Institute ID from session:", instituteid);
+router.get("/affiliate-partner-dashboard", verifyAffiliate, async (req, res) => {
+  try {
+    const instituteid = req.session.affiliate.instituteid;
+    console.log("Institute ID from session:", instituteid);
 
-      // Get the referred by count
-      const referredByCount = await serviceHelpers.getUniqueReferredByCount(
-        instituteid
-      );
+    // Get the referred by count
+    const referredByCount = await serviceHelpers.getUniqueReferredByCount(instituteid);
 
-      // Fetch the referred students or data containing `idApproved` field
-      const referredBy = await serviceHelpers.getAllPatnerTrack(instituteid);
+    // Fetch the referred students or data containing `idApproved` field
+    const referredBy = await serviceHelpers.getAllPatnerTrack(instituteid);
 
-      // Calculate the count of students whose ID is not approved
-      const notApprovedCount = referredBy.filter(
-        (student) => student.idApproved !== "Approved"
-      ).length;
+    // Calculate the count of students whose ID is not approved
+    const notApprovedCount = referredBy.filter(student => student.idApproved !== "Approved").length;
 
-      // Fetch the wallet information
-      const afpartners = await serviceHelpers.getAllAfPartnersW(instituteid);
-      const affiliate = afpartners[0]; // Assuming you're interested in the first affiliate
-      const wallet = affiliate.wallet || [];
+    // Fetch the wallet information
+    const afpartners = await serviceHelpers.getAllAfPartnersW(instituteid);
+    const affiliate = afpartners[0]; // Assuming you're interested in the first affiliate
+    const wallet = affiliate.wallet || [];
 
-      // Calculate the total credited amount
-      const totalCreditedAmount = wallet
-        .filter((entry) => entry.isCredited) // Filter credited entries
-        .reduce((total, entry) => total + entry.amount, 0); // Sum the amounts
+    // Calculate the total credited amount
+    const totalCreditedAmount = wallet
+      .filter((entry) => entry.isCredited) // Filter credited entries
+      .reduce((total, entry) => total + entry.amount, 0); // Sum the amounts
 
-      // Calculate the total pending amount
-      const totalPendingAmount = wallet
-        .filter((entry) => !entry.isCredited) // Filter pending entries
-        .reduce((total, entry) => total + entry.amount, 0); // Sum the amounts
+    // Calculate the total pending amount
+    const totalPendingAmount = wallet
+      .filter((entry) => !entry.isCredited) // Filter pending entries
+      .reduce((total, entry) => total + entry.amount, 0); // Sum the amounts
 
-      console.log("ReferredBy Count from Helper:", referredByCount);
+    console.log("ReferredBy Count from Helper:", referredByCount);
 
-      // Render the dashboard with the necessary data
-      res.render("user/affiliate-partner-dashboard", {
-        affiliate: req.session.affiliate,
-        referredByCount: referredByCount,
-        notApprovedCount, // Pass the not approved count to the template
-        totalCreditedAmount, // Pass the total credited amount to the template
-        totalPendingAmount, // Pass the total pending amount to the template
-      });
-    } catch (error) {
-      console.error("Error fetching affiliate dashboard data:", error);
-      res.status(500).send("Internal Server Error");
-    }
+    // Render the dashboard with the necessary data
+    res.render("user/affiliate-partner-dashboard", {
+      affiliate: req.session.affiliate,
+      referredByCount: referredByCount,
+      notApprovedCount, // Pass the not approved count to the template
+      totalCreditedAmount, // Pass the total credited amount to the template
+      totalPendingAmount, // Pass the total pending amount to the template
+    });
+  } catch (error) {
+    console.error("Error fetching affiliate dashboard data:", error);
+    res.status(500).send("Internal Server Error");
   }
-);
+});
 
 
 router.get("/affiliate-partner-wallet", verifyAffiliate, async (req, res) => {
@@ -2900,7 +2892,7 @@ router.get("/affiliate-partner-referral-details", verifyAffiliate, (req, res) =>
   const instituteid = req.session.affiliate.instituteid; // Get the instituteid from session
 
   serviceHelpers
-    .getAllPatnerTrack(instituteid)
+    .getAllPatnerReferral(instituteid)
     .then((referral) => {
       res.render("user/affiliate-partner-referral-details", {
         admin: true,
@@ -3050,7 +3042,7 @@ router.get("/partner-dashboard", verifyPartner, async (req, res) => {
       .filter((entry) => !entry.isCredited) // Filter pending entries
       .reduce((total, entry) => total + entry.amount, 0); // Sum the amounts
 
-    // Get the referred by count (if needed)
+    // Get the referred by count
     const referredByCount = await serviceHelpers.getUniqueReferredByCount(
       instituteid
     );
@@ -3059,10 +3051,16 @@ router.get("/partner-dashboard", verifyPartner, async (req, res) => {
     // Fetch students or data that contains `idApproved` field
     const referredBy = await serviceHelpers.getAllPatnerTrack(instituteid);
 
-    // Calculate the count of students whose ID is not approved
+    // Log the `referredBy` data to inspect the actual data
+    console.log("ReferredBy Data:", referredBy);
+
+    // Calculate the not approved count
+    // Calculate the not approved count
     const notApprovedCount = referredBy.filter(
-      (student) => student.idApproved !== "Approved"
+      (student) =>
+        !student.idApproved || student.idApproved.trim() !== "Approved"
     ).length;
+    console.log("Not Approved Count:", notApprovedCount); // Should output the correct count based on the actual data
 
     // Render the dashboard and pass the amounts
     res.render("user/partner-dashboard", {
@@ -3077,6 +3075,7 @@ router.get("/partner-dashboard", verifyPartner, async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
 
 
 

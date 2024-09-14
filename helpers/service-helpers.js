@@ -2990,6 +2990,7 @@ module.exports = {
       }
     });
   },
+  
   // Helper function
   getAllPatnerTrack: (instituteid) => {
     return new Promise(async (resolve, reject) => {
