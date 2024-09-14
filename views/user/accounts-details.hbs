@@ -1137,7 +1137,7 @@ h3 {
               data-amount="{{feePaidAmount}}"
               onchange="fetchInstituteDetails(this)">
               <option value="">Select Institute</option>
-              {{#each ../partner}}
+              {{#each ../combinedPartners}}
                 <option value="{{this.instituteid}}">
                   {{this.institutename}} ({{this.instituteid}})
                 </option>

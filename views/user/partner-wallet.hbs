@@ -20,13 +20,14 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
  <!-- Add necessary meta tags and links to CSS/JS files -->
-  <!-- jQuery -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet">
-  <!-- Bootstrap JS -->
-  <!-- DataTables JS -->
-  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css">
+
+<!-- DataTables JavaScript -->
+<script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
     <!-- Libraries Stylesheet -->
     <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
@@ -333,43 +334,61 @@ header img {
 <div class="container-fluid pt-4 px-4" style="width: 100%;">
   <div class="row g-4">
     <div class="container mt-5">
-      <h1 class="text-center mb-4">Wallet</h1>
 
       <!-- Wallet Balance -->
       <div class="card mb-4">
         <div class="card-body">
-          <h4 class="card-title"><i class="fa fa-wallet me-2"></i>Current Balance</h4>
-          <h2 class="card-text">₹{{totalRaisedAmount}}</h2> <!-- Display total raised amount -->
+          <h4 class="card-title"><i class="fa fa-wallet me-2"></i>Wallet Summary</h4>
+          <div class="row">
+            <div class="col-md-3 mb-3">
+              <div class="card bg-light p-3">
+                <h5 class="card-title">Total Raised</h5>
+                <p id="total-raised" class="card-text">₹{{totalRaisedAmount}}</p>
+              </div>
+            </div>
+            <div class="col-md-3 mb-3">
+              <div class="card bg-light p-3">
+                <h5 class="card-title">Total Not Raised</h5>
+                <p id="total-not-raised" class="card-text">₹{{totalNotRaisedAmount}}</p>
+              </div>
+            </div>
+            <div class="col-md-3 mb-3">
+              <div class="card bg-light p-3">
+                <h5 class="card-title">Total Credited</h5>
+                <p id="total-credited" class="card-text">₹{{totalCreditedAmount}}</p>
+              </div>
+            </div>
+            <div class="col-md-3 mb-3">
+              <div class="card bg-light p-3">
+                <h5 class="card-title">Total Pending</h5>
+                <p id="total-pending" class="card-text">₹{{totalPendingAmount}}</p>
+              </div>
+            </div>
+          </div>
           <p class="text-muted">Last updated: {{formatDate currentDate}}</p> <!-- Optional: Display last updated date -->
         </div>
       </div>
-<!-- Wallet Balance -->
-{{!-- <div class="card mb-4">
-  <div class="card-body">
-    <h4 class="card-title"><i class="fa fa-wallet me-2"></i>Current Balance</h4>
-
-    <!-- Display total raised amount -->
-    <h5 class="card-text">
-      Raised Amount: ₹{{totalRaisedAmount}}
-    </h5>
-
-    <!-- Display total not raised amount -->
-    <h5 class="card-text">
-      Not Raised Amount: ₹{{totalNotRaisedAmount}}
-    </h5>
-
-    <p class="text-muted">Last updated: {{formatDate currentDate}}</p>
-  </div>
-</div> --}}
 
       <!-- Transaction History -->
       <div class="card mb-4">
         <div class="card-body">
           <h4 class="card-title"><i class="fa fa-history me-2"></i>Transaction History</h4>
           
+          <!-- Filter Options in the UI -->
+          <div class="filter-options mb-3" style="width: 15%;">
+            <label for="filter-status">Filter by Status: </label>
+            <select id="filter-status" class="form-control">
+              <option value="">All</option>
+              <option value="raised">Raised</option>
+              <option value="not-raised">Not Raised</option>
+              <option value="credited">Credited</option>
+              <option value="pending">Pending</option>
+            </select>
+          </div>
+
           <!-- Responsive Table -->
           <div class="table-responsive">
-            <table class="table table-striped mt-3">
+            <table id="invoiceTable" class="table table-striped">
               <thead>
                 <tr>
                   <th><input type="checkbox" id="select-all"></th> <!-- Select All Checkbox -->
@@ -421,11 +440,45 @@ header img {
 
       <!-- Deposit/Withdraw Buttons -->
       <div class="d-flex justify-content-center">
-        <a href="#" class="btn btn-secondary"><i class="fa fa-minus-circle me-1"></i>Raise Invoice</a>
+        <a href="#" class="btn btn-secondary"><i class="fa fa-plus-circle me-1"></i> Raise Invoice</a>
       </div>
     </div>
   </div>
 </div>
+
+
+<script>
+  $(document).ready(function () {
+    // Initialize the DataTable
+    var table = $('#invoiceTable').DataTable({
+      "order": [[0, 'desc']], // Order by date descending
+      "paging": true,
+      "searching": true,
+      "info": false
+    });
+
+    // Filter logic for status
+    $('#filter-status').on('change', function () {
+      var filterValue = $(this).val();
+
+      // Clear existing table search
+      table.search('').columns().search('').draw();
+
+      if (filterValue === 'raised') {
+        table.column(9).search('Raised').draw();
+      } else if (filterValue === 'not-raised') {
+        table.column(9).search('Not Raised').draw();
+      } else if (filterValue === 'credited') {
+        table.column(10).search('Credited').draw();
+      } else if (filterValue === 'pending') {
+        table.column(10).search('Pending').draw();
+      } else {
+        table.search('').columns().search('').draw();
+      }
+    });
+  });
+</script>
+
 
 
 <script>

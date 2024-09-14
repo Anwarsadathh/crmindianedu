@@ -1151,6 +1151,8 @@ router.get("/student-referral-details",verifyLoginStudent, (req, res) => {
 
 router.get("/accounts-invoice", async (req, res) => {
   try {
+    const { statusFilter } = req.query; // Get the status filter from the query params
+
     // Fetch wallet data for partners and affiliates
     const partners = await serviceHelpers.getAllPartners();
     const afpartners = await serviceHelpers.getAllAFPartners();
@@ -1160,20 +1162,51 @@ router.get("/accounts-invoice", async (req, res) => {
 
     partners.forEach((partner) => {
       if (Array.isArray(partner.wallet)) {
-        allWallets.push(...partner.wallet); // Add partner wallet data to the array if it's an array
+        // Add partner wallet data with institutename and instituteid to the array
+        partner.wallet.forEach((walletEntry) => {
+          allWallets.push({
+            ...walletEntry,
+            institutename: partner.institutename,
+            instituteid: partner.instituteid,
+          });
+        });
       }
     });
 
     afpartners.forEach((afpartner) => {
       if (Array.isArray(afpartner.wallet)) {
-        allWallets.push(...afpartner.wallet); // Add affiliate wallet data to the array if it's an array
+        // Add affiliate wallet data with institutename and instituteid to the array
+        afpartner.wallet.forEach((walletEntry) => {
+          allWallets.push({
+            ...walletEntry,
+            institutename: afpartner.institutename,
+            instituteid: afpartner.instituteid,
+          });
+        });
       }
     });
 
-    // Filter entries to only include those where isRaised is true
-    const filteredWallets = allWallets.filter(
-      (entry) => entry.isRaised === true
-    );
+    // Filter based on the query parameter
+    let filteredWallets = allWallets;
+
+    // Apply filter based on the statusFilter query
+    if (statusFilter === "raised") {
+      // Only include entries where isRaised is true
+      filteredWallets = allWallets.filter((entry) => entry.isRaised === true);
+    } else if (statusFilter === "not-raised") {
+      // Include entries where isRaised is either false or undefined (i.e., missing)
+      filteredWallets = allWallets.filter(
+        (entry) => entry.isRaised === false || entry.isRaised === undefined
+      );
+    } else if (statusFilter === "credited") {
+      // Only include entries where isCredited is true
+      filteredWallets = allWallets.filter((entry) => entry.isCredited === true);
+    } else if (statusFilter === "pending") {
+      // Only include entries where isCredited is false or undefined
+      filteredWallets = allWallets.filter(
+        (entry) => entry.isCredited === false || entry.isCredited === undefined
+      );
+    }
 
     // Ensure that the wallet entries have default values for missing fields
     filteredWallets.forEach((entry) => {
@@ -1182,13 +1215,18 @@ router.get("/accounts-invoice", async (req, res) => {
       }
     });
 
-    // Pass the filtered wallet data to the template
+    // Sort by date in descending order (latest first)
+    filteredWallets.sort((a, b) => new Date(b.raisedAt) - new Date(a.raisedAt));
+
+    // Pass the filtered and sorted wallet data to the template
     res.render("user/accounts-invoice", { raisedDetails: filteredWallets });
   } catch (error) {
     console.error("Error fetching accounts invoice data:", error);
     res.status(500).send("Internal Server Error");
   }
 });
+
+
 
 
 
@@ -2692,6 +2730,21 @@ router.get("/affiliate-partner-wallet", verifyAffiliate, async (req, res) => {
       .filter((entry) => entry.isRaised) // Filter raised entries
       .reduce((total, entry) => total + entry.amount, 0); // Sum the amounts
 
+    // Calculate the total not raised amount
+    const totalNotRaisedAmount = wallet
+      .filter((entry) => !entry.isRaised) // Filter not raised entries
+      .reduce((total, entry) => total + entry.amount, 0); // Sum the amounts
+
+    // Calculate the total credited amount
+    const totalCreditedAmount = wallet
+      .filter((entry) => entry.isCredited) // Filter credited entries
+      .reduce((total, entry) => total + entry.amount, 0); // Sum the amounts
+
+    // Calculate the total pending amount
+    const totalPendingAmount = wallet
+      .filter((entry) => !entry.isCredited) // Filter pending entries
+      .reduce((total, entry) => total + entry.amount, 0); // Sum the amounts
+
     console.log("Affiliate Wallet Data:", wallet);
 
     res.render("user/affiliate-partner-wallet", {
@@ -2699,6 +2752,9 @@ router.get("/affiliate-partner-wallet", verifyAffiliate, async (req, res) => {
       affiliate: req.session.affiliate,
       wallet, // Pass wallet data to template
       totalRaisedAmount, // Pass total raised amount to template
+      totalNotRaisedAmount, // Pass total not raised amount to template
+      totalCreditedAmount, // Pass total credited amount to template
+      totalPendingAmount, // Pass total pending amount to template
     });
   } catch (error) {
     console.error("Error fetching affiliate wallet details:", error);
@@ -2822,6 +2878,16 @@ router.get("/partner-wallet", verifyPartner, async (req, res) => {
       .filter((entry) => !entry.isRaised) // Filter not raised entries
       .reduce((total, entry) => total + entry.amount, 0); // Sum the amounts
 
+    // Calculate the total credited amount
+    const totalCreditedAmount = wallet
+      .filter((entry) => entry.isCredited) // Filter credited entries
+      .reduce((total, entry) => total + entry.amount, 0); // Sum the amounts
+
+    // Calculate the total pending amount
+    const totalPendingAmount = wallet
+      .filter((entry) => !entry.isCredited) // Filter pending entries
+      .reduce((total, entry) => total + entry.amount, 0); // Sum the amounts
+
     console.log("Wallet Data:", wallet);
 
     res.render("user/partner-wallet", {
@@ -2829,12 +2895,16 @@ router.get("/partner-wallet", verifyPartner, async (req, res) => {
       wallet,
       totalRaisedAmount, // Pass total raised amount to template
       totalNotRaisedAmount, // Pass total not raised amount to template
+      totalCreditedAmount, // Pass total credited amount to template
+      totalPendingAmount, // Pass total pending amount to template
+      currentDate: new Date(), // Pass current date for display
     });
   } catch (error) {
     console.error("Error fetching wallet details:", error);
     res.status(500).send("Internal Server Error");
   }
 });
+
 
 
 

@@ -28,28 +28,13 @@
 
 <!-- DataTables JavaScript -->
 <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 
-<!-- DataTables Buttons CSS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/3.0.1/css/buttons.dataTables.css">
+<!-- DataTables JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 
-<!-- DataTables Buttons JavaScript -->
-<script src="https://cdn.datatables.net/buttons/3.0.1/js/dataTables.buttons.js"></script>
-<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.dataTables.js"></script>
-
-<!-- JSZip -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-
-<!-- pdfmake -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-
-<!-- DataTables Buttons HTML5 and Print JavaScript -->
-<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.print.min.js"></script>
-
-<!-- DataTables Select JavaScript -->
-<script src="https://cdn.datatables.net/select/2.0.0/js/dataTables.select.js"></script>
-<script src="https://cdn.datatables.net/select/2.0.0/js/select.dataTables.js"></script>
 
     <!-- Libraries Stylesheet -->
     <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
@@ -356,33 +341,53 @@ header img {
       <!-- Transaction History -->
       <div class="card mb-4">
         <div class="card-body">
-          <h4 class="card-title"><i class="fa fa-history me-2"></i>Raised Invoice</h4>
+          <h4 class="card-title">
+  <i class="fa fa-history me-2"></i>
+  <span id="table-heading">All Invoice</span>
+</h4>
           
+<!-- Filter Options in the UI -->
+<div class="filter-options" style="width: 15%;">
+  <label for="filter-status">Filter by Status: </label>
+  <select id="filter-status" class="form-control">
+    <option value="">All</option>
+    <option value="raised">Raised</option>
+    <option value="not-raised">Not Raised</option>
+    <option value="credited">Credited</option>
+    <option value="pending">Pending</option>
+  </select>
+</div>
+
 <!-- Responsive Table -->
 <div class="table-responsive">
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Select</th>
-      <th hidden>id</th>
-      <th>Date</th>
-      <th>Student ID</th>
-      <th>Name</th>
-      <th>Course</th>
-      <th>Email</th>
-      <th>Mobile</th>
-      <th>State</th>
-      <th>Amount</th>
-      <th>Status (Raised)</th>
-      <th>Status (Credited)</th>
-    </tr>
-  </thead>
- <tbody>
-    {{#each raisedDetails}}
+  <table id="invoiceTable" class="table table-striped">
+    <thead>
       <tr>
-        <td><input type="checkbox" class="select-row" data-index="{{this._id}}" {{#if this.isCredited}}disabled{{/if}}></td> <!-- Row Checkbox -->
+        <th>Select</th>
+        <th hidden>id</th>
+        <th>Institute Name</th>
+        <th>Institute ID</th>
+        <th>Raise Date</th>
+        <th>Student ID</th>
+        <th>Name</th>
+        <th>Course</th>
+        <th>Email</th>
+        <th>Mobile</th>
+        <th>State</th>
+        <th>Amount</th>
+        <th>Status (Raised)</th>
+        <th>Status (Credited)</th>
+        <th>Credited Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each raisedDetails}}
+      <tr>
+        <td><input type="checkbox" class="select-row" data-index="{{this._id}}" {{#if this.isCredited}}disabled{{/if}}></td>
         <td hidden>{{this._id}}</td>
-        <td>{{formatDate this.date}}</td>
+        <td> <b>{{this.institutename}}</b> </td>
+        <td><b>{{this.instituteid}}</b></td>
+        <td>{{formatDate this.raisedAt}}</td>
         <td>{{this.studentDetails.studentid}}</td>
         <td>{{this.studentDetails.name}}</td>
         <td>{{this.studentDetails.course}}</td>
@@ -404,24 +409,91 @@ header img {
             <span class="badge bg-warning text-dark">Pending</span>
           {{/if}}
         </td>
+        <td class="text-danger font-weight-bold">{{formatDate this.creditedAt}}</td>
       </tr>
-    {{/each}}
-</tbody>
-
-</table>
+      {{/each}}
+    </tbody>
+  </table>
 </div>
+
 
 <!-- Deposit/Withdraw Buttons -->
 <!-- Button to handle Invoice Credit -->
-<div class="d-flex justify-content-center">
-  <button id="raise-invoice-btn" class="btn btn-secondary"><i class="fa fa-plus-circle me-1"></i> Invoice Credited</button>
+<div class="d-flex justify-content-end me-4 mt-4">
+  <button id="raise-invoice-btn" class="btn btn-secondary"><i class="fa fa-check-circle me-1"></i>Credit Selected Invoices</button>
 </div>
 
     </div>
   </div>
 </div>
 
+<script>
+$(document).ready(function () {
+  // Initialize the DataTable
+  var table = $('#invoiceTable').DataTable();
 
+  // Get query parameter for status filter if present
+  const urlParams = new URLSearchParams(window.location.search);
+  const statusFilter = urlParams.get('statusFilter');
+
+  if (statusFilter) {
+    $('#filter-status').val(statusFilter); // Set dropdown to current filter
+    updateHeading(statusFilter); // Update the heading based on the filter
+  }
+
+  // Update the heading text based on the selected dropdown
+  function updateHeading(filterValue) {
+    var headingText = '';
+
+    switch (filterValue) {
+      case 'raised':
+        headingText = 'Raised Invoice';
+        break;
+      case 'not-raised':
+        headingText = 'Not Raised Invoice';
+        break;
+      case 'credited':
+        headingText = 'Credited Invoice';
+        break;
+      case 'pending':
+        headingText = 'Pending Invoice';
+        break;
+      default:
+        headingText = 'All Invoices'; // Default heading when no filter is selected
+        break;
+    }
+
+    $('#table-heading').text(headingText);
+  }
+
+  // Filter logic for status and update heading
+  $('#filter-status').on('change', function () {
+    var filterValue = $(this).val();
+
+    updateHeading(filterValue); // Update heading based on the selected filter
+
+    if (filterValue === 'raised') {
+      table.column(12).search('Raised').draw();
+    } else if (filterValue === 'not-raised') {
+      table.column(12).search('Not Raised').draw();
+    } else if (filterValue === 'credited') {
+      table.column(13).search('Credited').draw();
+    } else if (filterValue === 'pending') {
+      table.column(13).search('Pending').draw();
+    } else {
+      table.search('').columns().search('').draw(); // Reset filter
+    }
+
+    // Redirect to the filtered route (preserve the filter in URL)
+    var url = "/accounts-invoice";
+    if (filterValue) {
+      url += `?statusFilter=${filterValue}`;
+    }
+    window.location.href = url; // Redirect to apply filter server-side
+  });
+});
+
+</script>
 <script>
     document.getElementById('raise-invoice-btn').addEventListener('click', async function () {
   const selectedIndexes = [];
