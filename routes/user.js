@@ -2885,8 +2885,30 @@ router.get("/affiliate-partner-client-status", verifyAffiliate, (req, res) => {
 
 
 router.get("/affiliate-partner-payout-track", verifyAffiliate, (req, res) => {
-  res.render("user/affiliate-partner-payout-track", { user: true,affiliate: req.session.affiliate });
+  const instituteid = req.session.affiliate.instituteid; // Get the instituteid from session
+
+  serviceHelpers
+    .getAllPatnerTrack(instituteid)
+    .then((referredBy) => {
+      // Filter the referredBy array to only include entries with "Assigned to accounts department"
+      const filteredReferredBy = referredBy.filter(
+        (entry) => entry.assignaccounts === "Assigned to accounts department"
+      );
+
+      // Render the view with the filtered data
+      res.render("user/affiliate-partner-payout-track", {
+       user: true,affiliate: req.session.affiliate,
+        referredBy: filteredReferredBy, // Pass the filtered data to the view
+      });
+    })
+    .catch((error) => {
+      console.error("Error fetching referral details:", error);
+      res
+        .status(500)
+        .send("An error occurred while fetching referral details.");
+    });
 });
+
 
 router.get("/affiliate-partner-referral-details", verifyAffiliate, (req, res) => {
   const instituteid = req.session.affiliate.instituteid; // Get the instituteid from session
@@ -3090,14 +3112,20 @@ router.get("/testimonials", (req, res) => {
 
 
 router.get("/partner-payout-track", verifyPartner, (req, res) => {
-const instituteid = req.session.partner.instituteid; // Get the instituteid from session
+  const instituteid = req.session.partner.instituteid; // Get the instituteid from session
 
   serviceHelpers
     .getAllPatnerTrack(instituteid)
     .then((referredBy) => {
+      // Filter the referredBy array to only include entries with "Assigned to accounts department"
+      const filteredReferredBy = referredBy.filter(
+        (entry) => entry.assignaccounts === "Assigned to accounts department"
+      );
+
+      // Render the view with the filtered data
       res.render("user/partner-payout-track", {
         admin: true,
-        referredBy, // Pass the filtered referredBy data to the view
+        referredBy: filteredReferredBy, // Pass the filtered data to the view
         partner: req.session.partner,
       });
     })
@@ -3108,6 +3136,7 @@ const instituteid = req.session.partner.instituteid; // Get the instituteid from
         .send("An error occurred while fetching referral details.");
     });
 });
+
 
 router.get("/get-payment-details/:id/:studyStage", async (req, res) => {
   const { id, studyStage } = req.params;
