@@ -1179,7 +1179,7 @@ router.get("/accounts-invoice", async (req, res) => {
         afpartner.wallet.forEach((walletEntry) => {
           allWallets.push({
             ...walletEntry,
-            institutename: afpartner.institutename,
+            institutename: afpartner.name,
             instituteid: afpartner.instituteid,
           });
         });

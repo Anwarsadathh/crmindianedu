@@ -38,12 +38,13 @@
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
      <style>
+/* General Styles */
 body {
     font-family: 'Montserrat', sans-serif;
     background-color: #f0f2f5;
     margin: 0;
     padding: 0;
-    font-size: 14px; /* Smaller font size for overall content */
+    font-size: 14px;
 }
 
 header {
@@ -65,7 +66,7 @@ header img {
 }
 
 .dashboard-container {
-    margin-top: 80px; /* Space for fixed header */
+    margin-top: 80px;
     width: 90%;
     max-width: 1200px;
     background-color: #ffffff;
@@ -80,6 +81,7 @@ header img {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
+/* Button Customization */
 .btn-custom {
     background-color: #007BFF;
     color: #fff;
@@ -93,7 +95,7 @@ header img {
     transform: scale(1.05);
 }
 
-
+/* Table Styles */
 .table-responsive {
     margin-top: 20px;
 }
@@ -109,132 +111,146 @@ header img {
     color: #ffffff;
     text-align: left;
     padding: 10px;
-    width: auto !important;
-    font-size: 10px; /* Smaller font size for table headers */
+    font-size: 10px;
 }
 
 .table tbody td {
     border-bottom: 1px solid #dee2e6;
     padding: 8px;
-    font-size: 10px !important; /* Smaller font size for table content */
+    font-size: 10px;
 }
 
-
-
-
-
-.image-stack {
-    position: relative;
-    display: flex;
+/* Card Customization */
+.card {
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
 }
 
-.profile-img {
-    border-radius: 50%;
-    position: relative;
-    z-index: 1;
-    margin-left: -20px; /* Adjust based on the desired overlap */
-    transition: transform 0.3s, z-index 0.3s;
+.card-body {
+    padding: 20px;
+    font-size: 12px;
 }
 
-.profile-img:hover {
-    transform: translateX(-20px); /* Adjust based on the desired hover effect */
-    z-index: 10;
+.card-body p {
+    font-size: 10px;
 }
 
-.image-stack .bg-success {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    border-radius: 50%;
-    border: 2px solid white;
-    padding: 1px;
+.card-header {
+    border-bottom: 2px solid #007bff;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
-/* Custom styles for DataTables */
+.card:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s;
+}
+
+/* Modal Customization */
+.modal-content {
+    border-radius: 15px;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+}
+
+.modal-dialog {
+    max-width: 900px;
+}
+
+.modal-header {
+    font-size: 12px;
+    border-bottom: 2px solid #007bff;
+}
+
+.modal-title {
+    font-weight: bold;
+    font-size: 12px;
+}
+
+/* DataTables Customization */
 .dataTables_wrapper .dataTables_filter {
     float: right;
     text-align: right;
-    margin-bottom: 10px; /* Add margin below the search bar */
+    margin-bottom: 10px;
 }
 
 .dataTables_wrapper .dataTables_filter input {
     margin-left: 0.5em;
     display: inline-block;
     width: auto;
-    margin-bottom: 10px; /* Add margin below the search bar */
 }
 
 .dataTables_wrapper .dataTables_length {
     float: left;
-    margin-bottom: 10px; /* Add margin below the length dropdown */
+    margin-bottom: 10px;
 }
 
 .dataTables_wrapper .dataTables_info {
     float: left;
-    margin-top: 10px; /* Add margin above the info text */
+    margin-top: 10px;
 }
 
 .dataTables_wrapper .dataTables_paginate {
     float: right;
-    margin-top: 10px; /* Add margin above the pagination controls */
+    margin-top: 10px;
 }
 
-    .modal-content {
-        border-radius: 15px; /* Rounded corners */
-        background: linear-gradient(135deg, #f5f7fa, #c3cfe2); /* Gradient background */
+/* Wallet Cards Layout for Small Screens */
+@media (max-width: 768px) {
+    .col-md-3 {
+        width: 48%; /* Two cards per row */
+        margin-bottom: 15px; /* Add space between cards */
+    }
+
+    .card-title {
+        font-size: 10px;
+    }
+
+    .card-text {
+        font-size: 9px;
+    }
+
+    /* Adjust table font size */
+    .table thead th,
+    .table tbody td {
+        font-size: 9px;
+        padding: 6px;
+    }
+
+    /* Responsive DataTable Controls */
+    .dataTables_wrapper .dataTables_filter input,
+    .dataTables_wrapper .dataTables_length select {
+        font-size: 10px;
+        padding: 5px;
+    }
+
+    /* Make the search and pagination fit better */
+    .dataTables_wrapper .dataTables_filter {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .dataTables_wrapper .dataTables_length,
+    .dataTables_wrapper .dataTables_paginate {
+        width: 100%;
+        text-align: center;
+    }
+
+    .dashboard-container {
+        padding: 10px;
+        margin-top: 60px;
     }
 
     .modal-dialog {
-        max-width: 900px; /* Set a custom max width */
+        max-width: 100%; /* Full width on small screens */
     }
-
-    .card {
-        border: none; /* Remove card border */
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Card shadow */
-        border-radius: 10px; /* Rounded corners for cards */
-    }
-
-    .card-header {
-        border-bottom: 2px solid #007bff; /* Add a blue bottom border */
-        border-top-left-radius: 10px; /* Rounded top corners */
-        border-top-right-radius: 10px; /* Rounded top corners */
-    }
-
-    .card-body {
-        padding: 20px; /* More padding for content */
-         font-size: 12px !important;
-    }
- .card-body p{
-         font-size: 10px !important;
-    }
-    
-    .card:hover {
-        transform: scale(1.05); /* Scale effect on hover */
-        transition: transform 0.3s; /* Smooth transition */
-    }
-
-    .container {
-        
-        margin: 10px; /* Margin around the container */
-    }
-
-    .modal-header {
-         font-size: 12px !important;
-        border-bottom: 2px solid #007bff; /* Add a blue line at the bottom of header */
-    }
-
-    .modal-title {
-        font-weight: bold;
-     font-size: 12px !important;
-    }
-
-    /* Responsive design */
-    @media (max-width: 768px) {
-        .card {
-            margin-bottom: 15px; /* Space between cards on smaller screens */
-        }
-    }
-
+    .filter-options{
+    width: 45% !important;
+}
+}
+.filter-options{
+    width: 15%;
+}
     </style>
 </head>
 
@@ -375,7 +391,7 @@ header img {
           <h4 class="card-title"><i class="fa fa-history me-2"></i>Transaction History</h4>
           
           <!-- Filter Options in the UI -->
-          <div class="filter-options mb-3" style="width: 15%;">
+          <div class="filter-options mb-3" >
             <label for="filter-status">Filter by Status: </label>
             <select id="filter-status" class="form-control">
               <option value="">All</option>
