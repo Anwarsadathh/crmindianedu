@@ -217,23 +217,29 @@ header img {
         padding: 6px;
     }
 
-    /* Responsive DataTable Controls */
-    .dataTables_wrapper .dataTables_filter input,
+    .dataTables_wrapper .dataTables_filter input {
+        width: 80% !important; /* Make the search box wider to fit the screen */
+        font-size: 10px !important; /* Smaller font size */
+        padding: 5px !important;
+        margin: 5px 0 !important; /* Add some margin for better spacing */
+    }
+
     .dataTables_wrapper .dataTables_length select {
-        font-size: 10px;
-        padding: 5px;
+        font-size: 10px !important;
+        padding: 5px !important;
+        width: 50% !important; /* Reduce the width of the dropdown */
+        margin-left: 10px !important; /* Space between dropdown and other elements */
     }
 
-    /* Make the search and pagination fit better */
+    /* Center the controls */
     .dataTables_wrapper .dataTables_filter {
-        width: 100%;
-        margin-bottom: 5px;
+        text-align: end !important; /* Center the search box */
+        margin-bottom: 10px !important; /* Add margin for spacing */
     }
 
-    .dataTables_wrapper .dataTables_length,
-    .dataTables_wrapper .dataTables_paginate {
-        width: 100%;
-        text-align: center;
+    .dataTables_wrapper .dataTables_length {
+        text-align: end !important; /* Center the show entries dropdown */
+        margin-bottom: 10px !important; /* Add margin for spacing */
     }
 
     .dashboard-container {

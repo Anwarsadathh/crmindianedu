@@ -198,6 +198,18 @@ function verifySuper(req, res, next) {
   }
 }
 
+// Middleware for verifying client login
+function verifyClient(req, res, next) {
+  if (req.session && req.session.client) {
+    next(); // Proceed to the next middleware or route handler
+  } else {
+    console.log("Client session not found. Redirecting to login."); // Debug log
+    res.redirect("/client-department"); // Redirect to the client login page
+  }
+}
+
+
+
 function verifyPartner(req, res, next) {
   if (req.session && req.session.partner) {
     next();
@@ -961,9 +973,19 @@ router.post("/leadlogin", async (req, res) => {
   }
 });
 
-router.get("/client-dashboard", (req, res) => {
+router.get("/client-dashboard", verifyClient, (req, res) => {
   res.render("user/client-dashboard", { user: true });
 });
+router.get("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error("Error logging out:", err);
+      return res.status(500).send("Error logging out.");
+    }
+    res.redirect("/client-login"); // Redirect to login after logout
+  });
+});
+
 
 router.get("/student-dashboard", verifyLoginStudent, (req, res) => {
   res.render("user/student-dash", { student: req.session.student });
@@ -1844,12 +1866,11 @@ router.get("/create-partnerid", (req, res) => {
 });
 
 
-router.get("/client-details", (req, res) => {
+router.get("/client-details", verifyClient, (req, res) => {
   serviceHelpers
     .getAllClientdashboard()
     .then((formData) => {
       console.log(formData);
-
       res.render("user/client-details", {
         admin: true,
         formData,
@@ -1861,6 +1882,35 @@ router.get("/client-details", (req, res) => {
     });
 });
 
+
+
+router.get("/client-department", (req, res) => {
+  res.render("user/client-login", { user: true });
+});
+
+router.post("/clientlogin", (req, res) => {
+  const { email, password } = req.body;
+  const validEmail = process.env.ADMINCLIENT_EMAIL;
+  const validPassword = process.env.ADMINCLIENT_PASSWORD;
+
+  if (email === validEmail && password === validPassword) {
+    req.session.client = email;
+    req.session.save((err) => {
+      if (err) {
+        console.error(err);
+        return res
+          .status(500)
+          .json({ success: false, message: "Internal server error" });
+      }
+      res.redirect("/client-details");
+    });
+  } else {
+    res.render("user/client-login", {
+      user: true,
+      error: "Invalid email or password",
+    });
+  }
+});
 
 router.get("/mentor-form-details", (req, res) => {
  serviceHelpers.getAllClient().then((formData) => {
