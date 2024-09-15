@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Referral Leads</title>
+    <title>Payout Track</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -20,13 +20,22 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
  <!-- Add necessary meta tags and links to CSS/JS files -->
-  <!-- jQuery -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet">
-  <!-- Bootstrap JS -->
-  <!-- DataTables JS -->
-  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css">
+
+<!-- DataTables JavaScript -->
+<script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+
+<!-- DataTables JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+
     <!-- Libraries Stylesheet -->
     <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
@@ -36,13 +45,14 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
-     <style>
+    <style>
+/* General Styles */
 body {
     font-family: 'Montserrat', sans-serif;
     background-color: #f0f2f5;
     margin: 0;
     padding: 0;
-    font-size: 14px; /* Smaller font size for overall content */
+    font-size: 14px;
 }
 
 header {
@@ -64,7 +74,7 @@ header img {
 }
 
 .dashboard-container {
-    margin-top: 80px; /* Space for fixed header */
+    margin-top: 80px;
     width: 90%;
     max-width: 1200px;
     background-color: #ffffff;
@@ -79,6 +89,7 @@ header img {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
+/* Button Customization */
 .btn-custom {
     background-color: #007BFF;
     color: #fff;
@@ -92,7 +103,7 @@ header img {
     transform: scale(1.05);
 }
 
-
+/* Table Styles */
 .table-responsive {
     margin-top: 20px;
 }
@@ -108,134 +119,178 @@ header img {
     color: #ffffff;
     text-align: left;
     padding: 10px;
-    width: auto !important;
-    font-size: 10px; /* Smaller font size for table headers */
+    font-size: 10px;
 }
 
 .table tbody td {
     border-bottom: 1px solid #dee2e6;
     padding: 8px;
-    font-size: 10px !important; /* Smaller font size for table content */
+    font-size: 10px;
 }
 
-
-
-
-
-.image-stack {
-    position: relative;
-    display: flex;
+/* Card Customization */
+.card {
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
 }
 
-.profile-img {
-    border-radius: 50%;
-    position: relative;
-    z-index: 1;
-    margin-left: -20px; /* Adjust based on the desired overlap */
-    transition: transform 0.3s, z-index 0.3s;
+.card-body {
+    padding: 20px;
+    font-size: 12px;
 }
 
-.profile-img:hover {
-    transform: translateX(-20px); /* Adjust based on the desired hover effect */
-    z-index: 10;
+.card-body p {
+    font-size: 10px;
 }
 
-.image-stack .bg-success {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    border-radius: 50%;
-    border: 2px solid white;
-    padding: 1px;
+.card-header {
+    border-bottom: 2px solid #007bff;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
-/* Custom styles for DataTables */
+.card:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s;
+}
+
+/* Modal Customization */
+.modal-content {
+    border-radius: 15px;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+}
+
+.modal-dialog {
+    max-width: 900px;
+}
+
+.modal-header {
+    font-size: 12px;
+    border-bottom: 2px solid #007bff;
+}
+
+.modal-title {
+    font-weight: bold;
+    font-size: 12px;
+}
+
+/* DataTables Customization */
 .dataTables_wrapper .dataTables_filter {
     float: right;
     text-align: right;
-    margin-bottom: 10px; /* Add margin below the search bar */
+    margin-bottom: 10px;
 }
 
 .dataTables_wrapper .dataTables_filter input {
     margin-left: 0.5em;
     display: inline-block;
     width: auto;
-    margin-bottom: 10px; /* Add margin below the search bar */
 }
 
 .dataTables_wrapper .dataTables_length {
     float: left;
-    margin-bottom: 10px; /* Add margin below the length dropdown */
+    margin-bottom: 10px;
 }
 
 .dataTables_wrapper .dataTables_info {
     float: left;
-    margin-top: 10px; /* Add margin above the info text */
+    margin-top: 10px;
 }
 
 .dataTables_wrapper .dataTables_paginate {
     float: right;
-    margin-top: 10px; /* Add margin above the pagination controls */
+    margin-top: 10px;
 }
 
-    .modal-content {
-        border-radius: 15px; /* Rounded corners */
-        background: linear-gradient(135deg, #f5f7fa, #c3cfe2); /* Gradient background */
+/* Wallet Cards Layout for Small Screens */
+@media (max-width: 768px) {
+    .col-md-3 {
+        width: 48%; /* Two cards per row */
+        margin-bottom: 15px; /* Add space between cards */
     }
 
-    .modal-dialog {
-        max-width: 900px; /* Set a custom max width */
+    .card-title {
+        font-size: 10px;
     }
 
-    .card {
-        border: none; /* Remove card border */
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Card shadow */
-        border-radius: 10px; /* Rounded corners for cards */
+    .card-text {
+        font-size: 9px;
     }
 
-    .card-header {
-        border-bottom: 2px solid #007bff; /* Add a blue bottom border */
-        border-top-left-radius: 10px; /* Rounded top corners */
-        border-top-right-radius: 10px; /* Rounded top corners */
+    /* Adjust table font size */
+    .table thead th,
+    .table tbody td {
+        font-size: 9px;
+        padding: 6px;
     }
 
-    .card-body {
-        padding: 20px; /* More padding for content */
-         font-size: 12px !important;
-    }
- .card-body p{
-         font-size: 10px !important;
-    }
-    
-    .card:hover {
-        transform: scale(1.05); /* Scale effect on hover */
-        transition: transform 0.3s; /* Smooth transition */
+    .dataTables_wrapper .dataTables_filter input {
+        width: 60% !important; /* Make the search box smaller to fit the screen */
+        font-size: 9px !important; /* Smaller font size */
+        padding: 4px !important;
+        margin: 5px 0 !important; /* Add some margin for better spacing */
     }
 
-    .container {
-        
-        margin: 10px; /* Margin around the container */
+    .dataTables_wrapper .dataTables_length select {
+        font-size: 10px !important;
+        padding: 5px !important;
+        width: 30% !important; /* Reduce the width of the dropdown */
+        margin-left: 10px !important; /* Space between dropdown and other elements */
     }
 
-    .modal-header {
-         font-size: 12px !important;
-        border-bottom: 2px solid #007bff; /* Add a blue line at the bottom of header */
+    /* Align the controls */
+    .dataTables_wrapper .dataTables_filter {
+        text-align: end !important; /* Align the search box to the right */
+        margin-bottom: 10px !important; /* Add margin for spacing */
     }
 
-    .modal-title {
-        font-weight: bold;
-     font-size: 12px !important;
+    .dataTables_wrapper .dataTables_length {
+        text-align: end !important; /* Align the show entries dropdown */
+        margin-bottom: 10px !important; /* Add margin for spacing */
     }
 
-    /* Responsive design */
-    @media (max-width: 768px) {
-        .card {
-            margin-bottom: 15px; /* Space between cards on smaller screens */
-        }
+
+
+ 
+
+
+    .filter-options select {
+        width: 30% !important; /* Adjust width of the select dropdown */
+        font-size: 10px !important; /* Smaller font size for select dropdown */
+        padding: 5px !important; /* Reduce padding */
     }
 
+    /* Adjust the 'Show' dropdown width for 10, 25, 100 */
+    .dataTables_wrapper .dataTables_length select {
+        width:35% !important; /* Reduce width of the 'Show' dropdown */
+        font-size: 10px !important;
+        padding: 4px !important;
+        margin-left: 0 !important; /* Align to the left */
+         margin-top: 10px !important; /* Align to the left */
+    }
+}
+
+
+/* Styles for the tick (✔) and cross (✘) */
+.status-icon {
+  font-size: 24px !important;
+  text-align: center;
+}
+
+.icon-tick {
+  color: green;
+    font-size: 16px !important;
+  font-weight: bold;
+}
+
+.icon-cross {
+  color: red;
+  font-weight: bold;
+}
     </style>
 </head>
+
 
 <body>
     <div class="container-xxl position-relative bg-white d-flex p-0" style="background-color: #232f65;">
@@ -326,7 +381,7 @@ header img {
             <!-- Navbar End -->
 
 <!-- Table End -->
-<div class="container-fluid pt-4 px-4" style="width: 100%;">
+<div class="container-fluid pt-2 px-2" style="width: 100%;">
     <div class="row g-4">
         <div class="container mt-5">
             <h6 class="text-center mb-4">Payout Track</h6>
@@ -338,9 +393,8 @@ header img {
                     
                     <!-- Responsive Table -->
                     <div class="table-responsive">
-                        <table class="table table-striped mt-3">
+                        <table class="table table-striped mt-3" id="dataTable">
                     <thead>
-                                      {{!-- {{#each referredBy}} --}}
                         <tr>
                             {{!-- <th>Date</th> --}}
                             <th>Student ID</th>
@@ -377,11 +431,22 @@ header img {
                     </div>
                 </div>
             </div>
-
-      
     </div>
       </div>
   </div>
+
+  <script>$(document).ready(function() {
+    $('#dataTable').DataTable();
+
+    // Change header background on scroll
+    $(window).scroll(function() {
+        if ($(this).scrollTop() > 50) {
+            $('header').addClass('scrolled');
+        } else {
+            $('header').removeClass('scrolled');
+        }
+    });
+});</script>
   <!-- Additional JavaScript Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="lib/chart/chart.min.js"></script>

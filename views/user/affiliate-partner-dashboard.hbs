@@ -294,7 +294,7 @@
     @media (max-width: 576px) {
         .card-custom {
             min-height: 100px !important;
-            padding: 2px 8px;
+            border-radius: 2px 8px;
         }
         .card-custom i {
             font-size: 1.5rem;
@@ -489,7 +489,7 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-   <script>
+<script>
 function handleReferralClick(studentId) {
     const url = `https://crm.indianeduhub.in/p-referral?studentid=${studentId}`;
     
@@ -499,8 +499,6 @@ function handleReferralClick(studentId) {
                 icon: 'success',
                 title: 'Link Copied',
                 text: 'The referral link has been copied to your clipboard.',
-            }).then(() => {
-                window.location.href = url; // Redirect after the success message
             });
         })
         .catch((error) => {
@@ -512,6 +510,7 @@ function handleReferralClick(studentId) {
         });
 }
 </script>
+
 
 <script>
  function uploadImage(event) {
