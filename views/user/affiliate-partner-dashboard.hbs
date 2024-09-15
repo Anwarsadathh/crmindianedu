@@ -371,47 +371,56 @@
                 </div>
             </nav>
             <!-- Navbar End -->
- <div class="container-fluid pt-4 px-4" >
+ <!-- Navbar End -->
+<div class="container-fluid pt-4 px-4" >
     <div class="row g-4">
+        <!-- Card 1: Total Leads -->
         <div class="col-sm-6 col-xl-3">
-            <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                <i class="fa fa-chart-line fa-3x text-primary"></i>
-                <div class="ms-3">
-                    <p class="mb-2">Total Leads</p>
+            <div class="bg-gradient-primary card-custom d-flex align-items-center justify-content-between p-3 shadow-lg">
+                <i class="fa fa-chart-line fa-2x text-white"></i>
+                <div class="ms-3 text-end text-white">
+                    <p class="mb-1">Total Leads</p>
                     <h6 class="mb-0">{{referredByCount}}</h6>
                 </div>
             </div>
         </div>
-           <div class="col-sm-6 col-xl-3">
-            <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                <i class="fa fa-chart-area fa-3x text-primary"></i>
-                <div class="ms-3">
-                    <p class="mb-2">Today Credited Amount</p>
+
+        <!-- Card 2: Today Credited Amount -->
+        <div class="col-sm-6 col-xl-3">
+            <div class="card-custom  bg-gradient-info d-flex align-items-center justify-content-between p-3 shadow-lg">
+                <i class="fa fa-chart-area fa-2x text-white"></i>
+                <div class="ms-3 text-end text-white">
+                    <p class="mb-1">Today Credited Amount</p>
                     <h6 class="mb-0">₹{{totalCreditedAmount}}</h6>
                 </div>
             </div>
         </div>
+
+        <!-- Card 3: Total Pending Amount -->
         <div class="col-sm-6 col-xl-3">
-            <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                <i class="fa fa-chart-bar fa-3x text-primary"></i>
-                <div class="ms-3">
-                    <p class="mb-2">Total Pending Amount</p>
+            <div class="card-custom bg-gradient-warning d-flex align-items-center justify-content-between p-3 shadow-lg">
+                <i class="fa fa-chart-bar fa-2x text-white"></i>
+                <div class="ms-3 text-end text-white">
+                    <p class="mb-1">Total Pending Amount</p>
                     <h6 class="mb-0">₹{{totalPendingAmount}}</h6>
                 </div>
             </div>
         </div>
-     
+
+        <!-- Card 4: Not Approved Student -->
         <div class="col-sm-6 col-xl-3">
-            <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                <i class="fa fa-chart-pie fa-3x text-primary"></i>
-                <div class="ms-3">
-                    <p class="mb-2">Not Approved Student</p>
+            <div class="card-custom bg-gradient-danger d-flex align-items-center justify-content-between p-3 shadow-lg">
+                <i class="fa fa-chart-pie fa-2x text-white"></i>
+                <div class="ms-3 text-end text-white">
+                    <p class="mb-1">Not Approved Student</p>
                     <h6 class="mb-0">{{notApprovedCount}}</h6>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
 
 <div class="container-fluid pt-4 px-4">
   <div class="row g-4">

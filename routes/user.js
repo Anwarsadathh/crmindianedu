@@ -2913,9 +2913,42 @@ router.get("/affiliate-partner-payout-track", verifyAffiliate, (req, res) => {
 router.get("/affiliate-partner-referral-details", verifyAffiliate, (req, res) => {
   const instituteid = req.session.affiliate.instituteid; // Get the instituteid from session
 
-  serviceHelpers
-    .getAllPatnerReferral(instituteid)
-    .then((referral) => {
+  console.log("Institute ID from session:", instituteid);
+
+  // Fetch both referral and referredBy data
+  Promise.all([
+    serviceHelpers.getAllPatnerReferral(instituteid),
+    serviceHelpers.getAllPatnerTrack(instituteid) // This returns `referredBy`
+  ])
+    .then(([referral, referredBy]) => {
+      // Log the received data to inspect their structure
+      console.log("Referral Data:", JSON.stringify(referral, null, 2));
+      console.log("ReferredBy Data:", JSON.stringify(referredBy, null, 2));
+
+      // Map over referral data to add matching status based on referredBy data
+      referral = referral.map((ref) => {
+        const refEmail = ref.email.trim().toLowerCase(); // Normalize referral email
+
+        // Log the current referral email being processed
+        console.log(`Processing referral with email: ${refEmail}`);
+
+        const match = referredBy.find(
+          (rb) => rb.email.trim().toLowerCase() === refEmail && rb.referredBy === instituteid
+        );
+
+        // Log whether a match was found
+        if (match) {
+          console.log(`Match found for email: ${ref.email}`);
+        } else {
+          console.log(`No match found for email: ${ref.email}`);
+        }
+
+        // Add the leadStageStatus based on the match
+        ref.leadStageStatus = match ? "✔" : "✘"; // Mark as 'tick' or 'wrong'
+        return ref;
+      });
+
+      // Render the view with the modified referral data
       res.render("user/affiliate-partner-referral-details", {
         admin: true,
         referral,

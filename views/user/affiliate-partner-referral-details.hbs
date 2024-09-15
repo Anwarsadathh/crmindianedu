@@ -233,6 +233,22 @@ header img {
             margin-bottom: 15px; /* Space between cards on smaller screens */
         }
     }
+/* Styles for the tick (✔) and cross (✘) */
+.status-icon {
+  font-size: 24px !important;
+  text-align: center;
+}
+
+.icon-tick {
+  color: green;
+    font-size: 16px !important;
+  font-weight: bold;
+}
+
+.icon-cross {
+  color: red;
+  font-weight: bold;
+}
 
     </style>
 </head>
@@ -348,34 +364,35 @@ header img {
                                 <th>Course</th>
                                 <th>Email</th>
                              
-                                <th>Lead Stage & Status</th>
+                                <th>Lead Stage</th>
                             </tr>
                         </thead>
                       <tbody>
-    {{#each referral}}
-    <tr>
-        <td class="font-weight-bold" data-id="{{this._id}}" data-source="{{this.source}}" hidden>{{this._id}}</td>
+  {{#each referral}}
+  <tr>
+    <td class="font-weight-bold" data-id="{{this._id}}" data-source="{{this.source}}" hidden>{{this._id}}</td>
+    <td class="text-danger">{{this.timeStamp}}</td>
+    <td>{{#if this.source}}{{this.source}}{{else}}N/A{{/if}}</td> <!-- Conditional source display -->
+    <td>{{this.state}}</td>
+    <td>{{this.name}}</td>
+    <td>{{hidePartial this.whatsapp}}</td>
+    <td>{{hidePartial this.mobile}}</td>
+    <td>{{this.city}}</td>
+    <td>{{this.course}}</td>
+    <td>{{hidePartial this.email}}</td>
 
-       <td class="text-danger">{{this.timeStamp}}</td>
-        <td>{{#if this.source}}{{this.source}}{{else}}N/A{{/if}}</td> <!-- Conditional source display -->
-        <td>{{this.state}}</td>
-        <td>{{this.name}}</td>
-        <td>{{hidePartial this.whatsapp}}</td>
-        <td>{{hidePartial this.mobile}}</td>
-        <td>{{this.city}}</td>
-        <td>{{this.course}}</td>
-        <td>{{hidePartial this.email}}</td>
-       
-        <td>
-            <button class="btn btn-info ms-2 show-lead-status-btn" style="font-size: 9px !important;">Status</button>
-            <div class="leadStatusContent" style="display:none;">
-                {{json this.leadStatus}}
-            </div>
-        </td>
-     
-    </tr>
-    {{/each}}
+   <td class="status-icon">
+  {{#if (eq this.leadStageStatus "✔")}}
+    <span class="icon-tick">✔</span>
+  {{else}}
+    <span class="icon-cross">✘</span>
+  {{/if}}
+</td>
+
+  </tr>
+  {{/each}}
 </tbody>
+
 
                     </table>
                 </div>
