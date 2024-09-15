@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Referral Leads</title>
+    <title>wallet</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -28,6 +28,14 @@
 
 <!-- DataTables JavaScript -->
 <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+
+<!-- DataTables JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+
     <!-- Libraries Stylesheet -->
     <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
@@ -37,7 +45,7 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
-     <style>
+       <style>
 /* General Styles */
 body {
     font-family: 'Montserrat', sans-serif;
@@ -218,27 +226,27 @@ header img {
     }
 
     .dataTables_wrapper .dataTables_filter input {
-        width: 80% !important; /* Make the search box wider to fit the screen */
-        font-size: 10px !important; /* Smaller font size */
-        padding: 5px !important;
+        width: 60% !important; /* Make the search box smaller to fit the screen */
+        font-size: 9px !important; /* Smaller font size */
+        padding: 4px !important;
         margin: 5px 0 !important; /* Add some margin for better spacing */
     }
 
     .dataTables_wrapper .dataTables_length select {
         font-size: 10px !important;
         padding: 5px !important;
-        width: 50% !important; /* Reduce the width of the dropdown */
+        width: 30% !important; /* Reduce the width of the dropdown */
         margin-left: 10px !important; /* Space between dropdown and other elements */
     }
 
-    /* Center the controls */
+    /* Align the controls */
     .dataTables_wrapper .dataTables_filter {
-        text-align: end !important; /* Center the search box */
+        text-align: end !important; /* Align the search box to the right */
         margin-bottom: 10px !important; /* Add margin for spacing */
     }
 
     .dataTables_wrapper .dataTables_length {
-        text-align: end !important; /* Center the show entries dropdown */
+        text-align: end !important; /* Align the show entries dropdown */
         margin-bottom: 10px !important; /* Add margin for spacing */
     }
 
@@ -250,10 +258,35 @@ header img {
     .modal-dialog {
         max-width: 100%; /* Full width on small screens */
     }
-    .filter-options{
-    width: 45% !important;
+
+.filter-options {
+        width: 100% !important; /* Set the filter options to full width for mobile */
+        text-align: left !important; /* Align text to the left to look balanced */
+        margin-bottom: 10px !important; /* Add space below for better layout */
+    }
+
+    .filter-options label {
+        font-size: 10px !important; /* Smaller font size for mobile */
+        margin-right: 5px; /* Add space between label and dropdown */
+    }
+
+    .filter-options select {
+        width: 30% !important; /* Adjust width of the select dropdown */
+        font-size: 10px !important; /* Smaller font size for select dropdown */
+        padding: 5px !important; /* Reduce padding */
+    }
+
+    /* Adjust the 'Show' dropdown width for 10, 25, 100 */
+    .dataTables_wrapper .dataTables_length select {
+        width: 30% !important; /* Reduce width of the 'Show' dropdown */
+        font-size: 10px !important;
+        padding: 4px !important;
+        margin-left: 0 !important; /* Align to the left */
+         margin-top: 10px !important; /* Align to the left */
+    }
 }
-}
+
+
 .filter-options{
     width: 15%;
 }
@@ -352,10 +385,10 @@ header img {
             <!-- Navbar End -->
 
 
-           <!-- Table End -->
+           {{!-- <!-- Table End -->
 <div class="container-fluid pt-4 px-4" style="width: 100%;">
-  <div class="row g-4">
-    <div class="container mt-5">
+  <div class="row g-4"> --}}
+    <div class="container mt-3">
 
       <!-- Wallet Balance -->
       <div class="card mb-4">
@@ -465,8 +498,8 @@ header img {
         <a href="#" class="btn btn-secondary"><i class="fa fa-plus-circle me-1"></i> Raise Invoice</a>
       </div>
     </div>
-  </div>
-</div>
+  {{!-- </div>
+</div> --}}
 
 
 <script>
