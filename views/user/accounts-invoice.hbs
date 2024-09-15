@@ -242,7 +242,68 @@ header img {
             margin-bottom: 15px; /* Space between cards on smaller screens */
         }
     }
+/* Wallet Cards Layout for Small Screens */
+@media (max-width: 768px) {
+    .col-md-3 {
+        width: 48%; /* Two cards per row */
+        margin-bottom: 15px; /* Add space between cards */
+    }
 
+    .card-title {
+        font-size: 10px;
+    }
+
+    .card-text {
+        font-size: 9px;
+    }
+
+    /* Adjust table font size */
+    .table thead th,
+    .table tbody td {
+        font-size: 9px;
+        padding: 6px;
+    }
+
+    .dataTables_wrapper .dataTables_filter input {
+        width: 80% !important; /* Make the search box wider to fit the screen */
+        font-size: 10px !important; /* Smaller font size */
+        padding: 5px !important;
+        margin: 5px 0 !important; /* Add some margin for better spacing */
+    }
+
+    .dataTables_wrapper .dataTables_length select {
+        font-size: 10px !important;
+        padding: 5px !important;
+        width: 50% !important; /* Reduce the width of the dropdown */
+        margin-left: 10px !important; /* Space between dropdown and other elements */
+    }
+
+    /* Center the controls */
+    .dataTables_wrapper .dataTables_filter {
+        text-align: end !important; /* Center the search box */
+        margin-bottom: 10px !important; /* Add margin for spacing */
+    }
+
+    .dataTables_wrapper .dataTables_length {
+        text-align: end !important; /* Center the show entries dropdown */
+        margin-bottom: 10px !important; /* Add margin for spacing */
+    }
+
+    .dashboard-container {
+        padding: 10px;
+        margin-top: 60px;
+    }
+
+    .modal-dialog {
+        max-width: 100%; /* Full width on small screens */
+    }
+    .filter-options{
+    width: 45% !important;
+}
+}
+.filter-options{
+    width: 15%;
+}
     </style>
 </head>
 
@@ -347,7 +408,7 @@ header img {
 </h4>
           
 <!-- Filter Options in the UI -->
-<div class="filter-options" style="width: 15%;">
+<div class="filter-options" >
   <label for="filter-status">Filter by Status: </label>
   <select id="filter-status" class="form-control">
     <option value="">All</option>

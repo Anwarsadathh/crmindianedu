@@ -280,7 +280,32 @@
     align-items: center;
     justify-content: center;
         }
-       
+        .card-custom {
+     
+        min-height: 100px !important;
+    }
+    .card-custom p, .card-custom h6 {
+        margin: 0;
+        font-family: 'Times New Roman', Times, serif;
+        font-weight: 600;
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 576px) {
+        .card-custom {
+            min-height: 100px;
+            padding: 2px 8px;
+        }
+        .card-custom i {
+            font-size: 1.5rem;
+        }
+        .card-custom p {
+            font-size: 0.7rem !important;
+        }
+        .card-custom h6 {
+            font-size: 1.2rem;
+        }
+    }
     </style>
 </head>
 
@@ -372,7 +397,7 @@
             </nav>
             <!-- Navbar End -->
  <!-- Navbar End -->
-<div class="container-fluid pt-4 px-4" >
+<div class="container-fluid pt-4 px-4 my-3" >
     <div class="row g-4">
         <!-- Card 1: Total Leads -->
         <div class="col-sm-6 col-xl-3">
@@ -419,6 +444,7 @@
         </div>
     </div>
 </div>
+
 
 
 
