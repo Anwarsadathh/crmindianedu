@@ -513,15 +513,15 @@ header img {
   {{!-- </div>
 </div> --}}
 <!-- Custom Alert Modal -->
+<!-- Custom Alert Modal -->
 <div id="custom-alert" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Success</h5>
-       <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="background: none; color: black;">
-    <span aria-hidden="true">&times;</span>
-</button>
-
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="background: none; color: black;">
+            <span aria-hidden="true">&times;</span>
+        </button>
       </div>
       <div class="modal-body">
         <p>Raised successfully! Please send the downloaded PDF invoice to the accounts department by clicking the Gmail button.</p>
@@ -547,7 +547,7 @@ header img {
 }
 
 </style>
-<script>
+{{!-- <script>
   document.addEventListener('DOMContentLoaded', function () {
     const raiseInvoiceBtn = document.querySelector('.btn-secondary');
     const rowCheckboxes = document.querySelectorAll('.select-row');
@@ -596,7 +596,7 @@ header img {
       }
     });
   });
-</script>
+</script> --}}
 
 <script>
   $(document).ready(function () {
@@ -631,7 +631,6 @@ header img {
 </script>
 
 
-
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const raiseInvoiceBtn = document.querySelector('.btn-secondary');
@@ -657,47 +656,47 @@ header img {
                 });
 
                 if (response.ok) {
-                    // Optionally, update the UI to reflect the status change before reloading
-                    selectedIndexes.forEach((index) => {
-                        const rowBadge = document.querySelectorAll('.badge')[index];
-                        rowBadge.textContent = 'Raised';
-                        rowBadge.classList.remove('bg-danger');
-                        rowBadge.classList.add('bg-success');
+                    const blob = await response.blob();
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `invoice-${selectedIndexes[0] + 1}-${selectedIndexes[selectedIndexes.length - 1] + 1}.pdf`;
+                    a.click();
+                    URL.revokeObjectURL(url);
 
-                        // Disable the checkbox after raising
-                        const checkbox = rowCheckboxes[index];
-                        checkbox.disabled = true;
-                        checkbox.checked = false;
-                    });
-
-                    // Show custom alert modal
+                    // Show the success modal
                     $('#custom-alert').modal('show');
                 } else {
-                    console.error('Failed to update wallet status');
+                    console.error('Failed to generate invoice');
                 }
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Error generating invoice:', error);
             }
         } else {
-            alert('Please select at least one entry to raise an invoice.');
+            alert('Please select at least one row to generate an invoice.');
         }
     });
 
-  document.getElementById('send-email-btn').addEventListener('click', function() {
-    const email = 'accounts@indianeduhub.com';
-    const subject = 'Invoice PDF';
-    const body = 'Please find the attached PDF for the raised invoices.';
+    // Handle "Send Gmail" button click
+    document.getElementById('send-email-btn').addEventListener('click', function() {
+        const email = 'accounts@indianeduhub.com';
+        const subject = 'Invoice PDF';
+        const body = 'Please find the attached PDF for the raised invoices.';
 
-    const encodedSubject = encodeURIComponent(subject);
-    const encodedBody = encodeURIComponent(body);
+        const encodedSubject = encodeURIComponent(subject);
+        const encodedBody = encodeURIComponent(body);
 
-    // Open Gmail compose window with pre-filled details
-    window.location.href = `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${encodedSubject}&body=${encodedBody}`;
-});
+        // Open Gmail compose window with pre-filled details
+        window.location.href = `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${encodedSubject}&body=${encodedBody}`;
+    });
 
-});
-
+    // Reload the page when the modal is closed
+    $('#custom-alert').on('hidden.bs.modal', function () {
+        location.reload(); // Reload the page
+    });
+  });
 </script>
+
 
 
   <!-- Additional JavaScript Libraries -->

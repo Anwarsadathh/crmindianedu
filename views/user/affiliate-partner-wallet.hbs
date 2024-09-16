@@ -459,7 +459,16 @@ header img {
   <tr>
     <td><input type="checkbox" class="select-row" data-index="{{@index}}" {{#if this.isRaised}}disabled{{/if}}></td>
     <td>{{formatDate this.date}}</td>
-
+<td hidden> {{../institutename}}</td>
+  <td hidden>{{../instituteid}}</td>
+  <td hidden> {{../comtdany_tytde}}</td>
+  <td hidden> {{../state}}</td>
+  <td hidden> {{../city}}</td>
+  <td hidden>{{../email}}</td>
+  <td hidden>{{../account_holder_name}}</td>
+  <td hidden> {{../account_number}}</td>
+  <td hidden>{{../ifsc_code}}</td>
+  <td hidden> {{../branch}}</td>
     <td>{{this.studentDetails.studentid}}</td>
     <td>{{this.studentDetails.name}}</td>
     <td>{{this.studentDetails.course}}</td>
@@ -495,11 +504,76 @@ header img {
         <a href="#" id="raise-invoice-btn" class="btn btn-secondary"><i class="fa fa-minus-circle me-1"></i>Raise Invoice</a>
       </div>
     </div>
+
+    
   {{!-- </div>
 </div> --}}
 
+<!-- Custom Alert Modal -->
+<div id="custom-alert" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Success</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="background: none; color: black;">
+            <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Raised successfully! Please send the downloaded PDF invoice to the accounts department by clicking the Gmail button.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="send-email-btn">Send Gmail</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+    .modal.fade .modal-dialog {
+  transition: transform 0.3s ease-out;
+}
 
-<script>
+.modal.show .modal-dialog {
+  transform: translateY(0);
+}
+
+.modal.fade .modal-dialog {
+  transform: translateY(-50px);
+}
+
+</style>
+<script> $(document).ready(function () {
+    // Initialize the DataTable
+    var table = $('#invoiceTable').DataTable({
+      "order": [[0, 'desc']], // Order by date descending
+      "paging": true,
+      "searching": true,
+      "info": false
+    });
+
+    // Filter logic for status
+    $('#filter-status').on('change', function () {
+      var filterValue = $(this).val();
+
+      // Clear existing table search
+      table.search('').columns().search('').draw();
+
+      if (filterValue === 'raised') {
+        table.column(9).search('Raised').draw();
+      } else if (filterValue === 'not-raised') {
+        table.column(9).search('Not Raised').draw();
+      } else if (filterValue === 'credited') {
+        table.column(10).search('Credited').draw();
+      } else if (filterValue === 'pending') {
+        table.column(10).search('Pending').draw();
+      } else {
+        table.search('').columns().search('').draw();
+      }
+    });
+  });</script>
+
+{{!-- <script>
   $(document).ready(function () {
     // Initialize the DataTable
     var table = $('#invoiceTable').DataTable({
@@ -530,7 +604,7 @@ header img {
     });
   });
 
-  document.addEventListener('DOMContentLoaded', function () {
+  {{!-- document.addEventListener('DOMContentLoaded', function () {
     const selectAllCheckbox = document.getElementById('select-all');
     const rowCheckboxes = document.querySelectorAll('.select-row');
     const raiseInvoiceBtn = document.getElementById('raise-invoice-btn');
@@ -614,9 +688,74 @@ header img {
         alert('Please select at least one entry to raise an invoice.');
       }
     });
+  }); --}}
+</script> --}}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const raiseInvoiceBtn = document.querySelector('.btn-secondary');
+    const rowCheckboxes = document.querySelectorAll('.select-row');
+
+    raiseInvoiceBtn.addEventListener('click', async function () {
+        const selectedIndexes = [];
+
+        rowCheckboxes.forEach((checkbox, index) => {
+            if (checkbox.checked && !checkbox.disabled) {
+                selectedIndexes.push(index); // Push index of the selected checkbox
+            }
+        });
+
+        if (selectedIndexes.length > 0) {
+            try {
+                const response = await fetch('/update-wallet-status-bulk', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ indexes: selectedIndexes })
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `invoice-${selectedIndexes[0] + 1}-${selectedIndexes[selectedIndexes.length - 1] + 1}.pdf`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+
+                    // Show the success modal
+                    $('#custom-alert').modal('show');
+                } else {
+                    console.error('Failed to generate invoice');
+                }
+            } catch (error) {
+                console.error('Error generating invoice:', error);
+            }
+        } else {
+            alert('Please select at least one row to generate an invoice.');
+        }
+    });
+
+    // Handle "Send Gmail" button click
+    document.getElementById('send-email-btn').addEventListener('click', function() {
+        const email = 'accounts@indianeduhub.com';
+        const subject = 'Invoice PDF';
+        const body = 'Please find the attached PDF for the raised invoices.';
+
+        const encodedSubject = encodeURIComponent(subject);
+        const encodedBody = encodeURIComponent(body);
+
+        // Open Gmail compose window with pre-filled details
+        window.location.href = `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${encodedSubject}&body=${encodedBody}`;
+    });
+
+    // Reload the page when the modal is closed
+    $('#custom-alert').on('hidden.bs.modal', function () {
+        location.reload(); // Reload the page
+    });
   });
 </script>
-
 
 
   <!-- Additional JavaScript Libraries -->
