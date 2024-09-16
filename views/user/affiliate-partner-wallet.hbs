@@ -454,35 +454,37 @@ header img {
             <th>Status</th>
           </tr>
         </thead>
-        <tbody>
-          {{#each wallet}}
-          <tr>
-            <td><input type="checkbox" class="select-row" data-index="{{@index}}" {{#if this.isRaised}}disabled{{/if}}></td> <!-- Row Checkbox -->
-            <td>{{formatDate this.date}}</td>
-            <td>{{this.studentDetails.studentid}}</td>
-            <td>{{this.studentDetails.name}}</td>
-            <td>{{this.studentDetails.course}}</td>
-            <td>{{this.studentDetails.email}}</td>
-            <td>{{this.studentDetails.mobile}}</td>
-            <td>{{this.studentDetails.state}}</td>
-            <td>₹{{this.amount}}</td>
-            <td>
-              {{#if this.isRaised}}
-              <span class="badge bg-success">Raised</span>
-              {{else}}
-              <span class="badge bg-danger">Not Raised</span>
-              {{/if}}
-            </td>
-            <td>
-              {{#if this.isCredited}}
-              <span class="badge bg-success">Credited</span>
-              {{else}}
-              <span class="badge bg-warning text-dark">Pending</span>
-              {{/if}}
-            </td>
-          </tr>
-          {{/each}}
-        </tbody>
+     <tbody>
+  {{#each wallet}}
+  <tr>
+    <td><input type="checkbox" class="select-row" data-index="{{@index}}" {{#if this.isRaised}}disabled{{/if}}></td>
+    <td>{{formatDate this.date}}</td>
+
+    <td>{{this.studentDetails.studentid}}</td>
+    <td>{{this.studentDetails.name}}</td>
+    <td>{{this.studentDetails.course}}</td>
+    <td>{{this.studentDetails.email}}</td>
+    <td>{{this.studentDetails.mobile}}</td>
+    <td>{{this.studentDetails.state}}</td>
+    <td>₹{{this.amount}}</td>
+    <td>
+      {{#if this.isRaised}}
+      <span class="badge bg-success">Raised {{this.raisedNumber}}</span> <!-- Show the raised number -->
+      {{else}}
+      <span class="badge bg-danger">Not Raised</span>
+      {{/if}}
+    </td>
+    <td>
+      {{#if this.isCredited}}
+      <span class="badge bg-success">Credited</span>
+      {{else}}
+      <span class="badge bg-warning text-dark">Pending</span>
+      {{/if}}
+    </td>
+  </tr>
+  {{/each}}
+</tbody>
+
       </table>
     </div>
         </div>

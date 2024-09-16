@@ -15,7 +15,7 @@ const db = require("../config/connection");
 // const checkFollowUps = require("../utils/followUpChecker"); // Import the follow-up checker
 const bcrypt = require("bcrypt");
 const saltRounds = 10; // Define saltRounds
-
+const PDFDocument = require("pdfkit");
 
 // // Call the function periodically (e.g., every minute)
 // setInterval(checkFollowUps, 10000);
@@ -2816,21 +2816,53 @@ router.get("/affiliate-partner-wallet", verifyAffiliate, async (req, res) => {
 });
 
 
-// Bulk update wallet status
 router.post("/update-wallet-status-bulk", async (req, res) => {
   try {
     const { indexes, isRaised } = req.body; // Get indexes and isRaised status from the request
     const instituteid = req.session.affiliate.instituteid;
     const currentDate = new Date(); // Get the current date and time
 
-    // Create update queries to set 'isRaised' and 'raisedAt' for all selected wallet entries
+    // Fetch the affiliate's wallet first to get the existing data
+    const affiliate = await db
+      .get()
+      .collection(collection.AFFILIATE_COLLECTION)
+      .findOne({ instituteid: instituteid });
+
+    if (!affiliate || !affiliate.wallet) {
+      return res
+        .status(404)
+        .json({
+          success: false,
+          message: "Affiliate not found or no wallet data",
+        });
+    }
+
+    const wallet = affiliate.wallet;
+
+    // Find the current highest raisedNumber in the wallet
+    let maxRaisedNumber = wallet.reduce((max, entry) => {
+      return entry.raisedNumber ? Math.max(max, entry.raisedNumber) : max;
+    }, 0);
+
+    // Create update queries to set 'isRaised', 'raisedAt', and assign sequential 'raisedNumber'
     const updateQueries = indexes.map((index) => {
-      const walletField = `wallet.${index}.isRaised`; // Path to the specific wallet entry
+      const walletFieldIsRaised = `wallet.${index}.isRaised`; // Path to the specific wallet entry
       const raisedAtField = `wallet.${index}.raisedAt`; // Path to the raisedAt field
-      return {
-        [walletField]: isRaised,
+      const raisedNumberField = `wallet.${index}.raisedNumber`; // Path to the raisedNumber field
+
+      let updateQuery = {
+        [walletFieldIsRaised]: isRaised,
         [raisedAtField]: isRaised ? currentDate : null, // Set raisedAt only if isRaised is true
       };
+
+      if (isRaised) {
+        maxRaisedNumber += 1; // Increment the raisedNumber for each raised item
+        updateQuery[raisedNumberField] = maxRaisedNumber; // Assign the new raised number
+      } else {
+        updateQuery[raisedNumberField] = null; // Reset raisedNumber if marking as not raised
+      }
+
+      return updateQuery;
     });
 
     // Combine all update queries into a single update operation
@@ -2838,12 +2870,13 @@ router.post("/update-wallet-status-bulk", async (req, res) => {
       return { ...acc, ...query };
     }, {});
 
+    // Perform the update operation
     const result = await db
       .get()
       .collection(collection.AFFILIATE_COLLECTION)
       .updateOne(
         { instituteid: instituteid }, // Find affiliate by instituteid
-        { $set: updateOperation } // Update isRaised and raisedAt for selected indexes
+        { $set: updateOperation } // Update isRaised, raisedAt, and raisedNumber for selected indexes
       );
 
     if (result.modifiedCount > 0) {
@@ -2858,6 +2891,7 @@ router.post("/update-wallet-status-bulk", async (req, res) => {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 });
+
 
 
 
@@ -2966,52 +3000,56 @@ router.get("/affiliate-partner-referral-details", verifyAffiliate, (req, res) =>
 router.get("/partner-wallet", verifyPartner, async (req, res) => {
   try {
     const instituteid = req.session.partner.instituteid;
-    console.log("Institute ID from session:", instituteid);
-
     const partners = await serviceHelpers.getAllPartnersW(instituteid);
+
     if (partners.length === 0) {
       return res.status(404).send("No partners found");
     }
 
-    const partner = partners[0]; // Assuming you're interested in the first partner
+    const partner = partners[0]; // Assuming first partner is the one we need
     const wallet = partner.wallet || [];
 
-    // Calculate the total raised amount
+    // Calculate total amounts (raised, not raised, etc.)
     const totalRaisedAmount = wallet
-      .filter((entry) => entry.isRaised) // Filter raised entries
-      .reduce((total, entry) => total + entry.amount, 0); // Sum the amounts
-
-    // Calculate the total not raised amount
+      .filter((entry) => entry.isRaised)
+      .reduce((sum, entry) => sum + entry.amount, 0);
     const totalNotRaisedAmount = wallet
-      .filter((entry) => !entry.isRaised) // Filter not raised entries
-      .reduce((total, entry) => total + entry.amount, 0); // Sum the amounts
-
-    // Calculate the total credited amount
+      .filter((entry) => !entry.isRaised)
+      .reduce((sum, entry) => sum + entry.amount, 0);
     const totalCreditedAmount = wallet
-      .filter((entry) => entry.isCredited) // Filter credited entries
-      .reduce((total, entry) => total + entry.amount, 0); // Sum the amounts
-
-    // Calculate the total pending amount
+      .filter((entry) => entry.isCredited)
+      .reduce((sum, entry) => sum + entry.amount, 0);
     const totalPendingAmount = wallet
-      .filter((entry) => !entry.isCredited) // Filter pending entries
-      .reduce((total, entry) => total + entry.amount, 0); // Sum the amounts
+      .filter((entry) => !entry.isCredited)
+      .reduce((sum, entry) => sum + entry.amount, 0);
 
-    console.log("Wallet Data:", wallet);
-
+    // Pass the data to the template
     res.render("user/partner-wallet", {
       partner: req.session.partner,
+      institutename: partner.institutename, // Ensure this is passed to the template
+      instituteid: partner.instituteid, // Additional fields passed
+      owner_name: partner.owner_name,
+      company_type: partner.company_type,
+      state: partner.state,
+      city: partner.city,
+      email: partner.email, // Passing email
+      account_holder_name: partner.account_holder_name,
+      account_number: partner.account_number,
+      ifsc_code: partner.ifsc_code,
+      branch: partner.branch,
       wallet,
-      totalRaisedAmount, // Pass total raised amount to template
-      totalNotRaisedAmount, // Pass total not raised amount to template
-      totalCreditedAmount, // Pass total credited amount to template
-      totalPendingAmount, // Pass total pending amount to template
-      currentDate: new Date(), // Pass current date for display
+      totalRaisedAmount,
+      totalNotRaisedAmount,
+      totalCreditedAmount,
+      totalPendingAmount,
+      currentDate: new Date(),
     });
   } catch (error) {
     console.error("Error fetching wallet details:", error);
     res.status(500).send("Internal Server Error");
   }
 });
+
 
 
 
@@ -3032,11 +3070,18 @@ router.post("/update-wallet-status-bulk-p", verifyPartner, async (req, res) => {
     const wallet = partner.wallet || [];
     const currentDate = new Date(); // Get the current date and time
 
-    // Update the 'isRaised' field and store the date for the selected indexes
+    // Find the highest raised number in the wallet
+    let maxRaisedNumber = wallet.reduce((max, entry) => {
+      return entry.raisedNumber ? Math.max(max, entry.raisedNumber) : max;
+    }, 0); // If no raisedNumber exists, start from 0
+
+    // Update the 'isRaised' field, store the date, and assign sequential raised numbers
     indexes.forEach((index) => {
-      if (wallet[index]) {
+      if (wallet[index] && !wallet[index].isRaised) {
         wallet[index].isRaised = true;
         wallet[index].raisedAt = currentDate; // Store the current date and time
+        maxRaisedNumber += 1; // Increment the raised number
+        wallet[index].raisedNumber = maxRaisedNumber; // Assign the new raised number
       }
     });
 
@@ -3049,6 +3094,170 @@ router.post("/update-wallet-status-bulk-p", verifyPartner, async (req, res) => {
     res.status(500).json({ message: "Error updating wallet status" });
   }
 });
+router.post("/generate-invoice-pdf", verifyPartner, async (req, res) => {
+  try {
+    const instituteid = req.session.partner.instituteid;
+    const { indexes } = req.body;
+
+    // Find the partner by instituteid
+    const partners = await serviceHelpers.getAllPartnersW(instituteid);
+    if (partners.length === 0) {
+      return res.status(404).send("No partners found");
+    }
+
+    const partner = partners[0];
+    const wallet = partner.wallet || [];
+    const currentDate = new Date(); // Get the current date and time
+
+    let totalRaisedAmount = 0;
+    let raisedNumbers = [];
+
+    // Update the 'isRaised' field, store the date, and calculate total amount
+    indexes.forEach((index) => {
+      if (wallet[index]) {
+        wallet[index].isRaised = true;
+        wallet[index].raisedAt = currentDate; // Store the current date and time
+        raisedNumbers.push(index + 1); // Store raised number (index starts at 0, so add 1)
+        totalRaisedAmount += wallet[index].amount; // Sum the raised amount
+      }
+    });
+
+    // Calculate taxes
+    const subtotal = totalRaisedAmount;
+    const cgst = subtotal * 0.09; // 9% CGST
+    const sgst = subtotal * 0.09; // 9% SGST
+    const igst = subtotal * 0.18; // 18% IGST
+
+    // Calculate invoice total
+    const invoiceTotal = subtotal - igst;
+
+    // Generate invoice number as a range from min to max raised numbers (e.g., "1-3")
+    const invoiceNumber = `${Math.min(...raisedNumbers)}-${Math.max(
+      ...raisedNumbers
+    )}`;
+
+    // Ensure the invoices directory exists
+    const invoiceDir = path.join(__dirname, "../invoices");
+    if (!fs.existsSync(invoiceDir)) {
+      fs.mkdirSync(invoiceDir, { recursive: true }); // Create directory if it doesn't exist
+    }
+
+    // Path to store the PDF
+    const pdfPath = path.join(invoiceDir, `invoice-${invoiceNumber}.pdf`);
+    const writeStream = fs.createWriteStream(pdfPath);
+
+    // Create a new PDF document
+    const doc = new PDFDocument({
+      size: "A4",
+      margin: 50,
+    });
+
+    // Pipe the PDF output to the write stream
+    doc.pipe(writeStream);
+
+    // ---- Invoice Design ----
+    // Header section
+    doc
+      .fontSize(12)
+      .font("Helvetica-Bold") // Set bold font
+      .text("Invoice", 0, 90, { align: "center" }); // Center alignment
+
+    // Header section continued
+    doc
+      .fontSize(12)
+      .font("Helvetica") // Reset to normal font
+      .text(partner.institutename || "Sample Institute", 50, 120);
+
+    doc
+      .text(`Invoice No: ${invoiceNumber}`, 400, 120)
+      .text(`Invoice Date: ${currentDate.toLocaleDateString()}`, 400, 135);
+
+    // Bill To section (static with smaller font)
+    doc.fontSize(10); // Set smaller font for this section
+    doc.rect(50, 150, 250, 110).stroke();
+    doc.text("Bill To:", 55, 155); // Always show "Bill To:"
+    doc.text("Indian Edu Hub Pvt Ltd.", 55, 170); // Adjusted Y position
+    doc.text('"Srinivasa Square", Horamavu Main Road,', 55, 185); // Adjusted Y position
+    doc.text("Banaswadi Road, Bengaluru-560043", 55, 200); // Adjusted Y position
+    doc.text("Karnataka", 55, 215); // Adjusted Y position
+    doc.text("GSTN: 29AAGCI0125F1ZW", 55, 230); // Adjusted Y position
+    doc.text("PAN: AAGCI10125F", 55, 245); // Adjusted Y position
+
+    // Reset the font size for other content
+    doc.fontSize(12);
+
+    // Right side invoice totals
+    doc.rect(350, 150, 200, 110).stroke();
+    doc.text("Invoice Subtotal", 355, 155);
+    doc.text(`- ${subtotal.toFixed(2).toLocaleString("en-IN")}`, 480, 155);
+    doc.text("CGST @ 9%", 355, 170);
+    doc.text(`- ${cgst.toFixed(2).toLocaleString("en-IN")}`, 480, 170);
+    doc.text("SGST @ 9%", 355, 185);
+    doc.text(`- ${sgst.toFixed(2).toLocaleString("en-IN")}`, 480, 185);
+    doc.text("IGST @ 18%", 355, 200);
+    doc.text(`- ${igst.toFixed(2).toLocaleString("en-IN")}`, 480, 200);
+    doc.text("Invoice Total", 355, 215);
+    doc.text(`- ${invoiceTotal.toFixed(2).toLocaleString("en-IN")}`, 480, 215);
+
+    // Services Table Header
+    doc.rect(50, 290, 500, 20).fillAndStroke("#f0f0f0", "black");
+    doc.fill("black").fontSize(10).text("Description", 55, 295);
+    doc.text("Amount", 470, 295);
+
+    // Table content (each row)
+    let yPos = 315;
+    indexes.forEach((index) => {
+      const entry = wallet[index];
+      doc.text("Marketing Services", 55, yPos);
+      doc.text(`- ${entry.amount.toLocaleString("en-IN")}`, 470, yPos);
+      yPos += 20;
+    });
+
+    // Total Amount at the end
+    doc.rect(350, yPos + 20, 200, 40).stroke();
+    doc.text("Total", 355, yPos + 25);
+    doc.text(
+      `-  ${invoiceTotal.toFixed(2).toLocaleString("en-IN")}`,
+      480,
+      yPos + 25
+    );
+
+    // Footer section with bank details and dynamic institute name
+    doc
+      .fontSize(10)
+      .text(`For ${partner.institutename || "Sample Institute"}`, 50, yPos + 80) // Dynamic institutename
+      .text("Authorized Signatory", 50, yPos + 100)
+      .text("Branch: XYZ Branch", 350, yPos + 80) // Static Branch
+      .text("Account Name: Sample", 350, yPos + 95) // Static Account Name
+      .text("Account Number: 0909090909090", 350, yPos + 110) // Static Account Number
+      .text("IFSC Code: Sample123", 350, yPos + 125); // Static IFSC Code
+
+    // End the document and finish writing the PDF
+    doc.end();
+
+    // Once the PDF is fully written, trigger the download
+    writeStream.on("finish", () => {
+      res.setHeader(
+        "Content-disposition",
+        `attachment; filename=invoice-${invoiceNumber}.pdf`
+      );
+      res.setHeader("Content-type", "application/pdf");
+
+      // Read the file and send it to the client
+      const fileStream = fs.createReadStream(pdfPath);
+      fileStream.pipe(res);
+
+      // Optional: Remove the file after sending it
+      fileStream.on("end", () => {
+        fs.unlinkSync(pdfPath); // Remove the file after it's downloaded
+      });
+    });
+  } catch (error) {
+    console.error("Error generating invoice:", error);
+    res.status(500).json({ message: "Error generating invoice" });
+  }
+});
+
 
 router.get("/partner-client-status", verifyPartner, (req, res) => {
   const instituteid = req.session.partner.instituteid; // Get the instituteid from session

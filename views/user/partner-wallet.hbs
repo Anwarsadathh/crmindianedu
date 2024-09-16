@@ -459,35 +459,47 @@ header img {
                   <th>Status</th>
                 </tr>
               </thead>
-              <tbody>
-                {{#each wallet}}
-                <tr>
-                  <td><input type="checkbox" class="select-row" {{#if this.isRaised}}disabled{{/if}}></td>
-                  <td>{{formatDate this.date}}</td>
-                  <td>{{this.studentDetails.studentid}}</td>
-                  <td>{{this.studentDetails.name}}</td>
-                  <td>{{this.studentDetails.course}}</td>
-                  <td>{{this.studentDetails.email}}</td>
-                  <td>{{this.studentDetails.mobile}}</td>
-                  <td>{{this.studentDetails.state}}</td>
-                  <td>₹{{this.amount}}</td>
-                  <td>
-                    {{#if this.isRaised}}
-                    <span class="badge bg-success">Raised</span>
-                    {{else}}
-                    <span class="badge bg-danger">Not Raised</span>
-                    {{/if}}
-                  </td>
-                  <td>
-                    {{#if this.isCredited}}
-                    <span class="badge bg-success">Credited</span>
-                    {{else}}
-                    <span class="badge bg-warning text-dark">Pending</span>
-                    {{/if}}
-                  </td>
-                </tr>
-                {{/each}}
-              </tbody>
+            <tbody>
+  {{#each wallet}}
+  <tr>
+    <td><input type="checkbox" class="select-row" {{#if this.isRaised}}disabled{{/if}}></td>
+    <td>{{formatDate this.date}}</td>
+       <td hidden> {{../institutename}}</td>
+  <td hidden>{{../instituteid}}</td>
+  <td hidden> {{../owner_name}}</td>
+  <td hidden> {{../comtdany_tytde}}</td>
+  <td hidden> {{../state}}</td>
+  <td hidden> {{../city}}</td>
+  <td hidden>{{../email}}</td>
+  <td hidden>{{../account_holder_name}}</td>
+  <td hidden> {{../account_number}}</td>
+  <td hidden>{{../ifsc_code}}</td>
+  <td hidden> {{../branch}}</td>
+    <td>{{this.studentDetails.studentid}}</td>
+    <td>{{this.studentDetails.name}}</td>
+    <td>{{this.studentDetails.course}}</td>
+    <td>{{this.studentDetails.email}}</td>
+    <td>{{this.studentDetails.mobile}}</td>
+    <td>{{this.studentDetails.state}}</td>
+    <td>₹{{this.amount}}</td>
+    <td>
+      {{#if this.isRaised}}
+      <span class="badge bg-success">Raised {{this.raisedNumber}}</span> <!-- Show the raised number -->
+      {{else}}
+      <span class="badge bg-danger">Not Raised</span>
+      {{/if}}
+    </td>
+    <td>
+      {{#if this.isCredited}}
+      <span class="badge bg-success">Credited</span>
+      {{else}}
+      <span class="badge bg-warning text-dark">Pending</span>
+      {{/if}}
+    </td>
+  </tr>
+  {{/each}}
+</tbody>
+
             </table>
           </div>
         </div>
@@ -500,7 +512,91 @@ header img {
     </div>
   {{!-- </div>
 </div> --}}
+<!-- Custom Alert Modal -->
+<div id="custom-alert" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Success</h5>
+       <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="background: none; color: black;">
+    <span aria-hidden="true">&times;</span>
+</button>
 
+      </div>
+      <div class="modal-body">
+        <p>Raised successfully! Please send the downloaded PDF invoice to the accounts department by clicking the Gmail button.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="send-email-btn">Send Gmail</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+    .modal.fade .modal-dialog {
+  transition: transform 0.3s ease-out;
+}
+
+.modal.show .modal-dialog {
+  transform: translateY(0);
+}
+
+.modal.fade .modal-dialog {
+  transform: translateY(-50px);
+}
+
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const raiseInvoiceBtn = document.querySelector('.btn-secondary');
+    const rowCheckboxes = document.querySelectorAll('.select-row');
+
+    raiseInvoiceBtn.addEventListener('click', async function () {
+      const selectedIndexes = [];
+
+      rowCheckboxes.forEach((checkbox, index) => {
+        if (checkbox.checked && !checkbox.disabled) {
+          selectedIndexes.push(index); // Push index of the selected checkbox
+        }
+      });
+
+      if (selectedIndexes.length > 0) {
+        try {
+          const response = await fetch('/generate-invoice-pdf', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ indexes: selectedIndexes })
+          });
+
+          if (response.ok) {
+            // Extract the filename from the headers
+            const filename = response.headers.get('Content-Disposition').split('filename=')[1];
+
+            // Convert the response into a Blob (binary data)
+            const blob = await response.blob();
+
+            // Create a temporary download link for the PDF
+            const downloadLink = document.createElement('a');
+            downloadLink.href = window.URL.createObjectURL(blob);
+            downloadLink.download = filename; // Set the filename for the download
+            document.body.appendChild(downloadLink);
+            downloadLink.click(); // Simulate a click to trigger the download
+            document.body.removeChild(downloadLink); // Remove the link from the DOM
+          } else {
+            console.error('Failed to generate invoice PDF');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      } else {
+        alert('Please select at least one entry to raise an invoice.');
+      }
+    });
+  });
+</script>
 
 <script>
   $(document).ready(function () {
@@ -537,56 +633,70 @@ header img {
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const raiseInvoiceBtn = document.querySelector('.btn-secondary');
-        const rowCheckboxes = document.querySelectorAll('.select-row');
+  document.addEventListener('DOMContentLoaded', function () {
+    const raiseInvoiceBtn = document.querySelector('.btn-secondary');
+    const rowCheckboxes = document.querySelectorAll('.select-row');
 
-        raiseInvoiceBtn.addEventListener('click', async function () {
-            const selectedIndexes = [];
+    raiseInvoiceBtn.addEventListener('click', async function () {
+        const selectedIndexes = [];
 
-            rowCheckboxes.forEach((checkbox, index) => {
-                if (checkbox.checked && !checkbox.disabled) {
-                    selectedIndexes.push(index); // Push index of the selected checkbox
-                }
-            });
-
-            if (selectedIndexes.length > 0) {
-                try {
-                    const response = await fetch('/update-wallet-status-bulk-p', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ indexes: selectedIndexes })
-                    });
-
-                    if (response.ok) {
-                        // Optionally, update the UI to reflect the status change before reloading
-                        selectedIndexes.forEach((index) => {
-                            const rowBadge = document.querySelectorAll('.badge')[index];
-                            rowBadge.textContent = 'Raised';
-                            rowBadge.classList.remove('bg-danger');
-                            rowBadge.classList.add('bg-success');
-
-                            // Disable the checkbox after raising
-                            const checkbox = rowCheckboxes[index];
-                            checkbox.disabled = true;
-                            checkbox.checked = false;
-                        });
-
-                        // Reload the page after successful update
-                        location.reload();
-                    } else {
-                        console.error('Failed to update wallet status');
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                }
-            } else {
-                alert('Please select at least one entry to raise an invoice.');
+        rowCheckboxes.forEach((checkbox, index) => {
+            if (checkbox.checked && !checkbox.disabled) {
+                selectedIndexes.push(index); // Push index of the selected checkbox
             }
         });
+
+        if (selectedIndexes.length > 0) {
+            try {
+                const response = await fetch('/update-wallet-status-bulk-p', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ indexes: selectedIndexes })
+                });
+
+                if (response.ok) {
+                    // Optionally, update the UI to reflect the status change before reloading
+                    selectedIndexes.forEach((index) => {
+                        const rowBadge = document.querySelectorAll('.badge')[index];
+                        rowBadge.textContent = 'Raised';
+                        rowBadge.classList.remove('bg-danger');
+                        rowBadge.classList.add('bg-success');
+
+                        // Disable the checkbox after raising
+                        const checkbox = rowCheckboxes[index];
+                        checkbox.disabled = true;
+                        checkbox.checked = false;
+                    });
+
+                    // Show custom alert modal
+                    $('#custom-alert').modal('show');
+                } else {
+                    console.error('Failed to update wallet status');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        } else {
+            alert('Please select at least one entry to raise an invoice.');
+        }
     });
+
+  document.getElementById('send-email-btn').addEventListener('click', function() {
+    const email = 'accounts@indianeduhub.com';
+    const subject = 'Invoice PDF';
+    const body = 'Please find the attached PDF for the raised invoices.';
+
+    const encodedSubject = encodeURIComponent(subject);
+    const encodedBody = encodeURIComponent(body);
+
+    // Open Gmail compose window with pre-filled details
+    window.location.href = `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${encodedSubject}&body=${encodedBody}`;
+});
+
+});
+
 </script>
 
 
