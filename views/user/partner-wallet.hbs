@@ -552,7 +552,21 @@ header img {
 .modal.fade .modal-dialog {
   transform: translateY(-50px);
 }
+.close {
+    font-size: 1.5rem; /* Increase font size for better visibility */
+    color: #fff; /* White color for the close icon */
+    opacity: 0.8; /* Slight transparency */
+    border: none; /* Remove border */
+    background: none; /* Remove background */
+    padding: 0; /* Remove default padding */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: color 0.3s, opacity 0.3s; /* Smooth transition for hover effects */
+}
 
+.close:hover {
+    color: #ff4d4d; /* Change color on hover */
+    opacity: 1; /* Full opacity on hover */
+}
 </style>
 
 <div class="modal fade" id="date-restriction-modal" tabindex="-1" role="dialog" aria-labelledby="dateRestrictionModalLabel" aria-hidden="true">
