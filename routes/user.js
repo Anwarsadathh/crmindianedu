@@ -217,6 +217,15 @@ function verifyAccounts(req, res, next) {
   }
 }
 
+// Middleware for verifying client login
+function verifyTl(req, res, next) {
+  if (req.session && req.session.tl) {
+    next(); // Proceed to the next middleware or route handler
+  } else {
+    res.redirect("/team-lead"); // Redirect to the client login page
+  }
+}
+
 function verifyPartner(req, res, next) {
   if (req.session && req.session.partner) {
     next();
@@ -293,7 +302,7 @@ router.get("/accounts", (req, res) => {
   res.render("user/accounts-login", { user: true });
 });
 
-router.get("/crm-tl-dashboard", async (req, res) => {
+router.get("/crm-tl-dashboard",verifyTl, async (req, res) => {
   const { leadOwnerEmail, startDate, endDate } = req.query;
 
   // Fetch all lead owners
@@ -333,7 +342,7 @@ router.get("/crm-tl-dashboard", async (req, res) => {
 });
 
 
-router.get("/crm-tl-details", async (req, res) => {
+router.get("/crm-tl-details", verifyTl, async (req, res) => {
   try {
     const { leadOwnerEmail, startDate, endDate, state, city, course } =
       req.query;
@@ -394,7 +403,7 @@ router.get("/crm-tl-details", async (req, res) => {
 });
 
 
-router.get("/crm-tl-assigned", async (req, res) => {
+router.get("/crm-tl-assigned", verifyTl, async (req, res) => {
   try {
     const { leadOwnerEmail, startDate, endDate, state, city, course } =
       req.query;
@@ -476,7 +485,7 @@ router.get("/crm-tl-assigned", async (req, res) => {
 // });
 
 
-router.get("/crm-tl-referral", (req, res) => {
+router.get("/crm-tl-referral", verifyTl, (req, res) => {
   serviceHelpers.getAllReferral().then((referral) => {
     // Exclude the first item from the array
 
@@ -494,7 +503,7 @@ router.get("/crm-tl-referral", (req, res) => {
   });
 });
 
-router.post("/crm-tl-referral", async (req, res) => {
+router.post("/crm-tl-referral", verifyTl, async (req, res) => {
   try {
     const { title, amount, leadOwner } = req.body;
 
@@ -520,7 +529,7 @@ router.post("/crm-tl-referral", async (req, res) => {
   }
 });
 
-router.post("/crm-tl-referral-scratch", async (req, res) => {
+router.post("/crm-tl-referral-scratch", verifyTl, async (req, res) => {
   try {
     const { title, scratch } = req.body;
     const leadOwner = req.session.user.email; // Assuming the logged-in user's email is stored in the session
@@ -1935,6 +1944,34 @@ router.get("/client-details", verifyClient, (req, res) => {
     });
 });
 
+
+router.get("/team-lead", (req, res) => {
+  res.render("user/team-lead-login", { user: true });
+});
+
+router.post("/team-lead", (req, res) => {
+  const { email, password } = req.body;
+  const validEmail = process.env.ADMINTL_EMAIL;
+  const validPassword = process.env.ADMINTL_PASSWORD;
+
+  if (email === validEmail && password === validPassword) {
+    req.session.tl = email;
+    req.session.save((err) => {
+      if (err) {
+        console.error(err);
+        return res
+          .status(500)
+          .json({ success: false, message: "Internal server error" });
+      }
+      res.redirect("/crm-tl-dashboard");
+    });
+  } else {
+    res.render("user/team-lead-login", {
+      user: true,
+      error: "Invalid email or password",
+    });
+  }
+});
 
 
 router.get("/client-department", (req, res) => {
