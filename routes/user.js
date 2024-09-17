@@ -1099,7 +1099,7 @@ router.get('/s-referral', async (req, res) => {
   const studentId = req.query.studentid;
 
   // Regular expression to match the expected student ID format
-  const validIdPattern = /^(IEH\d+|SAMPLE007)$/;
+  const validIdPattern = /^(IEH-\d+|SAMPLE007)$/;
   
   if (!studentId || !validIdPattern.test(studentId)) {
     return res.status(400).send('Invalid or missing Student ID');
