@@ -3004,7 +3004,7 @@ router.post("/update-wallet-status-bulk", async (req, res) => {
     doc
       .fontSize(12)
       .font("Helvetica")
-      .text(affiliate.institutename || "Sample Institute", 50, 120);
+      .text(affiliate.name || "Sample Institute", 50, 120);
 
     doc
       .text(`Invoice No: ${currentRaisedNumber}`, 400, 120)
@@ -3061,18 +3061,21 @@ router.post("/update-wallet-status-bulk", async (req, res) => {
     );
 
     // Footer section with bank details and dynamic affiliate name
+    // Fetch affiliate details dynamically from the session or the database
+    const branch = affiliate.branch || " Not Available";
+    const accountName = affiliate.account_holder_name || " Not Available";
+    const accountNumber = affiliate.account_number || " Not Available";
+    const ifscCode = affiliate.ifsc_code || " Not Available";
+
+    // Dynamic footer section with bank details
     doc
       .fontSize(10)
-      .text(
-        `For ${affiliate.institutename || "Sample Institute"}`,
-        50,
-        yPos + 80
-      )
+      .text(`For ${affiliate.name || "Sample Institute"}`, 50, yPos + 80)
       .text("Authorized Signatory", 50, yPos + 100)
-      .text("Branch: XYZ Branch", 350, yPos + 80)
-      .text("Account Name: Sample", 350, yPos + 95)
-      .text("Account Number: 0909090909090", 350, yPos + 110)
-      .text("IFSC Code: Sample123", 350, yPos + 125);
+      .text(`Branch: ${branch}`, 350, yPos + 80)
+      .text(`Account Name: ${accountName}`, 350, yPos + 95)
+      .text(`Account Number: ${accountNumber}`, 350, yPos + 110)
+      .text(`IFSC Code: ${ifscCode}`, 350, yPos + 125);
 
     // End the document and finish writing the PDF
     doc.end();
@@ -3416,15 +3419,26 @@ router.post('/update-wallet-status-bulk-p', verifyPartner, async (req, res) => {
       yPos + 25
     );
 
-    // Footer section with bank details and dynamic institute name
+    // Fetch affiliate details dynamically from the session or the database
+    const branch = partner.branch || " Not Available";
+    const accountName = partner.account_holder_name || " Not Available";
+    const accountNumber =
+      partner.account_number || " Not Available";
+    const ifscCode = partner.ifsc_code || " Not Available";
+
+    // Dynamic footer section with bank details
     doc
       .fontSize(10)
-      .text(`For ${partner.institutename || "Sample Institute"}`, 50, yPos + 80)
+      .text(
+        `For ${partner.institutename || "Sample Institute"}`,
+        50,
+        yPos + 80
+      )
       .text("Authorized Signatory", 50, yPos + 100)
-      .text("Branch: XYZ Branch", 350, yPos + 80)
-      .text("Account Name: Sample", 350, yPos + 95)
-      .text("Account Number: 0909090909090", 350, yPos + 110)
-      .text("IFSC Code: Sample123", 350, yPos + 125);
+      .text(`Branch: ${branch}`, 350, yPos + 80)
+      .text(`Account Name: ${accountName}`, 350, yPos + 95)
+      .text(`Account Number: ${accountNumber}`, 350, yPos + 110)
+      .text(`IFSC Code: ${ifscCode}`, 350, yPos + 125);
 
     // End the document and finish writing the PDF
     doc.end();

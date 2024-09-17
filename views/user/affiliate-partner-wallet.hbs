@@ -25,7 +25,8 @@
 
 <!-- DataTables CSS -->
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css">
-
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  
 <!-- DataTables JavaScript -->
 <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
 <!-- DataTables CSS -->
@@ -161,6 +162,11 @@ header img {
     background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
 }
 
+/* Modal Customization */
+.modal-contentt {
+    border-radius: 15px;
+    background: linear-gradient(135deg, #ff5e5e, #d70040); /* Refined red gradient */
+}
 .modal-dialog {
     max-width: 900px;
 }
@@ -384,7 +390,11 @@ header img {
 {{!-- <!-- Table End -->
 <div class="container-fluid pt-4 px-4" style="width: 100%;">
   <div class="row g-4"> --}}
+    
     <div class="container mt-3">
+<!-- Modal for Date Restriction Alert -->
+<!-- Modal for Date Restriction Alert -->
+
 
 
  <!-- Wallet Balance -->
@@ -459,7 +469,7 @@ header img {
   <tr>
     <td><input type="checkbox" class="select-row" data-index="{{@index}}" {{#if this.isRaised}}disabled{{/if}}></td>
     <td>{{formatDate this.date}}</td>
-<td hidden> {{../institutename}}</td>
+{{!-- <td hidden> {{../institutename}}</td>
   <td hidden>{{../instituteid}}</td>
   <td hidden> {{../comtdany_tytde}}</td>
   <td hidden> {{../state}}</td>
@@ -468,7 +478,7 @@ header img {
   <td hidden>{{../account_holder_name}}</td>
   <td hidden> {{../account_number}}</td>
   <td hidden>{{../ifsc_code}}</td>
-  <td hidden> {{../branch}}</td>
+  <td hidden> {{../branch}}</td> --}}
     <td>{{this.studentDetails.studentid}}</td>
     <td>{{this.studentDetails.name}}</td>
     <td>{{this.studentDetails.course}}</td>
@@ -529,6 +539,25 @@ header img {
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="date-restriction-modal" tabindex="-1" role="dialog" aria-labelledby="dateRestrictionModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-contentt">
+      <div class="modal-header">
+        <h5 class="modal-title text-white" id="dateRestrictionModalLabel">Action Not Allowed</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-white">
+        You can only raise invoices on the 5th and 31st of each month. Please try again on the allowed dates.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
 <style>
     .modal.fade .modal-dialog {
   transition: transform 0.3s ease-out;
@@ -543,155 +572,145 @@ header img {
 }
 
 </style>
-<script> $(document).ready(function () {
-    // Initialize the DataTable
-    var table = $('#invoiceTable').DataTable({
-      "order": [[0, 'desc']], // Order by date descending
-      "paging": true,
-      "searching": true,
-      "info": false
-    });
+<script>$(document).ready(function () {
+  // Initialize the DataTable
+  var table = $('#invoiceTable').DataTable({
+    "order": [[0, 'desc']], // Order by date descending
+    "paging": true,
+    "searching": true,
+    "info": false
+  });
 
-    // Filter logic for status
-    $('#filter-status').on('change', function () {
-      var filterValue = $(this).val();
+  // Filter logic for status
+  $('#filter-status').on('change', function () {
+    var filterValue = $(this).val();
 
-      // Clear existing table search
+    // Clear existing table search
+    table.search('').columns().search('').draw();
+
+    if (filterValue === 'raised') {
+      // Search for any cell that contains the word "Raised"
+      table.column(9).search('^Raised', true, false).draw();
+    } else if (filterValue === 'not-raised') {
+      table.column(9).search('Not Raised').draw();
+    } else if (filterValue === 'credited') {
+      table.column(10).search('Credited').draw();
+    } else if (filterValue === 'pending') {
+      table.column(10).search('Pending').draw();
+    } else {
+      // If no filter, clear all searches
       table.search('').columns().search('').draw();
+    }
+  });
+});
+</script>
 
-      if (filterValue === 'raised') {
-        table.column(9).search('Raised').draw();
-      } else if (filterValue === 'not-raised') {
-        table.column(9).search('Not Raised').draw();
-      } else if (filterValue === 'credited') {
-        table.column(10).search('Credited').draw();
-      } else if (filterValue === 'pending') {
-        table.column(10).search('Pending').draw();
-      } else {
-        table.search('').columns().search('').draw();
-      }
-    });
-  });</script>
 
-{{!-- <script>
-  $(document).ready(function () {
-    // Initialize the DataTable
-    var table = $('#invoiceTable').DataTable({
-      "order": [[0, 'desc']], // Order by date descending
-      "paging": true,
-      "searching": true,
-      "info": false
-    });
+<script>
+ document.addEventListener('DOMContentLoaded', function () {
+  const raiseInvoiceBtn = document.querySelector('#raise-invoice-btn');
+  const rowCheckboxes = document.querySelectorAll('.select-row');
 
-    // Filter logic for status
-    $('#filter-status').on('change', function () {
-      var filterValue = $(this).val();
+  const closeModalButtons = document.querySelectorAll('[data-dismiss="modal"]'); // Select all close buttons in modals
 
-      // Clear existing table search
-      table.search('').columns().search('').draw();
-
-      if (filterValue === 'raised') {
-        table.column(9).search('Raised').draw();
-      } else if (filterValue === 'not-raised') {
-        table.column(9).search('Not Raised').draw();
-      } else if (filterValue === 'credited') {
-        table.column(10).search('Credited').draw();
-      } else if (filterValue === 'pending') {
-        table.column(10).search('Pending').draw();
-      } else {
-        table.search('').columns().search('').draw();
-      }
+  // Add event listeners to close buttons (OK and close)
+  closeModalButtons.forEach((button) => {
+    button.addEventListener('click', function () {
+      const modal = button.closest('.modal');
+      $(modal).modal('hide'); // Hide the modal when OK or close button is clicked
     });
   });
 
-  {{!-- document.addEventListener('DOMContentLoaded', function () {
-    const selectAllCheckbox = document.getElementById('select-all');
-    const rowCheckboxes = document.querySelectorAll('.select-row');
-    const raiseInvoiceBtn = document.getElementById('raise-invoice-btn');
+  // Check if today is the 5th or 31st
+  const today = new Date();
+  const day = today.getDate();
 
-    // Restore the scroll position if available
-    const scrollPosition = localStorage.getItem('scrollPosition');
-    if (scrollPosition) {
-      window.scrollTo(0, parseInt(scrollPosition));
-    }
-
-    // Toggle all checkboxes when 'select-all' checkbox is clicked
-    selectAllCheckbox.addEventListener('click', function () {
-      rowCheckboxes.forEach((checkbox) => {
-        if (!checkbox.disabled) {
-          checkbox.checked = selectAllCheckbox.checked;
-        }
-      });
+  // If it's not the 5th or 31st, show the modal with the alert
+  if (day !== 5 && day !== 1) {
+    raiseInvoiceBtn.addEventListener('click', function (event) {
+      event.preventDefault(); // Prevent normal click action
+      $('#date-restriction-modal').modal('show'); // Show custom modal with alert message
     });
-
-    // Handle the 'Raise Invoice' button click
+  } else {
+    // Allow the button to function normally on the 5th and 31st
     raiseInvoiceBtn.addEventListener('click', async function () {
       const selectedIndexes = [];
 
-      rowCheckboxes.forEach((checkbox) => {
+      rowCheckboxes.forEach((checkbox, index) => {
         if (checkbox.checked && !checkbox.disabled) {
-          selectedIndexes.push(checkbox.dataset.index); // Get the index of selected rows
+          selectedIndexes.push(index); // Push index of the selected checkbox
         }
       });
 
       if (selectedIndexes.length > 0) {
         try {
-          // Store the current scroll position
-          localStorage.setItem('scrollPosition', window.scrollY);
-
-          // Send an AJAX request to update the status of selected rows
           const response = await fetch('/update-wallet-status-bulk', {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-              indexes: selectedIndexes, // Send the selected indexes to the backend
-              isRaised: true // We want to raise the status
-            })
+            body: JSON.stringify({ indexes: selectedIndexes }),
           });
 
           if (response.ok) {
-            // Update the UI to reflect the changes
-            selectedIndexes.forEach(index => {
-              // Adjust the selector to target the correct row
-              const row = document.querySelector(`tr:nth-child(${parseInt(index) + 1})`);
-              if (row) {
-                const rowBadge = row.querySelector('.raised-status');
-                if (rowBadge) {
-                  rowBadge.textContent = 'Raised';
-                  rowBadge.classList.remove('bg-danger');
-                  rowBadge.classList.add('bg-success');
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `invoice-${selectedIndexes[0] + 1}-${selectedIndexes[selectedIndexes.length - 1] + 1}.pdf`;
+            a.click();
+            URL.revokeObjectURL(url);
 
-                  // Disable the checkbox after raising
-                  const rowCheckbox = row.querySelector(`.select-row[data-index='${index}']`);
-                  if (rowCheckbox) {
-                    rowCheckbox.disabled = true;
-                    rowCheckbox.checked = false;
-                  }
-                }
-              }
-            });
-
-            // Uncheck 'Select All' after raising
-            selectAllCheckbox.checked = false;
-
-            // Reload the page after the process is completed
-            location.reload();
+            // Show the success modal
+            $('#custom-alert').modal('show');
           } else {
-            console.error('Failed to raise invoice for selected entries');
+            console.error('Failed to generate invoice');
           }
         } catch (error) {
-          console.error('Error:', error);
+          console.error('Error generating invoice:', error);
         }
       } else {
-        alert('Please select at least one entry to raise an invoice.');
+        alert('Please select at least one row to generate an invoice.');
       }
     });
-  }); --}}
-</script> --}}
+  }
 
-<script>
+  // Handle "Send Gmail" button click
+  document.getElementById('send-email-btn').addEventListener('click', function () {
+    const email = 'accounts@indianeduhub.com';
+    const subject = 'Invoice PDF';
+    const body = 'Please find the attached PDF for the raised invoices.';
+
+    const encodedSubject = encodeURIComponent(subject);
+    const encodedBody = encodeURIComponent(body);
+
+    // Open Gmail compose window with pre-filled details
+    window.location.href = `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${encodedSubject}&body=${encodedBody}`;
+  });
+
+  // Reload the page when the success modal is closed
+  $('#custom-alert').on('hidden.bs.modal', function () {
+    location.reload(); // Reload the page
+  });
+});
+
+</script>
+
+  <!-- Popper.js for Bootstrap tooltips and popovers -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <!-- Additional JavaScript Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="lib/chart/chart.min.js"></script>
+  <script src="lib/easing/easing.min.js"></script>
+  <script src="lib/waypoints/waypoints.min.js"></script>
+  <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+  <script src="lib/tempusdominus/js/moment.min.js"></script>
+  <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
+  <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+{{!-- <script>
   document.addEventListener('DOMContentLoaded', function () {
     const raiseInvoiceBtn = document.querySelector('.btn-secondary');
     const rowCheckboxes = document.querySelectorAll('.select-row');
@@ -755,19 +774,7 @@ header img {
         location.reload(); // Reload the page
     });
   });
-</script>
-
-
-  <!-- Additional JavaScript Libraries -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="lib/chart/chart.min.js"></script>
-  <script src="lib/easing/easing.min.js"></script>
-  <script src="lib/waypoints/waypoints.min.js"></script>
-  <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-  <script src="lib/tempusdominus/js/moment.min.js"></script>
-  <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
-  <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
-
+</script> --}}
   <!-- Template Javascript -->
   <script src="js/main.js"></script>
 </body>
