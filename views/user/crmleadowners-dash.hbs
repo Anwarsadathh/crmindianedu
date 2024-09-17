@@ -3,14 +3,13 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Dashboard</title>
+    <title>Team Player Dashboard</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
 
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,7 +38,7 @@
             font-size: 14px; /* Smaller font size for overall content */
         }
 
-       
+ 
     .image-stack {
   position: relative;
   display: flex;
@@ -66,10 +65,200 @@
   border: 2px solid white;
   padding: 1px;
 }
+.close {
+    font-size: 1.5rem; /* Increase font size for better visibility */
+    color: #fff; /* White color for the close icon */
+    opacity: 0.8; /* Slight transparency */
+    border: none; /* Remove border */
+    background: none; /* Remove background */
+    padding: 0; /* Remove default padding */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: color 0.3s, opacity 0.3s; /* Smooth transition for hover effects */
+}
+
+.close:hover {
+    color: #ff4d4d; /* Change color on hover */
+    opacity: 1; /* Full opacity on hover */
+}
+    .dropdown-card {
+      cursor: pointer;
+    }
+.form-label {
+    font-size: 0.875rem; /* Smaller font size for labels */
+  }
+
+  .form-control {
+    font-size: 0.875rem; /* Smaller font size for input fields */
+    padding: 0.375rem 0.75rem; /* Reduced padding */
+  }
+
+  .btn {
+    font-size: 0.75rem; /* Smaller font size for buttons */
+    padding: 0.25rem 0.5rem; /* Reduced padding */
+  }
+
+  .dropdown-card {
+    padding: 0.75rem; /* Reduced padding inside the card */
+  }
+
+  .dropdown-card i {
+    font-size: 1.5rem; /* Smaller icon size */
+  }
+
+  .dropdown-card .ms-3 {
+    font-size: 0.875rem; /* Smaller font size for text inside the card */
+  }
+
+  .bg-light {
+    padding: 0.5rem; /* Reduced padding */
+    border-radius: 0.25rem; /* Smaller border-radius */
+  }
+
+  .mb-2, .mb-0, .mb-1 {
+    margin-bottom: 0.25rem; /* Reduced bottom margin */
+  }
+
+  .small {
+    font-size: 0.75rem; /* Smaller font size */
+  }
+
+  /* Media Queries for Mobile Screens */
+  @media (max-width: 576px) {
+    .dropdown-card {
+      padding: 0.5rem; /* Further reduced padding for mobile */
+    }
+
+  
+
+    .dropdown-card .ms-3 p,
+    .dropdown-card .ms-3 h6 {
+      font-size: 0.75rem; /* Even smaller font size for text inside the card */
+    }
+
+
+    .form-control {
+      font-size: 0.75rem; /* Even smaller font size for input fields on mobile */
+    }
+
+    .form-label {
+      font-size: 0.75rem; /* Even smaller font size for labels on mobile */
+    }
+  }
+  .btn-sm{
+    background-color: rgba(0, 0, 182, 0.68) !important;
+    color: white !important;
+    border-radius: 5px !important;
+  }
+
+  .btn-secondary{
+    background-color:#333;
+  }
+   /* General modal styling */
+.modal-content {
+  background-color: #f4f4f9; /* Soft light gray background */
+  color: #333; /* Dark gray text for better readability */
+  font-size: 10px; /* Small font size as per request */
+  border-radius: 8px; /* Subtle rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+}
+
+.custom-header {
+  background-color: #6c757d; /* Cool gray header */
+  border-bottom: 2px solid #ccc; /* Light border to separate header */
+  color: #fff; /* White text in header */
+}
+
+.custom-footer {
+  background-color: #6c757d; /* Same gray for footer */
+  border-top: 2px solid #ccc; /* Light border for separation */
+  color: #fff;
+}
+
+/* Table styling */
+.custom-table-container {
+  max-height: 600px; /* Smaller height for scrollable content */
+  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-x: auto; /* Enable horizontal scrolling */
+}
+
+.custom-table {
+  width: 100%; /* Full width table */
+  border-collapse: collapse;
+}
+
+.custom-table th, 
+.custom-table td {
+  border: 1px solid #ddd; /* Light borders for a clean look */
+  text-align: left; /* Left align text for a clean layout */
+  padding: 5px; /* Small padding to complement small font size */
+  font-size: 10px; /* Font size reduced to 10px */
+}
+
+.custom-table th {
+  background-color: #e9ecef; /* Light gray background for table headers */
+  color: #495057; /* Darker text for table headers */
+}
+
+.custom-table td {
+  background-color: #fff; /* White background for table cells */
+  color: #495057; /* Darker text for readability */
+}
+
+.modal-md {
+  max-width: 500px; /* Small width for the modal */
+}
+
+/* Ensure the modal body is scrollable */
+.modal-body {
+  max-height: calc(100vh - 160px); /* Adjust the value based on the height of the header and footer */
+  overflow-y: auto; /* Enable vertical scrolling */
+  padding: 10px; /* Reduce padding for a more compact look */
+}
+
+/* Adjust the modal height and width */
+.modal-dialog {
+  height: auto; /* Allow height to adjust based on content */
+}
+
+.modal-footer {
+  position: sticky; /* Make sure the footer stays at the bottom */
+  bottom: 0;
+  background-color: #6c757d; /* Same gray for footer */
+  border-top: 2px solid #ccc; /* Light border for separation */
+  color: #fff;
+  padding: 10px;
+  z-index: 1; /* Ensure it stays above other content */
+}
+
+/* Ensure modal width is responsive */
+.modal-md {
+  width: 70%;
+  max-width: 70%;
+}
+
+@media (max-width: 768px) {
+  .modal-md {
+    width: 95% !important; /* On very small screens, modal takes 95% of screen width */
+    max-width: 95% !important;
+  }
+}
+
+.modal-header h5 {
+  font-size: 12px; /* Slightly larger header text for visibility */
+}
+
+/* Close button styling */
+.close {
+  color: #fff; /* White close button */
+}
+
+.close:hover {
+  color: #ffcc00; /* Soft yellow hover effect for close button */
+}
 
 
 
-   .filter-card {
+  .filter-card {
       background: rgba(245, 245, 245, 0.2) !important;
       border-radius: 20px !important;
       backdrop-filter: blur(10px) !important;
@@ -224,8 +413,8 @@ color: #ffffff;
       right: 20px !important;
       z-index: 9999 !important;
   }
-
-    </style>
+</style>
+    
 </head>
 
 <body>
@@ -420,46 +609,44 @@ color: #ffffff;
     
 
 
-<!-- Modal -->
-<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+<div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-md" role="document"> <!-- Smaller modal with modal-md -->
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="detailsModalLabel">Document Details</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-header custom-header">
+        <h5 class="modal-title text-white" id="detailsModalLabel">Student Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
       <div class="modal-body">
-        <table class="table table-striped">
-          <thead>
+        <div class="table-responsive custom-table-container">
+          <table class="table custom-table">
+            <thead>
             <tr>
-              <th scope="col">Course</th>
-              <th scope="col">Specialization</th>
-              <th scope="col">Status</th>
+             
               <th scope="col">Name</th>
               <th scope="col">Email</th>
               <th scope="col">Mobile</th>
-              <th scope="col">budget</th>
-              <!-- Add more headers as needed -->
+               <th scope="col">Course</th>
+              <th scope="col">Specialization</th>
+              <th scope="col">Status</th>
+
             </tr>
           </thead>
           <tbody id="modalTableBody">
             <!-- Rows will be populated dynamically -->
           </tbody>
-        </table>
+          </table>
+        </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      <div class="modal-footer custom-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
 </div>
 
-{{!-- <!-- Back Button -->
-<div class="navigation-buttons d-none">
-    <button id="backBtn" class="btn btn-secondary">
-        <i class="fa fa-arrow-left"></i> Back
-    </button>
-</div> --}}
+
 
 <!-- Main Stage Cards -->
 {{#each mainStageCounts}}
@@ -509,63 +696,6 @@ color: #ffffff;
 {{/each}}
 
 
-{{!-- <!-- Main Stage Cards -->
-{{#each mainStageCounts}}
-    <div class="col-6 col-xl-3">
-        <div class="stat-card bg-gradient-neon text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl main-stage-card" 
-            data-stage="{{mainStage}}" 
-            data-documents='{{json this.documents}}'>
-            <i class="fa fa-briefcase fa-3x neon-icon"></i>
-            <div class="ms-3">
-                <p class="mb-2 counts">{{mainStage}}</p>
-                <h6 class="mb-0">{{count}}</h6>
-            </div>
-        </div>
-    </div>
-{{/each}}
-
-<!-- Stage Cards -->
-{{#each stageCounts}}
-    <div class="col-6 col-xl-3 stage-card d-none" 
-         data-main-stage="{{mainStage}}" 
-         data-stage="{{stage}}" 
-         data-documents='{{json this.documents}}'>
-        <div class="stat-card bg-gradient-info text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-            <i class="fa fa-layer-group fa-3x neon-icon"></i>
-            <div class="ms-3">
-                <p class="mb-2 counts">{{stage}}</p>
-                <h6 class="mb-0">{{count}}</h6>
-            </div>
-        </div>
-    </div>
-{{/each}}
-
-<!-- Sub-Stage Cards -->
-{{#each subStageCounts}}
-    <div class="col-6 col-xl-3 sub-stage-card d-none" 
-         data-stage="{{stage}}" 
-         data-sub-stage="{{subStage}}" 
-         data-documents='{{json this.documents}}'>
-        <div class="stat-card bg-gradient-success text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-            <i class="fa fa-tags fa-3x neon-icon"></i>
-            <div class="ms-3">
-                <p class="mb-2 counts">{{subStage}}</p>
-                <h6 class="mb-0">{{count}}</h6>
-            </div>
-        </div>
-    </div>
-{{/each}} --}}
-{{!-- {{#each subStageCounts}}
-    <div class="col-6 col-xl-3">
-        <div class="stat-card bg-gradient-success text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl sub-stage-card" data-sub-stage="{{subStage}}" data-documents='{{json this.documents}}' data-bs-toggle="modal" data-bs-target="#detailsModal">
-            <i class="fa fa-tags fa-3x neon-icon"></i>
-            <div class="ms-3">
-                <p class="mb-2 counts">Sub-Stage: {{subStage}}</p>
-                <h6 class="mb-0">{{count}}</h6>
-            </div>
-        </div>
-    </div>
-{{/each}} --}}
 <!-- Modal for Choosing Action -->
 <div class="modal fade" id="actionModal" tabindex="-1" aria-labelledby="actionModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
@@ -583,34 +713,44 @@ color: #ffffff;
   </div>
 </div>
 
-<!-- Modal for Displaying Table -->
-<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+{{!-- <div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-md" role="document"> <!-- Smaller modal with modal-md -->
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="detailsModalLabel">Details</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-header custom-header">
+        <h5 class="modal-title text-white" id="detailsModalLabel">Client Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
       <div class="modal-body">
-        <table class="table table-striped">
-          <thead>
+        <div class="table-responsive custom-table-container">
+          <table class="table custom-table">
+            <thead>
             <tr>
-              <th>Course</th>
-              <th>Specialization</th>
-              <th>Status</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Mobile</th>
-              <th>Budget</th>
-              <!-- Add more headers as needed -->
+             
+              <th scope="col">Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Mobile</th>
+               <th scope="col">Course</th>
+              <th scope="col">Specialization</th>
+              <th scope="col">Status</th>
+
             </tr>
           </thead>
-          <tbody id="modalTableBody"></tbody>
-        </table>
+          <tbody id="modalTableBody">
+            <!-- Rows will be populated dynamically -->
+          </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer custom-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
 </div>
+ --}}
+
 
 
 
@@ -701,13 +841,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 documents.forEach(doc => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${doc.course}</td>
-                        <td>${doc.specialization}</td>
-                        <td>${doc.status}</td>
-                        <td>${doc.name}</td>
+                             <td>${doc.name}</td>
                         <td>${doc.email}</td>
                         <td>${doc.mobile}</td>
-                        <td>${doc.budget}</td>
+                         <td>${doc.course}</td>
+                        <td>${doc.specialization}</td>
+                        <td>${doc.status}</td>
                         <!-- Add more cells as needed -->
                     `;
                     modalTableBody.appendChild(row);
@@ -759,13 +898,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 documents.forEach(doc => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${doc.course}</td>
-                        <td>${doc.specialization}</td>
-                        <td>${doc.status}</td>
-                        <td>${doc.name}</td>
+                             <td>${doc.name}</td>
                         <td>${doc.email}</td>
                         <td>${doc.mobile}</td>
-                        <td>${doc.budget}</td>
+                         <td>${doc.course}</td>
+                        <td>${doc.specialization}</td>
+                        <td>${doc.status}</td>
                         <!-- Add more cells as needed -->
                     `;
                     modalTableBody.appendChild(row);
@@ -787,13 +925,12 @@ document.addEventListener("DOMContentLoaded", function() {
             documents.forEach(doc => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${doc.course}</td>
-                    <td>${doc.specialization}</td>
-                    <td>${doc.status}</td>
-                    <td>${doc.name}</td>
-                    <td>${doc.email}</td>
-                    <td>${doc.mobile}</td>
-                    <td>${doc.budget}</td>
+                           <td>${doc.name}</td>
+                        <td>${doc.email}</td>
+                        <td>${doc.mobile}</td>
+                         <td>${doc.course}</td>
+                        <td>${doc.specialization}</td>
+                        <td>${doc.status}</td>
                     <!-- Add more cells as needed -->
                 `;
                 modalTableBody.appendChild(row);

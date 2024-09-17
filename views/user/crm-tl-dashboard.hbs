@@ -3,14 +3,13 @@
 
 <head>
     <meta charset="utf-8">
-    <title>CRM Team Lead Dashboard</title>
+    <title>Team Lead Dashboard</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
 
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,7 +38,7 @@
             font-size: 14px; /* Smaller font size for overall content */
         }
 
-       
+ 
     .image-stack {
   position: relative;
   display: flex;
@@ -66,8 +65,197 @@
   border: 2px solid white;
   padding: 1px;
 }
+.close {
+    font-size: 1.5rem; /* Increase font size for better visibility */
+    color: #fff; /* White color for the close icon */
+    opacity: 0.8; /* Slight transparency */
+    border: none; /* Remove border */
+    background: none; /* Remove background */
+    padding: 0; /* Remove default padding */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: color 0.3s, opacity 0.3s; /* Smooth transition for hover effects */
+}
 
-    </style>
+.close:hover {
+    color: #ff4d4d; /* Change color on hover */
+    opacity: 1; /* Full opacity on hover */
+}
+    .dropdown-card {
+      cursor: pointer;
+    }
+.form-label {
+    font-size: 0.875rem; /* Smaller font size for labels */
+  }
+
+  .form-control {
+    font-size: 0.875rem; /* Smaller font size for input fields */
+    padding: 0.375rem 0.75rem; /* Reduced padding */
+  }
+
+  .btn {
+    font-size: 0.75rem; /* Smaller font size for buttons */
+    padding: 0.25rem 0.5rem; /* Reduced padding */
+  }
+
+  .dropdown-card {
+    padding: 0.75rem; /* Reduced padding inside the card */
+  }
+
+  .dropdown-card i {
+    font-size: 1.5rem; /* Smaller icon size */
+  }
+
+  .dropdown-card .ms-3 {
+    font-size: 0.875rem; /* Smaller font size for text inside the card */
+  }
+
+  .bg-light {
+    padding: 0.5rem; /* Reduced padding */
+    border-radius: 0.25rem; /* Smaller border-radius */
+  }
+
+  .mb-2, .mb-0, .mb-1 {
+    margin-bottom: 0.25rem; /* Reduced bottom margin */
+  }
+
+  .small {
+    font-size: 0.75rem; /* Smaller font size */
+  }
+
+  /* Media Queries for Mobile Screens */
+  @media (max-width: 576px) {
+    .dropdown-card {
+      padding: 0.5rem; /* Further reduced padding for mobile */
+    }
+
+  
+
+    .dropdown-card .ms-3 p,
+    .dropdown-card .ms-3 h6 {
+      font-size: 0.75rem; /* Even smaller font size for text inside the card */
+    }
+
+
+    .form-control {
+      font-size: 0.75rem; /* Even smaller font size for input fields on mobile */
+    }
+
+    .form-label {
+      font-size: 0.75rem; /* Even smaller font size for labels on mobile */
+    }
+  }
+  .btn-sm{
+    background-color: rgba(0, 0, 182, 0.68) !important;
+    color: white !important;
+    border-radius: 5px !important;
+  }
+
+  .btn-secondary{
+    background-color:#333;
+  }
+   /* General modal styling */
+.modal-content {
+  background-color: #f4f4f9; /* Soft light gray background */
+  color: #333; /* Dark gray text for better readability */
+  font-size: 10px; /* Small font size as per request */
+  border-radius: 8px; /* Subtle rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+}
+
+.custom-header {
+  background-color: #6c757d; /* Cool gray header */
+  border-bottom: 2px solid #ccc; /* Light border to separate header */
+  color: #fff; /* White text in header */
+}
+
+.custom-footer {
+  background-color: #6c757d; /* Same gray for footer */
+  border-top: 2px solid #ccc; /* Light border for separation */
+  color: #fff;
+}
+
+/* Table styling */
+.custom-table-container {
+  max-height: 600px; /* Smaller height for scrollable content */
+  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-x: auto; /* Enable horizontal scrolling */
+}
+
+.custom-table {
+  width: 100%; /* Full width table */
+  border-collapse: collapse;
+}
+
+.custom-table th, 
+.custom-table td {
+  border: 1px solid #ddd; /* Light borders for a clean look */
+  text-align: left; /* Left align text for a clean layout */
+  padding: 5px; /* Small padding to complement small font size */
+  font-size: 10px; /* Font size reduced to 10px */
+}
+
+.custom-table th {
+  background-color: #e9ecef; /* Light gray background for table headers */
+  color: #495057; /* Darker text for table headers */
+}
+
+.custom-table td {
+  background-color: #fff; /* White background for table cells */
+  color: #495057; /* Darker text for readability */
+}
+
+.modal-md {
+  max-width: 500px; /* Small width for the modal */
+}
+
+/* Ensure the modal body is scrollable */
+.modal-body {
+  max-height: calc(100vh - 160px); /* Adjust the value based on the height of the header and footer */
+  overflow-y: auto; /* Enable vertical scrolling */
+  padding: 10px; /* Reduce padding for a more compact look */
+}
+
+/* Adjust the modal height and width */
+.modal-dialog {
+  height: auto; /* Allow height to adjust based on content */
+}
+
+.modal-footer {
+  position: sticky; /* Make sure the footer stays at the bottom */
+  bottom: 0;
+  background-color: #6c757d; /* Same gray for footer */
+  border-top: 2px solid #ccc; /* Light border for separation */
+  color: #fff;
+  padding: 10px;
+  z-index: 1; /* Ensure it stays above other content */
+}
+
+/* Ensure modal width is responsive */
+.modal-md {
+  width: 70%;
+  max-width: 70%;
+}
+
+@media (max-width: 768px) {
+  .modal-md {
+    width: 95% !important; /* On very small screens, modal takes 95% of screen width */
+    max-width: 95% !important;
+  }
+}
+
+.modal-header h5 {
+  font-size: 12px; /* Slightly larger header text for visibility */
+}
+
+/* Close button styling */
+.close {
+  color: #fff; /* White close button */
+}
+
+.close:hover {
+  color: #ffcc00; /* Soft yellow hover effect for close button */
+}
+</style>
     
 </head>
 
@@ -204,60 +392,7 @@
   </div>
 </div>
 
-{{!-- <div class="container-fluid pt-4 px-4">
-  <div class="row g-4">
-    <!-- Lead Owner Dropdown -->
-    <div class="col-12 col-md-12 d-flex">
-      <div class="filter-card glassmorphism p-4 shadow-lg d-flex">
-        <div class="floating-label-wrapper">
-          <label for="leadOwner" class="floating-label">Select Lead Owner</label>
-          <select id="leadOwner" class="form-control shadow-sm circular-input">
-            <option value="">Select Lead Owner</option>
-            {{#each leadOwners}}
-              <option value="{{this.email}}" {{#if (eq this.email ../selectedLeadOwner)}}selected{{/if}}>{{this.email}}</option>
-            {{/each}}
-          </select>
-        </div>
-        <div class="floating-label-wrapper ms-3">
-          <label for="dateRange" class="floating-label">Date Range</label>
-          <input type="text" id="dateRange" class="form-control shadow-sm circular-input" placeholder="Select Date Range">
-        </div>
-        <button class="btn btn-glass shadow-sm circular-btn ms-3" id="filterBtn">
-          <i class="bi bi-filter-circle"></i>
-        </button>
-        <button class="btn btn-danger shadow-sm circular-btn ms-3" id="clearBtn">
-          <i class="bi bi-x-circle"></i>
-        </button>
-      </div>
-    </div>
-  </div>
-</div> --}}
-{{!-- <div class="container-fluid pt-4 px-4">
-  <div class="row g-4">
-    <!-- Lead Owner Dropdown -->
-    <div class="col-12 col-md-12 d-flex">
-      <div class="filter-card glassmorphism p-4 shadow-lg d-flex">
-        <div class="floating-label-wrapper">
-          <label for="leadOwner" class="floating-label">Select Lead Owner</label>
-          <select id="leadOwner" class="form-control shadow-sm circular-input">
-            <option value="">Select Lead Owner</option>
-            {{#each leadOwners}}
-              <option value="{{this.email}}" {{#if (eq this.email ../selectedLeadOwner)}}selected{{/if}}>{{this.email}}</option>
-            {{/each}}
-          </select>
-        </div>
-        <div class="floating-label-wrapper ms-3">
-          <label for="dateRange" class="floating-label">Date Range</label>
-          <input type="text" id="dateRange" class="form-control shadow-sm circular-input" placeholder="Select Date Range">
-        </div>
-        <button class="btn btn-glass shadow-sm circular-btn ms-3" id="filterBtn">
-          <i class="bi bi-filter-circle"></i>
-        </button>
-        <button class="btn btn-danger shadow-sm circular-btn ms-3" id="clearBtn">
-          <i class="bi bi-x-circle"></i>
-        </button>
-      </div>
-    </div> --}}
+
     <div class="col-12 col-xl-12">
     <div style="width: 10%;">
         <button type="button" class="btn-sm btn-secondary icon-only-btn" id="backBtn">
@@ -267,6 +402,8 @@
 </div>
 
 <style>
+    
+ 
    .icon-only-btn {
     background-color: #343a40;
     color: #ffffff;
@@ -401,17 +538,19 @@
   </div>
 </div>
 
-<!-- Modal for Displaying Table -->
-<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+{{!-- <div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-md" role="document"> <!-- Smaller modal with modal-md -->
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="detailsModalLabel">Document Details</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-header custom-header">
+        <h5 class="modal-title text-white" id="detailsModalLabel">Client Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-      <div class="modal-body">
-        <table class="table table-striped">
-          <thead>
+        <div class="modal-body">
+        <div class="table-responsive custom-table-container">
+          <table class="table custom-table">
+            <thead>
             <tr>
               <th scope="col">Course</th>
               <th scope="col">Specialization</th>
@@ -427,159 +566,51 @@
             <!-- Rows will be populated dynamically -->
           </tbody>
         </table>
+     </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      <div class="modal-footer custom-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
-</div>
-
-{{!-- <!-- Back Button -->
-<button id="backBtn" class="btn btn-secondary" style="display: none;">
-  <i class="fa fa-arrow-left"></i> Back
-</button> --}}
-
-   {{!-- <!-- Lead Statistics -->
-        <div class="col-6 col-xl-3">
-            <div class="stat-card bg-gradient-primary text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-chart-line fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total Leads</p>
-                    <h6 class="mb-0">{{totalLeads}}</h6>
-                </div>
-            </div>
-        </div>
-
-
-
-<!-- Modal -->
-<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+</div> --}}
+<div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-md" role="document"> <!-- Smaller modal with modal-md -->
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="detailsModalLabel">Document Details</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-header custom-header">
+        <h5 class="modal-title text-white" id="detailsModalLabel">Student Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
       <div class="modal-body">
-        <table class="table table-striped">
-          <thead>
+        <div class="table-responsive custom-table-container">
+          <table class="table custom-table">
+            <thead>
             <tr>
-              <th scope="col">Course</th>
-              <th scope="col">Specialization</th>
-              <th scope="col">Status</th>
+             
               <th scope="col">Name</th>
               <th scope="col">Email</th>
               <th scope="col">Mobile</th>
-              <th scope="col">budget</th>
-              <!-- Add more headers as needed -->
+               <th scope="col">Course</th>
+              <th scope="col">Specialization</th>
+              <th scope="col">Status</th>
+
             </tr>
           </thead>
           <tbody id="modalTableBody">
             <!-- Rows will be populated dynamically -->
           </tbody>
-        </table>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Main Stage Cards -->
-{{#each mainStageCounts}}
-    <div class="col-6 col-xl-3">
-        <div class="stat-card bg-gradient-neon text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl main-stage-card" 
-            data-stage="{{mainStage}}" 
-            data-documents='{{json this.documents}}'>
-            <i class="fa fa-briefcase fa-3x neon-icon"></i>
-            <div class="ms-3">
-                <p class="mb-2 counts">{{mainStage}}</p>
-                <h6 class="mb-0">{{count}}</h6>
-            </div>
+          </table>
         </div>
-    </div>
-{{/each}}
-
-<!-- Stage Cards -->
-{{#each stageCounts}}
-    <div class="col-6 col-xl-3 stage-card d-none" 
-         data-main-stage="{{mainStage}}" 
-         data-stage="{{stage}}" 
-         data-documents='{{json this.documents}}'>
-        <div class="stat-card bg-gradient-info text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-            <i class="fa fa-layer-group fa-3x neon-icon"></i>
-            <div class="ms-3">
-                <p class="mb-2 counts">{{stage}}</p>
-                <h6 class="mb-0">{{count}}</h6>
-            </div>
-        </div>
-    </div>
-{{/each}}
-
-<!-- Sub-Stage Cards -->
-{{#each subStageCounts}}
-    <div class="col-6 col-xl-3 sub-stage-card d-none" 
-         data-stage="{{stage}}" 
-         data-sub-stage="{{subStage}}" 
-         data-documents='{{json this.documents}}'>
-        <div class="stat-card bg-gradient-success text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-            <i class="fa fa-tags fa-3x neon-icon"></i>
-            <div class="ms-3">
-                <p class="mb-2 counts">{{subStage}}</p>
-                <h6 class="mb-0">{{count}}</h6>
-            </div>
-        </div>
-    </div>
-{{/each}}
-
-
-  
-
-<div class="modal fade" id="actionModal" tabindex="-1" aria-labelledby="actionModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="actionModalLabel">Choose Action</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-        <p>Please choose what you want to do:</p>
-        <button type="button" class="btn btn-primary" id="showCardsBtn">Show Stages</button>
-        <button type="button" class="btn btn-secondary" id="showTableBtn">Show Table</button>
+      <div class="modal-footer custom-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Modal for Displaying Table -->
-<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="detailsModalLabel">Details</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>Course</th>
-              <th>Specialization</th>
-              <th>Status</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Mobile</th>
-              <th>Budget</th>
-              <!-- Add more headers as needed -->
-            </tr>
-          </thead>
-          <tbody id="modalTableBody"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
 
 
 
@@ -670,13 +701,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 documents.forEach(doc => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${doc.course}</td>
-                        <td>${doc.specialization}</td>
-                        <td>${doc.status}</td>
+                       
                         <td>${doc.name}</td>
                         <td>${doc.email}</td>
                         <td>${doc.mobile}</td>
-                        <td>${doc.budget}</td>
+                         <td>${doc.course}</td>
+                        <td>${doc.specialization}</td>
+                        <td>${doc.status}</td>
                         <!-- Add more cells as needed -->
                     `;
                     modalTableBody.appendChild(row);
@@ -728,13 +759,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 documents.forEach(doc => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${doc.course}</td>
-                        <td>${doc.specialization}</td>
-                        <td>${doc.status}</td>
                         <td>${doc.name}</td>
                         <td>${doc.email}</td>
                         <td>${doc.mobile}</td>
-                        <td>${doc.budget}</td>
+                         <td>${doc.course}</td>
+                        <td>${doc.specialization}</td>
+                        <td>${doc.status}</td>
                         <!-- Add more cells as needed -->
                     `;
                     modalTableBody.appendChild(row);
@@ -756,204 +786,12 @@ document.addEventListener("DOMContentLoaded", function() {
             documents.forEach(doc => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${doc.course}</td>
-                    <td>${doc.specialization}</td>
-                    <td>${doc.status}</td>
                     <td>${doc.name}</td>
-                    <td>${doc.email}</td>
-                    <td>${doc.mobile}</td>
-                    <td>${doc.budget}</td>
-                    <!-- Add more cells as needed -->
-                `;
-                modalTableBody.appendChild(row);
-            });
-            new bootstrap.Modal(document.getElementById('detailsModal')).show();
-        });
-    });
-});
-</script> --}}
-
-
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    let selectedMainStage = null;
-    let selectedStage = null;
-    let documents = null;
-    const backBtn = document.getElementById("backBtn");
-
-    // Initialize Back Button
-    backBtn.style.display = "none";
-
-    function showBackButton() {
-        backBtn.style.display = "block";
-    }
-
-    function hideBackButton() {
-        backBtn.style.display = "none";
-    }
-
-    function resetView() {
-        document.querySelectorAll(".main-stage-card, .stage-card, .sub-stage-card").forEach(function(card) {
-            card.classList.add("d-none");
-        });
-        document.querySelectorAll(".main-stage-card").forEach(function(card) {
-            card.classList.remove("d-none");
-        });
-        hideBackButton();
-    }
-
-    // Handle Back Button Click
-    backBtn.addEventListener("click", function() {
-        if (selectedStage) {
-            // If sub-stages are being viewed, go back to stage view
-            document.querySelectorAll(".sub-stage-card").forEach(function(card) {
-                card.classList.add("d-none");
-            });
-            document.querySelectorAll(`.stage-card[data-main-stage="${selectedMainStage}"]`).forEach(function(card) {
-                card.classList.remove("d-none");
-            });
-            selectedStage = null;
-        } else if (selectedMainStage) {
-            // If stages are being viewed, go back to main stage view
-            document.querySelectorAll(".stage-card, .sub-stage-card").forEach(function(card) {
-                card.classList.add("d-none");
-            });
-            document.querySelectorAll(".main-stage-card").forEach(function(card) {
-                card.classList.remove("d-none");
-            });
-            selectedMainStage = null;
-        } else {
-            // If at the main stage view, reset everything
-            resetView();
-        }
-    });
-
-    // Handle main stage card click
-    document.querySelectorAll(".main-stage-card").forEach(function(mainStageCard) {
-        mainStageCard.addEventListener("click", function() {
-            selectedMainStage = this.dataset.stage;
-            documents = JSON.parse(this.getAttribute('data-documents'));
-
-            showBackButton();
-
-            // Show the action modal
-            new bootstrap.Modal(document.getElementById('actionModal')).show();
-
-            // Update button text to "Show Stages"
-            document.getElementById("showCardsBtn").textContent = "Show Stages";
-
-            // Attach action listeners
-            document.getElementById("showCardsBtn").onclick = function() {
-                // Show stage cards related to the selected main stage
-                document.querySelectorAll(".stage-card, .sub-stage-card").forEach(function(card) {
-                    card.classList.add("d-none");
-                });
-                document.querySelectorAll(`.stage-card[data-main-stage="${selectedMainStage}"]`).forEach(function(stageCard) {
-                    stageCard.classList.remove("d-none");
-                });
-                bootstrap.Modal.getInstance(document.getElementById('actionModal')).hide();
-            };
-
-            document.getElementById("showTableBtn").onclick = function() {
-                // Display the table in the modal
-                const modalTableBody = document.getElementById('modalTableBody');
-                modalTableBody.innerHTML = ''; // Clear previous data
-                documents.forEach(doc => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${doc.course}</td>
-                        <td>${doc.specialization}</td>
-                        <td>${doc.status}</td>
-                        <td>${doc.name}</td>
                         <td>${doc.email}</td>
                         <td>${doc.mobile}</td>
-                        <td>${doc.budget}</td>
-                        <!-- Add more cells as needed -->
-                    `;
-                    modalTableBody.appendChild(row);
-                });
-                bootstrap.Modal.getInstance(document.getElementById('actionModal')).hide();
-                new bootstrap.Modal(document.getElementById('detailsModal')).show();
-            };
-        });
-    });
-
-    // Handle stage card click
-    document.querySelectorAll(".stage-card").forEach(function(stageCard) {
-        stageCard.addEventListener("click", function() {
-            selectedStage = this.dataset.stage;
-            documents = JSON.parse(this.getAttribute('data-documents'));
-
-            showBackButton();
-
-            // Show the action modal
-            new bootstrap.Modal(document.getElementById('actionModal')).show();
-
-            // Update button text to "Show Sub-Stages"
-            document.getElementById("showCardsBtn").textContent = "Show Sub-Stages";
-
-            // Attach action listeners
-            document.getElementById("showCardsBtn").onclick = function() {
-                // Hide all other stages and sub-stages
-                document.querySelectorAll(".stage-card, .sub-stage-card").forEach(function(card) {
-                    card.classList.add("d-none");
-                });
-
-                // Show the clicked stage count
-                document.querySelectorAll(`.stage-card[data-stage="${selectedStage}"]`).forEach(function(stageCard) {
-                    stageCard.classList.remove("d-none");
-                });
-
-                // Show sub-stage cards related to the selected stage
-                document.querySelectorAll(`.sub-stage-card[data-stage="${selectedStage}"]`).forEach(function(subStageCard) {
-                    subStageCard.classList.remove("d-none");
-                });
-
-                bootstrap.Modal.getInstance(document.getElementById('actionModal')).hide();
-            };
-
-            document.getElementById("showTableBtn").onclick = function() {
-                // Display the table in the modal
-                const modalTableBody = document.getElementById('modalTableBody');
-                modalTableBody.innerHTML = ''; // Clear previous data
-                documents.forEach(doc => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${doc.course}</td>
+                         <td>${doc.course}</td>
                         <td>${doc.specialization}</td>
                         <td>${doc.status}</td>
-                        <td>${doc.name}</td>
-                        <td>${doc.email}</td>
-                        <td>${doc.mobile}</td>
-                        <td>${doc.budget}</td>
-                        <!-- Add more cells as needed -->
-                    `;
-                    modalTableBody.appendChild(row);
-                });
-                bootstrap.Modal.getInstance(document.getElementById('actionModal')).hide();
-                new bootstrap.Modal(document.getElementById('detailsModal')).show();
-            };
-        });
-    });
-
-    // Handle sub-stage card click
-    document.querySelectorAll(".sub-stage-card").forEach(function(subStageCard) {
-        subStageCard.addEventListener("click", function() {
-            documents = JSON.parse(this.getAttribute('data-documents'));
-
-            // Display the table in the modal directly
-            const modalTableBody = document.getElementById('modalTableBody');
-            modalTableBody.innerHTML = ''; // Clear previous data
-            documents.forEach(doc => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${doc.course}</td>
-                    <td>${doc.specialization}</td>
-                    <td>${doc.status}</td>
-                    <td>${doc.name}</td>
-                    <td>${doc.email}</td>
-                    <td>${doc.mobile}</td>
-                    <td>${doc.budget}</td>
                     <!-- Add more cells as needed -->
                 `;
                 modalTableBody.appendChild(row);
@@ -964,157 +802,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script>
      
-      {{!-- <div class="col-6 col-xl-3">
-            <div class="stat-card bg-gradient-success text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-star fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total HQL</p>
-                    <h6 class="mb-0">{{totalHQL}}</h6>
-                </div>
-            </div>
-        </div>
-           <div class="col-6 col-xl-3">
-            <div class="stat-card bg-gradient-info text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-phone fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total PQL</p>
-                    <h6 class="mb-0">{{totalPQL}}</h6>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-6 col-xl-3">
-            <div class="stat-card bg-gradient-primarys text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-chart-line fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total QL</p>
-                    <h6 class="mb-0">{{totalQL}}</h6>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-6 col-xl-3">
-            <div class="stat-card bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-clock fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total RNR</p>
-                    <h6 class="mb-0 black">{{totalRNR}}</h6>
-                </div>
-            </div>
-        </div>
-
-     
-        <div class="col-6 col-xl-3">
-            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-times fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total UQL</p>
-                    <h6 class="mb-0 black">{{totalUQL}}</h6>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-6 col-xl-3">
-            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-calendar fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total Next Intake</p>
-                    <h6 class="mb-0 black">{{totalNextIntake}}</h6>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-6 col-xl-3">
-            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-university fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total Direct University</p>
-                    <h6 class="mb-0 black">{{totalDirectUniversity}}</h6>
-                </div>
-            </div>
-        </div>
-
-  
-
-        <div class="col-6 col-xl-3">
-            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-check fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total Busy</p>
-                    <h6 class="mb-0 black">{{totalBusy}}</h6>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-6 col-xl-3">
-            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-clock fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total Call Later</p>
-                    <h6 class="mb-0 black">{{totalCallLater}}</h6>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-6 col-xl-3">
-            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-times fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total QL to NR</p>
-                    <h6 class="mb-0 black">{{totalQLToNR}}</h6>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-6 col-xl-3">
-            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-times fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total PQL to NR</p>
-                    <h6 class="mb-0 black">{{totalPQLToNR}}</h6>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-6 col-xl-3">
-            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-ban fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total Not Interested</p>
-                    <h6 class="mb-0 black">{{totalNotInterested}}</h6>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-6 col-xl-3">
-            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-question fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total Just Enquiry</p>
-                    <h6 class="mb-0 black">{{totalJustEnquiry}}</h6>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-6 col-xl-3">
-            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa fa-check fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total Regular</p>
-                    <h6 class="mb-0 black">{{totalRegular}}</h6>
-                </div>
-            </div>
-        </div> --}}
-
-        {{!-- <div class="col-6 col-xl-3">
-            <div class="stat-card  bg-gradient-white text-dark rounded d-flex align-items-center justify-content-between p-4 shadow-xl">
-                <i class="fa-brands fa-whatsapp fa-3x neon-icon"></i>
-                <div class="ms-3">
-                    <p class="mb-2 counts">Total WhatsApp Connected</p>
-                    <h6 class="mb-0 black">{{totalWhatsAppConnected}}</h6>
-                </div>
-            </div>
-        </div> --}}
+    
     </div>  
 </div>
 
@@ -1284,48 +972,7 @@ document.addEventListener("DOMContentLoaded", function() {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-{{!-- <script>
-flatpickr("#dateRange", {
-  mode: "range",
-  dateFormat: "Y-m-d", // Ensure this matches your expected format
-  onChange: function(selectedDates, dateStr, instance) {
-    console.log("Flatpickr Date Range:", dateStr); // Log the dateStr
-  }
-});
 
-document.getElementById("filterBtn").addEventListener("click", function() {
-  const leadOwner = document.getElementById("leadOwner").value;
-  const dateRange = document.getElementById("dateRange").value;
-
-  // Check if dateRange contains 'to' and split accordingly
-  let [startDate, endDate] = dateRange.split(" to ").map(date => date.trim());
-
-  // Debugging logs
-  console.log("Selected Lead Owner:", leadOwner);
-  console.log("Selected Date Range:", dateRange);
-  console.log("Parsed Start Date:", startDate);
-  console.log("Parsed End Date:", endDate);
-
-  const query = new URLSearchParams({
-    leadOwnerEmail: leadOwner,
-    startDate: startDate,
-    endDate: endDate
-  }).toString();
-
-  console.log("Query String:", query);
-
-  window.location.href = `/crm-tl-dashboard?${query}`;
-});
-
-document.getElementById("clearBtn").addEventListener("click", function() {
-  // Reset the filters
-  document.getElementById("leadOwner").value = "";
-  document.getElementById("dateRange").value = "";
-
-  // Redirect to the dashboard without query parameters
-  window.location.href = "/crm-tl-dashboard";
-});
-</script> --}}
 <script>
 flatpickr("#dateRange", {
   mode: "range",
