@@ -208,7 +208,14 @@ function verifyClient(req, res, next) {
   }
 }
 
-
+// Middleware for verifying client login
+function verifyAccounts(req, res, next) {
+  if (req.session && req.session.accounts) {
+    next(); // Proceed to the next middleware or route handler
+  } else {
+    res.redirect("/accounts"); // Redirect to the client login page
+  }
+}
 
 function verifyPartner(req, res, next) {
   if (req.session && req.session.partner) {
@@ -1150,7 +1157,7 @@ router.get("/student-referral-details",verifyLoginStudent, (req, res) => {
 });
 
 
-router.get("/accounts-invoice", async (req, res) => {
+router.get("/accounts-invoice",verifyAccounts, async (req, res) => {
   try {
     const { statusFilter } = req.query; // Get the status filter from the query params
 
@@ -1306,7 +1313,7 @@ router.post("/update-wallet-status-bulk-ac", async (req, res) => {
 
 
 
-router.get("/accounts-dashboard", async (req, res) => {
+router.get("/accounts-dashboard",verifyAccounts, async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
 
@@ -1486,7 +1493,7 @@ router.get("/get-details-by-dropdown/:value", async (req, res) => {
 
 
 
-router.get("/accounts-details", async (req, res) => {
+router.get("/accounts-details",verifyAccounts, async (req, res) => {
   try {
     // Fetch all account dashboard data
     const formData = await serviceHelpers.getAllAccountsdashboard();
@@ -1515,7 +1522,7 @@ router.get("/accounts-details", async (req, res) => {
   }
 });
 
-router.post("/update-accounts-details", async (req, res) => {
+router.post("/update-accounts-details",verifyAccounts, async (req, res) => {
   console.log("Request Body:", req.body);
 
   try {
@@ -2544,7 +2551,7 @@ router.post("/accountslogin", (req, res) => {
   const validPassword = process.env.ADMINACCOUNTS_PASSWORD;
 
   if (email === validEmail && password === validPassword) {
-    req.session.user = email;
+    req.session.accounts = email;
     req.session.save((err) => {
       if (err) {
         console.error(err);
@@ -2552,7 +2559,7 @@ router.post("/accountslogin", (req, res) => {
           .status(500)
           .json({ success: false, message: "Internal server error" });
       }
-      res.redirect("/");
+      res.redirect("/accounts-dashboard");
     });
   } else {
     res.render("user/accounts-login", {
