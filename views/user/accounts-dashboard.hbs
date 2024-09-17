@@ -65,8 +65,92 @@
   border: 2px solid white;
   padding: 1px;
 }
+.close {
+    font-size: 1.5rem; /* Increase font size for better visibility */
+    color: #fff; /* White color for the close icon */
+    opacity: 0.8; /* Slight transparency */
+    border: none; /* Remove border */
+    background: none; /* Remove background */
+    padding: 0; /* Remove default padding */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: color 0.3s, opacity 0.3s; /* Smooth transition for hover effects */
+}
 
-    </style>
+.close:hover {
+    color: #ff4d4d; /* Change color on hover */
+    opacity: 1; /* Full opacity on hover */
+}
+    .dropdown-card {
+      cursor: pointer;
+    }
+.form-label {
+    font-size: 0.875rem; /* Smaller font size for labels */
+  }
+
+  .form-control {
+    font-size: 0.875rem; /* Smaller font size for input fields */
+    padding: 0.375rem 0.75rem; /* Reduced padding */
+  }
+
+  .btn {
+    font-size: 0.75rem; /* Smaller font size for buttons */
+    padding: 0.25rem 0.5rem; /* Reduced padding */
+  }
+
+  .dropdown-card {
+    padding: 0.75rem; /* Reduced padding inside the card */
+  }
+
+  .dropdown-card i {
+    font-size: 1.5rem; /* Smaller icon size */
+  }
+
+  .dropdown-card .ms-3 {
+    font-size: 0.875rem; /* Smaller font size for text inside the card */
+  }
+
+  .bg-light {
+    padding: 0.5rem; /* Reduced padding */
+    border-radius: 0.25rem; /* Smaller border-radius */
+  }
+
+  .mb-2, .mb-0, .mb-1 {
+    margin-bottom: 0.25rem; /* Reduced bottom margin */
+  }
+
+  .small {
+    font-size: 0.75rem; /* Smaller font size */
+  }
+
+  /* Media Queries for Mobile Screens */
+  @media (max-width: 576px) {
+    .dropdown-card {
+      padding: 0.5rem; /* Further reduced padding for mobile */
+    }
+
+  
+
+    .dropdown-card .ms-3 p,
+    .dropdown-card .ms-3 h6 {
+      font-size: 0.75rem; /* Even smaller font size for text inside the card */
+    }
+
+
+    .form-control {
+      font-size: 0.75rem; /* Even smaller font size for input fields on mobile */
+    }
+
+    .form-label {
+      font-size: 0.75rem; /* Even smaller font size for labels on mobile */
+    }
+  }
+  .btn-sm{
+    background-color: rgba(0, 0, 182, 0.68) !important;
+    color: white !important;
+    border-radius: 5px !important;
+  }
+</style>
+
 </head>
 
 <body>
@@ -146,33 +230,31 @@
             </nav>
             <!-- Navbar End -->
 
-
-    <!-- Payment Step 1 Count -->
-   <!-- Date Filter Section -->
-<div class="container-fluid pt-4 px-4">
-  <div class="row g-4">
+<div class="container-fluid pt-2 ">
+  <div class="row ">
     <!-- Date Filters -->
     <form action="/accounts-dashboard" method="get" class="mb-4">
-      <div class="row">
-        <div class="col-md-4">
-          <label for="startDate">Start Date</label>
+      <div class="row pt-2">
+        <!-- Ensure 1 row layout on small screens and 3 columns on larger screens -->
+        <div class="col-4 col-md-4">
+          <label for="startDate" class="form-label">Start Date</label>
           <input type="date" id="startDate" name="startDate" class="form-control">
         </div>
-        <div class="col-md-4">
-          <label for="endDate">End Date</label>
+        <div class="col-4 col-md-4">
+          <label for="endDate" class="form-label">End Date</label>
           <input type="date" id="endDate" name="endDate" class="form-control">
         </div>
-        <div class="col-md-4 d-flex align-items-end">
-          <button type="submit" class="btn btn-primary">Filter</button>
+        <div class="col-4 col-md-3 d-flex align-items-end">
+          <button type="submit" class="btn-sm btn-primary w-100">Filter</button>
         </div>
       </div>
     </form>
 
     <!-- Dropdown Value Counts -->
-    <div class="row g-4">
+    <div class="row ">
       {{#each dropdownValueCounts}}
-      <div class="col-sm-6 col-xl-3">
-        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4 dropdown-card" data-value="{{@key}}">
+      <div class="col-6 col-sm-6 col-xl-3 pt-2">
+        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4 dropdown-card" data-value="{{@key}}" style="cursor:pointer;">
           <i class="fa fa-chart-line fa-3x text-primary"></i>
           <div class="ms-3">
             <p class="mb-2">{{@key}} Count</p>
@@ -185,32 +267,12 @@
   </div>
 </div>
 
-{{!-- <!-- Sale & Revenue Start -->
-<div class="container-fluid pt-4 px-4">
-  <div class="row g-4">
-    <!-- Loop through dropdown values and display a card for each -->
-    {{#each dropdownValueCounts}}
-    <div class="col-sm-6 col-xl-3">
-      <div class="bg-light rounded d-flex align-items-center justify-content-between p-4 dropdown-card" data-value="{{@key}}">
-        <i class="fa fa-chart-line fa-3x text-primary"></i>
-        <div class="ms-3">
-          <p class="mb-2">{{@key}} Count</p> <!-- Dropdown value name -->
-          <h6 class="mb-0">{{this}}</h6> <!-- Count for this value -->
-        </div>
-      </div>
-    </div>
-    {{/each}}
-  </div>
-</div>
-<!-- Sale & Revenue End --> --}}
 
-<!-- Modal for displaying details -->
-<!-- Updated Modal for displaying details -->
-<div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true" >
-  <div class="modal-dialog modal-md" role="document" > <!-- Smaller modal with modal-md -->
+<div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md" role="document"> <!-- Smaller modal with modal-md -->
     <div class="modal-content">
       <div class="modal-header custom-header">
-        <h5 class="modal-title" id="detailsModalLabel">Client Details</h5>
+        <h5 class="modal-title text-white" id="detailsModalLabel">Client Details</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -243,7 +305,16 @@
   </div>
 </div>
 
+
+
+
+
+
+
 <style>
+  .btn-secondary{
+    background-color:#333;
+  }
    /* General modal styling */
 .modal-content {
   background-color: #f4f4f9; /* Soft light gray background */
@@ -351,56 +422,56 @@
 
     <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
 <script>
-$(document).on('click', '.dropdown-card', function () {
-  const dropdownValue = $(this).data('value'); // Get the dropdown value from the card data attribute
-  const startDate = $('#startDate').val(); // Assume you have an input field for start date
-  const endDate = $('#endDate').val(); // Assume you have an input field for end date
+document.addEventListener("DOMContentLoaded", function() {
+  const dropdownCards = document.querySelectorAll('.dropdown-card');
+  const startDateInput = document.getElementById('startDate');
+  const endDateInput = document.getElementById('endDate');
 
-  if (dropdownValue) {
-    $.ajax({
-      url: `/get-details-by-dropdown/${dropdownValue}?startDate=${startDate}&endDate=${endDate}`,
-      method: 'GET',
-      success: function (response) {
-        if (response.success) {
-          const clients = response.clients;
-          const $modalTableBody = $('#modalTableBody');
-          $modalTableBody.empty(); // Clear existing rows
+  dropdownCards.forEach(card => {
+    card.addEventListener('click', function() {
+      const selectedValue = card.getAttribute('data-value');
+      const startDate = startDateInput.value;
+      const endDate = endDateInput.value;
 
-          // Populate the modal table with client data
-          clients.forEach(client => {
-            $modalTableBody.append(`
-              <tr>
-                <td class="text-danger font-weight-bold">${client.date || ''}</td>
-                <td class="text-dark font-weight-bold">${client.studentid || ''}</td>
-                <td>${client.name || ''}</td>
-                <td>${client.course || ''}</td>
-                <td class="hideable">${client.email || ''}</td>
-                <td class="hideable">${client.mobile || ''}</td>
-                <td class="hideable">${client.state || ''}</td>
-                <td class="hideable">${client.specificName || ''}</td>
-              </tr>
-            `);
+      // Fetch client details based on the selected value and date range
+      let query = `/get-client-details?value=${selectedValue}`;
+      if (startDate) query += `&startDate=${startDate}`;
+      if (endDate) query += `&endDate=${endDate}`;
+
+      fetch(query)
+        .then(response => response.json())
+        .then(data => {
+          // Populate the modal table
+          const modalTableBody = document.getElementById('modalTableBody');
+          modalTableBody.innerHTML = ''; // Clear previous data
+
+          data.clients.forEach(client => {
+            const row = `<tr>
+              <td>${client.date}</td>
+              <td>${client.studentid}</td>
+              <td>${client.name}</td>
+              <td>${client.course}</td>
+              <td>${client.email}</td>
+              <td>${client.mobile}</td>
+              <td>${client.state}</td>
+              <td>${client.specificName}</td>
+            </tr>`;
+            modalTableBody.innerHTML += row;
           });
 
           // Show the modal
           $('#detailsModal').modal('show');
-        } else {
-          console.warn('No details found for this dropdown value.');
-        }
-      },
-      error: function (err) {
-        console.error('Error fetching client details:', err);
-      }
+        })
+        .catch(error => {
+          console.error('Error fetching client details:', error);
+        });
     });
-  } else {
-    console.error('Dropdown value is missing.');
-  }
+  });
 });
 
 </script>
-
-
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>

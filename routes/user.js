@@ -1406,6 +1406,73 @@ router.get("/accounts-dashboard",verifyAccounts, async (req, res) => {
 
 
 
+router.get("/get-client-details", async (req, res) => {
+  try {
+    const value = req.query.value; // Fetch value from query params
+    const { startDate, endDate } = req.query; // Also fetch date filters if needed
+
+    // Fetch the client collection
+    const clientCollection = await db
+      .get()
+      .collection(collection.CLIENT_COLLECTION)
+      .find()
+      .toArray();
+
+    // Filter clients by the selected dropdown value and date filters (if paymentDetails exist)
+    const filteredClients = clientCollection.filter((client) => {
+      const paymentDetails = client.paymentDetails || {};
+      const studyStages = Object.keys(paymentDetails);
+      if (studyStages.length === 0) return false;
+
+      const lastStudyStage = studyStages[studyStages.length - 1];
+      const steps = Array.isArray(paymentDetails[lastStudyStage])
+        ? paymentDetails[lastStudyStage]
+        : [];
+
+      // Find the last step with a selected value and its date
+      let lastValue = null;
+      let lastDate = null;
+      for (let i = steps.length - 1; i >= 0; i--) {
+        if (steps[i].selectedValue) {
+          lastValue = steps[i].selectedValue;
+          lastDate = steps[i].date;
+          break;
+        }
+      }
+
+      if (!lastValue || lastValue !== value) return false;
+
+      // Apply date filtering if provided
+      const lastDateObj = new Date(lastDate);
+      if (startDate && endDate) {
+        const startDateObj = new Date(startDate);
+        const endDateObj = new Date(endDate);
+        if (lastDateObj < startDateObj || lastDateObj > endDateObj) {
+          return false;
+        }
+      } else if (startDate && !endDate) {
+        const startDateObj = new Date(startDate);
+        if (lastDateObj.getTime() !== startDateObj.getTime()) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+
+    // If no clients are found, return an empty array
+    if (!filteredClients.length) {
+      return res.status(404).json({ message: "No client details found" });
+    }
+
+    // Render the modal content with the filtered clients
+    res.json({ clients: filteredClients });
+  } catch (error) {
+    console.error("Error fetching client details:", error);
+    res.status(500).json({ message: "Error fetching client details" });
+  }
+});
+
 
 
 
