@@ -303,7 +303,7 @@ header img {
   <!-- Sidebar Start -->
         <div class="sidebar pe-4 pb-3" style="background-color: #232f65;">
             <nav class="navbar " style="background-color: #232f65;">
-                <a href="index.html" class="navbar-brand mx-4 mb-3">
+                <a href="/partner-dashboard" class="navbar-brand mx-4 mb-3">
                     <h3 class="text-primary"> <img src="/images/indian-hub-logo-vert-white-e1662813826792.png" alt="Indian Edu Hub Logo" class="log"></h3>
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4" style="background-color: #232f65;">
@@ -342,7 +342,7 @@ header img {
         <div class="content">
             <!-- Navbar Start -->
             <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
-                <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
+                <a href="/partner-dashboard" class="navbar-brand d-flex d-lg-none me-4">
                     <h2 class="text-primary mb-0"> <img src="/img/ie.png" alt="Indian Edu Hub Logo" style="height: 30px;"></h2>
                 </a>
                 <a href="#" class="sidebar-toggler flex-shrink-0">
@@ -391,73 +391,54 @@ header img {
                 <div class="card-body">
                    <h6 class="mb-4">Leads</h6>
                 <!-- Update Button -->
-                <div class="table-responsive" >
+                 <div class="table-responsive" >
                     <table class="table" id="dataTable">
                         <thead>
                             <tr>
                                 <th hidden>d</th>
-                                <th>Time Stamp</th>
+                                <th>Date</th>
                                 <th>ReferredBy</th>
                                 <th>Source</th>
                                 <th>State</th>
                                 <th>Name</th>
                                 <th>WhatsApp</th>
                                 <th>Mobile</th>
-                                <th>Budget</th>
                                 <th>City</th>
                                 <th>Course</th>
-                                <th>Current Salary</th>
-                                <th>Description</th>
                                 <th>Email</th>
-                                <th>Employee Location</th>
-                                <th>Expected Salary</th>
-                                <th>Experience</th>
-                                <th>Exposure</th>
-                                <th>Previous Qualification</th>
-                                <th>Previous University</th>
-                                <th>Sector</th>
-                                <th>Specialization</th>
-                                {{!-- <th>Role</th> --}}
-                                <th>Lead Stage & Status</th>
+                             
+                                <th>Service Taken</th>
                             </tr>
                         </thead>
                       <tbody>
-    {{#each referral}}
-    <tr>
-        <td class="font-weight-bold" data-id="{{this._id}}" data-source="{{this.source}}" hidden>{{this._id}}</td>
+  {{#each referral}}
+  <tr>
+    <td class="font-weight-bold" data-id="{{this._id}}" data-source="{{this.source}}" hidden>{{this._id}}</td>
+    <td class="text-danger">{{this.timeStamp}}</td>
+      <td>{{this.ReferredBy}}</td>
+    <td>{{#if this.source}}{{this.source}}{{else}}N/A{{/if}}</td> <!-- Conditional source display -->
+    <td>{{this.state}}</td>
+    <td>{{this.name}}</td>
+    <td>{{hidePartial this.whatsapp}}</td>
+    <td>{{hidePartial this.mobile}}</td>
+    <td>{{this.city}}</td>
+    <td>{{this.course}}</td>
+    <td>{{hidePartial this.email}}</td>
 
-       <td class="text-danger">{{this.timeStamp}}</td>
-        <td>{{this.ReferredBy}}</td>
-        <td>{{#if this.source}}{{this.source}}{{else}}N/A{{/if}}</td> <!-- Conditional source display -->
-        <td>{{this.state}}</td>
-        <td>{{this.name}}</td>
-        <td>{{hidePartial this.whatsapp}}</td>
-        <td>{{hidePartial this.mobile}}</td>
-        <td>{{this.budget}}</td>
-        <td>{{this.city}}</td>
-        <td>{{this.course}}</td>
-        <td>{{this.currSalary}}</td>
-        <td>{{this.description}}</td>
-        <td>{{hidePartial this.email}}</td>
-        <td>{{this.empLocation}}</td>
-        <td>{{this.expSalary}}</td>
-        <td>{{this.experience}}</td>
-        <td>{{this.exposure}}</td>
-        <td>{{this.prevQualification}}</td>
-        <td>{{this.prevUniversity}}</td>
-        <td>{{this.sector}}</td>
-        <td>{{this.specialization}}</td>
-        {{!-- <td>{{this.role}}</td> --}}
-             <td style="width: 50px !important;">
-            <button class="btn btn-info ms-2 show-lead-status-btn" style="font-size: 10px !important;" data-bs-toggle="modal" data-bs-target="#leadStatusModal" onclick="showLeadStatus(this)">Status</button>
-            <div class="leadStatusContent" style="display:none;">
-                {{json this.leadStatus}}
-            </div>
-        </td>
-     
-    </tr>
-    {{/each}}
+   <td class="status-icon">
+  {{#if (eq this.leadStageStatus "✔")}}
+    <span class="icon-tick">✔</span>
+  {{else}}
+    <span class="icon-cross">✘</span>
+  {{/if}}
+</td>
+
+  </tr>
+  {{/each}}
 </tbody>
+
+
+                    </table>
 
                     </table>
                 </div>

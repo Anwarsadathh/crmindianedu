@@ -317,7 +317,7 @@ header img {
  <!-- Sidebar Start -->
         <div class="sidebar pe-4 pb-3" style="background-color: #232f65;">
             <nav class="navbar " style="background-color: #232f65;">
-                <a href="index.html" class="navbar-brand mx-4 mb-3">
+                <a href="/partner-dashboard" class="navbar-brand mx-4 mb-3">
                     <h3 class="text-primary"> <img src="/images/indian-hub-logo-vert-white-e1662813826792.png" alt="Indian Edu Hub Logo" class="log"></h3>
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4" style="background-color: #232f65;">
@@ -357,7 +357,7 @@ header img {
         <div class="content">
             <!-- Navbar Start -->
             <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
-                <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
+                <a href="/partner-dashboard" class="navbar-brand d-flex d-lg-none me-4">
                     <h2 class="text-primary mb-0"> <img src="/img/ie.png" alt="Indian Edu Hub Logo" style="height: 30px;"></h2>
                 </a>
                 <a href="#" class="sidebar-toggler flex-shrink-0">
@@ -371,7 +371,7 @@ header img {
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                             <i class="fa fa-bell me-lg-2"></i>
-                            <span class="d-none d-lg-inline-flex">Notificatin</span>
+                            <span class="d-none d-lg-inline-flex">Notification</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
                             <a href="#" class="dropdown-item text-dark">
@@ -713,7 +713,7 @@ header img {
   const day = today.getDate();
 
   // If it's not the 5th or 31st, show the modal with the alert
-  if (day !== 5 && day !== 1) {
+  if (day !== 25 && day !== 10) {
     raiseInvoiceBtn.addEventListener('click', function (event) {
       event.preventDefault(); // Prevent normal click action
       $('#date-restriction-modal').modal('show'); // Show custom modal with alert message
