@@ -26,8 +26,20 @@ const hbs = exphbs.create({
   helpers: {
     formatDate: function (date) {
       if (!date) return "N/A";
-      return new Date(date).toLocaleString(); // Formats the date as a readable string
+
+      const options = {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true, // 12-hour format with AM/PM
+      };
+
+      return new Date(date).toLocaleString("en-IN", options); // Formats the date and time in DD/MM/YYYY, HH:MM:SS AM/PM format
     },
+
     incrementIndex: function (index) {
       return index + 1;
     },
@@ -77,22 +89,28 @@ const hbs = exphbs.create({
       return value;
     },
     shouldShowFollowUp: function (leadStage) {
-      const stagesWithoutFollowUp = ["HQL", "UQL", "Not Interested", "Just Enquiry", "Regular"];
+      const stagesWithoutFollowUp = [
+        "HQL",
+        "UQL",
+        "Not Interested",
+        "Just Enquiry",
+        "Regular",
+      ];
       return !stagesWithoutFollowUp.includes(leadStage);
     },
     keyValue: function (obj) {
-  return Object.keys(obj).map(key => ({ key, value: obj[key] }));
+      return Object.keys(obj).map((key) => ({ key, value: obj[key] }));
     },
     toString: function (id) {
-  return id.toString();
-},
+      return id.toString();
+    },
     unlessEqual: function (value1, value2, options) {
       if (value1 !== value2) {
         return options.fn(this);
       } else {
         return options.inverse(this);
       }
-    }
+    },
   },
 });
 

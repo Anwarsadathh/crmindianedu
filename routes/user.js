@@ -707,53 +707,85 @@ router.get("/crm-lead-owner-dashboard-details", (req, res) => {
 });
 
 
-
-
-
-
 router.get("/crm-lead-owner-dashboard", verifyLogin, async (req, res) => {
   const sessionEmail = req.session.user.email;
   const { startDate, endDate, filterType, stage, showLatestSubstage } =
     req.query;
 
   try {
-    // Modify the backend function to include documents
-   const {
-     mainStageCounts,
-     stageCounts,
-     subStageCounts,
-     totalLeads,
-     documents, // Ensure documents are included here
-   } = await serviceHelpers.getLeadStatusCounts(
-     sessionEmail,
-     startDate,
-     endDate,
-     filterType,
-     stage,
-     showLatestSubstage === "true"
-   );
+    const {
+      mainStageCounts,
+      stageCounts,
+      subStageCounts,
+      totalLeads,
+      documents, // Ensure documents are included here
+    } = await serviceHelpers.getLeadStatusCountsok(
+      sessionEmail,
+      startDate,
+      endDate
+    );
 
-
-
-
-      res.render("user/crmleadowners-dash", {
-        user: true,
-        totalLeads,
-        stage,
-        mainStageCounts,
-        stageCounts,
-        subStageCounts,
-        showLatestSubstage: showLatestSubstage === "true",
-        userEmail: req.session.user.email,
-        userName: req.session.user.name,
-        documents, // Ensure this is passed to the template
-      });
-
+    // Render the dashboard with the calculated counts
+    res.render("user/crmleadowners-dash", {
+      user: true,
+      totalLeads,
+      selectedLeadOwner: sessionEmail || "", // Pass the selected lead owner or empty string
+      mainStageCounts,
+      stageCounts,
+      subStageCounts,
+      documents, // Ensure this is passed to the template
+    });
   } catch (error) {
     console.error("Error fetching lead status counts:", error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 });
+
+
+
+// router.get("/crm-lead-owner-dashboard", verifyLogin, async (req, res) => {
+//   const sessionEmail = req.session.user.email;
+//   const { startDate, endDate, filterType, stage, showLatestSubstage } =
+//     req.query;
+
+//   try {
+//     // Modify the backend function to include documents
+//    const {
+//      mainStageCounts,
+//      stageCounts,
+//      subStageCounts,
+//      totalLeads,
+//      documents, // Ensure documents are included here
+//    } = await serviceHelpers.getLeadStatusCounts(
+//      sessionEmail,
+//      startDate,
+//      endDate,
+//      filterType,
+//      stage,
+//      showLatestSubstage === "true"
+//    );
+
+
+
+
+//       res.render("user/crmleadowners-dash", {
+//         user: true,
+//         totalLeads,
+//         stage,
+//         mainStageCounts,
+//         stageCounts,
+//         subStageCounts,
+//         showLatestSubstage: showLatestSubstage === "true",
+//         userEmail: req.session.user.email,
+//         userName: req.session.user.name,
+//         documents, // Ensure this is passed to the template
+//       });
+
+//   } catch (error) {
+//     console.error("Error fetching lead status counts:", error);
+//     res.status(500).json({ success: false, message: "Internal Server Error" });
+//   }
+// });
 
 
 router.get("/lead-details", verifyLogin, async (req, res) => {
