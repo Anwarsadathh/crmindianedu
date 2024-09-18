@@ -469,20 +469,28 @@
         </div>
       </div>
     </div> 
-    <!-- Main Stage Cards -->
-    {{#each mainStageCounts}}
-      <div class="col-6 col-xl-3">
-        <div class="stat-card bg-gradient-neon text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl main-stage-card" 
+  <!-- Main Stage Cards -->
+{{#each mainStageCounts}}
+    <div class="col-6 col-xl-3">
+        <div 
+            class="stat-card {{#if (eq mainStage 'Not Contacted')}}bg-warning{{else}}bg-gradient-neon{{/if}} text-white rounded d-flex align-items-center justify-content-between p-4 shadow-xl main-stage-card" 
             data-stage="{{mainStage}}" 
             data-documents='{{json this.documents}}'>
-          <i class="fa fa-briefcase fa-3x neon-icon"></i>
-          <div class="ms-3">
-            <p class="mb-2 counts">{{mainStage}}</p>
-            <h6 class="mb-0">{{count}}</h6>
-          </div>
+            
+            <!-- Conditional Icon -->
+            {{#if (eq mainStage 'Not Contacted')}}
+                <i class="fa fa-phone-slash fa-3x text-dark"></i> <!-- Icon for Not Contacted -->
+            {{else}}
+                <i class="fa fa-briefcase fa-3x neon-icon"></i> <!-- Default Icon -->
+            {{/if}}
+            
+            <div class="ms-3">
+                <p class="mb-2 counts">{{mainStage}}</p>
+                <h6 class="mb-0">{{count}}</h6>
+            </div>
         </div>
-      </div>
-    {{/each}}
+    </div>
+{{/each}}
 
     <!-- Stage Cards -->
     {{#each stageCounts}}

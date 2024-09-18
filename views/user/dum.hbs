@@ -1,0 +1,86 @@
+const { google } = require("googleapis");
+const { MongoClient } = require("mongodb");
+const fs = require("fs");
+const path = require("path");
+require("dotenv").config();
+
+// Load the Google Sheets API credentials
+const credentials = JSON.parse(
+  fs.readFileSync(path.join(__dirname, "./credentials.json"))
+);
+
+// Configure MongoDB
+const url = process.env.MONGODB_URL;
+const dbName = "indianedudashboard";
+const collectionName = "client";
+
+// Authenticate with Google Sheets API
+const auth = new google.auth.GoogleAuth({
+  credentials,
+  scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
+});
+
+async function updateDatabase() {
+  const sheets = google.sheets({ version: "v4", auth });
+  const spreadsheetId = "1UZYtJRvlT7yZLae32ScaoamWGdigF_4_eqJhaBeGnD0"; // Replace with your actual spreadsheet ID
+  const range = "Sheet1"; // Fetch all data in Sheet1
+
+  // Fetch data from Google Sheets
+  const response = await sheets.spreadsheets.values.get({
+    spreadsheetId,
+    range,
+  });
+
+  const rows = response.data.values;
+  if (rows.length) {
+    const client = new MongoClient(url, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    await client.connect();
+    const db = client.db(dbName);
+    const collection = db.collection(collectionName);
+
+    // Step 1: Prepare data to be updated or inserted
+    for (const row of rows) {
+      const dataToUpdate = {
+        studentId: row[0] || null,
+        date: row[1] || null,
+        mentor: row[2] || null,
+        name: row[3] || null,
+        course: row[4] || null,
+        specialization: row[5] || null,
+        mobile: row[6] || null,
+        university: row[7] || null,
+        batch: row[8] || null,
+        enrollmentNo: row[9] || null,
+        email: row[10] || null,
+        budget: row[11] || null,
+        domain: row[12] || null,
+        city: row[13] || null,
+        purpose: row[14] || null,
+        servicePack: row[15] || null,
+        scholarship: row[16] || null,
+        specificName: row[17] || null,
+        assign: row[18] || null,
+        role: row[19] || null,
+        intake: row[20] || null,
+        mentorshipStatus: row[21] || null,
+      };
+
+      // Update the document if it exists, otherwise insert a new one
+      await collection.updateOne(
+        { studentId: dataToUpdate.studentId },
+        { $set: dataToUpdate },
+        { upsert: true }
+      );
+    }
+
+    console.log("Database updated successfully.");
+    client.close();
+  } else {
+    console.log("No data found in the spreadsheet.");
+  }
+}
+
+module.exports = updateDatabase;
