@@ -408,7 +408,6 @@ router.get("/crm-tl-assigned", verifyTl, async (req, res) => {
     const { leadOwnerEmail, startDate, endDate, state, city, course, id } = req.query;
     const leadStage = await serviceHelpers.getAllLeadStage();
 
-    // Get unique lead stages
     const uniqueLeadStages = Array.from(
       new Set(leadStage.map((stage) => stage.mainStage))
     ).map((mainStage) => {
@@ -417,11 +416,9 @@ router.get("/crm-tl-assigned", verifyTl, async (req, res) => {
 
     let matchCriteria = {};
 
-    // If redirected with specific document IDs, filter by those IDs
     if (id) {
       matchCriteria._id = { $in: Array.isArray(id) ? id : [id] };
     } else {
-      // Use other match criteria if IDs are not present
       if (leadOwnerEmail) matchCriteria.leadOwnerName = leadOwnerEmail;
       if (state) matchCriteria.state = state;
       if (city) matchCriteria.city = city;
@@ -431,11 +428,9 @@ router.get("/crm-tl-assigned", verifyTl, async (req, res) => {
       }
     }
 
-    // Fetch data from both collections
     const googlesheets = await serviceHelpers.getAllGooglsheets(matchCriteria);
     const referrals = await serviceHelpers.getAllReferral(matchCriteria);
 
-    // Add source information if missing
     const filteredGooglesheets = googlesheets.map((item) => ({
       ...item,
       source: item.source || "N/A",
@@ -445,19 +440,14 @@ router.get("/crm-tl-assigned", verifyTl, async (req, res) => {
       source: item.source || "N/A",
     }));
 
-    // Combine data from both sources and filter by assigned leads
     let combinedData = [...filteredGooglesheets, ...referralsWithSource].filter(
       (item) => item.assignLead === "assigned"
     );
 
-    // Additional filtering based on name, email, etc.
     const filterFields = [
-      "name",
       "email",
       "mobile",
-      "course",
-      "specialization",
-      "status",
+   
     ];
 
     filterFields.forEach((field) => {
@@ -469,10 +459,8 @@ router.get("/crm-tl-assigned", verifyTl, async (req, res) => {
       }
     });
 
-    // Fetch lead owners
     const leadOwners = await serviceHelpers.getAllLeadOwners();
 
-    // Render the data in the view
     res.render("user/crm-tl-assigned", {
       admin: true,
       googlesheets: combinedData,
@@ -484,6 +472,7 @@ router.get("/crm-tl-assigned", verifyTl, async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
 
 
 

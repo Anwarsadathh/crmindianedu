@@ -469,37 +469,35 @@
                 </div>
             </div>
         </div>
-<div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true" >
-  <div class="modal-dialog modal-md" role="document"> <!-- Smaller modal with modal-md -->
+<div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md" role="document">
     <div class="modal-content">
       <div class="modal-header custom-header">
         <h5 class="modal-title text-white" id="detailsModalLabel">Student Details</h5>
-         <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close" style=" background-color: white !important;"></button>
-    
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="background-color: white !important;"></button>
       </div>
       <div class="modal-body">
         <div class="table-responsive custom-table-container">
           <table class="table custom-table">
             <thead>
-            <tr>
-             
-              <th scope="col">Name</th>
-              <th scope="col">Email</th>
-              <th scope="col">Mobile</th>
-               <th scope="col">Course</th>
-              <th scope="col">Specialization</th>
-              <th scope="col">Status</th>
-
-            </tr>
-          </thead>
-          <tbody id="modalTableBody">
-            <!-- Rows will be populated dynamically -->
-          </tbody>
+              <tr>
+                <th scope="col"><input type="checkbox" id="selectAllCheckbox"></th> <!-- Add "Select All" -->
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Mobile</th>
+                <th scope="col">Course</th>
+                <th scope="col">Specialization</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody id="modalTableBody">
+              <!-- Rows will be populated dynamically -->
+            </tbody>
           </table>
         </div>
       </div>
       <div class="modal-footer custom-footer">
-          <button type="button" class="btn btn-primary" id="redirectBtn">Go to Details Page</button>
+        <button type="button" class="btn btn-primary" id="redirectBtn">Get Details</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
       </div>
     </div>
@@ -561,9 +559,8 @@
     </div>
 {{/each}}
 
-
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function() {
     let selectedMainStage = null;
     let selectedStage = null;
     let documents = null;
@@ -593,6 +590,7 @@
     // Handle Back Button Click
     backBtn.addEventListener("click", function() {
         if (selectedStage) {
+            // Go back from sub-stage view to stage view
             document.querySelectorAll(".sub-stage-card").forEach(function(card) {
                 card.classList.add("d-none");
             });
@@ -601,6 +599,7 @@
             });
             selectedStage = null;
         } else if (selectedMainStage) {
+            // Go back from stage view to main stage view
             document.querySelectorAll(".stage-card, .sub-stage-card").forEach(function(card) {
                 card.classList.add("d-none");
             });
@@ -613,20 +612,27 @@
         }
     });
 
+    // Redirect to details page
     function redirectToDetailsPage(selectedDocs) {
-    const queryParams = new URLSearchParams();
-    selectedDocs.forEach(doc => {
-        for (const [key, value] of Object.entries(doc)) {
-            if (Array.isArray(value)) {
-                value.forEach(val => queryParams.append(key, val));
-            } else {
-                queryParams.append(key, value);
+        const queryParams = new URLSearchParams();
+        selectedDocs.forEach(doc => {
+            for (const [key, value] of Object.entries(doc)) {
+                if (Array.isArray(value)) {
+                    value.forEach(val => queryParams.append(key, val));
+                } else {
+                    queryParams.append(key, value);
+                }
             }
-        }
-    });
-    window.open(`/crm-tl-assigned?${queryParams.toString()}`, '_blank');
-}
+        });
+        window.open(`/crm-tl-assigned?${queryParams.toString()}`, '_blank');
+    }
 
+    // Select All functionality
+    const selectAllCheckbox = document.getElementById("selectAllCheckbox");
+    selectAllCheckbox.addEventListener("change", function() {
+        const checkboxes = document.querySelectorAll(".row-checkbox");
+        checkboxes.forEach(checkbox => checkbox.checked = selectAllCheckbox.checked);
+    });
 
     // Handle main stage card click
     document.querySelectorAll(".main-stage-card").forEach(function(mainStageCard) {
@@ -642,6 +648,7 @@
             document.getElementById("showCardsBtn").textContent = "Show Stages";
 
             document.getElementById("showCardsBtn").onclick = function() {
+                // Show stage cards related to the selected main stage
                 document.querySelectorAll(".stage-card, .sub-stage-card").forEach(function(card) {
                     card.classList.add("d-none");
                 });
@@ -652,6 +659,7 @@
             };
 
             document.getElementById("showTableBtn").onclick = function() {
+                // Display the table in the modal
                 const modalTableBody = document.getElementById('modalTableBody');
                 modalTableBody.innerHTML = ''; 
                 documents.forEach(doc => {
@@ -663,7 +671,7 @@
                         <td>${doc.mobile}</td>
                         <td>${doc.course}</td>
                         <td>${doc.specialization}</td>
-                       
+                        <td>${doc.status}</td>
                     `;
                     modalTableBody.appendChild(row);
                 });
@@ -671,20 +679,17 @@
                 new bootstrap.Modal(document.getElementById('detailsModal')).show();
 
                 // Attach redirect on button click
-               document.getElementById("redirectBtn").onclick = function() {
-    const selectedDocs = Array.from(document.querySelectorAll(".row-checkbox:checked"))
-        .map(checkbox => JSON.parse(checkbox.getAttribute('data-documents')));
+                document.getElementById("redirectBtn").onclick = function() {
+                    const selectedDocs = Array.from(document.querySelectorAll(".row-checkbox:checked"))
+                        .map(checkbox => JSON.parse(checkbox.getAttribute('data-documents')));
 
-    if (selectedDocs.length === 0) {
-        // If no rows are selected, show an alert
-        alert("Please select at least one row before proceeding.");
-        return; // Stop further execution
-    }
+                    if (selectedDocs.length === 0) {
+                        alert("Please select at least one row before proceeding.");
+                        return;
+                    }
 
-    // If rows are selected, proceed with redirection
-    redirectToDetailsPage(selectedDocs);
-};
-
+                    redirectToDetailsPage(selectedDocs);
+                };
             };
         });
     });
@@ -697,6 +702,7 @@
 
             showBackButton();
 
+            // Show sub-stage cards related to the selected stage
             document.querySelectorAll(".sub-stage-card").forEach(function(card) {
                 card.classList.add("d-none");
             });
@@ -725,7 +731,7 @@
                     <td>${doc.mobile}</td>
                     <td>${doc.course}</td>
                     <td>${doc.specialization}</td>
-                   
+                    <td>${doc.status}</td>
                 `;
                 modalTableBody.appendChild(row);
             });
@@ -734,22 +740,20 @@
 
             // Attach redirect on button click
             document.getElementById("redirectBtn").onclick = function() {
-    const selectedDocs = Array.from(document.querySelectorAll(".row-checkbox:checked"))
-        .map(checkbox => JSON.parse(checkbox.getAttribute('data-documents')));
+                const selectedDocs = Array.from(document.querySelectorAll(".row-checkbox:checked"))
+                    .map(checkbox => JSON.parse(checkbox.getAttribute('data-documents')));
 
-    if (selectedDocs.length === 0) {
-        // If no rows are selected, show an alert
-        alert("Please select at least one row before proceeding.");
-        return; // Stop further execution
-    }
+                if (selectedDocs.length === 0) {
+                    alert("Please select at least one row before proceeding.");
+                    return;
+                }
 
-    // If rows are selected, proceed with redirection
-    redirectToDetailsPage(selectedDocs);
-};
-
+                redirectToDetailsPage(selectedDocs);
+            };
         });
     });
 });
+
 
 </script>
 <!-- Modal for Choosing Action -->
@@ -863,7 +867,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         <td>${doc.mobile}</td>
                          <td>${doc.course}</td>
                         <td>${doc.specialization}</td>
-                       
+                        <td>${doc.status}</td>
                         <!-- Add more cells as needed -->
                     `;
                     modalTableBody.appendChild(row);
@@ -920,7 +924,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         <td>${doc.mobile}</td>
                          <td>${doc.course}</td>
                         <td>${doc.specialization}</td>
-                       
+                        <td>${doc.status}</td>
                         <!-- Add more cells as needed -->
                     `;
                     modalTableBody.appendChild(row);
@@ -947,7 +951,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         <td>${doc.mobile}</td>
                          <td>${doc.course}</td>
                         <td>${doc.specialization}</td>
-                       
+                        <td>${doc.status}</td>
                     <!-- Add more cells as needed -->
                 `;
                 modalTableBody.appendChild(row);

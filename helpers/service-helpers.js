@@ -1522,7 +1522,6 @@ module.exports = {
         let subStageDetails = [];
 
         allData.forEach((doc) => {
-          console.log("Processing document:", doc);
 
           let latestMainStage = null;
           let latestStage = null;
@@ -2502,10 +2501,7 @@ module.exports = {
   getLeadStatusCountsok: async (sessionEmail, startDate, endDate) => {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log("Lead Owner Email for Count:", sessionEmail);
-      console.log("Received startDate:", startDate);
-      console.log("Received endDate:", endDate);
-
+    
       // Parse startDate and endDate
       const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
       const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
@@ -2537,7 +2533,6 @@ module.exports = {
       let notContactedDocuments = []; // Initialize array to hold details of "Not Contacted" leads
 
       allData.forEach((doc) => {
-        console.log("Processing document:", doc);
 
         let latestMainStage = null;
         let latestStage = null;
@@ -2690,11 +2685,8 @@ module.exports = {
         })
         .sort((a, b) => b.count - a.count);
 
-      console.log("Main Stage Counts Array:", mainStageCountsArray);
-      console.log("Stage Counts Array:", stageCountsArray);
-      console.log("Sub-Stage Counts Array:", subStageCountsArray);
+ 
 
-      console.log("Total Leads:", allData.length);
 
       const documents = allData.map((doc) => {
         return {
