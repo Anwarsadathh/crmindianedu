@@ -185,7 +185,7 @@ header img {
 
         <div class="row">
             <div class="col-md-6 col-6 form-group">
-  <select class="form-control" id="working_status" required>
+  <select class="form-control" id="working_status" >
     <option value="" disabled selected>Working Status</option>
     <option value="fresher">Fresher</option>
     <option value="entrepreneur">Entrepreneur</option>
@@ -196,7 +196,7 @@ header img {
 
 
             <div class="col-md-6 col-6 form-group">
-                <input type="text" class="form-control" id="position" placeholder="Position" required>
+                <input type="text" class="form-control" id="position" placeholder="Position" >
                 <div id="position_error" class="error-message"></div>
             </div>
         </div>
@@ -221,7 +221,7 @@ header img {
         <div class="row">
           
   <div class="col-md-6 col-6 form-group">
-                <input type="text" class="form-control" id="present_company" placeholder="Present Company" required>
+                <input type="text" class="form-control" id="present_company" placeholder="Present Company" >
                 <div id="present_company_error" class="error-message"></div>
             </div>
             <div class="col-md-6 col-6 form-group">
@@ -451,18 +451,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('mobile_number_error').textContent = 'Invalid mobile number.';
                 hasError = true;
             }
-            if (workingStatus === '') {
-                document.getElementById('working_status_error').textContent = 'Working status is required.';
-                hasError = true;
-            }
-            if (position === '') {
-                document.getElementById('position_error').textContent = 'Position is required.';
-                hasError = true;
-            }
-            if (presentCompany === '') {
-                document.getElementById('present_company_error').textContent = 'Present company is required.';
-                hasError = true;
-            }
+           
+           
+            
             if (state === '') {
                 document.getElementById('stateError').textContent = 'State is required.';
                 hasError = true;
