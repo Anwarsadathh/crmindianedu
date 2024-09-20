@@ -49,6 +49,12 @@ const hbs = exphbs.create({
     eq: function (arg1, arg2) {
       return arg1 == arg2;
     },
+    not: function (value) {
+  return !value;
+    },
+    and: function (arg1, arg2) {
+  return arg1 && arg2;
+},
     ifCond: function (v1, operator, v2, options) {
       switch (operator) {
         case "==":

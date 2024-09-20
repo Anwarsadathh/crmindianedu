@@ -474,7 +474,7 @@ color: black !important;
                                 <td>{{this.name}}</td>
                                 <td>{{this.course}}</td>
                                 <td>{{this.specialization}}</td>
-                                <td>{{this.email}}</td>
+                                 <td><input type="text" class="form-control" value="{{this.email}}" /></td>
                                 <td>{{this.mobile}}</td>
                                 <td>{{this.state}}</td>
                                 <td>{{this.city}}</td>
@@ -488,6 +488,7 @@ color: black !important;
                                         <option value="This Week" {{#if (eq this.intake "This Week")}}selected{{/if}}>This Week</option>
                                         <option value="Month End" {{#if (eq this.intake "Month End")}}selected{{/if}}>Month End</option>
                                         <option value="Next Intake" {{#if (eq this.intake "Next Intake")}}selected{{/if}}>Next Intake</option>
+                                        <option value="Done" {{#if (eq this.intake "Done")}}selected{{/if}}>Done</option>
                                     </select>
                                 </td>
                                   <td>
@@ -595,6 +596,8 @@ color: black !important;
                                         <option value="Semester" {{#if (eq this.feepaid "Semester")}}selected{{/if}}>Semester</option>
                                         <option value="First Year" {{#if (eq this.feepaid "First Year")}}selected{{/if}}>First Year</option>
                                         <option value="Full Fee" {{#if (eq this.feepaid "Full Fee")}}selected{{/if}}>Full Fee</option>
+                                        <option value="Yearly Fee With EMI" {{#if (eq this.feepaid "Yearly Fee With EMI")}}selected{{/if}}>Yearly Fee With EMI</option>
+                                        <option value="Full Fee - EMI" {{#if (eq this.feepaid "Full Fee - EMI")}}selected{{/if}}>Full Fee - EMI</option>
                                     </select>
                                 </td>
                                 <td><input type="number" class="form-control" value="{{this.feePaidAmount}}" /></td>
@@ -603,6 +606,8 @@ color: black !important;
             <option value="" {{#if (eq this.degreeType "")}}selected{{/if}}>Select Degree</option>
             <option value="UG" {{#if (eq this.degreeType "UG")}}selected{{/if}}>UG</option>
             <option value="PG" {{#if (eq this.degreeType "PG")}}selected{{/if}}>PG</option>
+            <option value="CERTIFICATE COURSE" {{#if (eq this.degreeType "CERTIFICATE COURSE")}}selected{{/if}}>CERTIFICATE COURSE</option>
+            <option value="DIPLOMA" {{#if (eq this.degreeType "DIPLOMA")}}selected{{/if}}>DIPLOMA</option>
         </select>
     </td>
                                 <td>
@@ -888,7 +893,7 @@ function getRowData(row) {
         name: row.find('td').eq(4).text().trim(),
         course: row.find('td').eq(5).text().trim(),
         specialization: row.find('td').eq(6).text().trim(),
-        email: row.find('td').eq(7).text().trim(),
+         email: row.find('td').eq(7).find('input').val() || '',
         mobile: row.find('td').eq(8).text().trim(),
         state: row.find('td').eq(9).text().trim(),
         city: row.find('td').eq(10).text().trim(),

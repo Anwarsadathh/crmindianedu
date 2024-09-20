@@ -4114,9 +4114,9 @@ router.post("/partner-creation", async (req, res) => {
         html: `
      <p>Dear ${otherFields.owner_name},</p>
 
-<p>Welcome to the Indian Edu Hub family! We are excited to have you on board as one of our valued Affiliate Partners. Your partnership is integral to our mission of making education more accessible to all.</p>
+<p>Welcome to the Indian Edu Hub family! We are excited to have you on board as one of our valued Partner. Your partnership is integral to our mission of making education more accessible to all.</p>
 
-<p>Below are your login details to access your Affiliate Dashboard, where you can track your performance, earnings, and much more:</p>
+<p>Below are your login details to access your Partner Dashboard, where you can track your performance, earnings, and much more:</p>
 
 <ul>
   <li><strong>Email:</strong> ${email}</li>
@@ -4127,9 +4127,9 @@ router.post("/partner-creation", async (req, res) => {
 
 <p style="text-align: center;">
   <a 
-    href="https://crm.indianeduhub.in/affiliate-partner-signup" 
+    href="https://crm.indianeduhub.in/partner-signup" 
     style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-size: 16px;">
-    Log In to Your Affiliate Dashboard
+    Log In to Your Partner Dashboard
   </a>
 </p>
 
