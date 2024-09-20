@@ -9,6 +9,38 @@ const bodyParser = require("body-parser");
 
 
 module.exports = {
+  createLeadOwner: async ({ name, email, password }) => {
+    try {
+      // Get database instance and collection
+      const database = db.get();
+      const crmLeadCollection = database.collection(collection.CRM_LEAD_COLLECTION);
+
+      // Check if a lead owner with the same email already exists
+      const existingLeadOwner = await crmLeadCollection.findOne({ email });
+      if (existingLeadOwner) {
+        throw new Error("Lead owner with this email already exists.");
+      }
+
+      // Hash the password
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+      // Create the lead owner object
+      const newLeadOwner = {
+        name,
+        email,
+        password: hashedPassword, // Store the hashed password
+        createdAt: new Date(),
+      };
+
+      // Insert the new lead owner into the collection
+      await crmLeadCollection.insertOne(newLeadOwner);
+
+      return { success: true, message: "Lead owner created successfully." };
+    } catch (error) {
+      console.error("Error creating lead owner:", error);
+      throw new Error(error.message || "An error occurred while creating the lead owner.");
+    }
+  },
   getPaymentStepsByStudyStage: async (studyStage) => {
     if (!studyStage) {
       throw new Error("Study stage is required");

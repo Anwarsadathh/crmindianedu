@@ -2236,7 +2236,6 @@ router.put("/edit-payment/:id", async (req, res) => {
 });
 
 
-// Handle form submission to create a new lead owner
 router.post("/crm-create-lead", async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -2245,9 +2244,14 @@ router.post("/crm-create-lead", async (req, res) => {
     res.json({ success: true });
   } catch (error) {
     console.error("Error creating lead owner:", error);
-    res.json({ success: false, message: error.message || "An error occurred while creating the lead owner." });
+    res.json({
+      success: false,
+      message:
+        error.message || "An error occurred while creating the lead owner.",
+    });
   }
 });
+
 
 router.get("/crm-leadstage", (req, res) => {
   serviceHelpers.getAllLeadStage().then((leadStage) => {

@@ -255,6 +255,10 @@
     overflow: auto; /* Allows the table body to scroll */
     height: 430px; /* Set a height for the scrolling area */
 }
+input, select{
+font-size: 12px !important;
+color: black !important;
+}
 </style>
 
 </head>
@@ -584,7 +588,7 @@
 </td>
 
 
-                                  <td>{{this.scholarship}}</td>
+                                  <td><input type="text" class="form-control" value="{{this.scholarship}}" /></td>
                                 <td>
                                     <select class="form-select">
                                         <option value="" {{#if (eq this.feepaid "")}}selected{{/if}}>Select</option>
@@ -779,12 +783,12 @@ function toggleInitialRegistration(button) {
 
 function toggleDateVisibility(row) {
     const status = {
-        unirefund: row.find('td').eq(23).find('select').val(),
-        iehrefund: row.find('td').eq(25).find('select').val()
+        unirefund: row.find('td').eq(24).find('select').val(),
+        iehrefund: row.find('td').eq(26).find('select').val()
     };
 
-    const uniDateInput = row.find('td').eq(24).find('input');
-    const iehDateInput = row.find('td').eq(26).find('input');
+    const uniDateInput = row.find('td').eq(25).find('input');
+    const iehDateInput = row.find('td').eq(27).find('input');
 
     uniDateInput.toggleClass('d-none', status.unirefund !== 'success');
     iehDateInput.toggleClass('d-none', status.iehrefund !== 'success');
@@ -905,7 +909,7 @@ function getRowData(row) {
         dateOfRefundInitiateduni: row.find('td').eq(25).find('input').val() || '',
         iehrefundinitiated: row.find('td').eq(26).find('select').val() || '',
         dateOfRefundInitiatedieh: row.find('td').eq(27).find('input').val() || '',
-        scholarship: row.find('td').eq(28).text().trim(),
+         scholarship: row.find('td').eq(28).find('input').val() || '',
         feepaid: row.find('td').eq(29).find('select').val() || '',
         feePaidAmount: row.find('td').eq(30).find('input').val() || '',
         degreeType: row.find('td').eq(31).find('select').val() || '',
