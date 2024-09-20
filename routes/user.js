@@ -2893,6 +2893,32 @@ router.post("/affiliate-partner-signin", async (req, res) => {
 });
 
 
+// router.post("/affiliate-partner-creation", async (req, res) => {
+//   try {
+//     console.log(req.body); // Log the request body to debug
+
+//     const { email, otp, ...otherFields } = req.body;
+
+//     // Direct OTP verification not needed here; it should be handled in /verify-otp
+
+//     // Proceed with partner creation
+//     const result = await serviceHelpers.createAfPartner({
+//       email,
+//       ...otherFields,
+//     });
+
+//     if (result.success) {
+//       res.status(200).json({ success: true });
+//     } else {
+//       res.status(400).json(result);
+//     }
+//   } catch (error) {
+//     res
+//       .status(500)
+//       .json({ message: "Internal Server Error: " + error.message });
+//   }
+// });
+
 router.post("/affiliate-partner-creation", async (req, res) => {
   try {
     console.log(req.body); // Log the request body to debug
@@ -2908,18 +2934,69 @@ router.post("/affiliate-partner-creation", async (req, res) => {
     });
 
     if (result.success) {
+      // Send email with login details upon successful creation
+      const transporter = nodemailer.createTransport({
+        service: "Gmail", // or use your email service provider
+        auth: {
+          user: "clientsupport@indianeduhub.com",
+          pass: "xeep ypij nhqg ilcd",
+        },
+      });
+
+      const mailOptions = {
+        from: "clientsupport@indianeduhub.com", // Sender email
+        to: email, // Recipient email
+        subject: "Affiliate Partner Account Created",
+        html: `
+          <p>Dear ${otherFields.name},</p>
+
+<p>Welcome to the Indian Edu Hub family! We are excited to have you on board as one of our valued Affiliate Partners. Your partnership is integral to our mission of making education more accessible to all.</p>
+
+<p>Below are your login details to access your Affiliate Dashboard, where you can track your performance, earnings, and much more:</p>
+
+<ul>
+  <li><strong>Email:</strong> ${email}</li>
+  <li><strong>Password:</strong> ${otherFields.password}</li>
+</ul>
+
+<p>You can get started by clicking the link below:</p>
+
+<p style="text-align: center;">
+  <a 
+    href="https://crm.indianeduhub.in/affiliate-partner-signup" 
+    style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-size: 16px;">
+    Log In to Your Affiliate Dashboard
+  </a>
+</p>
+
+<p>If you have any questions or need assistance, feel free to reach out to our support team. We're here to help you succeed!</p>
+
+<p>We look forward to a long and prosperous partnership together.</p>
+
+<p>Best regards,<br><strong>The Indian Edu Hub Team</strong></p>
+
+<p style="font-size: 12px; color: gray;">This email contains confidential information intended solely for ${otherFields.name}. If you are not the intended recipient, please notify the sender and delete this email immediately.</p>
+
+        `,
+      };
+
+      // Send email
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.error('Error sending email:', error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+      });
+
       res.status(200).json({ success: true });
     } else {
       res.status(400).json(result);
     }
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Internal Server Error: " + error.message });
+    res.status(500).json({ message: "Internal Server Error: " + error.message });
   }
 });
-
-
 
 
 router.get("/affiliate-partner-dashboard", verifyAffiliate, async (req, res) => {
@@ -4014,24 +4091,79 @@ router.post("/partner-creation", async (req, res) => {
 
     // OTP verification logic can be added here if needed
 
-    // Proceed with partner creation
     const result = await serviceHelpers.createPartner({
       email,
       ...otherFields,
     });
 
+    // Ensure the email is valid before sending
     if (result.success) {
+      // Send email with login details upon successful creation
+      const transporter = nodemailer.createTransport({
+        service: "Gmail", // or use your email service provider
+        auth: {
+          user: "clientsupport@indianeduhub.com",
+          pass: "xeep ypij nhqg ilcd",
+        },
+      });
+
+      const mailOptions = {
+        from: "clientsupport@indianeduhub.com",
+        to: email, // Ensure this is populated
+        subject: "Partner Account Created",
+        html: `
+     <p>Dear ${otherFields.owner_name},</p>
+
+<p>Welcome to the Indian Edu Hub family! We are excited to have you on board as one of our valued Affiliate Partners. Your partnership is integral to our mission of making education more accessible to all.</p>
+
+<p>Below are your login details to access your Affiliate Dashboard, where you can track your performance, earnings, and much more:</p>
+
+<ul>
+  <li><strong>Email:</strong> ${email}</li>
+  <li><strong>Password:</strong> ${otherFields.password}</li>
+</ul>
+
+<p>You can get started by clicking the link below:</p>
+
+<p style="text-align: center;">
+  <a 
+    href="https://crm.indianeduhub.in/affiliate-partner-signup" 
+    style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-size: 16px;">
+    Log In to Your Affiliate Dashboard
+  </a>
+</p>
+
+<p>If you have any questions or need assistance, feel free to reach out to our support team. We're here to help you succeed!</p>
+
+<p>We look forward to a long and prosperous partnership together.</p>
+
+<p>Best regards,<br><strong>The Indian Edu Hub Team</strong></p>
+
+<p style="font-size: 12px; color: gray;">This email contains confidential information intended solely for ${otherFields.owner_name}. If you are not the intended recipient, please notify the sender and delete this email immediately.</p>
+
+    `,
+      };
+
+      // Send email
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.error("Error sending email:", error);
+        } else {
+          console.log("Email sent: " + info.response);
+        }
+      });
+
       res.status(200).json({ success: true });
     } else {
       res.status(400).json(result);
     }
+
   } catch (error) {
     console.error("Error creating partner:", error);
-    res
-      .status(500)
-      .json({ message: "Internal Server Error: " + error.message });
+    res.status(500).json({ message: "Internal Server Error: " + error.message });
   }
 });
+
 
 
 

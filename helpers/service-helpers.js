@@ -3494,7 +3494,7 @@ module.exports = {
         instituteid: nextInstituteId,
         owner_name: formData.owner_name,
         company_type: formData.company_type,
-        established_date: formData.established_date,
+        established_year: formData.established_year,
         institute_provides: formData.institute_provides,
         state: formData.state,
         city: formData.city,
@@ -3504,6 +3504,7 @@ module.exports = {
         account_number: formData.account_number,
         ifsc_code: formData.ifsc_code,
         branch: formData.branch,
+        mobile_number: formData.mobile_number,
       };
 
       // Insert the new partner document into the collection

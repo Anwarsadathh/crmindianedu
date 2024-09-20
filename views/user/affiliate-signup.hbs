@@ -234,7 +234,6 @@ header img {
             <div class="col-md-12 form-group position-relative">
                 <input type="text" class="form-control" id="emailOtpField" placeholder="Email" required>
                 <button type="button" id="sendOtpBtn" class="btn-sm btn-secondary position-absolute" style="right: 0; top: 0;">Send OTP</button>
-                <button type="button" id="verifyOtpBtn" class="btn-sm btn-success d-none position-absolute" style="right: 0; top: 0;">Verify OTP</button>
                 <div id="email_error" class="error-message"></div>
             </div>
         </div>
@@ -301,9 +300,10 @@ header img {
 document.addEventListener('DOMContentLoaded', function() {
     let isOtpVerified = false; // Flag to track OTP verification status
     let verifiedEmail = ''; // Store the email once OTP is verified
+    let otpAttemptCount = 0; // Counter for OTP attempts
+    const maxOtpAttempts = 3; // Max attempts allowed for sending OTP
 
     const sendOtpBtn = document.getElementById('sendOtpBtn');
-    const verifyOtpBtn = document.getElementById('verifyOtpBtn');
     const emailOtpField = document.getElementById('emailOtpField');
     const loadingIcon = document.createElement('span');
     loadingIcon.className = 'spinner-border spinner-border-sm ms-2'; // Bootstrap spinner
@@ -316,6 +316,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (email === '') {
                 document.getElementById('email_error').textContent = 'Email is required.';
+                return;
+            }
+
+            // Prevent further OTP attempts if limit reached
+            if (otpAttemptCount >= maxOtpAttempts) {
+                sendOtpBtn.disabled = true;
                 return;
             }
 
@@ -339,80 +345,25 @@ document.addEventListener('DOMContentLoaded', function() {
                     emailOtpField.value = ''; // Clear the email field
                     emailOtpField.placeholder = 'Enter OTP';
                     emailOtpField.type = 'text'; // Change the field to text for OTP input
-                    sendOtpBtn.classList.add('d-none');
-                    verifyOtpBtn.classList.remove('d-none');
                     verifiedEmail = email; // Store the email for later use
                 } else {
                     alertify.error(result.message);
-                    sendOtpBtn.disabled = false; // Re-enable the button if the OTP fails
+                    otpAttemptCount++; // Increase OTP attempt count
+                    sendOtpBtn.disabled = false; // Enable Send OTP button again
                 }
             } catch (error) {
                 console.error('Error sending OTP:', error);
                 alertify.error('An error occurred while sending OTP.');
+                otpAttemptCount++; // Increase OTP attempt count
                 sendOtpBtn.disabled = false; // Re-enable the button if there's an error
             } finally {
                 // Remove loading icon after the process
                 sendOtpBtn.removeChild(loadingIcon);
             }
-        });
-    }
 
-    if (verifyOtpBtn && emailOtpField) {
-        verifyOtpBtn.addEventListener('click', async function() {
-            const otp = emailOtpField.value.trim();
-
-            if (otp === '') {
-                document.getElementById('email_error').textContent = 'OTP is required.';
-                return;
-            }
-
-            // Show loading icon on verify button
-            verifyOtpBtn.appendChild(loadingIcon);
-            verifyOtpBtn.disabled = true;
-
-            try {
-                const response = await fetch('/verify-otp', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ otp: otp, email: verifiedEmail })
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    alertify.success('OTP verified successfully.');
-                    emailOtpField.placeholder = 'OTP Verified';
-                    emailOtpField.disabled = true; // Disable the OTP field after successful verification
-                    isOtpVerified = true; // Set OTP verification status to true
-                    verifyOtpBtn.classList.add('d-none');
-
-                    // Update the email field with the verified email
-                    const emailField = document.getElementById('emailOtpField');
-                    if (emailField) {
-                        emailField.value = verifiedEmail;
-                    } else {
-                        console.error('Email field not found.');
-                    }
-                } else {
-                    document.getElementById('email_error').textContent = result.message;
-                    alertify.error(result.message);
-                    // Show Send OTP button again
-                    sendOtpBtn.classList.remove('d-none');
-                    verifyOtpBtn.classList.add('d-none');
-                    sendOtpBtn.disabled = false; // Re-enable the Send OTP button
-                }
-            } catch (error) {
-                console.error('Error verifying OTP:', error);
-                alertify.error('An error occurred while verifying OTP.');
-                // Show Send OTP button again if there's an error
-                sendOtpBtn.classList.remove('d-none');
-                verifyOtpBtn.classList.add('d-none');
-                sendOtpBtn.disabled = false; // Re-enable the Send OTP button
-            } finally {
-                // Remove loading icon after the process
-                verifyOtpBtn.removeChild(loadingIcon);
+            // Hide "Send OTP" button after 3 failed attempts
+            if (otpAttemptCount >= maxOtpAttempts) {
+                sendOtpBtn.style.display = 'none';
             }
         });
     }
@@ -427,7 +378,7 @@ document.addEventListener('DOMContentLoaded', function() {
             errorFields.forEach(field => field.textContent = '');
 
             const name = document.getElementById('name').value.trim();
-            const email = emailOtpField.value.trim(); // Use the OTP field's value
+            const otp = emailOtpField.value.trim(); // Use the OTP field's value
             const mobileNumber = document.getElementById('mobile_number').value.trim();
             const workingStatus = document.getElementById('working_status').value.trim();
             const position = document.getElementById('position').value.trim();
@@ -443,7 +394,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('name_error').textContent = 'Name is required.';
                 hasError = true;
             }
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(verifiedEmail)) {
                 document.getElementById('email_error').textContent = 'Invalid email address.';
                 hasError = true;
             }
@@ -451,9 +402,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('mobile_number_error').textContent = 'Invalid mobile number.';
                 hasError = true;
             }
-           
-           
-            
             if (state === '') {
                 document.getElementById('stateError').textContent = 'State is required.';
                 hasError = true;
@@ -468,48 +416,67 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             if (hasError) {
+                alertify.error('Please fill all required fields and verify OTP.');
                 return; // Stop form submission if there are validation errors
             }
 
-            // Check if OTP is verified
-            if (!isOtpVerified) {
-                alertify.error('Please verify the OTP before submitting the form.');
-                return; // Stop form submission if OTP is not verified
-            }
-
-            const formData = {
-                name: name,
-                email: emailOtpField.value.trim(), // Use the emailOtpField's value
-                mobile_number: mobileNumber,
-                working_status: workingStatus,
-                position: position,
-                present_company: presentCompany,
-                state: state,
-                city: city,
-                password: password
-            };
-
+            // Verify OTP before submitting the form
             try {
-                const response = await fetch('/affiliate-partner-creation', {
+                const response = await fetch('/verify-otp', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(formData)
+                    body: JSON.stringify({ otp: otp, email: verifiedEmail })
                 });
 
                 const result = await response.json();
 
                 if (result.success) {
-                    alertify.success('Signup successful!');
-                    const signinTab = new bootstrap.Tab(document.getElementById('signin-tab'));
-                    signinTab.show();
+                    isOtpVerified = true; // Set OTP verification status to true
+                    alertify.success('OTP verified successfully.');
+
+                    // Proceed with form submission
+                    const formData = {
+                        name: name,
+                        email: verifiedEmail, // Use the verified email
+                        mobile_number: mobileNumber,
+                        working_status: workingStatus,
+                        position: position,
+                        present_company: presentCompany,
+                        state: state,
+                        city: city,
+                        password: password
+                    };
+
+                    try {
+                        const submitResponse = await fetch('/affiliate-partner-creation', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(formData)
+                        });
+
+                        const submitResult = await submitResponse.json();
+
+                        if (submitResult.success) {
+                            alertify.success('Signup successful!');
+                            const signinTab = new bootstrap.Tab(document.getElementById('signin-tab'));
+                            signinTab.show();
+                        } else {
+                            alertify.error(submitResult.message);
+                        }
+                    } catch (submitError) {
+                        console.error('Error submitting the form:', submitError);
+                        alertify.error('An error occurred while submitting the form.');
+                    }
                 } else {
-                    alertify.error(result.message);
+                    alertify.error('OTP verification failed.');
                 }
-            } catch (error) {
-                console.error('Error submitting the form:', error);
-                alertify.error('An error occurred while submitting the form.');
+            } catch (otpError) {
+                console.error('Error verifying OTP:', otpError);
+                alertify.error('An error occurred while verifying OTP.');
             }
         });
     }
