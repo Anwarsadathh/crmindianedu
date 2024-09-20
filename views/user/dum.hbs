@@ -41,50 +41,58 @@ async function updateDatabase() {
     const db = client.db(dbName);
     const collection = db.collection(collectionName);
 
+    // Log the rows for debugging
+    console.log("Rows fetched from Google Sheets:", rows);
+
     // Step 1: Prepare data to be updated or inserted
     for (const row of rows) {
-      const dataToUpdate = {
-    date: row[0] || null,
-    studentid: row[1] || null,
-    mentor: row[2] || null,
-    name: row[3] || null,
-    course: row[4] || null,
-    specialization: row[5] || null,
-    email: row[6] || null,
-    mobile: row[7] || null,
-    state: row[8] || null,
-    city: row[9] || null,
-    role: row[10] || null,
-    specificName: row[11] || null,
-    servicePack: row[12] || null,
-    intake: row[13] || null,
-    mentorshipStatus: row[14] || null,
-    university: row[15] || null,
-    initialRegistration: row[16] || null,
-    initialDate: row[17] || null,
-    Message: row[18] || null,
-    universityPaid: row[19] || null,
-    universityPaidDate: row[20] || null,
-    documentStatus: row[21] || null,
-    docApprovedDate: row[22] || null,
-    unirefundinitiated: row[23] || null,
-    dateOfRefundInitiateduni: row[24] || null,
-    iehrefundinitiated: row[25] || null,
-    dateOfRefundInitiatedieh: row[26] || null,
-    scholarship: row[27] || null,
-    feepaid: row[28] || null,
-    feePaidAmount: row[29] || null,
-    degreeType: row[30] || null,
-    semesterStatus: row[31] || null,
-    batch: row[32] || null,
-    enrollmentNo: row[33] || null,
-    applicationNo: row[34] || null
-};
+    const dataToUpdate = {
+      studentid: row[1] || "nill", // "studentid"
+      applicationNo: row[34] || "nill", // "enrollmentNo"
+      assign: row[35] || "nill", // "applicationNo"
+      batch: row[32] || "nill", // "semesterStatus"
+      city: row[9] || "nill", // "city"
+      course: row[4] || "nill", // "course"
+      date: row[0] || "nill", // "date"
+      dateOfRefundInitiatedIeh: row[26] || "nill", // "iehrefundinitiated"
+      dateOfRefundInitiatedUni: row[24] || "nill", // "dateOfRefundInitiateduni"
+      degreeType: row[30] || "nill", // "feePaidAmount"
+      docApprovedDate: row[22] || "nill", // "docApprovedDate"
+      documentStatus: row[21] || "nill", // "documentStatus"
+      email: row[6] || "nill", // "email"
+      enrollmentNo: row[33] || "nill", // "batch"
+      feePaid: row[28] || "nill", // "scholarship"
+      feePaidAmount: row[29] || "nill", // "feepaid"
+      iehRefundInitiated: row[25] || "nill", // "nill"
+      initialDate: row[17] || "nill", // "initialDate"
+      initialRegistration: row[16] || "nill", // "initialRegistration"
+      intake: row[13] || "nill", // "intake"
+      mentor: row[2] || "nill", // "mentor"
+      mentorshipStatus: row[14] || "nill", // "mentorshipStatus"
+      message: row[18] || "nill", // "Message"
+      mobile: row[7] || "nill", // "mobile"
+      name: row[3] || "nill", // "name"
+      role: row[10] || "nill", // "role"
+      scholarship: row[27] || "nill", // "dateOfRefundInitiatedieh"
+      semesterStatus: row[31] || "nill", // "degreeType"
+      servicePack: row[12] || "nill", // "servicePack"
+      specialization: row[5] || "nill", // "specialization"
+      specificName: row[11] || "nill", // "specificName"
+      state: row[8] || "nill", // "state"
+      uniRefundInitiated: row[23] || "nill", // "unirefundinitiated"
+      university: row[15] || "nill", // "university"
+      universityPaid: row[19] || "nill", // "universityPaid"
+      universityPaidDate: row[20] || "nill", // "universityPaidDate"
+    };
 
+
+
+      // Log dataToUpdate for each row
+      console.log("Data to be updated/inserted:", dataToUpdate);
 
       // Update the document if it exists, otherwise insert a new one
       await collection.updateOne(
-        { studentId: dataToUpdate.studentId },
+        { studentid: dataToUpdate.studentid },
         { $set: dataToUpdate },
         { upsert: true }
       );
