@@ -2852,6 +2852,20 @@ router.get("/affiliate-partner-signup", (req, res) => {
   });
 });
 
+// Signup route
+router.get("/find-ap-email", (req, res) => {
+  res.render("user/find-ap-email", {
+    user: true,
+  });
+});
+
+// Signup route
+router.get("/reset-ap-password", (req, res) => {
+  res.render("user/reset-ap-password", {
+    user: true,
+  });
+});
+
 
 router.post("/affiliate-partner-signin", async (req, res) => {
   const { email, password } = req.body;
@@ -2892,6 +2906,128 @@ router.post("/affiliate-partner-signin", async (req, res) => {
   }
 });
 
+// Route to handle forgot password
+router.post("/affiliate-partner-forgot-password", async (req, res) => {
+  const { email } = req.body;
+  try {
+    const database = db.get();
+    const partnersCollection = database.collection(collection.AFFILIATE_COLLECTION);
+
+    // Check if the affiliate partner exists
+    const partner = await partnersCollection.findOne({ email });
+
+    if (!partner) {
+      return res.status(404).json({ success: false, message: "Partner not found" });
+    }
+
+    // Generate a token for resetting the password
+    const resetToken = crypto.randomBytes(32).toString("hex");
+
+    // Hash the token before saving it to the database
+    const hashedToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+
+    // Set the token expiration time (e.g., 1 hour)
+    const tokenExpiry = Date.now() + 3600000; // 1 hour in milliseconds
+
+    // Save the token and its expiry in the database
+    await partnersCollection.updateOne(
+      { email },
+      {
+        $set: {
+          resetPasswordToken: hashedToken,
+          resetPasswordExpires: tokenExpiry,
+        },
+      }
+    );
+
+    // Send the token via email
+    const resetUrl = `https://crm.indianeduhub.in/reset-ap-password/${resetToken}`;
+
+    // Configure nodemailer
+    let transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "clientsupport@indianeduhub.com",
+        pass: "xeep ypij nhqg ilcd",
+      },
+    });
+
+    // Email message options
+    const mailOptions = {
+      to: email,
+      from: "clientsupport@indianeduhub.com",
+      subject: "Password Reset",
+      html: `<p>You requested for password reset</p>
+             <p>Click this <a href="${resetUrl}">link</a> to reset your password. The link will expire in 1 hour.</p>`,
+    };
+
+    // Send the email
+    await transporter.sendMail(mailOptions);
+
+    res.status(200).json({
+      success: true,
+      message: `A password reset email has been sent to ${email}`,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error: " + error.message,
+    });
+  }
+});
+
+// Route to handle resetting the password
+router.post("/reset-ap-password/:token", async (req, res) => {
+  const { password } = req.body;
+  const resetToken = req.params.token;
+
+  try {
+    const database = db.get();
+    const partnersCollection = database.collection(
+      collection.AFFILIATE_COLLECTION
+    );
+
+    // Hash the token
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
+
+    // Find partner with valid reset token and check if it's not expired
+    const partner = await partnersCollection.findOne({
+      resetPasswordToken: hashedToken,
+      resetPasswordExpires: { $gt: Date.now() }, // Ensure token is still valid
+    });
+
+    if (!partner) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid or expired token" });
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    // Update the partner's password and clear the reset token fields
+    await partnersCollection.updateOne(
+      { _id: partner._id },
+      {
+        $set: { password: hashedPassword },
+        $unset: { resetPasswordToken: "", resetPasswordExpires: "" },
+      }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Password has been reset successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error: " + error.message,
+    });
+  }
+});
 
 // router.post("/affiliate-partner-creation", async (req, res) => {
 //   try {
