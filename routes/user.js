@@ -2868,7 +2868,6 @@ router.get("/reset-ap-password/:token", (req, res) => {
 });
 
 
-
 router.post("/affiliate-partner-signin", async (req, res) => {
   const { email, password } = req.body;
 
@@ -2950,7 +2949,7 @@ router.post("/affiliate-partner-forgot-password", async (req, res) => {
       service: "gmail",
       auth: {
         user: "clientsupport@indianeduhub.com",
-        pass: "",
+        pass: "xeep ypij nhqg ilcd",
       },
     });
 
