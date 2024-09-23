@@ -3021,7 +3021,7 @@ router.post("/reset-ap-password/:token", async (req, res) => {
     );
 
     req.flash("success", "Password has been reset successfully");
-    res.redirect("/affiliate-partner-signin");
+    res.redirect("/affiliate-partner-signup#signin");
   } catch (error) {
     req.flash("error", "Internal Server Error: " + error.message);
     res.redirect(`/reset-ap-password/${resetToken}`);
