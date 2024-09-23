@@ -2918,7 +2918,8 @@ router.post("/affiliate-partner-forgot-password", async (req, res) => {
     const partner = await partnersCollection.findOne({ email });
 
     if (!partner) {
-      return res.status(404).json({ success: false, message: "Partner not found" });
+      req.flash('error', 'Partner not found.'); // Set flash message for error
+      return res.redirect('/find-ap-email'); // Redirect to the forgot password page
     }
 
     // Generate a token for resetting the password
@@ -2965,22 +2966,24 @@ router.post("/affiliate-partner-forgot-password", async (req, res) => {
     // Send the email
     await transporter.sendMail(mailOptions);
 
-    res.status(200).json({
-      success: true,
-      message: `A password reset email has been sent to ${email}`,
-    });
+    req.flash('success', `A password reset email has been sent to ${email}`);
+    res.redirect('/find-ap-email'); // Redirect to the forgot password page
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal Server Error: " + error.message,
-    });
+    req.flash('error', "Internal Server Error: " + error.message);
+    res.redirect('/find-ap-email'); // Redirect to the forgot password page
   }
 });
 
-// Route to handle resetting the password
+
 router.post("/reset-ap-password/:token", async (req, res) => {
-  const { password } = req.body;
+  const { password, confirmPassword } = req.body;
   const resetToken = req.params.token;
+
+  // Check if the passwords match
+  if (password !== confirmPassword) {
+    req.flash("error", "Passwords do not match");
+    return res.redirect(`/reset-ap-password/${resetToken}`);
+  }
 
   try {
     const database = db.get();
@@ -3001,9 +3004,8 @@ router.post("/reset-ap-password/:token", async (req, res) => {
     });
 
     if (!partner) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid or expired token" });
+      req.flash("error", "Invalid or expired token");
+      return res.redirect("/find-ap-email");
     }
 
     // Hash the new password
@@ -3018,17 +3020,14 @@ router.post("/reset-ap-password/:token", async (req, res) => {
       }
     );
 
-    res.status(200).json({
-      success: true,
-      message: "Password has been reset successfully",
-    });
+    req.flash("success", "Password has been reset successfully");
+    res.redirect("/affiliate-partner-signin");
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal Server Error: " + error.message,
-    });
+    req.flash("error", "Internal Server Error: " + error.message);
+    res.redirect(`/reset-ap-password/${resetToken}`);
   }
 });
+
 
 // router.post("/affiliate-partner-creation", async (req, res) => {
 //   try {

@@ -47,28 +47,42 @@
 </head>
 
 <body>
-  <div class="container forgot-password-container">
-    <div class="row justify-content-center">
-      <div class="col-md-6">
-        <div class="forgot-password-card">
-          <h2 class="text-center">Forgot Password</h2>
-          <p class="text-center">Enter your email to reset your password.</p>
-          <form action="/affiliate-partner-forgot-password" method="POST">
-            <div class="form-group">
-              <label for="email">Email Address:</label>
-              <input type="email" class="form-control" id="email" name="email" required>
-            </div>
-            <div class="form-group text-center">
-              <button type="submit" class="btn btn-submit btn-block">Submit</button>
-            </div>
-          </form>
-          <div class="text-center text-muted">
-            <a href="/affiliate-partner-signin" class="text-primary">Back to Sign In</a>
+ <div class="container forgot-password-container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="forgot-password-card">
+        <h2 class="text-center">Forgot Password</h2>
+        <p class="text-center">Enter your email to reset your password.</p>
+
+        <!-- Display flash messages -->
+        {{#if error}}
+          <div class="alert alert-danger">
+            {{error}}
           </div>
+        {{/if}}
+        {{#if success}}
+          <div class="alert alert-success">
+            {{success}}
+          </div>
+        {{/if}}
+
+        <form action="/affiliate-partner-forgot-password" method="POST">
+          <div class="form-group">
+            <label for="email">Email Address:</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+          </div>
+          <div class="form-group text-center">
+            <button type="submit" class="btn btn-submit btn-block">Submit</button>
+          </div>
+        </form>
+        <div class="text-center text-muted">
+          <a href="/affiliate-partner-signin" class="text-primary">Back to Sign In</a>
         </div>
       </div>
     </div>
   </div>
+</div>
+
 
   <!-- Bootstrap JS and dependencies -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

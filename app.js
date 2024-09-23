@@ -7,6 +7,7 @@ const exphbs = require("express-handlebars");
 const session = require("express-session");
 const createError = require("http-errors");
 const bodyParser = require("body-parser");
+const flash = require("connect-flash");
 // const cron = require("node-cron"); // Comment this out if you don't want the cron job
 
 require("dotenv").config();
@@ -133,7 +134,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.json());
-
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -142,6 +142,16 @@ app.use(
     cookie: { secure: false },
   })
 );
+
+app.use(flash());
+
+
+app.use((req, res, next) => {
+  res.locals.error = req.flash("error");
+  res.locals.success = req.flash("success");
+  next();
+});
+
 
 // Database connection
 db.connect((err) => {
