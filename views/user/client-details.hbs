@@ -66,12 +66,12 @@
 .search{
   
   top:6px;
-  left:10px;
+  left:9px;
 }
      .date-input {
     width: 100% !important;
     padding: 6px!important;
-    font-size: 10px !important;
+    font-size: 9px !important;
     border-radius: 4px !important;
     border: 1px solid #ced4da !important;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075) !important;
@@ -90,8 +90,8 @@
     padding-left:32px;
 }
 .tt {
-    margin-top: 20px;
-    border-radius: 10px;
+    margin-top: 9px;
+    border-radius: 9px;
 
 }
 .container{
@@ -99,7 +99,7 @@
 
 }
 .table-responsive{
-    padding: 10px;
+    padding: 9px;
 }
 .form-control:focus{
     
@@ -113,7 +113,7 @@
 }
 /* Button styles */
 .btn-status {
-    font-size: 10px; /* Smaller font size for buttons */
+    font-size: 9px; /* Smaller font size for buttons */
     padding: 4px 8px; /* Smaller padding for buttons */
     transition: background-color 0.3s ease;
 }
@@ -167,7 +167,7 @@
     width: 100%;
     height: 500px !important;
     border-collapse: collapse;
-    font-size: 10px; /* Smaller font size for table content */
+    font-size: 9px; /* Smaller font size for table content */
     table-layout: fixed; /* Ensures fixed widths are respected */
 }
 
@@ -185,9 +185,8 @@
     text-align: left;
     padding: 6px; /* Reduced padding for a smaller appearance */
     border: 1px solid #dee2e6;
-    font-size: 10px; /* Consistent smaller font size */
+    font-size: 9px; /* Consistent smaller font size */
     width: 120px; /* Fixed width for consistency */
-    font-family: Arial, Helvetica, sans-serif;
     overflow: hidden; /* Prevent overflow for fixed-width cells */
     text-overflow: ellipsis; /* Add ellipsis for overflowed text */
     white-space: nowrap; /* Prevent text wrapping */
@@ -197,11 +196,8 @@
     background-color: #232f65;
     color: #ffffff;
 }
-/* Apply 10px font size to buttons and select inputs within a table */
- button,
- select {
-    font-size: 10px !important;
-}
+/* Apply 9px font size to buttons and select inputs within a table */
+
 
 .table tbody tr:hover {
     background-color: #d0e3ff; /* Hover color for rows */
@@ -230,20 +226,20 @@
 .dataTables_wrapper .dataTables_filter {
     float: right;
     text-align: right;
-    margin-bottom: 10px; /* Add margin below the search bar */
+    margin-bottom: 9px; /* Add margin below the search bar */
 }
 
 .dataTables_wrapper .dataTables_filter input {
     margin-left: 0.5em;
     display: inline-block;
     width: auto;
-    margin-bottom: 10px; /* Add margin below the search bar */
+    margin-bottom: 9px; /* Add margin below the search bar */
         position: sticky !important;
 }
 
 .dataTables_wrapper .dataTables_length {
     float: left;
-    margin-bottom: 10px; /* Add margin below the length dropdown */
+    margin-bottom: 9px; /* Add margin below the length dropdown */
 }
 
 .dataTables_wrapper .dataTables_info {
@@ -252,18 +248,19 @@
 
 .dataTables_wrapper .dataTables_paginate {
     float: right;
-    margin-top: 10px; /* Add margin above the pagination controls */
+    margin-top: 9px; /* Add margin above the pagination controls */
 
 }
 /* Container for table */
 .table-wrapper {
     position: relative; /* To contain the sticky header */
     overflow: auto; /* Allows the table body to scroll */
-    height: 430px; /* Set a height for the scrolling area */
+    height: 450px; /* Set a height for the scrolling area */
 }
 input, select{
-font-size: 10px !important;
+font-size: 9px !important;
 color: black !important;
+background-color: #dee8f2 !important;
 }
 /* Button styles */
 
@@ -279,7 +276,7 @@ color: black !important;
     color: white;
 }
 button{
-    font-size: 10px !important;
+    font-size: 9px !important;
 }
 
 
@@ -290,7 +287,7 @@ button{
   border: 1px solid #18181a;
   color: #18181a;
   display: inline-block;
-  font-size: 10px;
+  font-size: 9px;
   line-height: 15px;
   border-radius: 7px;
   padding: 8px 8px 7px;
@@ -347,6 +344,13 @@ button{
   transform: translateX(-50%) translateY(-100%);
   opacity: 1;
   transition: all 900ms cubic-bezier(0.48, 0, 0.12, 1);
+}
+.container-fluida{
+    background-color: #d6d6d6 !important;
+    padding: 9px !important;
+}
+#dataTable{
+    background-color: white !important;
 }
 </style>
 
@@ -438,7 +442,7 @@ button{
 
 
 
-            <div class="container-fluida tt  px-1">
+            <div class="container-fluida tt  ">
 
       <div class="table-responsive">
         <button  id="saveButton" class="button-57" role="button"><span class="text">Save Changes</span><span>Save</span></button>
@@ -505,7 +509,7 @@ button{
                                 <td>{{this.specificName}}</td>
                                 <td>{{this.servicePack}}</td>
                                 <td>
-                                    <select class="form-select" style="width: 110px;">
+                                    <select class="form-select" >
                                         <option value="" {{#if (eq this.intake "")}}selected{{/if}}>None</option>
                                         <option value="Next Week" {{#if (eq this.intake "Next Week")}}selected{{/if}}>Next Week</option>
                                         <option value="This Week" {{#if (eq this.intake "This Week")}}selected{{/if}}>This Week</option>
@@ -784,12 +788,12 @@ $(document).ready(function () {
     $('#dataTable').on('change', 'select', function () {
         const row = $(this).closest('tr');
         toggleDateVisibility(row);
-        saveRowData(row);  // Save after dropdown change
+        confirmSave(row);  // Ask for confirmation before saving
     });
 
     // Attach the saveData function to the save button
     $('#saveButton').on('click', function () {
-        saveData();
+        confirmSave();  // Ask for confirmation before saving all data
     });
 
     // Attach button click events
@@ -812,8 +816,34 @@ $(document).ready(function () {
             // Add more cases if needed
         }
 
-        saveRowData(row); // Save changes automatically after button click
+        confirmSave(row); // Ask for confirmation before saving the row changes
     });
+
+    // Function to confirm save action using SweetAlert
+    function confirmSave(row = null) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to save the changes?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, save it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if (row) {
+                    saveRowData(row); // Save row-specific data
+                } else {
+                    saveData(); // Save all data
+                }
+                Swal.fire(
+                    'Saved!',
+                    'Your changes have been saved.',
+                    'success'
+                );
+            }
+        });
+    }
 });
 
 
