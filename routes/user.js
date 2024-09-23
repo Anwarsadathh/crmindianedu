@@ -2859,12 +2859,14 @@ router.get("/find-ap-email", (req, res) => {
   });
 });
 
-// Signup route
-router.get("/reset-ap-password", (req, res) => {
+router.get("/reset-ap-password/:token", (req, res) => {
+  const { token } = req.params;
   res.render("user/reset-ap-password", {
     user: true,
+    token, // Pass the token to the view for form submission
   });
 });
+
 
 
 router.post("/affiliate-partner-signin", async (req, res) => {
@@ -2948,7 +2950,7 @@ router.post("/affiliate-partner-forgot-password", async (req, res) => {
       service: "gmail",
       auth: {
         user: "clientsupport@indianeduhub.com",
-        pass: "xeep ypij nhqg ilcd",
+        pass: "",
       },
     });
 
