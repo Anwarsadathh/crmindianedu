@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Leads</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+ <!-- Add necessary meta tags and links to CSS/JS files -->
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css">
+
+<!-- DataTables JavaScript -->
+<script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+
+<!-- DataTables Buttons CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/3.0.1/css/buttons.dataTables.css">
+
+<!-- DataTables Buttons JavaScript -->
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/dataTables.buttons.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.dataTables.js"></script>
+
+<!-- JSZip -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<!-- pdfmake -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+<!-- DataTables Buttons HTML5 and Print JavaScript -->
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.print.min.js"></script>
+
+<!-- DataTables Select JavaScript -->
+<script src="https://cdn.datatables.net/select/2.0.0/js/dataTables.select.js"></script>
+<script src="https://cdn.datatables.net/select/2.0.0/js/select.dataTables.js"></script>
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+ <style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
+
+.search{
+  
+  top:6px;
+  left:9px;
+}
+     .date-input {
+    width: 100% !important;
+    padding: 6px!important;
+    font-size: 9px !important;
+    border-radius: 4px !important;
+    border: 1px solid #ced4da !important;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075) !important;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
+}
+
+.date-input:focus {
+    border-color: #80bdff !important;
+    outline: 0 !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+}
+
+.form-control{
+    
+    border:none;
+    padding-left:32px;
+}
+.tt {
+    margin-top: 9px;
+    border-radius: 9px;
+
+}
+.container{
+    background-color: #f2f9f6 !important; /* Very pale mint green */
+
+}
+.table-responsive{
+    padding: 9px;
+}
+.form-control:focus{
+    
+    border:none;
+    box-shadow:none;
+}
+
+.green{
+    
+    color:green;
+}
+/* Button styles */
+.btn-status {
+    font-size: 9px; /* Smaller font size for buttons */
+    padding: 4px 8px; /* Smaller padding for buttons */
+    transition: background-color 0.3s ease;
+}
+
+.btn-not-paid {
+    background-color: #e8172c; /* Red */
+    color: #fff;
+}
+
+.btn-paid {
+    background-color: #28a745; /* Green */
+    color: #fff;
+}
+
+.btn-not-approved {
+    background-color: #ffc107; /* Yellow */
+    color: #000;
+}
+
+.btn-approved {
+    background-color: #17a2b8; /* Teal */
+    color: #fff;
+}
+
+.btn-not-done {
+    background-color: #ffc107; /* Yellow */
+    color: #000;
+}
+
+.btn-done {
+    background-color: #28a745; /* Green */
+    color: #fff;
+}
+
+.btn-status.active-paid {
+    background-color: #28a745 !important; /* Green */
+    color: #fff;
+}
+
+.btn-status.active-not-paid {
+    background-color: #dc3545 !important; /* Red */
+    color: #fff;
+}
+
+.btn-status.active-not-approved {
+    background-color: #ffc107 !important; /* Yellow */
+    color: #000;
+}
+/* Ensure the table takes the full width of its container */
+.table {
+    width: 100%;
+    height: 500px !important;
+    border-collapse: collapse;
+    font-size: 9px; /* Smaller font size for table content */
+    table-layout: fixed; /* Ensures fixed widths are respected */
+}
+
+/* Ensure the table header stays fixed at the top */
+.table thead {
+    position: sticky;
+    top: 0;
+    background-color: #fff; /* Solid background color for visibility */
+    z-index: 2; /* Ensure it stays on top of other content */
+}
+
+/* Table header and cells styling */
+.table thead th,
+.table tbody td {
+    text-align: left;
+    padding: 6px; /* Reduced padding for a smaller appearance */
+    border: 1px solid #dee2e6;
+    font-size: 9px; /* Consistent smaller font size */
+    width: 120px; /* Fixed width for consistency */
+    overflow: hidden; /* Prevent overflow for fixed-width cells */
+    text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+.table thead th {
+    background-color: #232f65;
+    color: #ffffff;
+}
+/* Apply 9px font size to buttons and select inputs within a table */
+
+
+.table tbody tr:hover {
+    background-color: #d0e3ff; /* Hover color for rows */
+}
+
+
+
+/* Adjust other table-related styles if necessary */
+
+
+.btn-status.active-approved {
+    background-color: #17a2b8 !important; /* Teal */
+    color: #fff;
+}
+
+.btn-status.active-not-done {
+    background-color: #ffc107 !important; /* Yellow */
+    color: #000;
+}
+
+.btn-status.active-done {
+    background-color: #28a745 !important; /* Green */
+    color: #fff;
+}
+/* DataTables styles */
+.dataTables_wrapper .dataTables_filter {
+    float: right;
+    text-align: right;
+    margin-bottom: 9px; /* Add margin below the search bar */
+}
+
+.dataTables_wrapper .dataTables_filter input {
+    margin-left: 0.5em;
+    display: inline-block;
+    width: auto;
+    margin-bottom: 9px; /* Add margin below the search bar */
+        position: sticky !important;
+}
+
+.dataTables_wrapper .dataTables_length {
+    float: left;
+    margin-bottom: 9px; /* Add margin below the length dropdown */
+}
+
+.dataTables_wrapper .dataTables_info {
+    float: left;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+    float: right;
+    margin-top: 9px; /* Add margin above the pagination controls */
+
+}
+/* Container for table */
+.table-wrapper {
+    position: relative; /* To contain the sticky header */
+    overflow: auto; /* Allows the table body to scroll */
+    height: 450px; /* Set a height for the scrolling area */
+}
+input, select{
+font-size: 9px !important;
+color: black !important;
+background-color: #dee8f2 !important;
+}
+/* Button styles */
+
+/* Correct button: Green background for correct answers */
+.btn-correct {
+    background-color: #28a745; /* Green color */
+    color: white;
+}
+
+/* Incorrect button: Red background for wrong answers */
+.btn-incorrect {
+    background-color: #dc3545; /* Red color */
+    color: white;
+}
+button{
+    font-size: 9px !important;
+}
+
+
+/* CSS */
+.button-57 {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #18181a;
+  color: #18181a;
+  display: inline-block;
+  font-size: 9px;
+  line-height: 15px;
+  border-radius: 7px;
+  padding: 8px 8px 7px;
+  text-decoration: none;
+  cursor: pointer;
+  background: #fff;
+  user-select: none;
+  margin-bottom: ;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-57 span:first-child {
+  position: relative;
+  transition: color 600ms cubic-bezier(0.48, 0, 0.12, 1);
+  z-index: 10;
+}
+
+.button-57 span:last-child {
+  color: white;
+  display: block;
+  position: absolute;
+  bottom: 0;
+  transition: all 500ms cubic-bezier(0.48, 0, 0.12, 1);
+  z-index: 100;
+  opacity: 0;
+  top: 50%;
+  left: 50%;
+  transform: translateY(225%) translateX(-50%);
+  height: 14px;
+  line-height: 13px;
+}
+
+.button-57:after {
+  content: "";
+  position: absolute;
+  bottom: -50%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  transform-origin: bottom center;
+  transition: transform 600ms cubic-bezier(0.48, 0, 0.12, 1);
+  transform: skewY(9.3deg) scaleY(0);
+  z-index: 50;
+}
+
+.button-57:hover:after {
+  transform-origin: bottom center;
+  transform: skewY(9.3deg) scaleY(2);
+}
+
+.button-57:hover span:last-child {
+  transform: translateX(-50%) translateY(-100%);
+  opacity: 1;
+  transition: all 900ms cubic-bezier(0.48, 0, 0.12, 1);
+}
+.container-fluida{
+    background-color: #d6d6d6 !important;
+    padding: 9px !important;
+}
+#dataTable{
+    background-color: white !important;
+}
+</style>
+
+</head>
+
+<body>
+    <div class="container-xxl position-relative bg-white d-flex p-0" style="background-color: #232f65;">
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+
+
+        <!-- Sidebar Start -->
+        <div class="sidebar pe-4 pb-3" style="background-color: #232f65;">
+            <nav class="navbar " style="background-color: #232f65;">
+                <a href="index.html" class="navbar-brand mx-4 mb-3">
+                    <h3 class="text-primary"> <img src="/images/indian-hub-logo-vert-white-e1662813826792.png" alt="Indian Edu Hub Logo" class="log"></h3>
+                </a>
+                <div class="d-flex align-items-center ms-4 mb-4" style="background-color: #232f65;">
+                      
+                    <div class="ms-3" >
+                        <h6 class="mb-0 text-white">Indianeduhub</h6>
+                        <span style="color: rgb(209, 211, 212);">Client</span>
+                    </div>
+                </div>
+                <div class="navbar-nav w-100" style="background-color: #232f65;">
+                    <a href="/client-dashboard" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Dashboard</a>
+                    <a href="/client-details" class="nav-link text-white "><i class="fa fa-laptop me-2 text-dark"></i>SE Form</a>
+                    <div class="nav-item dropdown">
+                         <a href="#" class="nav-link dropdown-toggle text-dark active" data-bs-toggle="dropdown"><i class="fa fa-users me-2 text-dark"></i>Partners</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="/p-details" class="dropdown-item active">Partners</a>
+                            <a href="/ap-details" class="dropdown-item">Affiliate-partners</a>
+                        </div>
+                    </div>
+                    
+                </div>
+            </nav>
+        </div>
+        <!-- Sidebar End -->
+
+
+        <!-- Content Start -->
+        <div class="content">
+            <!-- Navbar Start -->
+            <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
+                <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
+                    <h2 class="text-primary mb-0"><img src="/img/ie.png" alt="Indian Edu Hub Logo" style="height: 30px;"></h2>
+                </a>
+                <a href="#" class="sidebar-toggler flex-shrink-0">
+                    <i class="fa fa-bars"></i>
+                </a>
+                <form class="d-none d-md-flex ms-4">
+                    <input class="form-control border-0" type="search" placeholder="Search">
+                </form>
+                <div class="navbar-nav align-items-center ms-auto">
+                    
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="fa fa-bell me-lg-2"></i>
+                            <span class="d-none d-lg-inline-flex">Notificatin</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                            <a href="#" class="dropdown-item">
+                                <h6 class="fw-normal mb-0">Profile updated</h6>
+                                <small>15 minutes ago</small>
+                            </a>
+                       
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item text-center">See all notifications</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <img class="rounded-circle me-lg-2" src="/images/anon.webp" alt="" style="width: 40px; height: 40px;">
+                            <span class="d-none d-lg-inline-flex">Client</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                            <a href="#" class="dropdown-item">Log Out</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <!-- Navbar End -->
+
+
+
+            <div class="container-fluida tt  ">
+
+      <div class="table-responsive">
+        <h6>Affiliate Partners</h6>
+ <div class="table-wrapper ">
+    <table class="table" id="dataTable">
+  <thead>
+    <tr class="bg-light">
+      <th>No.</th>
+      <th>Date</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Mobile Number</th>
+      <th>WhatsApp</th> <!-- New column for WhatsApp -->
+      <th>Working Status</th>
+      <th>Position</th>
+      <th>Present Company</th>
+      <th>State</th>
+      <th>City</th>
+      <th>Institute ID</th>
+  
+    </tr>
+  </thead>
+  <tbody>
+    {{#each apartners}}
+    <tr data-id="{{_id}}">
+      <td>{{incrementIndex @index}}</td>
+      <td>{{formatDate createdAt}}</td>
+      <td>{{name}}</td>
+      <td>{{email}}</td>
+      <td>{{mobNumber}}</td>
+      <td>
+        <!-- WhatsApp icon button to send a message -->
+        <a href="https://wa.me/{{mobNumber}}" target="_blank">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width="24" height="24">
+        </a>
+      </td>
+      <td>{{workingStatus}}</td>
+      <td>{{position}}</td>
+      <td>{{presentCompany}}</td>
+      <td>{{state}}</td>
+      <td>{{city}}</td>
+      <td>{{instituteid}}</td>
+     
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+  
+  </div>
+     </div>
+</div>
+
+ 
+
+
+
+<!-- Include SweetAlert2 for alerts -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+       <script>
+$(document).ready(function() {
+   const table = $('#dataTable').DataTable({
+        pageLength: 100, // Default to showing 100 entries
+        lengthMenu: [[100, 25, 10, -1], [100, 25, 10, "All"]] // Options for 100, 25, 10, and All entries per page
+    });
+});
+
+</script>
+
+ 
+  <!-- Additional JavaScript Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="lib/chart/chart.min.js"></script>
+  <script src="lib/easing/easing.min.js"></script>
+  <script src="lib/waypoints/waypoints.min.js"></script>
+  <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+  <script src="lib/tempusdominus/js/moment.min.js"></script>
+  <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
+  <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+  <!-- Template Javascript -->
+  <script src="js/main.js"></script>
+</body>
+</html>

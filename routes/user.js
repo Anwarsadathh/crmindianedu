@@ -1254,6 +1254,32 @@ router.get("/student-referral-details",verifyLoginStudent, (req, res) => {
 });
 
 
+router.get("/p-details", verifyClient, async (req, res) => {
+  try {
+    // Fetch wallet data for partners
+    const partners = await serviceHelpers.getAllPartners();
+
+    // Render the data on the user/client-p-details template
+    res.render("user/client-p-details", { partners });
+  } catch (error) {
+    console.error("Error fetching partner details:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+router.get("/ap-details",verifyClient, async (req, res) => {
+  try {
+    // Fetch wallet data for partners
+    const apartners = await serviceHelpers.getAllAFPartners();
+
+    // Render the data on the user/client-p-details template
+    res.render("user/client-ap-details", { apartners });
+  } catch (error) {
+    console.error("Error fetching partner details:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 router.get("/accounts-invoice",verifyAccounts, async (req, res) => {
   try {
     const { statusFilter } = req.query; // Get the status filter from the query params
