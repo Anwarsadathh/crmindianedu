@@ -140,13 +140,14 @@ select,textarea{
     border-collapse: collapse;
     font-size: 10px; /* Smaller font size for table content */
     table-layout: fixed; /* Ensures fixed widths are respected */
+    background-color: #fff !important; /* Solid background color for visibility */
 }
 
 /* Ensure the table header stays fixed at the top */
 .table thead {
     position: sticky;
     top: 0;
-    background-color: #fff; /* Solid background color for visibility */
+    background-color: #fff !important; /* Solid background color for visibility */
     z-index: 2; /* Ensure it stays on top of other content */
 }
 
@@ -156,14 +157,23 @@ select,textarea{
     text-align: left;
     padding: 6px; /* Reduced padding for a smaller appearance */
     border: 1px solid #dee2e6;
-    font-size: 12px; /* Consistent smaller font size */
+    font-size: 9px; /* Consistent smaller font size */
     width: 120px; /* Fixed width for consistency */
     font-family: Arial, Helvetica, sans-serif;
     overflow: hidden; /* Prevent overflow for fixed-width cells */
     text-overflow: ellipsis; /* Add ellipsis for overflowed text */
     white-space: nowrap; /* Prevent text wrapping */
 }
+input, select ,textarea{
+font-size: 9px !important;
+color: black !important;
+background-color: #eaeef2 !important;
+}
 
+
+.btn ,button{
+   font-size: 9px !important;
+}
 .table thead th {
     background-color: #232f65;
     color: #ffffff;
@@ -293,7 +303,10 @@ select,textarea{
     cursor: pointer;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
-
+.circular-btn {
+    border-radius: 20% !important;
+    font-size: 12px !important;
+}
 </style>
 
 </head>
@@ -388,19 +401,24 @@ select,textarea{
             <!-- Navbar End -->
 <!-- Rest of your template code -->
 
-<div class="container-fluid pt-4 px-4">
-    <div class="row g-4">
-        <div class="col-12">
-            <div class="bg-light rounded h-100 p-4">
-                <h6 class="mb-4">Total Leads</h6>
+
 {{!-- <div class="d-flex justify-content-end mb-3">
     <button id="hideColumnsBtn" class="btn btn-sm btn-primary">Minimize Some Fields</button>
 </div> --}}
-<div class="d-flex justify-content-end mb-3">
+<div class="d-flex justify-content-end mb-3 mt-3">
     <button id="hideColumnsBtn" class="btn btn-sm btn-primary animated-btn">Minimize Some Fields</button>
+     <div class=" mx-2">
+                <select id="dateFilter" class="form-select form-select-sm" style="width: 150px; display: inline-block;">
+                    <option selected value="" disabled>Select New Leads</option>
+                    <option value="today">Today</option>
+                    <option value="yesterday">Yesterday</option>
+                    <option value="this-week">This Week</option>
+                    <option value="last-month">Last Month</option>
+                </select>
+            </div>
 </div>
-
-<div class="filter-card glassmorphism p-4 shadow-lg d-flex">
+ 
+<div class="filter-card glassmorphism p-2 shadow-lg d-flex">
     <div class="floating-label-wrapper ms-3">
         <label for="filterDateRange" class="floating-label">Date Range</label>
         <input type="text" id="filterDateRange" class="form-control shadow-sm circular-input" placeholder="Select Date Range">
@@ -449,21 +467,14 @@ select,textarea{
 
 
 
-
+<div class="container-fluid  px-2">
+    <div class="row ">
+        <div class="col-12">
+            <div class="bg-light rounded h-100 ">
    <div class="table-responsive">
     <div class="table-wrapper">
         <!-- Dropdown for Filtering Assign Date -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <div>
-                <select id="dateFilter" class="form-select form-select-sm" style="width: 150px; display: inline-block;">
-                    <option selected value="">New Leads</option>
-                    <option value="today">Today</option>
-                    <option value="yesterday">Yesterday</option>
-                    <option value="this-week">This Week</option>
-                    <option value="last-month">Last Month</option>
-                </select>
-            </div>
-        </div>    <table class="table" id="dataTable">
+         <table class="table" id="dataTable">
                         <thead>
                             <tr>
                                 <!-- Define table headers -->
@@ -574,7 +585,7 @@ select,textarea{
             {{/if}}
         </td>
         <td>
-            <textarea class="form-control lead-status-textarea" rows="3" style="width: 250px;">
+            <textarea class="form-control lead-status-textarea" rows="2" style="width: 250px;">
                 {{#if this.leadStatus.[this.leadStage]}}
                     {{this.leadStatus.[this.leadStage]}}
                 {{/if}}

@@ -16,7 +16,7 @@ const db = require("../config/connection");
 const bcrypt = require("bcrypt");
 const saltRounds = 10; // Define saltRounds
 const PDFDocument = require("pdfkit");
-
+const intekartService = require("../helpers/interkart");
 // // Call the function periodically (e.g., every minute)
 // setInterval(checkFollowUps, 10000);
 
@@ -1264,6 +1264,22 @@ router.get("/p-details", verifyClient, async (req, res) => {
   } catch (error) {
     console.error("Error fetching partner details:", error);
     res.status(500).send("Internal Server Error");
+  }
+});
+
+// Route to send bulk WhatsApp messages
+router.post('/send-bulk-message', async (req, res) => {
+  const { message, numbers } = req.body;
+
+  try {
+    // Use Intekart API to send messages
+    const result = await intekartService.sendBulkMessage(numbers, message);
+    
+    // Send a successful response back to the frontend
+    res.json({ success: true, result });
+  } catch (error) {
+    console.error('Error sending bulk messages:', error);
+    res.status(500).json({ success: false, message: 'Failed to send messages' });
   }
 });
 

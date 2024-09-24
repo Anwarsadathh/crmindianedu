@@ -15,7 +15,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+    <!-- Bootstrap CSS -->
+
     <!-- Icon Font Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
@@ -386,8 +387,8 @@ button{
                     <div class="nav-item dropdown">
                          <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown"><i class="fa fa-users me-2 text-dark"></i>Partners</a>
                         <div class="dropdown-menu bg-transparent border-0">
-                            <a href="/p-details" class="dropdown-item ">Partners</a>
-                            <a href="/ap-details" class="dropdown-item active">Affiliate-partners</a>
+                            <a href="/p-details" class="dropdown-item active">Partners</a>
+                            <a href="/ap-details" class="dropdown-item ">Affiliate-partners</a>
                         </div>
                     </div>
                     
@@ -445,57 +446,65 @@ button{
             <div class="container-fluida tt  ">
 
       <div class="table-responsive">
+        <!-- Bulk Send Button -->
+<button class="btn btn-sm btn-success" id="bulkSendBtn" data-toggle="modal" data-target="#bulkSendModal">
+  Bulk Send WhatsApp Message
+</button>
+
          <h6>Partners</h6>
  <div class="table-wrapper ">
 <table class="table" id="dataTable">
-  <thead>
-    <tr class="bg-light">
-      <th>No.</th>
-      <th>Institute Name</th>
-      <th>Institute ID</th>
-      <th>Owner Name</th>
-      <th>Mobile</th>
-      <th>WhatsApp</th> <!-- New WhatsApp column -->
-      <th>Company Type</th>
-      <th>Established Date</th>
-      <th>Institute Provides</th>
-      <th>State</th>
-      <th>City</th>
-      <th>Email</th>
-      <th>Account Holder Name</th>
-      <th>Account Number</th>
-      <th>IFSC Code</th>
-      <th>Branch</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each partners}}
-    <tr data-id="{{_id}}">
-      <td>{{incrementIndex @index}}</td>
-      <td>{{institutename}}</td>
-      <td>{{instituteid}}</td>
-      <td>{{owner_name}}</td>
-      <td>{{mobile_number}}</td>
-      <td>
-        <!-- WhatsApp icon button to send a message -->
-        <a href="https://wa.me/{{mobile_number}}" target="_blank">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width="24" height="24">
-        </a>
-      </td>
-      <td>{{company_type}}</td>
-      <td>{{established_date}}</td>
-      <td>{{institute_provides}}</td>
-      <td>{{state}}</td>
-      <td>{{city}}</td>
-      <td>{{email}}</td>
-      <td>{{account_holder_name}}</td>
-      <td>{{account_number}}</td>
-      <td>{{ifsc_code}}</td>
-      <td>{{branch}}</td>
-     
-    </tr>
-    {{/each}}
-  </tbody>
+  <!-- Add a checkbox column to select rows -->
+<thead>
+  <tr class="bg-light">
+    <th>Select</th> <!-- Checkbox column -->
+    <th>No.</th>
+    <th>Institute Name</th>
+    <th>Institute ID</th>
+    <th>Owner Name</th>
+    <th>Mobile</th>
+    <th>WhatsApp</th>
+    <th>Company Type</th>
+    <th>Established Date</th>
+    <th>Institute Provides</th>
+    <th>State</th>
+    <th>City</th>
+    <th>Email</th>
+    <th>Account Holder Name</th>
+    <th>Account Number</th>
+    <th>IFSC Code</th>
+    <th>Branch</th>
+  </tr>
+</thead>
+<tbody>
+  {{#each partners}}
+  <tr data-id="{{_id}}">
+    <td><input type="checkbox" class="select-partner" /></td> <!-- Checkbox for selecting -->
+    <td>{{incrementIndex @index}}</td>
+    <td>{{institutename}}</td>
+    <td>{{instituteid}}</td>
+    <td>{{owner_name}}</td>
+    <td>{{mobile_number}}</td>
+    <td>
+      <!-- WhatsApp icon button to send a message -->
+      <a href="https://wa.me/91{{mobile_number}}" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width="24" height="24">
+      </a>
+    </td>
+    <td>{{company_type}}</td>
+    <td>{{established_date}}</td>
+    <td>{{institute_provides}}</td>
+    <td>{{state}}</td>
+    <td>{{city}}</td>
+    <td>{{email}}</td>
+    <td>{{account_holder_name}}</td>
+    <td>{{account_number}}</td>
+    <td>{{ifsc_code}}</td>
+    <td>{{branch}}</td>
+  </tr>
+  {{/each}}
+</tbody>
+
 </table>
 
   
@@ -504,7 +513,83 @@ button{
 </div>
 
  
+<!-- Bulk Send Modal -->
+<div class="modal fade" id="bulkSendModal" tabindex="-1" role="dialog" aria-labelledby="bulkSendModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="bulkSendModalLabel">Send WhatsApp Message</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="bulkSendForm">
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea class="form-control" id="message" rows="3" placeholder="Enter your message" required></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="sendBulkMessage">Send Message</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+   document.getElementById('sendBulkMessage').addEventListener('click', function() {
+  const message = document.getElementById('message').value;
 
+  if (message.trim() === '') {
+    alert('Please enter a message');
+    return;
+  }
+
+  const mobileNumbers = [];
+  document.querySelectorAll('tr[data-id]').forEach(row => {
+    const checkbox = row.querySelector('.select-partner');
+    if (checkbox.checked) { // Only collect mobile numbers for selected rows
+      const mobileNumber = row.querySelector('td:nth-child(6)').textContent.trim();
+      if (mobileNumber) {
+        mobileNumbers.push(mobileNumber);
+      }
+    }
+  });
+
+  if (mobileNumbers.length === 0) {
+    alert('No mobile numbers selected');
+    return;
+  }
+
+  // Send the message to selected numbers using the bulk API
+  fetch('/send-bulk-message', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ message: message, numbers: mobileNumbers }),
+  })
+  .then(response => response.json())
+  .then(result => {
+    if (result.success) {
+      alert('Message sent to selected numbers');
+    } else {
+      alert('Failed to send message');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Error sending message');
+  });
+
+  // Close the modal
+  $('#bulkSendModal').modal('hide');
+});
+
+
+</script>
 
 
 <!-- Include SweetAlert2 for alerts -->
@@ -519,7 +604,9 @@ $(document).ready(function() {
 
 </script>
 
- 
+ <!-- jQuery, Popper.js, and Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <!-- Additional JavaScript Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="lib/chart/chart.min.js"></script>
