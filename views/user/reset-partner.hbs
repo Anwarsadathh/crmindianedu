@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Forgot Password</title>
+  <title>Reset Password</title>
 
   <!-- Bootstrap CSS -->
   <link
@@ -16,29 +16,29 @@
       background-color: #f7f9fc;
       font-family: 'Montserrat', sans-serif;
     }
-    .forgot-password-container {
+    .reset-password-container {
       margin-top: 80px;
     }
-    .forgot-password-card {
+    .reset-password-card {
       padding: 30px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       background-color: #fff;
       border-radius: 10px;
     }
-    .forgot-password-card h2 {
+    .reset-password-card h2 {
       margin-bottom: 20px;
       color: #333;
     }
     .form-control {
       border-radius: 5px;
     }
-    .btn-submit {
-      background-color: #28a745;
+    .btn-reset {
+      background-color: #007bff;
       color: white;
       border-radius: 5px;
     }
-    .btn-submit:hover {
-      background-color: #218838;
+    .btn-reset:hover {
+      background-color: #0056b3;
     }
     .text-muted {
       margin-top: 20px;
@@ -47,42 +47,48 @@
 </head>
 
 <body>
- <div class="container forgot-password-container">
+  <div class="container reset-password-container">
   <div class="row justify-content-center">
     <div class="col-md-6">
-      <div class="forgot-password-card">
-        <h6 class="text-center">Forgot Password</h6>
-        <p class="text-center">Enter your email to reset your password.</p>
+      <div class="reset-password-card">
+        <h6 class="text-center">Reset Password</h6>
+        <p class="text-center">Enter your new password and confirm it to reset your account password.</p>
 
-        <!-- Display flash messages -->
-        {{#if error}}
-          <div class="alert alert-danger">
-            {{error}}
-          </div>
-        {{/if}}
-        {{#if success}}
-          <div class="alert alert-success">
-            {{success}}
-          </div>
-        {{/if}}
+      {{#if success}}
+  <div class="alert alert-success">
+    {{success}}
+  </div>
+{{/if}}
 
-        <form action="/affiliate-partner-forgot-password" method="POST">
+{{#if error}}
+  <div class="alert alert-danger">
+    {{error}}
+  </div>
+{{/if}}
+
+
+        <form action="/reset-partner-password/{{token}}" method="POST">
           <div class="form-group">
-            <label for="email">Email Address:</label>
-            <input type="email" class="form-control" id="email" name="email" required>
+            <input type="hidden" name="token" value="{{token}}" />
+            <label for="password">New Password:</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password:</label>
+            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
           </div>
           <div class="form-group text-center">
-            <button type="submit" class="btn btn-submit btn-block">Submit</button>
+            <button type="submit" class="btn btn-reset btn-block">Reset Password</button>
           </div>
         </form>
+
         <div class="text-center text-muted">
-          <a href="/affiliate-partner-signup#signin" class="text-primary">Back to Sign In</a>
+          <a href="/partner-signup#signin" class="text-primary">Back to Sign In</a>
         </div>
       </div>
     </div>
   </div>
 </div>
-
 
   <!-- Bootstrap JS and dependencies -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
