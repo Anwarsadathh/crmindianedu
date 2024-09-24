@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Leads</title>
+    <title>Invoice</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -28,28 +28,13 @@
 
 <!-- DataTables JavaScript -->
 <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 
-<!-- DataTables Buttons CSS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/3.0.1/css/buttons.dataTables.css">
+<!-- DataTables JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 
-<!-- DataTables Buttons JavaScript -->
-<script src="https://cdn.datatables.net/buttons/3.0.1/js/dataTables.buttons.js"></script>
-<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.dataTables.js"></script>
-
-<!-- JSZip -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-
-<!-- pdfmake -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-
-<!-- DataTables Buttons HTML5 and Print JavaScript -->
-<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.print.min.js"></script>
-
-<!-- DataTables Select JavaScript -->
-<script src="https://cdn.datatables.net/select/2.0.0/js/dataTables.select.js"></script>
-<script src="https://cdn.datatables.net/select/2.0.0/js/select.dataTables.js"></script>
 
     <!-- Libraries Stylesheet -->
     <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
@@ -70,13 +55,7 @@ select {
     color: #000 !important; /* Ensure select text is black */
 }
 
-{{!-- ::placeholder {
-    color: #000 !important; /* Ensure placeholder text is black */
-}
 
-:-ms-input-placeholder { /* Internet Explorer 10-11 */
-    color: #000 !important;
-} --}}
 
 ::-ms-input-placeholder { /* Microsoft Edge */
     color: #000 !important;
@@ -90,10 +69,10 @@ select {
   border: 1px solid #18181a;
   color: #18181a;
   display: inline-block;
-  font-size: 15px;
-  line-height: 15px;
+  font-size: 10px;
+  line-height: 11px;
   border-radius: 7px;
-  padding: 12px 12px 11px;
+  padding: 8px 8px 7px;
   text-decoration: none;
   cursor: pointer;
   background: #fff;
@@ -140,7 +119,7 @@ select {
 
 .button-57:hover:after {
   transform-origin: bottom center;
-  transform: skewY(9.3deg) scaleY(2);
+  transform: skewY(7.3deg) scaleY(2);
 }
 
 .button-57:hover span:last-child {
@@ -200,8 +179,8 @@ select {
     padding-left:32px;
 }
 .tt {
-    margin-top: 20px;
-    padding: 70px;
+    margin-top: 10px;
+    padding: 20px;
     border-radius: 10px;background-color: #f2f9f6; /* Very pale mint green */
 
 }
@@ -219,6 +198,20 @@ select,textarea{
     
     border:none;
     box-shadow:none;
+}
+input, select, textarea {
+  background-color: #f0f0f0 !important; /* Light gray background */
+  border: 1px solid #cccccc !important; /* Soft gray border */
+  color: #333333 !important; /* Dark gray text for better readability */
+  padding: 8px;
+  border-radius: 4px; /* Slightly rounded corners for a modern look */
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  background-color: #ffffff !important; /* White background when focused */
+  border-color: #007BFF !important; /* Blue border on focus for better user feedback */
+  outline: none;
 }
 
 .green{
@@ -338,36 +331,117 @@ select,textarea{
     background-color: #28a745 !important; /* Green */
     color: #fff;
 }
-/* DataTables styles */
+/* DataTables Customization */
 .dataTables_wrapper .dataTables_filter {
     float: right;
     text-align: right;
-    margin-bottom: 10px; /* Add margin below the search bar */
+    margin-bottom: 10px;
 }
 
 .dataTables_wrapper .dataTables_filter input {
     margin-left: 0.5em;
     display: inline-block;
     width: auto;
-    margin-bottom: 10px; /* Add margin below the search bar */
-        position: sticky !important;
 }
 
 .dataTables_wrapper .dataTables_length {
     float: left;
-    margin-bottom: 10px; /* Add margin below the length dropdown */
+    margin-bottom: 10px;
 }
 
 .dataTables_wrapper .dataTables_info {
     float: left;
-    margin-top: 10px; /* Add margin above the info text */
+    margin-top: 10px;
 }
 
 .dataTables_wrapper .dataTables_paginate {
     float: right;
-    margin-top: 10px; /* Add margin above the pagination controls */
-
+    margin-top: 10px;
 }
+
+/* Wallet Cards Layout for Small Screens */
+@media (max-width: 768px) {
+    .col-md-3 {
+        width: 48%; /* Two cards per row */
+        margin-bottom: 15px; /* Add space between cards */
+    }
+
+    .card-title {
+        font-size: 10px;
+    }
+
+    .card-text {
+        font-size: 9px;
+    }
+
+    /* Adjust table font size */
+    .table thead th,
+    .table tbody td {
+        font-size: 9px;
+        padding: 6px;
+    }
+
+    .dataTables_wrapper .dataTables_filter input {
+        width: 60% !important; /* Make the search box smaller to fit the screen */
+        font-size: 9px !important; /* Smaller font size */
+        padding: 4px !important;
+        margin: 5px 0 !important; /* Add some margin for better spacing */
+    }
+
+    .dataTables_wrapper .dataTables_length select {
+        font-size: 10px !important;
+        padding: 5px !important;
+        width: 30% !important; /* Reduce the width of the dropdown */
+        margin-left: 10px !important; /* Space between dropdown and other elements */
+    }
+
+    /* Align the controls */
+    .dataTables_wrapper .dataTables_filter {
+        text-align: end !important; /* Align the search box to the right */
+        margin-bottom: 10px !important; /* Add margin for spacing */
+    }
+
+    .dataTables_wrapper .dataTables_length {
+        text-align: end !important; /* Align the show entries dropdown */
+        margin-bottom: 10px !important; /* Add margin for spacing */
+    }
+
+    .dashboard-container {
+        padding: 10px;
+        margin-top: 60px;
+    }
+
+    .modal-dialog {
+        max-width: 100%; /* Full width on small screens */
+    }
+
+.filter-options {
+        width: 100% !important; /* Set the filter options to full width for mobile */
+        text-align: left !important; /* Align text to the left to look balanced */
+        margin-bottom: 10px !important; /* Add space below for better layout */
+    }
+
+    .filter-options label {
+        font-size: 10px !important; /* Smaller font size for mobile */
+        margin-right: 5px; /* Add space between label and dropdown */
+    }
+
+    .filter-options select {
+        width: 30% !important; /* Adjust width of the select dropdown */
+        font-size: 10px !important; /* Smaller font size for select dropdown */
+        padding: 5px !important; /* Reduce padding */
+    }
+
+    /* Adjust the 'Show' dropdown width for 10, 25, 100 */
+    .dataTables_wrapper .dataTables_length select {
+        width: 35% !important; /* Reduce width of the 'Show' dropdown */
+        font-size: 10px !important;
+        padding: 4px !important;
+        margin-left: 0 !important; /* Align to the left */
+         margin-top: 10px !important; /* Align to the left */
+    }
+}
+
 .btn-glass:hover{
     background-color: #007bff !important;
 }
@@ -804,8 +878,8 @@ h3 {
             <!-- Navbar End -->
 
 
-<div class="container tt mt-5 px-2">
-<button id="saveChangesBtn" class="btn btn-primary">Save Changes</button>
+<div class="container tt  px-2">
+<button id="saveChangesBtn" class="btn btn-primary mx-3">Save Changes</button>
         <button id="hideFieldsButton" class="button-57  mx-2" role="button">    <span class="text">Show hidden fields</span>
                 <span>Hide</span></button>
     <div class="table-responsive">

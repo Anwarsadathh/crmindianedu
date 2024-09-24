@@ -5,48 +5,166 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page Not Found - 404 Error</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            color: #343a40;
+            font-family: 'Arial', sans-serif;
+            background-color: #1d1f27;
+            color: #f8f9fa;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
-            text-align: center;
+            overflow: hidden;
+            position: relative;
         }
         .container {
-            max-width: 600px;
+            text-align: center;
             padding: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1.5s ease-out;
+            z-index: 2;
         }
         h1 {
-            font-size: 3rem;
+            font-size: 4rem;
             margin-bottom: 10px;
+            color: #ff0055;
+            letter-spacing: 2px;
+            animation: glitch 1.5s infinite;
         }
         p {
-            font-size: 1.2rem;
-            line-height: 1.6;
+            font-size: 1.4rem;
             margin-bottom: 20px;
+            line-height: 1.8;
         }
         a {
-            color: #007bff;
+            color: #4db8ff;
             text-decoration: none;
             font-weight: bold;
+            border: 2px solid #4db8ff;
+            padding: 10px 20px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            animation: hoverEffect 1.5s infinite;
         }
         a:hover {
-            text-decoration: underline;
+            background-color: #4db8ff;
+            color: #1d1f27;
+            box-shadow: 0px 0px 15px rgba(0, 255, 255, 0.6);
+        }
+        
+        /* Background animation */
+        .floating-squares {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .square {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background-color: rgba(255, 255, 255, 0.1);
+            animation: floatSquare 8s infinite;
+            border-radius: 5px;
+        }
+        @keyframes floatSquare {
+            0% {
+                transform: translateY(0) rotate(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-1000px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        @keyframes glitch {
+            0% {
+                text-shadow: 2px 2px #ff0055, -2px -2px #00ffaa;
+            }
+            50% {
+                text-shadow: -2px -2px #ff0055, 2px 2px #00ffaa;
+            }
+            100% {
+                text-shadow: 2px 2px #ff0055, -2px -2px #00ffaa;
+            }
+        }
+        @keyframes hoverEffect {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        /* Randomly positioned squares */
+        .square:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            width: 80px;
+            height: 80px;
+            animation-duration: 10s;
+        }
+        .square:nth-child(2) {
+            top: 50%;
+            left: 80%;
+            width: 40px;
+            height: 40px;
+            animation-duration: 12s;
+        }
+        .square:nth-child(3) {
+            top: 70%;
+            left: 40%;
+            width: 100px;
+            height: 100px;
+            animation-duration: 14s;
+        }
+        .square:nth-child(4) {
+            top: 30%;
+            left: 60%;
+            width: 50px;
+            height: 50px;
+            animation-duration: 16s;
+        }
+        .square:nth-child(5) {
+            top: 80%;
+            left: 20%;
+            width: 70px;
+            height: 70px;
+            animation-duration: 18s;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>404 Error - Page Not Found</h1>
-        <p>The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.</p>
-        <p>Please check the URL for spelling errors, then <a href="/">click here</a> to go to the homepage.</p>
+        <h1>404 Error</h1>
+        <p>Oops! The page you're looking for can't be found.</p>
+        <p><a href="/">Return to Homepage</a></p>
+    </div>
+    
+    <!-- Floating squares background -->
+    <div class="floating-squares">
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
     </div>
 </body>
 </html>

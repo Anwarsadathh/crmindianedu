@@ -144,11 +144,20 @@
       font-size: 0.75rem; /* Even smaller font size for labels on mobile */
     }
   }
-  .btn-sm{
-    background-color: rgba(0, 0, 182, 0.68) !important;
-    color: white !important;
-    border-radius: 5px !important;
-  }
+ .btn-sm {
+    background-color: #007BFF !important; /* Bright blue for a modern look */
+    color: #ffffff !important; /* White text for contrast */
+    border-radius: 5px !important; /* Slightly rounded corners */
+    border: none !important; /* Clean, button-like appearance */
+    padding: 6px 12px !important; /* Comfortable padding */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-sm:hover {
+    background-color: #0056b3 !important; /* Darker blue on hover */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow on hover for depth */
+}
+
 </style>
 
 </head>
