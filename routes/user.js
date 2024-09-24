@@ -917,12 +917,9 @@ router.get("/crm-lead-owner-details", async (req, res) => {
 
     // Handle multiple filters for name, email, etc.
     const filterFields = [
-      "name",
+    
       "email",
-      "mobile",
-      "course",
-      "specialization",
-      "status",
+     
     ];
     filterFields.forEach((field) => {
       if (req.query[field]) {
