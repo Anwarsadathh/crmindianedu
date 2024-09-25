@@ -159,7 +159,102 @@
 }
 
 </style>
+<style>
+ /* General Card Styles */
+.card-total-amount,
+.card-total-expected {
+  position: relative;
+  background-color: #f8f9fa;
+  color: #333;
+  border-radius: 15px;
+  display: flex;
+  height: 100px !important;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+  overflow: hidden;
+  cursor: pointer;
+}
 
+.card-total-expected {
+  background-color: #e9ecef;
+}
+
+.card-total-amount:hover,
+.card-total-expected:hover {
+  transform: translateY(-10px) rotate(3deg);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Icon Animation */
+.icon {
+  font-size: 3em;
+  transition: transform 0.3s ease, color 0.3s ease;
+  z-index: 1;
+  color: #007bff; /* Standard blue */
+}
+
+.card-total-amount:hover .icon {
+  transform: rotate(360deg);
+  color: #28a745; /* Green when hovered */
+}
+
+.card-total-expected:hover .icon {
+  transform: rotate(-360deg);
+  color: #ffc107; /* Yellow when hovered */
+}
+
+/* Text Animation */
+.text-section {
+  text-align: right;
+  z-index: 1;
+}
+
+.text-section p {
+  margin: 0;
+  font-size: 0.8em;
+  font-weight: bold;
+  opacity: 0.8;
+}
+
+.text-section h6 {
+  font-size: 1em;
+  margin: 0;
+  font-weight: 900;
+  transition: transform 0.5s ease, color 0.5s ease;
+}
+
+.card-total-amount:hover h6,
+.card-total-expected:hover h6 {
+  transform: scale(1.1);
+  color: #000;
+}
+
+/* Background Animation */
+.card-total-amount::before,
+.card-total-expected::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0) 60%);
+  transition: all 0.7s ease;
+  transform: scale(0);
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.card-total-amount:hover::before,
+.card-total-expected:hover::before {
+  transform: scale(1);
+}
+
+
+
+</style><!-- Total Amount Count Card -->
 </head>
 
 <body>
@@ -239,42 +334,68 @@
             </nav>
             <!-- Navbar End -->
 
-<div class="container-fluid pt-2 ">
-  <div class="row ">
+<div class="container-fluid pt-2">
+  <div class="row">
     <!-- Date Filters -->
     <form action="/accounts-dashboard" method="get" class="mb-4">
       <div class="row pt-2">
-        <!-- Ensure 1 row layout on small screens and 3 columns on larger screens -->
         <div class="col-4 col-md-4">
           <label for="startDate" class="form-label">Start Date</label>
-          <input type="date" id="startDate" name="startDate" class="form-control">
+          <input type="date" id="startDate" name="startDate" class="form-control" />
         </div>
         <div class="col-4 col-md-4">
           <label for="endDate" class="form-label">End Date</label>
-          <input type="date" id="endDate" name="endDate" class="form-control">
+          <input type="date" id="endDate" name="endDate" class="form-control" />
         </div>
-        <div class="col-4 col-md-3 d-flex align-items-end">
-          <button type="submit" class="btn-sm btn-primary w-100">Filter</button>
-        </div>
+       <div class="col-4 col-md-3 d-flex align-items-end">
+  <button type="submit" class="btn-sm btn-primary w-10">
+    <i class="fa fa-filter me-2"></i> Filter
+  </button>
+</div>
+
       </div>
     </form>
+<div class="col-6 col-sm-6 col-xl-3 pt-2">
+  <div class="card-total-amount">
+    <i class="fa fa-dollar-sign fa-3x icon"></i>
+    <div class="text-section">
+      <p>Total Amount</p>
+      <h6>{{totalAmtCount}}</h6>
+    </div>
+  </div>
+</div>
 
+<!-- Total Expected Amount Count Card -->
+<div class="col-6 col-sm-6 col-xl-3 pt-2">
+  <div class="card-total-expected">
+    <i class="fa fa-dollar-sign fa-3x icon"></i>
+    <div class="text-section">
+      <p>Total Expected Amount</p>
+      <h6>{{totalExpectedAmtCount}}</h6>
+    </div>
+  </div>
+</div>
     <!-- Dropdown Value Counts -->
-    <div class="row ">
+    <div class="row">
       {{#each dropdownValueCounts}}
-      <div class="col-6 col-sm-6 col-xl-3 pt-2">
-        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4 dropdown-card" data-value="{{@key}}" style="cursor:pointer;">
+      <div class="col-6 col-sm-6 col-xl-3 pt-2 ">
+        <div class="card-total-expected dropdown-card" data-value="{{@key}}" style="cursor:pointer;">
           <i class="fa fa-chart-line fa-3x text-primary"></i>
-          <div class="ms-3">
+          <div class="text-section">
             <p class="mb-2">{{@key}} Count</p>
-            <h6 class="mb-0">{{this}}</h6> <!-- Display the count -->
+            <h6 class="mb-0">{{this}}</h6>
           </div>
         </div>
       </div>
       {{/each}}
+
+
+
+ 
     </div>
   </div>
 </div>
+
 
 
 <div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">

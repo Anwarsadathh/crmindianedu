@@ -882,11 +882,33 @@ h3 {
 <button id="saveChangesBtn" class="btn btn-primary mx-3">Save Changes</button>
         <button id="hideFieldsButton" class="button-57  mx-2" role="button">    <span class="text">Show hidden fields</span>
                 <span>Hide</span></button>
+                {{!-- <div class="filter-container">
+  <!-- University Filter -->
+  <label for="universityFilter">University:</label>
+  <select id="universityFilter" class="form-select">
+    <option value="">All Universities</option>
+    <option value="Manipal Jaipur University">Manipal Jaipur University</option>
+    <option value="Manipal Sikkim University">Manipal Sikkim University</option>
+    <option value="Jain Online University">Jain Online University</option>
+    <!-- Add other university options here -->
+  </select>
+
+  <!-- Doc Approved Date Filter (Single Date) -->
+  <label for="docApprovedDateFilter">Doc Approved Date:</label>
+  <input type="text" id="docApprovedDateFilter" class="form-control" placeholder="Select Date">
+
+  <!-- Date Range Filter -->
+  <label for="dateRangeFilter">Date Range:</label>
+  <input type="text" id="dateRangeFilter" class="form-control" placeholder="Select Date Range">
+
+  <!-- Filter Button -->
+  <button id="applyFilters" class="btn btn-primary">Apply Filters</button>
+</div> --}}
+
+
     <div class="table-responsive">
         <table class="table table-responsive table-borderless" id="dataTable">
-            {{!-- <button id="saveButton" class="button-57" role="button">
-                <span class="text">Save Changes</span>
-                <span>Save</span>  </button> --}}
+           
             
           
             <thead>
@@ -1239,7 +1261,65 @@ h3 {
         </table>
     </div>
 </div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+{{!-- <script>
+  document.addEventListener("DOMContentLoaded", function () {
+  // Initialize flatpickr for the Doc Approved Date (single date)
+  flatpickr("#docApprovedDateFilter", {
+    dateFormat: "Y-m-d",
+  });
 
+  // Initialize flatpickr for the Date Range
+  flatpickr("#dateRangeFilter", {
+    mode: "range",
+    dateFormat: "Y-m-d",
+  });
+
+  // Event Listener for Filter Button
+  document.getElementById("applyFilters").addEventListener("click", function () {
+    const universityFilter = document.getElementById("universityFilter").value;
+    const docApprovedDateFilter = document.getElementById("docApprovedDateFilter").value;
+    const dateRangeFilter = document.getElementById("dateRangeFilter").value.split(" to ");
+
+    // Get all table rows
+    const rows = document.querySelectorAll("#dataTable tbody tr");
+
+    rows.forEach((row) => {
+      const university = row.querySelector("td:nth-child(29)").innerText.trim(); // Assuming university is the 29th column
+      const docApprovedDate = row.querySelector("td:nth-child(2)").innerText.trim(); // Assuming docApprovedDate is the 2nd column
+      const date = row.querySelector("td:nth-child(3)").innerText.trim(); // Assuming date is the 3rd column
+
+      let showRow = true;
+
+      // Filter by University
+      if (universityFilter && university !== universityFilter) {
+        showRow = false;
+      }
+
+      // Filter by Doc Approved Date (Single Date)
+      if (docApprovedDateFilter && docApprovedDate !== docApprovedDateFilter) {
+        showRow = false;
+      }
+
+      // Filter by Date Range
+      if (dateRangeFilter.length === 2) {
+        const startDate = new Date(dateRangeFilter[0]);
+        const endDate = new Date(dateRangeFilter[1]);
+        const rowDate = new Date(date);
+        
+        if (rowDate < startDate || rowDate > endDate) {
+          showRow = false;
+        }
+      }
+
+      // Show or hide the row based on filters
+      row.style.display = showRow ? "" : "none";
+    });
+  });
+});
+
+</script> --}}
 
 <!-- Modal Container -->
 <div id="instituteModal" class="modal">

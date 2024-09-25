@@ -1449,7 +1449,97 @@ router.post("/update-wallet-status-bulk-ac", async (req, res) => {
 
 
 
-router.get("/accounts-dashboard",verifyAccounts, async (req, res) => {
+// router.get("/accounts-dashboard",verifyAccounts, async (req, res) => {
+//   try {
+//     const { startDate, endDate } = req.query;
+
+//     // Log the received date filters
+//     console.log("Start Date:", startDate);
+//     console.log("End Date:", endDate);
+
+//     const clientCollection = await db
+//       .get()
+//       .collection(collection.CLIENT_COLLECTION)
+//       .find()
+//       .toArray();
+
+//     const dropdownValueCounts = {};
+
+//     clientCollection.forEach((client) => {
+//       const paymentDetails = client.paymentDetails || {};
+
+//       const studyStages = Object.keys(paymentDetails);
+//       if (studyStages.length === 0) return; // No payment details available
+
+//       const lastStudyStage = studyStages[studyStages.length - 1];
+//       const steps = paymentDetails[lastStudyStage];
+
+//       let lastValue = null;
+//       let lastDate = null;
+
+//       for (let i = steps.length - 1; i >= 0; i--) {
+//         if (steps[i].selectedValue) {
+//           lastValue = steps[i].selectedValue;
+//           lastDate = steps[i].date;
+//           break;
+//         }
+//       }
+
+//       // Log the found lastValue and lastDate
+//       console.log(
+//         `Client: ${client.name}, Last Value: ${lastValue}, Last Date: ${lastDate}`
+//       );
+
+//       if (lastValue && lastDate) {
+//         const lastDateObj = new Date(lastDate);
+//         console.log("Last Date Object:", lastDateObj);
+
+//         if (startDate && endDate) {
+//           const startDateObj = new Date(startDate);
+//           const endDateObj = new Date(endDate);
+//           console.log(
+//             "Start Date Object:",
+//             startDateObj,
+//             "End Date Object:",
+//             endDateObj
+//           );
+
+//           if (lastDateObj >= startDateObj && lastDateObj <= endDateObj) {
+//             console.log(`Counted: ${lastValue} (within date range)`);
+//             dropdownValueCounts[lastValue] =
+//               (dropdownValueCounts[lastValue] || 0) + 1;
+//           }
+//         } else if (startDate && !endDate) {
+//           const startDateObj = new Date(startDate);
+//           console.log("Single Start Date Object:", startDateObj);
+
+//           if (lastDateObj.getTime() === startDateObj.getTime()) {
+//             console.log(`Counted: ${lastValue} (on single date)`);
+//             dropdownValueCounts[lastValue] =
+//               (dropdownValueCounts[lastValue] || 0) + 1;
+//           }
+//         } else {
+//           console.log(`Counted: ${lastValue} (no date filter applied)`);
+//           dropdownValueCounts[lastValue] =
+//             (dropdownValueCounts[lastValue] || 0) + 1;
+//         }
+//       }
+//     });
+
+//     console.log("Final Dropdown Counts:", dropdownValueCounts);
+
+//     res.render("user/accounts-dashboard", {
+//       user: true,
+//       dropdownValueCounts,
+//     });
+//   } catch (error) {
+//     console.error("Error fetching account details for dashboard:", error);
+//     res.status(500).send("Error loading the dashboard");
+//   }
+// });
+
+
+router.get("/accounts-dashboard", verifyAccounts, async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
 
@@ -1464,10 +1554,11 @@ router.get("/accounts-dashboard",verifyAccounts, async (req, res) => {
       .toArray();
 
     const dropdownValueCounts = {};
+    let totalAmtCount = 0;
+    let totalExpectedAmtCount = 0;
 
     clientCollection.forEach((client) => {
       const paymentDetails = client.paymentDetails || {};
-
       const studyStages = Object.keys(paymentDetails);
       if (studyStages.length === 0) return; // No payment details available
 
@@ -1485,60 +1576,76 @@ router.get("/accounts-dashboard",verifyAccounts, async (req, res) => {
         }
       }
 
-      // Log the found lastValue and lastDate
-      console.log(
-        `Client: ${client.name}, Last Value: ${lastValue}, Last Date: ${lastDate}`
-      );
-
+      // Filter and count the payment details based on selectedValue and date
       if (lastValue && lastDate) {
         const lastDateObj = new Date(lastDate);
-        console.log("Last Date Object:", lastDateObj);
 
         if (startDate && endDate) {
           const startDateObj = new Date(startDate);
           const endDateObj = new Date(endDate);
-          console.log(
-            "Start Date Object:",
-            startDateObj,
-            "End Date Object:",
-            endDateObj
-          );
 
           if (lastDateObj >= startDateObj && lastDateObj <= endDateObj) {
-            console.log(`Counted: ${lastValue} (within date range)`);
             dropdownValueCounts[lastValue] =
               (dropdownValueCounts[lastValue] || 0) + 1;
           }
         } else if (startDate && !endDate) {
           const startDateObj = new Date(startDate);
-          console.log("Single Start Date Object:", startDateObj);
 
           if (lastDateObj.getTime() === startDateObj.getTime()) {
-            console.log(`Counted: ${lastValue} (on single date)`);
             dropdownValueCounts[lastValue] =
               (dropdownValueCounts[lastValue] || 0) + 1;
           }
         } else {
-          console.log(`Counted: ${lastValue} (no date filter applied)`);
           dropdownValueCounts[lastValue] =
             (dropdownValueCounts[lastValue] || 0) + 1;
         }
       }
-    });
 
-    console.log("Final Dropdown Counts:", dropdownValueCounts);
+      // Filter and count totalAMt and totalExpectedAMt
+      const totalAmtDate = new Date(client.totalAMtDate);
+      const totalExpectedAmtDate = new Date(client.totalExpectedAMtDate);
+
+      if (startDate && endDate) {
+        const startDateObj = new Date(startDate);
+        const endDateObj = new Date(endDate);
+
+        if (totalAmtDate >= startDateObj && totalAmtDate <= endDateObj) {
+          totalAmtCount += parseFloat(client.totalAMt || 0);
+        }
+
+        if (
+          totalExpectedAmtDate >= startDateObj &&
+          totalExpectedAmtDate <= endDateObj
+        ) {
+          totalExpectedAmtCount += parseFloat(client.totalExpectedAMt || 0);
+        }
+      } else if (startDate && !endDate) {
+        const startDateObj = new Date(startDate);
+
+        if (totalAmtDate.getTime() === startDateObj.getTime()) {
+          totalAmtCount += parseFloat(client.totalAMt || 0);
+        }
+
+        if (totalExpectedAmtDate.getTime() === startDateObj.getTime()) {
+          totalExpectedAmtCount += parseFloat(client.totalExpectedAMt || 0);
+        }
+      } else {
+        totalAmtCount += parseFloat(client.totalAMt || 0);
+        totalExpectedAmtCount += parseFloat(client.totalExpectedAMt || 0);
+      }
+    });
 
     res.render("user/accounts-dashboard", {
       user: true,
       dropdownValueCounts,
+      totalAmtCount,
+      totalExpectedAmtCount,
     });
   } catch (error) {
     console.error("Error fetching account details for dashboard:", error);
     res.status(500).send("Error loading the dashboard");
   }
 });
-
-
 
 
 
