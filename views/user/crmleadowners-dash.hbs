@@ -507,7 +507,7 @@ color: #ffffff;
 <div class="container-fluid pt-4 px-4">
     <div class="row g-4">
         <!-- Unique Date Range Filter and Button -->
-       <div class="col-6 col-md-6 d-flex">
+       <div class="col-12 col-md-12 d-flex">
              {{#if user}}
                 <div class="filter-card glassmorphism p-4 shadow-lg d-flex">
                     <div class="floating-label-wrapper">
@@ -515,7 +515,7 @@ color: #ffffff;
                         <input type="text" id="dateRange" class="form-control shadow-sm circular-input" placeholder="Select Date Range">
                     </div>
                     <div class="floating-label-wrapper ms-3">
-                        <label for="presetDateRange" class="floating-label">Preset Date Range</label>
+                        <label for="presetDateRange" class="floating-label">Preset Date</label>
                         <select id="presetDateRange" class="form-select shadow-sm circular-input">
                             <option value="">Select Preset</option>
                             <option value="today">Today</option>
@@ -624,8 +624,9 @@ color: #ffffff;
             <thead>
               <tr>
                 <th scope="col"><input type="checkbox" id="selectAllCheckbox"></th> <!-- Add "Select All" -->
-                <th scope="col">Date</th>
-                 <th scope="col">Assigned</th>
+                {{!-- <th scope="col">Date</th>
+                 <th scope="col">Assigned</th> --}}
+                 <th scope="col">id</th>
                   <th scope="col">Name</th>
                 <th scope="col">Email</th>
                 <th scope="col">Mobile</th>
@@ -759,18 +760,47 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
 function redirectToDetailsPage(selectedDocs) {
-    const queryParams = new URLSearchParams();
-    
-    // Loop through selected documents and append their _id to query params
-    selectedDocs.forEach(doc => {
-        if (doc._id) {
-            queryParams.append('_id', doc._id);
+    try {
+        // Extract only the IDs from the selected documents
+        const ids = selectedDocs.map(doc => doc._id);
+        if (ids.length > 1000) {
+            alert('The number of selected documents is too large to process. Please select fewer documents.');
+            return;
         }
-    });
 
-    // Redirect to the lead details page with the _id as query params
-    window.open(`/crm-lead-owner-details?${queryParams.toString()}`, '_blank');
+        // Safely stringify the IDs array
+        let jsonString;
+        try {
+            jsonString = JSON.stringify(ids);
+        } catch (error) {
+            console.error('Error stringifying IDs:', error);
+            alert('An error occurred while preparing the data for submission. Please try again.');
+            return;
+        }
+
+        // Create a form to submit the IDs
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/crm-lead-owner-details';
+        form.target = '_blank';
+
+        // Create a hidden input for the IDs
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'ids';
+        input.value = jsonString; // Set the sanitized JSON string as the value
+
+        // Append the input to the form and submit
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();  // Submit the form to redirect
+    } catch (error) {
+        alert('An error occurred while processing your request: ' + error.message);
+        console.error('Error in redirectToDetailsPage:', error);
+    }
 }
+
+
 
 
     // Select All functionality
@@ -794,7 +824,6 @@ function redirectToDetailsPage(selectedDocs) {
             document.getElementById("showCardsBtn").textContent = "Show Stages";
 
             document.getElementById("showCardsBtn").onclick = function() {
-                // Show stage cards related to the selected main stage
                 document.querySelectorAll(".stage-card, .sub-stage-card").forEach(function(card) {
                     card.classList.add("d-none");
                 });
@@ -805,25 +834,27 @@ function redirectToDetailsPage(selectedDocs) {
             };
 
             document.getElementById("showTableBtn").onclick = function() {
-                // Display the table in the modal
                 const modalTableBody = document.getElementById('modalTableBody');
                 modalTableBody.innerHTML = ''; 
                 documents.forEach(doc => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td><input type="checkbox" class="row-checkbox" data-documents='${JSON.stringify(doc)}'></td>
-                         {{!-- <td>${doc._id}</td> --}}
-                        <td>${doc.timeStamp}</td>
-                        <td>${doc.assignDate}</td>
-                        <td>${doc.name}</td>
-                        <td>${doc.email}</td>
-                        <td>${doc.mobile}</td>
-                         <td>${doc.whatsapp}</td>
-                        <td>${doc.course}</td>
-                        <td>${doc.specialization}</td>
-                        <td>${doc.status}</td>
-                    `;
-                    modalTableBody.appendChild(row);
+                    try {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td><input type="checkbox" class="row-checkbox" data-documents='${JSON.stringify(doc)}'></td>
+                            <td>${doc._id}</td>
+                            <td>${doc.name}</td>
+                            <td>${doc.email}</td>
+                            <td>${doc.mobile}</td>
+                            <td>${doc.whatsapp}</td>
+                            <td>${doc.course}</td>
+                            <td>${doc.specialization}</td>
+                            <td>${doc.status}</td>
+                        `;
+                        modalTableBody.appendChild(row);
+                    } catch (error) {
+                        alert('Error rendering table row: ' + error.message);
+                        console.error('Error rendering document:', doc, error);
+                    }
                 });
                 bootstrap.Modal.getInstance(document.getElementById('actionModal')).hide();
                 new bootstrap.Modal(document.getElementById('detailsModal')).show();
@@ -873,21 +904,24 @@ function redirectToDetailsPage(selectedDocs) {
             const modalTableBody = document.getElementById('modalTableBody');
             modalTableBody.innerHTML = ''; 
             documents.forEach(doc => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td><input type="checkbox" class="row-checkbox" data-documents='${JSON.stringify(doc)}'></td>
-                    {{!-- <td>${doc._id}</td> --}}
-                    <td>${doc.name}</td>
-                    <td>${doc.name}</td>
-                    <td>${doc.name}</td>
-                    <td>${doc.email}</td>
-                    <td>${doc.mobile}</td>
-                      <td>${doc.whatsapp}</td>
-                    <td>${doc.course}</td>
-                    <td>${doc.specialization}</td>
-                    <td>${doc.status}</td>
-                `;
-                modalTableBody.appendChild(row);
+                try {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><input type="checkbox" class="row-checkbox" data-documents='${JSON.stringify(doc)}'></td>
+                        <td>${doc._id}</td>
+                        <td>${doc.name}</td>
+                        <td>${doc.email}</td>
+                        <td>${doc.mobile}</td>
+                        <td>${doc.whatsapp}</td>
+                        <td>${doc.course}</td>
+                        <td>${doc.specialization}</td>
+                        <td>${doc.status}</td>
+                    `;
+                    modalTableBody.appendChild(row);
+                } catch (error) {
+                    alert('Error rendering table row: ' + error.message);
+                    console.error('Error rendering document:', doc, error);
+                }
             });
 
             new bootstrap.Modal(document.getElementById('detailsModal')).show();
@@ -907,9 +941,8 @@ function redirectToDetailsPage(selectedDocs) {
         });
     });
 });
-
-
 </script>
+
 
 <!-- Modal for Choosing Action -->
 <div class="modal fade" id="actionModal" tabindex="-1" aria-labelledby="actionModalLabel" aria-hidden="true">

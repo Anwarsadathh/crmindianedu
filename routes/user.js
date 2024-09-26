@@ -960,7 +960,48 @@ router.get("/lead-details", verifyLogin, async (req, res) => {
 //   }
 // });
 
+router.post("/crm-lead-owner-details", async (req, res) => {
+  try {
+    // Parse the list of IDs from the request body
+    const ids = JSON.parse(req.body.ids);
 
+    // Fetch lead owner data from session
+    const leadOwnerName = req.session.user.email;
+
+    // Fetch data from collections (similar to the GET request handler)
+    const [googlesheets, referrals, leadOwners] = await Promise.all([
+      serviceHelpers.getAllGooglsheets(),
+      serviceHelpers.getAllReferral(),
+      serviceHelpers.getAllLeadOwners(),
+    ]);
+
+    // Combine data from both collections
+    const combinedData = [...googlesheets, ...referrals];
+
+    // Filter combined data based on the lead owner and assigned lead
+    let filteredData = combinedData.filter(
+      (item) => item.leadOwnerName === leadOwnerName && item.assignLead !== null
+    );
+
+    // Filter the data based on the provided IDs
+    if (ids.length > 0) {
+      filteredData = filteredData.filter((item) =>
+        ids.includes(item._id.toString())
+      );
+    }
+
+    // Continue with the logic to render or send the response
+    res.render("user/crmleadowners-details", {
+      // Pass required data to the view
+      googlesheets: filteredData, // Use the filtered data here
+      leadOwners, // Pass the leadOwners data if needed
+      // Add any other required variables for rendering the view
+    });
+  } catch (error) {
+    console.error("Error processing POST request:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 router.get("/crm-lead-owner-details", async (req, res) => {
   // Check if the user is logged in
@@ -990,42 +1031,36 @@ router.get("/crm-lead-owner-details", async (req, res) => {
     // Combine data from both collections
     const combinedData = [...googlesheets, ...referrals];
 
-    // Log incoming _id from query parameters
-    console.log("Query _id:", req.query._id);
+    // Log incoming ids from query parameters
+    console.log("Query ids:", req.query.ids);
 
-    // Filter combined data based on query parameters
+    // Parse the ids field to handle multiple IDs (comma-separated)
+    const ids = req.query.ids ? req.query.ids.split(",") : [];
+
+    // Filter combined data based on the lead owner and assignLead fields
     let filteredData = combinedData.filter(
       (item) => item.leadOwnerName === leadOwnerName && item.assignLead !== null
     );
 
-    // Log filtered data before applying further filters
-    console.log("Filtered Data before _id filter:", filteredData);
+    console.log("Filtered Data before ids filter:", filteredData);
 
- const filterFields = ["_id"];
-filterFields.forEach((field) => {
-  if (req.query[field]) {
-    const values = Array.isArray(req.query[field])
-      ? req.query[field]
-      : [req.query[field]];
-    filteredData = filteredData.filter((item) =>
-      values.includes(item[field].toString()) // Cast _id to string
-    );
-  }
-});
+    // Filter the data by multiple ids if any exist
+    if (ids.length > 0) {
+      filteredData = filteredData.filter(
+        (item) => ids.includes(item._id.toString()) // Cast _id to string to match
+      );
+    }
 
-
-    // Log filtered data after _id filter
-    console.log("Filtered Data after _id filter:", filteredData);
+    console.log("Filtered Data after ids filter:", filteredData);
 
     // Sort data by assignDate
     const sortedData = filteredData.sort(
       (a, b) => new Date(b.assignDate) - new Date(a.assignDate)
     );
 
-    // Log sorted data
     console.log("Sorted Data:", sortedData);
 
-    // New: Extract additional query parameters
+    // Extract additional query parameters
     const { startDate, endDate, filterType, stage, showLatestSubstage } =
       req.query;
 
@@ -1035,14 +1070,14 @@ filterFields.forEach((field) => {
       stageCounts,
       subStageCounts,
       totalLeads,
-      documents, // Ensure documents are included here
+      documents,
     } = await serviceHelpers.getLeadStatusCountsok(
       leadOwnerName,
       startDate,
       endDate
     );
 
-    // Render the view with filtered and sorted data, including the new counts
+    // Render the view with filtered and sorted data
     res.render("user/crmleadowners-details", {
       admin: true,
       googlesheets: sortedData,
@@ -1050,17 +1085,18 @@ filterFields.forEach((field) => {
       leadStage: uniqueLeadStages,
       userEmail: req.session.user.email,
       userName: req.session.user.name,
-      mainStageCounts, // Pass the main stage counts
-      stageCounts, // Pass the stage counts
-      subStageCounts, // Pass the sub-stage counts
-      totalLeads, // Pass the total leads count
-      documents, // Pass the documents data
+      mainStageCounts,
+      stageCounts,
+      subStageCounts,
+      totalLeads,
+      documents,
     });
   } catch (error) {
     console.error("Error fetching lead details:", error);
     res.status(500).send("Internal Server Error");
   }
 });
+
 
 
 
