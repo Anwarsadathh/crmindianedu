@@ -1001,13 +1001,18 @@ router.get("/crm-lead-owner-details", async (req, res) => {
     // Log filtered data before applying further filters
     console.log("Filtered Data before _id filter:", filteredData);
 
-    // Ensure that req.query._id is an array
-    const _idArray = Array.isArray(req.query._id) ? req.query._id : [req.query._id];
+ const filterFields = ["_id"];
+filterFields.forEach((field) => {
+  if (req.query[field]) {
+    const values = Array.isArray(req.query[field])
+      ? req.query[field]
+      : [req.query[field]];
+    filteredData = filteredData.filter((item) =>
+      values.includes(item[field].toString()) // Cast _id to string
+    );
+  }
+});
 
-    // Apply filter based on the _id values
-    if (_idArray.length > 0) {
-      filteredData = filteredData.filter((item) => _idArray.includes(item._id.toString()));
-    }
 
     // Log filtered data after _id filter
     console.log("Filtered Data after _id filter:", filteredData);
@@ -1021,7 +1026,8 @@ router.get("/crm-lead-owner-details", async (req, res) => {
     console.log("Sorted Data:", sortedData);
 
     // New: Extract additional query parameters
-    const { startDate, endDate, filterType, stage, showLatestSubstage } = req.query;
+    const { startDate, endDate, filterType, stage, showLatestSubstage } =
+      req.query;
 
     // Fetch lead status counts
     const {
@@ -1055,7 +1061,6 @@ router.get("/crm-lead-owner-details", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-
 
 
 
