@@ -406,7 +406,7 @@ background-color: #eaeef2 !important;
     <button id="hideColumnsBtn" class="btn btn-sm btn-primary">Minimize Some Fields</button>
 </div> --}}
 <div class="d-flex justify-content-end mb-3 mt-3">
-    <button id="hideColumnsBtn" class="btn btn-sm btn-primary animated-btn">Minimize Some Fields</button>
+    <button id="hideColumnsBtn" class="btn btn-sm btn-primary animated-btn">Hide Some Fields</button>
      <div class=" mx-2">
                 <select id="dateFilter" class="form-select form-select-sm" style="width: 150px; display: inline-block;">
                     <option selected value="" disabled>Select New Leads</option>
@@ -658,7 +658,7 @@ background-color: #eaeef2 !important;
     });
 
     // Update button text based on current state
-    this.textContent = isMinimized ? 'Unminimize Fields' : 'Minimize Some Fields';
+    this.textContent = isMinimized ? 'Show All Fields' : 'Hide Some Fields';
 });
 
 

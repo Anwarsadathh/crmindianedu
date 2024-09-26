@@ -18,6 +18,39 @@ const db = require("./config/connection");
 
 const app = express();
 
+const formatDates = function (date) {
+  if (!date) return ""; // Return empty string if the date is null/undefined
+
+  // If the date is already in YYYY-MM-DD format
+  if (date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+    const d = new Date(date);
+    if (!isNaN(d.getTime())) {
+      const day = String(d.getDate()).padStart(2, "0");
+      const month = String(d.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+      const year = d.getFullYear();
+      return `${day}/${month}/${year}`;
+    }
+  }
+
+  // If the date is in DD/MM/YYYY format
+  const dateParts = date.split("/");
+  if (dateParts.length === 3) {
+    // Rearrange date parts to MM/DD/YYYY for JavaScript Date object
+    const formattedDate = `${dateParts[1]}/${dateParts[0]}/${dateParts[2]}`;
+    const d = new Date(formattedDate);
+
+    if (!isNaN(d.getTime())) {
+      const day = String(d.getDate()).padStart(2, "0");
+      const month = String(d.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+      const year = d.getFullYear();
+      return `${day}/${month}/${year}`;
+    }
+  }
+
+  return "Invalid Date"; // Return "Invalid Date" if the input is not a valid date
+};
+
+
 
 const hbs = exphbs.create({
   extname: "hbs",
@@ -25,6 +58,7 @@ const hbs = exphbs.create({
   layoutsDir: path.join(__dirname, "views/layout"),
   partialsDir: path.join(__dirname, "views/partials"),
   helpers: {
+    formatDates: formatDates ,// Register the formatDate helper
     formatDate: function (date) {
       if (!date) return "N/A";
 

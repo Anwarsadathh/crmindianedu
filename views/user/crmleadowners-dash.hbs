@@ -624,7 +624,9 @@ color: #ffffff;
             <thead>
               <tr>
                 <th scope="col"><input type="checkbox" id="selectAllCheckbox"></th> <!-- Add "Select All" -->
-                <th scope="col">Name</th>
+                <th scope="col">Date</th>
+                 <th scope="col">Assigned</th>
+                  <th scope="col">Name</th>
                 <th scope="col">Email</th>
                 <th scope="col">Mobile</th>
 <th scope="col">WhatsApp</th>
@@ -756,20 +758,20 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // Redirect to details page
-    function redirectToDetailsPage(selectedDocs) {
-        const queryParams = new URLSearchParams();
-        selectedDocs.forEach(doc => {
-            for (const [key, value] of Object.entries(doc)) {
-                if (Array.isArray(value)) {
-                    value.forEach(val => queryParams.append(key, val));
-                } else {
-                    queryParams.append(key, value);
-                }
-            }
-        });
-        window.open(`/crm-lead-owner-details?${queryParams.toString()}`, '_blank');
-    }
+function redirectToDetailsPage(selectedDocs) {
+    const queryParams = new URLSearchParams();
+    
+    // Loop through selected documents and append their _id to query params
+    selectedDocs.forEach(doc => {
+        if (doc._id) {
+            queryParams.append('_id', doc._id);
+        }
+    });
+
+    // Redirect to the lead details page with the _id as query params
+    window.open(`/crm-lead-owner-details?${queryParams.toString()}`, '_blank');
+}
+
 
     // Select All functionality
     const selectAllCheckbox = document.getElementById("selectAllCheckbox");
@@ -810,6 +812,9 @@ document.addEventListener("DOMContentLoaded", function() {
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td><input type="checkbox" class="row-checkbox" data-documents='${JSON.stringify(doc)}'></td>
+                         {{!-- <td>${doc._id}</td> --}}
+                        <td>${doc.timeStamp}</td>
+                        <td>${doc.assignDate}</td>
                         <td>${doc.name}</td>
                         <td>${doc.email}</td>
                         <td>${doc.mobile}</td>
@@ -871,6 +876,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td><input type="checkbox" class="row-checkbox" data-documents='${JSON.stringify(doc)}'></td>
+                    {{!-- <td>${doc._id}</td> --}}
+                    <td>${doc.name}</td>
+                    <td>${doc.name}</td>
                     <td>${doc.name}</td>
                     <td>${doc.email}</td>
                     <td>${doc.mobile}</td>

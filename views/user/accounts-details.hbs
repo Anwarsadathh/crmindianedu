@@ -980,8 +980,8 @@ h3 {
                <tr data-id="{{this._id}}">
         <td hidden>{{this._id}}</td> <!-- The ID is stored in a hidden cell for reference -->
                     <td>{{incrementIndex @index}}</td>
-                    <td class="text-danger font-weight-bold">{{this.date}}</td>
-                    <td class="text-danger font-weight-bold">{{this.docApprovedDate}}</td>
+                    <td class="text-danger font-weight-bold">{{formatDates this.date}}</td>
+                    <td class="text-danger font-weight-bold">{{formatDates this.docApprovedDate}}</td>
                     <td class="text-dark font-weight-bold">{{this.studentid}}</td>
                     <td>{{this.name}}</td>
                     <td >{{this.course}}</td>
@@ -1283,7 +1283,7 @@ h3 {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
- document.getElementById('universityFilter').addEventListener('change', function() {
+document.getElementById('universityFilter').addEventListener('change', function() {
   filterTable();
 });
 
@@ -1303,7 +1303,7 @@ function filterTable() {
 
   for (var i = 1; i < rows.length; i++) {
     var universityCell = rows[i].getElementsByTagName('td')[29]; // Ensure this is the correct column for University
-    var docDateCell = rows[i].getElementsByTagName('td')[3].textContent; // Ensure this is the correct column for Doc Approved Date
+    var docDateCell = rows[i].getElementsByTagName('td')[3].textContent.trim(); // Ensure this is the correct column for Doc Approved Date
 
     // Log cell values to check if they are being read correctly
     console.log("Row " + i + " University: ", universityCell ? universityCell.textContent : "No University Cell");
@@ -1317,9 +1317,18 @@ function filterTable() {
     // Log the processed university text
     console.log("Processed University Text: ", universityText);
 
+    // Convert date to comparable format (YYYY-MM-DD) if it's in DD/MM/YYYY
+    var formattedDocDate = formatDateToComparable(docDateCell);
+
+    // Log the formatted document date
+    console.log("Formatted Doc Date: ", formattedDocDate);
+
+    var selectedFormattedDate = formatDateToComparable(docApprovedDate);
+    console.log("Selected Formatted Date: ", selectedFormattedDate);
+
     // Filter logic
     if ((university === "" || universityText.includes(university)) &&
-        (docApprovedDate === "" || docDateCell.includes(docApprovedDate))) {
+        (docApprovedDate === "" || formattedDocDate === selectedFormattedDate)) {
       rows[i].style.display = ""; // Show row
     } else {
       rows[i].style.display = "none"; // Hide row
@@ -1327,6 +1336,23 @@ function filterTable() {
   }
 }
 
+// Function to convert DD/MM/YYYY or other date formats to YYYY-MM-DD for easy comparison
+function formatDateToComparable(date) {
+  if (!date) return "";
+
+  // Check for DD/MM/YYYY format
+  if (date.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+    var parts = date.split('/');
+    return parts[2] + '-' + parts[1] + '-' + parts[0]; // Convert to YYYY-MM-DD
+  }
+
+  // If it's already in YYYY-MM-DD, return it as is
+  if (date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+    return date;
+  }
+
+  return ""; // Return empty string if the date format doesn't match
+}
 </script>
 
 <!-- Modal Container -->

@@ -882,6 +882,86 @@ router.get("/lead-details", verifyLogin, async (req, res) => {
 
 
 
+// router.get("/crm-lead-owner-details", async (req, res) => {
+//   // Check if the user is logged in
+//   if (!req.session.user) {
+//     return res.redirect("/lead-login");
+//   }
+
+//   try {
+//     // Fetch lead stage data
+//     const leadStage = await serviceHelpers.getAllLeadStage();
+//     const uniqueLeadStages = Array.from(
+//       new Set(leadStage.map((stage) => stage.mainStage))
+//     ).map((mainStage) =>
+//       leadStage.find((stage) => stage.mainStage === mainStage)
+//     );
+
+//     // Fetch lead owner data from session
+//     const leadOwnerName = req.session.user.email;
+
+//     // Fetch data from collections
+//     const [googlesheets, referrals, leadOwners] = await Promise.all([
+//       serviceHelpers.getAllGooglsheets(),
+//       serviceHelpers.getAllReferral(),
+//       serviceHelpers.getAllLeadOwners(),
+//     ]);
+
+//     // Combine data from both collections
+//     const combinedData = [...googlesheets, ...referrals];
+
+//     // Log incoming _id from query parameters
+//     console.log("Query _id:", req.query._id);
+
+//     // Filter combined data based on query parameters
+//     let filteredData = combinedData.filter(
+//       (item) => item.leadOwnerName === leadOwnerName && item.assignLead !== null
+//     );
+
+//     // Log filtered data before applying further filters
+//     console.log("Filtered Data before _id filter:", filteredData);
+
+//     // Handle multiple filters for name, email, etc.
+//     const filterFields = ["email"];
+//     filterFields.forEach((field) => {
+//       if (req.query[field]) {
+//         const values = Array.isArray(req.query[field])
+//           ? req.query[field]
+//           : [req.query[field]];
+//         filteredData = filteredData.filter((item) =>
+//           values.includes(item[field])
+//         );
+//       }
+//     });
+
+//     // Log filtered data after _id filter
+//     console.log("Filtered Data after _id filter:", filteredData);
+
+//     // Sort data by assignDate
+//     const sortedData = filteredData.sort(
+//       (a, b) => new Date(b.assignDate) - new Date(a.assignDate)
+//     );
+
+//     // Log sorted data
+//     console.log("Sorted Data:", sortedData);
+
+//     // Render the view with filtered and sorted data
+//     res.render("user/crmleadowners-details", {
+//       admin: true,
+//       googlesheets: sortedData,
+//       leadOwners,
+//       leadStage: uniqueLeadStages,
+//       userEmail: req.session.user.email,
+//       userName: req.session.user.name,
+//     });
+//   } catch (error) {
+//     console.error("Error fetching lead details:", error);
+//     res.status(500).send("Internal Server Error");
+//   }
+// });
+
+
+
 router.get("/crm-lead-owner-details", async (req, res) => {
   // Check if the user is logged in
   if (!req.session.user) {
@@ -910,34 +990,53 @@ router.get("/crm-lead-owner-details", async (req, res) => {
     // Combine data from both collections
     const combinedData = [...googlesheets, ...referrals];
 
+    // Log incoming _id from query parameters
+    console.log("Query _id:", req.query._id);
+
     // Filter combined data based on query parameters
     let filteredData = combinedData.filter(
       (item) => item.leadOwnerName === leadOwnerName && item.assignLead !== null
     );
 
-    // Handle multiple filters for name, email, etc.
-    const filterFields = [
-    
-      "email",
-     
-    ];
-    filterFields.forEach((field) => {
-      if (req.query[field]) {
-        const values = Array.isArray(req.query[field])
-          ? req.query[field]
-          : [req.query[field]];
-        filteredData = filteredData.filter((item) =>
-          values.includes(item[field])
-        );
-      }
-    });
+    // Log filtered data before applying further filters
+    console.log("Filtered Data before _id filter:", filteredData);
+
+    // Ensure that req.query._id is an array
+    const _idArray = Array.isArray(req.query._id) ? req.query._id : [req.query._id];
+
+    // Apply filter based on the _id values
+    if (_idArray.length > 0) {
+      filteredData = filteredData.filter((item) => _idArray.includes(item._id.toString()));
+    }
+
+    // Log filtered data after _id filter
+    console.log("Filtered Data after _id filter:", filteredData);
 
     // Sort data by assignDate
     const sortedData = filteredData.sort(
       (a, b) => new Date(b.assignDate) - new Date(a.assignDate)
     );
 
-    // Render the view with filtered and sorted data
+    // Log sorted data
+    console.log("Sorted Data:", sortedData);
+
+    // New: Extract additional query parameters
+    const { startDate, endDate, filterType, stage, showLatestSubstage } = req.query;
+
+    // Fetch lead status counts
+    const {
+      mainStageCounts,
+      stageCounts,
+      subStageCounts,
+      totalLeads,
+      documents, // Ensure documents are included here
+    } = await serviceHelpers.getLeadStatusCountsok(
+      leadOwnerName,
+      startDate,
+      endDate
+    );
+
+    // Render the view with filtered and sorted data, including the new counts
     res.render("user/crmleadowners-details", {
       admin: true,
       googlesheets: sortedData,
@@ -945,13 +1044,17 @@ router.get("/crm-lead-owner-details", async (req, res) => {
       leadStage: uniqueLeadStages,
       userEmail: req.session.user.email,
       userName: req.session.user.name,
+      mainStageCounts, // Pass the main stage counts
+      stageCounts, // Pass the stage counts
+      subStageCounts, // Pass the sub-stage counts
+      totalLeads, // Pass the total leads count
+      documents, // Pass the documents data
     });
   } catch (error) {
     console.error("Error fetching lead details:", error);
     res.status(500).send("Internal Server Error");
   }
 });
-
 
 
 
