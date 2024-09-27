@@ -2530,7 +2530,259 @@ module.exports = {
   //     }
   //   });
   // },
-  getLeadStatusCountsok: async (sessionEmail, startDate, endDate) => {
+//   getLeadStatusCountsok: async (sessionEmail, startDate, endDate) => {
+//   return new Promise(async (resolve, reject) => {
+//     try {
+    
+//       // Parse startDate and endDate
+//       const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+//       const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+
+//       if ((startDate && !start) || (endDate && !end)) {
+//         throw new Error("Invalid date value provided");
+//       }
+
+//       let matchCriteria = sessionEmail ? { leadOwnerName: sessionEmail } : {};
+
+//       // Fetch data
+//       const [googleSheetData, referralData] = await Promise.all([
+//         db.get().collection(collection.GOOGLESHEETS_COLLECTION).find(matchCriteria).toArray(),
+//         db.get().collection(collection.REFERRAL_COLLECTION).find(matchCriteria).toArray(),
+//       ]);
+
+//       const allData = [...googleSheetData, ...referralData];
+
+//       let mainStageCounts = {};
+//       let stageCounts = {};
+//       let subStageCounts = {};
+//       let mainStageList = new Set();
+
+//       let mainStageDetails = [];
+//       let stageDetails = [];
+//       let subStageDetails = [];
+
+//       let notContactedCount = 0; // Initialize count for "Not Contacted"
+//       let notContactedDocuments = []; // Initialize array to hold details of "Not Contacted" leads
+
+//       allData.forEach((doc) => {
+
+//         let latestMainStage = null;
+//         let latestStage = null;
+//         let latestSubStage = null;
+//         let latestDate = null;
+
+//         const leadStatus = doc.leadStatus || {}; // Handle missing leadStatus
+
+//         if (Object.keys(leadStatus).length === 0) {
+//           // If there's no leadStatus, consider this as "Not Contacted"
+//           notContactedCount++;
+//           notContactedDocuments.push({
+//             _id: doc._id,
+//             course: doc.course,
+//             specialization: doc.specialization,
+//             status: doc.status,
+//             experience: doc.experience,
+//             currSalary: doc.currSalary,
+//             prevUniversity: doc.prevUniversity,
+//             exposure: doc.exposure,
+//             budget: doc.budget,
+//             description: doc.description,
+//             name: doc.name,
+//             email: doc.email,
+//             whatsapp: doc.whatsapp,
+//             mobile: doc.mobile,
+//             state: doc.state,
+//             city: doc.city,
+//             ReferredBy: doc.ReferredBy,
+//             timeStamp: doc.timeStamp,
+//             assignDate: doc.assignDate,
+//             assignLead: doc.assignLead,
+//             leadOwnerName: doc.leadOwnerName,
+//             leadStatus: doc.leadStatus,
+//           });
+//           return;
+//         }
+
+//         for (const [mainStage, stages] of Object.entries(leadStatus)) {
+//           if (!["In Progress", "Completed"].includes(mainStage)) {
+//             mainStageList.add(mainStage);
+//           }
+
+//           for (const [stage, entries] of Object.entries(stages)) {
+//             const filteredEntries = entries.filter((entry) => {
+//               const entryDate = new Date(entry.date).getTime();
+//               return (!start || entryDate >= start) && (!end || entryDate <= end);
+//             });
+
+//             console.log(`Filtered Entries for ${mainStage} - ${stage}:`, filteredEntries);
+
+//             if (filteredEntries.length === 0) continue;
+
+//             const latest = filteredEntries.reduce((latest, entry) => {
+//               const entryDate = new Date(entry.date).getTime();
+//               if (isNaN(entryDate)) {
+//                 console.warn("Invalid date found in entry:", entry);
+//                 return latest;
+//               }
+//               return !latest || entryDate > new Date(latest.date).getTime() ? entry : latest;
+//             }, null);
+
+//             console.log(`Latest Entry for ${mainStage} - ${stage}:`, latest);
+
+//             if (latest && (!latestDate || new Date(latest.date) > new Date(latestDate))) {
+//               latestDate = latest.date;
+//               latestMainStage = mainStage;
+//               latestStage = stage;
+//               latestSubStage = latest.subStage;
+//             }
+//           }
+//         }
+
+//         if (latestMainStage) {
+//           mainStageCounts[latestMainStage] = (mainStageCounts[latestMainStage] || 0) + 1;
+//           stageCounts[`${latestMainStage}-${latestStage}`] =
+//             (stageCounts[`${latestMainStage}-${latestStage}`] || 0) + 1;
+//           subStageCounts[`${latestMainStage}-${latestStage}-${latestSubStage}`] =
+//             (subStageCounts[`${latestMainStage}-${latestStage}-${latestSubStage}`] || 0) + 1;
+
+//           mainStageDetails.push({ mainStage: latestMainStage, doc });
+//           stageDetails.push({ mainStage: latestMainStage, stage: latestStage, doc });
+//           subStageDetails.push({
+//             mainStage: latestMainStage,
+//             stage: latestStage,
+//             subStage: latestSubStage,
+//             doc,
+//           });
+//         }
+//       });
+
+//       // Add "Not Contacted" category if no leadStatus is found
+//       if (notContactedCount > 0) {
+//         mainStageCounts["Not Contacted"] = notContactedCount;
+//       }
+
+//       // Ensure all stages and sub-stages are shown
+//       mainStageList.forEach((mainStage) => {
+//         if (!(mainStage in mainStageCounts)) {
+//           mainStageCounts[mainStage] = 0;
+//         }
+//         for (const stage of Object.keys(stageCounts)) {
+//           if (stage.startsWith(`${mainStage}-`) && !(stage in stageCounts)) {
+//             stageCounts[stage] = 0;
+//           }
+//           for (const subStage of Object.keys(subStageCounts)) {
+//             if (subStage.startsWith(`${mainStage}-${stage}-`) && !(subStage in subStageCounts)) {
+//               subStageCounts[subStage] = 0;
+//             }
+//           }
+//         }
+//       });
+
+//       // Convert counts to arrays and sort
+//       const mainStageCountsArray = Array.from(mainStageList)
+//         .map((mainStage) => ({
+//           mainStage,
+//           count: mainStageCounts[mainStage],
+//         }))
+//         .sort((a, b) => b.count - a.count);
+
+//       if (notContactedCount > 0) {
+//         mainStageCountsArray.push({
+//           mainStage: "Not Contacted",
+//           count: notContactedCount,
+//           documents: notContactedDocuments, // Attach the details of "Not Contacted" leads
+//         });
+//       }
+
+//       const stageCountsArray = Object.keys(stageCounts)
+//         .map((key) => {
+//           const [mainStage, stage] = key.split("-");
+//           return {
+//             mainStage,
+//             stage,
+//             count: stageCounts[key],
+//           };
+//         })
+//         .sort((a, b) => b.count - a.count);
+
+//       const subStageCountsArray = Object.keys(subStageCounts)
+//         .map((key) => {
+//           const [mainStage, stage, subStage] = key.split("-");
+//           return {
+//             mainStage,
+//             stage,
+//             subStage,
+//             count: subStageCounts[key],
+//           };
+//         })
+//         .sort((a, b) => b.count - a.count);
+
+ 
+
+
+//       const documents = allData.map((doc) => {
+//         return {
+//           _id: doc._id,
+//           course: doc.course,
+//           specialization: doc.specialization,
+//           status: doc.status,
+//           experience: doc.experience,
+//           currSalary: doc.currSalary,
+//           prevUniversity: doc.prevUniversity,
+//           exposure: doc.exposure,
+//           budget: doc.budget,
+//           description: doc.description,
+//           name: doc.name,
+//           email: doc.email,
+//           whatsapp: doc.whatsapp,
+//           mobile: doc.mobile,
+//           state: doc.state,
+//           city: doc.city,
+//           ReferredBy: doc.ReferredBy,
+//           timeStamp: doc.timeStamp,
+//           assignDate: doc.assignDate,
+//           assignLead: doc.assignLead,
+//           leadOwnerName: doc.leadOwnerName,
+//           leadStatus: doc.leadStatus,
+//         };
+//       });
+
+//       resolve({
+//         mainStageCounts: mainStageCountsArray.map((mainStageCount) => ({
+//           ...mainStageCount,
+//           documents: mainStageCount.mainStage === "Not Contacted" 
+//             ? notContactedDocuments 
+//             : mainStageDetails
+//               .filter((detail) => detail.mainStage === mainStageCount.mainStage)
+//               .map((detail) => detail.doc),
+//         })),
+//         stageCounts: stageCountsArray.map((stageCount) => ({
+//           ...stageCount,
+//           documents: stageDetails
+//             .filter((detail) => detail.mainStage === stageCount.mainStage && detail.stage === stageCount.stage)
+//             .map((detail) => detail.doc),
+//         })),
+//         subStageCounts: subStageCountsArray.map((subStageCount) => ({
+//           ...subStageCount,
+//           documents: subStageDetails
+//             .filter(
+//               (detail) =>
+//                 detail.mainStage === subStageCount.mainStage &&
+//                 detail.stage === subStageCount.stage &&
+//                 detail.subStage === subStageCount.subStage
+//             )
+//             .map((detail) => detail.doc),
+//         })),
+//         totalLeads: allData.length,
+//       });
+//     } catch (error) {
+//       console.log("Error in getLeadStatusCountsok:", error);
+//       reject(error);
+//     }
+//   });
+// },
+
+getLeadStatusCountsok: async (sessionEmail, startDate, endDate) => {
   return new Promise(async (resolve, reject) => {
     try {
     
@@ -2551,7 +2803,11 @@ module.exports = {
       ]);
 
       const allData = [...googleSheetData, ...referralData];
-
+// Filter the total leads by assignDate
+const totalLeads = allData.filter((doc) => {
+  const assignDate = new Date(doc.assignDate).getTime();
+  return (!start || assignDate >= start) && (!end || assignDate <= end);
+});
       let mainStageCounts = {};
       let stageCounts = {};
       let subStageCounts = {};
@@ -2750,16 +3006,23 @@ module.exports = {
       resolve({
         mainStageCounts: mainStageCountsArray.map((mainStageCount) => ({
           ...mainStageCount,
-          documents: mainStageCount.mainStage === "Not Contacted" 
-            ? notContactedDocuments 
-            : mainStageDetails
-              .filter((detail) => detail.mainStage === mainStageCount.mainStage)
-              .map((detail) => detail.doc),
+          documents:
+            mainStageCount.mainStage === "Not Contacted"
+              ? notContactedDocuments
+              : mainStageDetails
+                  .filter(
+                    (detail) => detail.mainStage === mainStageCount.mainStage
+                  )
+                  .map((detail) => detail.doc),
         })),
         stageCounts: stageCountsArray.map((stageCount) => ({
           ...stageCount,
           documents: stageDetails
-            .filter((detail) => detail.mainStage === stageCount.mainStage && detail.stage === stageCount.stage)
+            .filter(
+              (detail) =>
+                detail.mainStage === stageCount.mainStage &&
+                detail.stage === stageCount.stage
+            )
             .map((detail) => detail.doc),
         })),
         subStageCounts: subStageCountsArray.map((subStageCount) => ({
@@ -2773,15 +3036,15 @@ module.exports = {
             )
             .map((detail) => detail.doc),
         })),
-        totalLeads: allData.length,
+        totalLeads: totalLeads.length, // Use the filtered total leads count
       });
+
     } catch (error) {
       console.log("Error in getLeadStatusCountsok:", error);
       reject(error);
     }
   });
 },
-
 
   getAllGooglsheets: () => {
     return new Promise(async (resolve, reject) => {

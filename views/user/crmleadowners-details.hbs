@@ -1589,6 +1589,24 @@ $(document).ready(function() {
 
 </script>
 
+<script>
+    const tableWrapper = document.querySelector('.table-wrapper');
+    const stickyHeaders = document.querySelectorAll('.sticky'); // Include third and fourth sticky headers
+
+    tableWrapper.addEventListener('scroll', function() {
+        if (tableWrapper.scrollLeft > 0) {
+            stickyHeaders.forEach(header => {
+                header.style.boxShadow = '5px 0 10px rgba(0, 0, 0, 0.5)'; // Right-side light black shadow
+                header.style.zIndex = '4'; // Ensure sticky header stays above content
+            });
+        } else {
+            stickyHeaders.forEach(header => {
+                header.style.boxShadow = 'none'; // Remove shadow when not scrolling
+                header.style.zIndex = '3'; // Restore original z-index
+            });
+        }
+    });
+</script>
 
 
 
