@@ -891,69 +891,40 @@ $(document).ready(function () {
         const row = $(this);
         const documentStatus = row.find('td').eq(22).find('button').text().trim();
         handleRowStatus(row, documentStatus);
+        toggleDateVisibility(row);  // Ensure dates are shown/hidden on page load
     });
 
     // Attach the toggleDateVisibility function to the change event of the refund status dropdowns
     $('#dataTable').on('change', 'select', function () {
         const row = $(this).closest('tr');
         toggleDateVisibility(row);
-        confirmSave(row);  // Ask for confirmation before saving
     });
 
     // Attach the saveData function to the save button
     $('#saveButton').on('click', function () {
-        confirmSave();  // Ask for confirmation before saving all data
+        saveData();
     });
-
-    // Attach button click events
-    $('#dataTable').on('click', 'button', function () {
-        const button = $(this);
-        const row = button.closest('tr');
-        const actionType = button.data('action'); // Get action type, e.g., initialRegistration, status, assign
-
-        // Handle different button actions based on type
-        switch (actionType) {
-            case 'initialRegistration':
-                toggleInitialRegistration(button);
-                break;
-            case 'status':
-                toggleStatus(button, button.data('type'));  // Assuming a `data-type` attribute exists
-                break;
-            case 'assignment':
-                toggleAssignment(button);
-                break;
-            // Add more cases if needed
-        }
-
-        confirmSave(row); // Ask for confirmation before saving the row changes
-    });
-
-    // Function to confirm save action using SweetAlert
-    function confirmSave(row = null) {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "Do you want to save the changes?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, save it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                if (row) {
-                    saveRowData(row); // Save row-specific data
-                } else {
-                    saveData(); // Save all data
-                }
-                Swal.fire(
-                    'Saved!',
-                    'Your changes have been saved.',
-                    'success'
-                );
-            }
-        });
-    }
 });
+
+function toggleDateVisibility(row) {
+    const status = {
+        unirefund: row.find('td').eq(23).find('select').val(),
+        iehrefund: row.find('td').eq(25).find('select').val()
+    };
+
+    const uniDateInput = row.find('td').eq(24).find('input');
+    const iehDateInput = row.find('td').eq(26).find('input');
+
+    // Show/hide the date input for 'unirefundinitiated' when it equals 'success'
+    uniDateInput.toggleClass('d-none', status.unirefund !== 'success');
+    uniDateInput.prop('required', status.unirefund === 'success');
+
+    // Show/hide the date input for 'iehrefundinitiated' when it equals 'success'
+    iehDateInput.toggleClass('d-none', status.iehrefund !== 'success');
+    iehDateInput.prop('required', status.iehrefund === 'success');
+}
+
+
 
 
 function toggleInitialRegistration(button) {
@@ -1297,7 +1268,37 @@ function validateFields(data) {
 }
 
 
+{{!-- function saveTableData() {
+    const tableData = [];
 
+    $('#dataTable tbody tr').each(function () {
+        const rowData = getRowData($(this));
+        tableData.push(rowData);
+    });
+
+    $.ajax({
+        url: '/update-client-details',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(tableData),
+        success: function (response) {
+            Swal.fire({
+                title: 'Success!',
+                text: 'Table data has been saved successfully.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        },
+        error: function () {
+            Swal.fire({
+                title: 'Error!',
+                text: 'Failed to save table data. Please try again.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    });
+} --}}
 function saveRowData(row) {
     const rowData = getRowData(row);
 
