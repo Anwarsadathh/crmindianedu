@@ -403,6 +403,32 @@ router.get("/crm-tl-details", verifyTl, async (req, res) => {
 });
 
 
+// Route to delete selected leads from both collections
+router.post('/delete-leads', async (req, res) => {
+  const { ids } = req.body;
+
+  if (!ids || ids.length === 0) {
+    return res.status(400).json({ success: false, message: 'No IDs provided' });
+  }
+
+  try {
+    // Delete the records with the provided IDs from GOOGLESHEETS_COLLECTION
+    await db.get().collection(collection.GOOGLESHEETS_COLLECTION).deleteMany({
+      _id: { $in: ids.map(id => ObjectId(id)) }
+    });
+
+    // Delete the records with the provided IDs from REFERRAL_COLLECTION
+    await db.get().collection(collection.REFERRAL_COLLECTION).deleteMany({
+      _id: { $in: ids.map(id => ObjectId(id)) }
+    });
+
+    res.json({ success: true, message: 'Records deleted from both collections successfully' });
+  } catch (error) {
+    console.error('Error deleting records:', error);
+    res.status(500).json({ success: false, message: 'Failed to delete records' });
+  }
+});
+
 router.get("/crm-tl-assigned", verifyTl, async (req, res) => {
   try {
     const { leadOwnerEmail, startDate, endDate, state, city, course, id } = req.query;
