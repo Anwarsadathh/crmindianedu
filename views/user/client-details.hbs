@@ -550,6 +550,10 @@ button{
     <a href="http://partner.schoolguru.in" target="_blank">{{this.university}}</a> <!-- Add the correct URL here -->
   {{else if (eq this.university "LPU")}}
     <a href="http://partner.schoolguru.in" target="_blank">{{this.university}}</a> <!-- Add the correct URL here -->
+    {{else if (eq this.university "amrita university")}}
+    <a href="#" target="_blank">{{this.university}}</a> <!-- Add the correct URL here -->
+    {{else if (eq this.university "DY Patil University")}}
+    <a href="#" target="_blank">{{this.university}}</a> <!-- Add the correct URL here -->
   {{else}}
     {{this.university}}
   {{/if}}
@@ -695,13 +699,15 @@ button{
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <!-- WhatsApp Message TextArea -->
                 <div class="mb-3">
                     <label for="whatsappMessage" class="form-label">WhatsApp Message</label>
-                    <input type="text" class="form-control" id="whatsappMessage" placeholder="Enter your WhatsApp message">
+                    <textarea class="form-control" id="whatsappMessage" rows="5" placeholder="Enter your WhatsApp message"></textarea>
                 </div>
+                <!-- Email Message TextArea -->
                 <div class="mb-3">
                     <label for="emailMessage" class="form-label">Email Message</label>
-                    <textarea class="form-control" id="emailMessage" rows="3" placeholder="Enter your Email message"></textarea>
+                    <textarea class="form-control" id="emailMessage" rows="5" placeholder="Enter your Email message"></textarea>
                 </div>
             </div>
             <div class="modal-footer">
@@ -711,56 +717,86 @@ button{
         </div>
     </div>
 </div>
-
 <script>
     function openMessageModal(mobile, email) {
-    // Set the data in the modal
-    document.getElementById('whatsappMessage').value = '';
-    document.getElementById('emailMessage').value = '';
-    
-    // Store mobile and email for later use
-    document.getElementById('messageModal').dataset.mobile = mobile;
-    document.getElementById('messageModal').dataset.email = email;
-    
-    // Show the modal
-    var myModal = new bootstrap.Modal(document.getElementById('messageModal'));
-    myModal.show();
-}
+        // Predefined message content with line breaks suitable for WhatsApp
+        const predefinedMessage = `Welcome to Indian Edu Hub💫
 
-function sendMessages() {
-    const mobile = document.getElementById('messageModal').dataset.mobile;
-    const email = document.getElementById('messageModal').dataset.email;
-    const whatsappMessage = document.getElementById('whatsappMessage').value;
-    const emailMessage = document.getElementById('emailMessage').value;
-    
-    // Redirect to WhatsApp with a pre-filled message
-    const whatsappUrl = `https://wa.me/${mobile}?text=${encodeURIComponent(whatsappMessage)}`;
-    window.open(whatsappUrl, '_blank');
-    
-    // Send email using an API or directly via server-side
-    fetch('/send-emailclient', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            email: email,
-            message: emailMessage
-        })
-    }).then(response => response.json())
-      .then(data => {
-          if(data.success) {
-              alert('Email sent successfully');
-          } else {
-              alert('Failed to send email');
-          }
-      }).catch(error => {
-          console.error('Error:', error);
-          alert('Error sending email');
-      });
-}
+We're delighted to have you on board. This is the process you'll follow from the beginning of your studies to the end. We wish you a successful and enriching educational experience!
 
+We're excited to guide you through your educational journey! Here’s a step-by-step overview of our registration and admission process:
+
+1. Registration Process Introduction
+2. Fill the Basic Form
+3. Document Collection and Verification
+4. Add the Lead
+5. Registration Fee Payment
+6. Admission Process
+7. Semester Fee Payment
+8. Upload Documents
+9. Document Verification
+10. Approval Email
+11. LMS Details
+12. Attend Orientation Classes
+13. Community Addition
+
+Here is the Process how the complete Support services will be provided from the Client support team to Students/Clients till they complete their education journey.
+
+Best wishes for your Educational Journey 💐
+
+Thank you 🙂
+
+Team Client Support
+Indian Edu Hub`;
+
+
+        // Set the predefined message in the modal's textareas
+        document.getElementById('whatsappMessage').value = predefinedMessage;
+        document.getElementById('emailMessage').value = predefinedMessage;
+
+        // Store mobile and email for later use
+        document.getElementById('messageModal').dataset.mobile = mobile;
+        document.getElementById('messageModal').dataset.email = email;
+
+        // Show the modal
+        var myModal = new bootstrap.Modal(document.getElementById('messageModal'));
+        myModal.show();
+    }
+
+    function sendMessages() {
+        const mobile = document.getElementById('messageModal').dataset.mobile;
+        const email = document.getElementById('messageModal').dataset.email;
+        const whatsappMessage = document.getElementById('whatsappMessage').value;
+        const emailMessage = document.getElementById('emailMessage').value;
+
+        // Redirect to WhatsApp with a pre-filled message
+        const whatsappUrl = `https://wa.me/${mobile}?text=${encodeURIComponent(whatsappMessage)}`;
+        window.open(whatsappUrl, '_blank');
+
+        // Send email using an API or directly via server-side
+        fetch('/send-emailclient', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email,
+                message: emailMessage
+            })
+        }).then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  alert('Email sent successfully');
+              } else {
+                  alert('Failed to send email');
+              }
+          }).catch(error => {
+              console.error('Error:', error);
+              alert('Error sending email');
+          });
+    }
 </script>
+
 
 
 
