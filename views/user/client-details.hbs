@@ -169,10 +169,11 @@
     border-collapse: collapse;
     font-size: 9px; /* Smaller font size for table content */
     table-layout: fixed; /* Ensures fixed widths are respected */
+    overflow: auto; /* To allow scrolling if necessary */
 }
 
 /* Ensure the table header stays fixed at the top */
-.table thead {
+.table thead th {
     position: sticky;
     top: 0;
     background-color: #fff; /* Solid background color for visibility */
@@ -196,14 +197,68 @@
     background-color: #232f65;
     color: #ffffff;
 }
-/* Apply 9px font size to buttons and select inputs within a table */
 
-
+/* Hover color for rows */
 .table tbody tr:hover {
-    background-color: #d0e3ff; /* Hover color for rows */
+    background-color: #d0e3ff; 
 }
 
+/* Sticky position for the first column (studentname) */
+.table tbody td.sticky {
+    position: sticky;
+    left: 0;
+    background-color: #fff;
+    z-index: 1;
+}
 
+/* Sticky position for the second column (studentid) */
+.table tbody td.sticky-second {
+    position: sticky;
+    left: 120px; /* Adjust based on the width of the first sticky column */
+    background-color: #fff;
+    z-index: 1;
+}
+
+/* Sticky position for the third column */
+.table tbody td.sticky-third {
+    position: sticky;
+    left: 240px; /* Adjust based on the combined width of first and second sticky columns */
+    background-color: #fff;
+    z-index: 1;
+}
+
+/* Sticky position for the fourth column */
+.table tbody td.sticky-fourth {
+    position: sticky;
+    left: 360px; /* Adjust based on the combined width of first, second, and third sticky columns */
+    background-color: #fff;
+    z-index: 1;
+}
+
+/* Ensure that the sticky headers remain above the sticky columns */
+.table thead th.sticky {
+    position: sticky !important;
+    left: 0 !important;
+    z-index: 3 !important;
+}
+
+.table thead th.sticky-second {
+    position: sticky !important;
+    left: 120px !important;
+    z-index: 3 !important;
+}
+
+.table thead th.sticky-third {
+    position: sticky !important;
+    left: 240px !important;
+    z-index: 3 !important;
+}
+
+.table thead th.sticky-fourth {
+    position: sticky !important;
+    left: 360px !important;
+    z-index: 3 !important;
+}
 
 /* Adjust other table-related styles if necessary */
 
@@ -220,7 +275,7 @@
 
 .btn-status.active-done {
     background-color: #28a745 !important; /* Green */
-    color: #fff;
+    color: #f4f4f4;
 }
 /* DataTables styles */
 .dataTables_wrapper .dataTables_filter {
@@ -352,6 +407,7 @@ button{
 #dataTable{
     background-color: white !important;
 }
+
 </style>
 
 </head>
@@ -452,12 +508,12 @@ button{
       <thead>
         <tr class="bg-light">
           <th>No.</th>
-                                <th>Date</th>
-                                <th>Student ID</th>
+                                <th class="sticky">Date</th>
+                               <th >Student ID</th>
                                 <th>Mentor</th>
-                                <th>Student Name</th>
-                                <th>Course</th>
-                                <th>Specialization</th>
+                                <th class="sticky-second">Student Name</th>
+                                <th class="sticky-third">Course</th>
+                                <th class="sticky-fourth">Specialization</th>
                                 <th>Email</th>
                                 <th>Mobile Number</th>
                                 <th>State</th>
@@ -495,12 +551,12 @@ button{
                             {{#each formData}}
                             <tr data-id="{{_id}}">
                                 <td>{{incrementIndex @index}}</td>
-                                <td class="text-danger">{{this.date}}</td>
-                                <td>{{this.studentid}}</td>
+                                <td class="text-danger sticky" >{{this.date}}</td>
+                                <td class="">{{this.studentid}}</td>
                                 <td>{{this.mentor}}</td>
-                                <td>{{this.name}}</td>
-                                <td>{{this.course}}</td>
-                                <td>{{this.specialization}}</td>
+                                <td class="sticky-second">{{this.name}}</td>
+                                <td class="sticky-third">{{this.course}}</td>
+                                <td class="sticky-fourth">{{this.specialization}}</td>
                                  <td><input type="text" class="form-control" value="{{this.email}}" /></td>
                                 <td>{{this.mobile}}</td>
                                 <td>{{this.state}}</td>
@@ -1254,6 +1310,27 @@ function saveData() {
 }
 
 </script>
+<script>
+    const tableWrapper = document.querySelector('.table-wrapper');
+    const stickyHeaders = document.querySelectorAll('.sticky, .sticky-second');
+
+    tableWrapper.addEventListener('scroll', function() {
+        if (tableWrapper.scrollLeft > 0) {
+            stickyHeaders.forEach(header => {
+                header.style.boxShadow = '5px 0 10px rgba(255, 215, 0, 0.8)'; // Enhanced shadow with gold color
+                header.style.zIndex = '4'; // Ensure sticky header stays above content
+            });
+        } else {
+            stickyHeaders.forEach(header => {
+                header.style.boxShadow = 'none'; // Remove shadow when not scrolling
+                header.style.zIndex = '3'; // Restore original z-index
+            });
+        }
+    });
+</script>
+
+
+ 
 
  
   <!-- Additional JavaScript Libraries -->

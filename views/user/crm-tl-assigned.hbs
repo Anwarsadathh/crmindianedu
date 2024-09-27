@@ -466,7 +466,7 @@ background-color: #1c008b !important;
                     <th hidden>d</th>
                     
                     <th>Time Stamp</th>
-                    <th>BDA</th>
+                    <th class="sticky">BDA</th>
                     <th hidden>Assign date</th>
                       <th >Source</th>
                     <th >ReferredBy</th>
@@ -489,7 +489,7 @@ background-color: #1c008b !important;
                     <td class="font-weight-bold" data-id="{{this._id}}" data-source="{{this.source}}" hidden>{{this._id}}</td>
                    
           <td>{{this.timeStamp}}</td>
-          <td>{{this.BDA}}</td>
+          <td class="sticky">{{this.BDA}}</td>
                     <td hidden>{{this.assignDate}}</td>
                     <td>{{#if this.source}}{{this.source}}{{else}}N/A{{/if}}</td>
 <td >{{this.ReferredBy}}</td>
