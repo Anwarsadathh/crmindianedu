@@ -365,32 +365,32 @@
 
 
 
-            <div class="container-fluid pt-4 px-4">
+     <div class="container-fluid pt-4 px-4">
   <div class="row g-4">
     <!-- Lead Owner Dropdown -->
-  <div class="col-12 col-md-12 d-flex">
-  <div class="filter-card glassmorphism p-4 shadow-lg d-flex">
-    <div class="floating-label-wrapper">
-      <label for="leadOwner" class="floating-label">Select Lead Owner</label>
-      <select id="leadOwner" class="form-control shadow-sm circular-input">
-        <option value="">Select Lead Owner</option>
-        {{#each leadOwners}}
-          <option value="{{this.email}}" {{#if (eq this.email ../selectedLeadOwner)}}selected{{/if}}>{{this.email}}</option>
-        {{/each}}
-      </select>
+    <div class="col-12 col-md-12 d-flex">
+      <div class="filter-card glassmorphism p-4 shadow-lg d-flex">
+        <div class="floating-label-wrapper">
+          <label for="leadOwner" class="floating-label">Select Lead Owner</label>
+          <select id="leadOwner" class="form-control shadow-sm circular-input">
+            <option value="">Select Lead Owner</option>
+            {{#each leadOwners}}
+              <option value="{{this.email}}" {{#if (eq this.email ../selectedLeadOwner)}}selected{{/if}}>{{this.email}}</option>
+            {{/each}}
+          </select>
+        </div>
+        <div class="floating-label-wrapper ms-3">
+          <label for="dateRange" class="floating-label">Select Date or Range</label>
+          <input type="text" id="dateRange" class="form-control shadow-sm circular-input" placeholder="Select Date or Date Range">
+        </div>
+        <button class="btn btn-glass shadow-sm circular-btn ms-3" id="filterBtn">
+          <i class="bi bi-filter-circle"></i>
+        </button>
+        <button class="btn btn-danger shadow-sm circular-btn ms-3" id="clearBtn">
+          <i class="bi bi-x-circle"></i>
+        </button>
+      </div>
     </div>
-    <div class="floating-label-wrapper ms-3">
-      <label for="dateRange" class="floating-label">Date Range</label>
-      <input type="text" id="dateRange" class="form-control shadow-sm circular-input" placeholder="Select Date Range">
-    </div>
-    <button class="btn btn-glass shadow-sm circular-btn ms-3" id="filterBtn">
-      <i class="bi bi-filter-circle"></i>
-    </button>
-    <button class="btn btn-danger shadow-sm circular-btn ms-3" id="clearBtn">
-      <i class="bi bi-x-circle"></i>
-    </button>
-  </div>
-</div>
 
 
     <div class="col-12 col-xl-12">
@@ -1135,41 +1135,45 @@ document.addEventListener("DOMContentLoaded", function() {
 
 </style>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
 
 <script>
 flatpickr("#dateRange", {
-  mode: "range",
+  mode: "range", // Allow both single date and range selection
   dateFormat: "Y-m-d", // Ensure this matches your expected format
   onChange: function(selectedDates, dateStr, instance) {
-    console.log("Flatpickr Date Range:", dateStr); // Log the dateStr for debugging
+    console.log("Selected Dates:", selectedDates, dateStr); // Log for debugging
   }
 });
 
 document.getElementById("filterBtn").addEventListener("click", function() {
   const leadOwner = document.getElementById("leadOwner").value;
-  const dateRange = document.getElementById("dateRange").value;
+  const selectedDateRange = document.getElementById("dateRange").value; // Get date or range
 
-  // Check if dateRange contains 'to' and split accordingly
-  let [startDate, endDate] = dateRange.split(" to ").map(date => date.trim());
-
-  // Ensure dates are correctly formatted
-  startDate = startDate || "";
-  endDate = endDate || "";
+  let startDate, endDate;
+  
+  // Handle single date and range selections
+  if (selectedDateRange.includes(" to ")) {
+    // Date range selected (two dates)
+    [startDate, endDate] = selectedDateRange.split(" to ").map(date => date.trim());
+  } else {
+    // Single date selected, use it for both startDate and endDate
+    startDate = selectedDateRange;
+    endDate = selectedDateRange;
+  }
 
   // Debugging logs
   console.log("Selected Lead Owner:", leadOwner);
-  console.log("Selected Date Range:", dateRange);
-  console.log("Parsed Start Date:", startDate);
-  console.log("Parsed End Date:", endDate);
+  console.log("Start Date:", startDate);
+  console.log("End Date:", endDate);
 
-  // Build the query string
+  // Build the query string with startDate, endDate, and showLatestSubstage=true
   const query = new URLSearchParams({
     leadOwnerEmail: leadOwner,
-    startDate: startDate,
-    endDate: endDate
+    startDate: startDate || "",  // Default to empty string if not selected
+    endDate: endDate || "",      // Default to empty string if not selected
+    showLatestSubstage: true     // Ensure this is always true
   }).toString();
 
   console.log("Query String:", query);
@@ -1187,7 +1191,6 @@ document.getElementById("clearBtn").addEventListener("click", function() {
   window.location.href = "/crm-tl-dashboard";
 });
 </script>
-
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

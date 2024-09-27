@@ -507,31 +507,39 @@ color: #ffffff;
 <div class="container-fluid pt-4 px-4">
     <div class="row g-4">
         <!-- Unique Date Range Filter and Button -->
-       <div class="col-12 col-md-12 d-flex">
-             {{#if user}}
-                <div class="filter-card glassmorphism p-4 shadow-lg d-flex">
-                    <div class="floating-label-wrapper">
-                        <label for="dateRange" class="floating-label">Date Range</label>
-                        <input type="text" id="dateRange" class="form-control shadow-sm circular-input" placeholder="Select Date Range">
-                    </div>
-                    <div class="floating-label-wrapper ms-3">
-                        <label for="presetDateRange" class="floating-label">Preset Date</label>
-                        <select id="presetDateRange" class="form-select shadow-sm circular-input">
-                            <option value="">Select Preset</option>
-                            <option value="today">Today</option>
-                            <option value="this-week">This Week</option>
-                            <option value="last-month">Last Month</option>
-                            <option value="last-year">Last Year</option>
-                        </select>
-                    </div>
-                    <button class="btn btn-glass shadow-sm circular-btn ms-3" id="latestBtn">
-                        <i class="bi bi-filter-circle"></i> 
-                    </button>
-                    
-                </div>
-            {{/if}}
-            
+  <div class="col-12 col-md-12 d-flex">
+    {{#if user}}
+        <div class="filter-card glassmorphism p-4 shadow-lg d-flex">
+            <!-- Date Range Input -->
+            <div class="floating-label-wrapper">
+                <label for="dateRange" class="floating-label">Date Range</label>
+                <input type="text" id="dateRange" class="form-control shadow-sm circular-input" placeholder="Select Date or Range">
+            </div>
+
+            <!-- Preset Date Selection -->
+            <div class="floating-label-wrapper ms-3">
+                <label for="presetDateRange" class="floating-label">Preset Date</label>
+                <select id="presetDateRange" class="form-select shadow-sm circular-input">
+                    <option value="">Select Preset</option>
+                    <option value="today">Today</option>
+                    <option value="this-week">This Week</option>
+                    <option value="last-month">Last Month</option>
+                    <option value="last-year">Last Year</option>
+                </select>
+            </div>
+
+            <!-- Filter Button -->
+            <button class="btn btn-glass shadow-sm circular-btn ms-3" id="latestBtn">
+                <i class="bi bi-filter-circle"></i>
+            </button>
+
+            <!-- Clear Button -->
+            <button class="btn btn-danger shadow-sm circular-btn ms-3" id="clearBtn">
+                <i class="bi bi-x-circle"></i>
+            </button>
         </div>
+    {{/if}}
+</div>
              {{!-- <div class="col-6 col-md-6 d-flex">
       
                <button>Report</button>
@@ -1289,15 +1297,30 @@ document.addEventListener("DOMContentLoaded", function() {
 </script> --}}
 
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
-  document.getElementById('latestBtn').addEventListener('click', function() {
+  flatpickr("#dateRange", {
+    mode: "range",
+    dateFormat: "Y-m-d", // Adjust the date format if needed
+    onChange: function(selectedDates, dateStr, instance) {
+      // Optional: you can add logic here to handle date changes
+    }
+  });
+</script>
+
+
+<script>
+document.getElementById('latestBtn').addEventListener('click', function() {
     const dateRange = document.getElementById('dateRange').value;
     const preset = document.getElementById('presetDateRange').value;
 
     let startDate, endDate;
 
-    // Calculate dates based on preset
+    // Get today's date
     const today = new Date();
+
+    // Calculate startDate and endDate based on the selected preset
     switch(preset) {
         case 'today':
             startDate = endDate = today.toISOString().split('T')[0];
@@ -1322,45 +1345,43 @@ document.addEventListener("DOMContentLoaded", function() {
             break;
         default:
             if (dateRange) {
-                [startDate, endDate] = dateRange.split(' to ');
+                // Handle single date or range
+                if (dateRange.includes(' to ')) {
+                    [startDate, endDate] = dateRange.split(' to ');
+                } else {
+                    // Single date: Use the same date for both startDate and endDate
+                    startDate = endDate = dateRange;
+                }
             }
             break;
     }
 
-    // Check if no date is selected
+    // Check if no valid date is selected
     if (!startDate || !endDate) {
-      alert('Please select a date range or a preset date range.');
-      return;
+        alert('Please select a date range or a preset date range.');
+        return;
     }
 
+    // Redirect with query parameters for date range and showLatestSubstage=true
     const url = `/crm-lead-owner-dashboard?startDate=${startDate}&endDate=${endDate}&showLatestSubstage=true`;
     window.location.href = url;
-  });
+});
 
-  
+// Clear button event listener
+document.getElementById('clearBtn').addEventListener('click', function() {
+    // Clear the date range input and preset selection
+    document.getElementById('dateRange').value = '';
+    document.getElementById('presetDateRange').value = '';
+
+    // Redirect to the dashboard without any query parameters
+    window.location.href = '/crm-lead-owner-dashboard';
+});
+
 </script>
 
 
-       
-     
-<!-- Back to Top -->
-<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top neon-btn"><i class="bi bi-arrow-up"></i></a>
 
-<style>
- 
-</style>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script>
-  flatpickr("#dateRange", {
-    mode: "range",
-    dateFormat: "Y-m-d", // Adjust the date format if needed
-    onChange: function(selectedDates, dateStr, instance) {
-      // Optional: you can add logic here to handle date changes
-    }
-  });
-</script>
 
 
 
