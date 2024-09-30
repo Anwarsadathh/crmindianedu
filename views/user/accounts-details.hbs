@@ -177,9 +177,12 @@ select {
     border-radius: 10px;background-color: #f2f9f6; /* Very pale mint green */
 
 }
-.btn-primary{
+.btn-primary {
     font-size: 10px;
     background-color: #007bff !important;
+}
+.btn-dark{
+  font-size: 10px !important;
 }
 select,textarea{
        font-size: 13px !important;
@@ -793,6 +796,9 @@ h3 {
         font-size: 10px !important;
         font-weight: 500;
        }
+        .btn i {
+        margin-right: 5px; /* Space between icon and text */
+    }
 </style>
 </head>
 
@@ -878,22 +884,13 @@ h3 {
 <div class="container tt  px-2">
 <div class="container">
     <!-- Button Section -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <!-- Left-aligned buttons -->
-        <div>
-            <button id="saveChangesBtn" class="btn btn-primary mx">Save Changes</button>
-        <button id="hideFieldsButton" class="button-57  mx-2" role="button">    <span class="text">Show hidden fields</span>
-                <span>Hide</span></button>
-        </div>
-
-       <!-- Right-aligned filters -->
-<div class="d-flex">
-    <!-- University Filter -->
-    <div class="col-md-3">
-        <label for="universityFilter" class="form-label"> <b>Filter by University:</b></label>
-        <select id="universityFilter" class="form-select filter-select">
-            <option value="">All Universities</option>
-             <option value="Manipal Jaipur University">Manipal Jaipur University</option>
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+        <!-- University Filter -->
+        <div class="col-md-2">
+            <label for="universityFilter" class="form-label"> <b>Filter by University:</b></label>
+            <select id="universityFilter" class="form-select filter-select">
+                <option value="">All Universities</option>
+                       <option value="Manipal Jaipur University">Manipal Jaipur University</option>
   <option value="Manipal Sikkim University">Manipal Sikkim University</option>
   <option value="Jain Online University">Jain Online University</option>
   <option value="Jain ODL University">Jain ODL University</option>
@@ -907,31 +904,62 @@ h3 {
   <option value="Uttaranchal University">Uttaranchal University</option>
   <option value="Andhra University">Andhra University</option>
   <option value="LPU">LPU</option>
-        </select>
-    </div>
+   <option value="Amrita University">Amrita University</option>
+    <option value="DY Patil University">DY Patil University</option>
+            </select>
+        </div>
 
-    <!-- Doc Approved Date Filter -->
-    <div class="col-md-3 ms-3">
-        <label for="docApprovedDateFilter" class="form-label"><b>Doc Approved Date:</b></label>
-        <input type="date" id="docApprovedDateFilter" class="form-control filter-date" />
-    </div>
+        <!-- Doc Approved Date Start Filter -->
+        <div class="col-md-2 ms-2">
+            <label for="docApprovedDateStartFilter" class="form-label"><b>Doc Approved Date Start:</b></label>
+            <input type="date" id="docApprovedDateStartFilter" class="form-control filter-date" />
+        </div>
 
-    <!-- Filter by Year -->
-    <div class="col-md-3 ms-3">
-        <label for="yearFilter" class="form-label"><b>Filter By Doc Year:</b></label>
-        <select id="yearFilter" class="form-select filter-select">
-            <option value="">All Years</option>
-            <option value="2024">2024</option>
-            <option value="2023">2023</option>
-            <option value="2022">2022</option>
-            <option value="2021">2021</option>
-            <!-- Add more years as needed -->
-        </select>
-    </div>
+        <!-- Doc Approved Date End Filter -->
+        <div class="col-md-2 ms-2">
+            <label for="docApprovedDateEndFilter" class="form-label"><b>Doc Approved Date End:</b></label>
+            <input type="date" id="docApprovedDateEndFilter" class="form-control filter-date" />
+        </div>
+
+        <!-- Filter by Year -->
+        <div class="col-md-2 ms-2">
+            <label for="yearFilter" class="form-label"><b>Filter By Doc Year:</b></label>
+            <select id="yearFilter" class="form-select filter-select">
+                <option value="">All Years</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+                <option value="2022">2022</option>
+                <option value="2021">2021</option>
+            </select>
+        </div>
+
+        <!-- Clear Button -->
+        <div class="col-md-1 ms-2 align-self-end">
+            <button id="clearFiltersBtn" class="btn btn-sm btn-secondary">
+                <i class="fas fa-times-circle"></i>
+            </button>
+        </div>
+
+        <!-- Save Changes Button -->
+        <div class="col-md-2 ms-2">
+            <button id="saveChangesBtn" class="btn btn-primary mx">Save Changes</button>
+          <button id="hideFieldsButton" class="btn-sm btn-dark mx-2" role="button">
+    <span class="text">
+        <i id="toggleIcon" class="fas fa-eye"></i> 
+    </span>
+</button>
+
+        </div>
+
+        <!-- Hide/Show Fields Button -->
+      <!-- Hide/Show Fields Button -->
+<div class="col-md-2 ms-2">
+   
 </div>
 
     </div>
 </div>
+
 
 
     <div class="table-responsive">
@@ -1113,7 +1141,7 @@ h3 {
 
              <td>
   <select id="studyStage" class="form-select mb-2 date" name="studyStage">
-      <option value="" disabled {{#if (eq this.studyStage "")}}selected{{/if}}>Select Sem</option>
+      <option value=""  {{#if (eq this.studyStage "")}}selected{{/if}}>Select Sem</option>
       <option value="sem1" {{#if (eq this.studyStage "sem1")}}selected{{/if}}>Sem 1</option>
       <option value="sem2" {{#if (eq this.studyStage "sem2")}}selected{{/if}}>Sem 2</option>
       <option value="sem3" {{#if (eq this.studyStage "sem3")}}selected{{/if}}>Sem 3</option>
@@ -1296,80 +1324,6 @@ h3 {
 </div>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script>
-document.getElementById('universityFilter').addEventListener('change', function() {
-  filterTable();
-});
-
-document.getElementById('docApprovedDateFilter').addEventListener('change', function() {
-  filterTable();
-});
-
-document.getElementById('yearFilter').addEventListener('change', function() {
-  filterTable();
-});
-
-function filterTable() {
-  var university = document.getElementById('universityFilter').value.toLowerCase();
-  var docApprovedDate = document.getElementById('docApprovedDateFilter').value;
-  var selectedYear = document.getElementById('yearFilter').value;
-
-  var table = document.getElementById('dataTable');
-  var rows = table.getElementsByTagName('tr');
-
-  console.log("Selected University: ", university);
-  console.log("Selected Doc Approved Date: ", docApprovedDate);
-  console.log("Selected Year: ", selectedYear);
-
-  for (var i = 1; i < rows.length; i++) {
-    var universityCell = rows[i].getElementsByTagName('td')[29]; // Ensure this is the correct column for University
-    var docDateCell = rows[i].getElementsByTagName('td')[3].textContent.trim(); // Ensure this is the correct column for Doc Approved Date
-
-    // Extract text from the <a> tag or fallback to plain text if <a> doesn't exist
-    var universityText = universityCell && universityCell.querySelector('a') 
-      ? universityCell.querySelector('a').textContent.toLowerCase() 
-      : universityCell ? universityCell.textContent.toLowerCase() : "";
-
-    // Convert the document date to a comparable format (YYYY-MM-DD) for filtering
-    var formattedDocDate = formatDateToComparable(docDateCell);
-    console.log("Formatted Doc Date: ", formattedDocDate);
-
-    // Extract the year from the document date
-    var docYear = formattedDocDate ? formattedDocDate.split('-')[0] : "";
-    console.log("Extracted Year from Doc Date: ", docYear);
-
-    var selectedFormattedDate = formatDateToComparable(docApprovedDate);
-    console.log("Selected Formatted Date: ", selectedFormattedDate);
-
-    // Filter logic
-    if ((university === "" || universityText.includes(university)) &&
-        (docApprovedDate === "" || formattedDocDate === selectedFormattedDate) &&
-        (selectedYear === "" || docYear === selectedYear)) {
-      rows[i].style.display = ""; // Show row
-    } else {
-      rows[i].style.display = "none"; // Hide row
-    }
-  }
-}
-
-// Function to convert DD/MM/YYYY or other date formats to YYYY-MM-DD for easy comparison
-function formatDateToComparable(date) {
-  if (!date) return "";
-
-  // Check for DD/MM/YYYY format
-  if (date.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
-    var parts = date.split('/');
-    return parts[2] + '-' + parts[1] + '-' + parts[0]; // Convert to YYYY-MM-DD
-  }
-
-  // If it's already in YYYY-MM-DD, return it as is
-  if (date.match(/^\d{4}-\d{2}-\d{2}$/)) {
-    return date;
-  }
-
-  return ""; // Return empty string if the date format doesn't match
-}
-</script>
 
 <!-- Modal Container -->
 <div id="instituteModal" class="modal">
@@ -1797,48 +1751,8 @@ function closeModal() {
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
-        <script>
- $(document).ready(function() {
-    // Initialize DataTable
-    const table = $('#dataTable').DataTable({
-        pageLength: 100, // Default to showing 100 entries
-        lengthMenu: [[100, 25, 10, -1], [100, 25, 10, "All"]] // Options for 100, 25, 10, and All entries per page
-    });
-});
+  
 
-
-</script>
-
-
-
-<script>
-    $(document).ready(function() {
-        $('#hideFieldsButton').on('click', function() {
-            const columnsToToggle = $('.toggle-column, .hideable');
-            const isHidden = columnsToToggle.first().is(':hidden');
-
-            // Faster speed: 200ms for animation and delay
-            const speed = 10;
-            
-            if (isHidden) {
-                // Show columns with animation
-                columnsToToggle.each(function(index) {
-                    $(this).delay(index * speed).slideDown(speed);
-                });
-                $(this).text('Hide Fields');
-            } else {
-                // Hide columns with animation
-                columnsToToggle.each(function(index) {
-                    $(this).delay(index * speed).slideUp(speed);
-                });
-                $(this).text('Show Fields');
-            }
-        });
-
-        // Initially hide the columns
-        $('.toggle-column, .hideable').hide();
-    });
-</script>
 
 <script>
   $(document).on('change', '#studyStage', function () {
@@ -1981,6 +1895,94 @@ $(document).on('click', '#saveChangesBtn', function(e) {
 
 </script>
 
+<script>
+// Add event listeners for the filters
+document.getElementById('universityFilter').addEventListener('change', function() {
+  filterTable();
+});
+
+document.getElementById('docApprovedDateStartFilter').addEventListener('change', function() {
+  filterTable();
+});
+
+document.getElementById('docApprovedDateEndFilter').addEventListener('change', function() {
+  filterTable();
+});
+
+document.getElementById('yearFilter').addEventListener('change', function() {
+  filterTable();
+});
+
+// Clear button event listener
+document.getElementById('clearFiltersBtn').addEventListener('click', function() {
+  // Reset all filter values
+  document.getElementById('universityFilter').value = "";
+  document.getElementById('docApprovedDateStartFilter').value = "";
+  document.getElementById('docApprovedDateEndFilter').value = "";
+  document.getElementById('yearFilter').value = "";
+  
+  // Reset table to show all rows
+  filterTable();
+});
+
+function filterTable() {
+  var university = document.getElementById('universityFilter').value.toLowerCase();
+  var docApprovedDateStart = document.getElementById('docApprovedDateStartFilter').value;
+  var docApprovedDateEnd = document.getElementById('docApprovedDateEndFilter').value;
+  var selectedYear = document.getElementById('yearFilter').value;
+
+  var table = document.getElementById('dataTable');
+  var rows = table.getElementsByTagName('tr');
+
+  for (var i = 1; i < rows.length; i++) {
+    var universityCell = rows[i].getElementsByTagName('td')[29]; // Ensure this is the correct column for University
+    var docDateCell = rows[i].getElementsByTagName('td')[3].textContent.trim(); // Ensure this is the correct column for Doc Approved Date
+
+    // Extract text from the <a> tag or fallback to plain text if <a> doesn't exist
+    var universityText = universityCell && universityCell.querySelector('a') 
+      ? universityCell.querySelector('a').textContent.toLowerCase() 
+      : universityCell ? universityCell.textContent.toLowerCase() : "";
+
+    // Convert the document date to a comparable format (YYYY-MM-DD) for filtering
+    var formattedDocDate = formatDateToComparable(docDateCell);
+
+    // Extract the year from the document date
+    var docYear = formattedDocDate ? formattedDocDate.split('-')[0] : "";
+
+    // Filter logic for the date range
+    var showRow = (university === "" || universityText.includes(university)) &&
+                  (docApprovedDateStart === "" || formattedDocDate >= docApprovedDateStart) &&
+                  (docApprovedDateEnd === "" || formattedDocDate <= docApprovedDateEnd) &&
+                  (selectedYear === "" || docYear === selectedYear);
+
+    if (showRow) {
+      rows[i].style.display = ""; // Show row
+    } else {
+      rows[i].style.display = "none"; // Hide row
+    }
+  }
+}
+
+// Function to convert DD/MM/YYYY or other date formats to YYYY-MM-DD for easy comparison
+function formatDateToComparable(date) {
+  if (!date) return "";
+
+  // Check for DD/MM/YYYY format
+  if (date.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+    var parts = date.split('/');
+    return parts[2] + '-' + parts[1] + '-' + parts[0]; // Convert to YYYY-MM-DD
+  }
+
+  // If it's already in YYYY-MM-DD, return it as is
+  if (date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+    return date;
+  }
+
+  return ""; // Return empty string if the date format doesn't match
+}
+
+
+</script>
 
 
 
@@ -1994,6 +1996,35 @@ $(document).on('click', '#saveChangesBtn', function(e) {
   <script src="lib/tempusdominus/js/moment.min.js"></script>
   <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
   <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Initialize DataTable
+        const table = $('#dataTable').DataTable({
+            pageLength: 100, // Default to showing 100 entries
+            lengthMenu: [[100, 25, 10, -1], [100, 25, 10, "All"]] // Options for 100, 25, 10, and All entries per page
+        });
+
+        $('#hideFieldsButton').on('click', function() {
+            const columnsToToggle = $('.toggle-column, .hideable');
+            const isHidden = columnsToToggle.is(':hidden');
+
+            if (isHidden) {
+                // Instantly show all columns without animation
+                columnsToToggle.show();
+                // Change button icon to "Hide"
+                $('#toggleIcon').removeClass('fa-eye').addClass('fa-eye-slash');
+            } else {
+                // Instantly hide all columns without animation
+                columnsToToggle.hide();
+                // Change button icon to "Show"
+                $('#toggleIcon').removeClass('fa-eye-slash').addClass('fa-eye');
+            }
+        });
+
+        // Initially hide the columns
+        $('.toggle-column, .hideable').hide();
+    });
+</script>
 
   <!-- Template Javascript -->
   <script src="js/main.js"></script>
