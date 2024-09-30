@@ -1333,7 +1333,32 @@ function saveData() {
 </script>
 
 
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    const dateInput = document.querySelector('.date-input');
+    
+    if (dateInput) {
+        const dateValue = dateInput.value;
+        if (dateValue) {
+            const formattedDate = formatDateToDMY(new Date(dateValue));
+            dateInput.value = formattedDate;
+        }
 
+        dateInput.addEventListener('change', function() {
+            const formattedDate = formatDateToDMY(new Date(this.value));
+            this.value = formattedDate;
+        });
+    }
+
+    function formatDateToDMY(date) {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}-${month}-${year}`;
+    }
+});
+
+</script>
  
 
  
