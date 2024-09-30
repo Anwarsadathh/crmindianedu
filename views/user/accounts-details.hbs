@@ -886,11 +886,13 @@ h3 {
     <!-- Button Section -->
     <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
         <!-- University Filter -->
-        <div class="col-md-2">
-            <label for="universityFilter" class="form-label"> <b>Filter by University:</b></label>
-            <select id="universityFilter" class="form-select filter-select">
-                <option value="">All Universities</option>
-                       <option value="Manipal Jaipur University">Manipal Jaipur University</option>
+      
+  <!-- University Filter -->
+  <div class="col-md-2">
+    <label for="universityFilter" class="form-label"><b>Filter by University:</b></label>
+    <select id="universityFilter" class="form-select filter-select">
+      <option value="">All Universities</option>
+     <option value="Manipal Jaipur University">Manipal Jaipur University</option>
   <option value="Manipal Sikkim University">Manipal Sikkim University</option>
   <option value="Jain Online University">Jain Online University</option>
   <option value="Jain ODL University">Jain ODL University</option>
@@ -906,39 +908,34 @@ h3 {
   <option value="LPU">LPU</option>
    <option value="Amrita University">Amrita University</option>
     <option value="DY Patil University">DY Patil University</option>
-            </select>
-        </div>
+    </select>
+  </div>
 
-        <!-- Doc Approved Date Start Filter -->
-        <div class="col-md-2 ms-2">
-            <label for="docApprovedDateStartFilter" class="form-label"><b>Doc Approved Date Start:</b></label>
-            <input type="date" id="docApprovedDateStartFilter" class="form-control filter-date" />
-        </div>
+  <!-- Date Range Filter -->
+  <div class="col-md-4">
+    <label for="dateRangeFilter" class="form-label"><b>Select Date Range:</b></label>
+    <input type="text" id="dateRangeFilter" class="form-control" />
+  </div>
 
-        <!-- Doc Approved Date End Filter -->
-        <div class="col-md-2 ms-2">
-            <label for="docApprovedDateEndFilter" class="form-label"><b>Doc Approved Date End:</b></label>
-            <input type="date" id="docApprovedDateEndFilter" class="form-control filter-date" />
-        </div>
+  <!-- Filter by Year -->
+  <div class="col-md-2 ms-2">
+    <label for="yearFilter" class="form-label"><b>Filter By Doc Year:</b></label>
+    <select id="yearFilter" class="form-select filter-select">
+      <option value="">All Years</option>
+      <option value="2024">2024</option>
+      <option value="2023">2023</option>
+      <option value="2022">2022</option>
+      <option value="2021">2021</option>
+    </select>
+  </div>
 
-        <!-- Filter by Year -->
-        <div class="col-md-2 ms-2">
-            <label for="yearFilter" class="form-label"><b>Filter By Doc Year:</b></label>
-            <select id="yearFilter" class="form-select filter-select">
-                <option value="">All Years</option>
-                <option value="2024">2024</option>
-                <option value="2023">2023</option>
-                <option value="2022">2022</option>
-                <option value="2021">2021</option>
-            </select>
-        </div>
+  <!-- Clear Button -->
+  <div class="col-md-1 ms-2 align-self-end">
+    <button id="clearFiltersBtn" class="btn btn-sm btn-danger">
+      <i class="fas fa-times-circle"></i> 
+    </button>
+  </div>
 
-        <!-- Clear Button -->
-        <div class="col-md-1 ms-2 align-self-end">
-            <button id="clearFiltersBtn" class="btn btn-sm btn-secondary">
-                <i class="fas fa-times-circle"></i>
-            </button>
-        </div>
 
         <!-- Save Changes Button -->
         <div class="col-md-2 ms-2">
@@ -951,17 +948,12 @@ h3 {
 
         </div>
 
-        <!-- Hide/Show Fields Button -->
-      <!-- Hide/Show Fields Button -->
-<div class="col-md-2 ms-2">
-   
-</div>
 
     </div>
 </div>
 
 
-
+      
     <div class="table-responsive">
        <div class="table-wrapper ">
         <table class="table table-responsive table-borderless" id="dataTable">
@@ -1895,97 +1887,104 @@ $(document).on('click', '#saveChangesBtn', function(e) {
 
 </script>
 
+<!-- Include daterangepicker CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+<!-- Include jQuery (required) and moment.js (for date manipulation) -->
+<script src="https://cdn.jsdelivr.net/npm/moment/moment.min.js"></script>
+
+<!-- Include daterangepicker JS -->
+<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+
+
 <script>
-// Add event listeners for the filters
-document.getElementById('universityFilter').addEventListener('change', function() {
-  filterTable();
-});
-
-document.getElementById('docApprovedDateStartFilter').addEventListener('change', function() {
-  filterTable();
-});
-
-document.getElementById('docApprovedDateEndFilter').addEventListener('change', function() {
-  filterTable();
-});
-
-document.getElementById('yearFilter').addEventListener('change', function() {
-  filterTable();
-});
-
-// Clear button event listener
-document.getElementById('clearFiltersBtn').addEventListener('click', function() {
-  // Reset all filter values
-  document.getElementById('universityFilter').value = "";
-  document.getElementById('docApprovedDateStartFilter').value = "";
-  document.getElementById('docApprovedDateEndFilter').value = "";
-  document.getElementById('yearFilter').value = "";
-  
-  // Reset table to show all rows
-  filterTable();
-});
-
-function filterTable() {
-  var university = document.getElementById('universityFilter').value.toLowerCase();
-  var docApprovedDateStart = document.getElementById('docApprovedDateStartFilter').value;
-  var docApprovedDateEnd = document.getElementById('docApprovedDateEndFilter').value;
-  var selectedYear = document.getElementById('yearFilter').value;
-
-  var table = document.getElementById('dataTable');
-  var rows = table.getElementsByTagName('tr');
-
-  for (var i = 1; i < rows.length; i++) {
-    var universityCell = rows[i].getElementsByTagName('td')[29]; // Ensure this is the correct column for University
-    var docDateCell = rows[i].getElementsByTagName('td')[3].textContent.trim(); // Ensure this is the correct column for Doc Approved Date
-
-    // Extract text from the <a> tag or fallback to plain text if <a> doesn't exist
-    var universityText = universityCell && universityCell.querySelector('a') 
-      ? universityCell.querySelector('a').textContent.toLowerCase() 
-      : universityCell ? universityCell.textContent.toLowerCase() : "";
-
-    // Convert the document date to a comparable format (YYYY-MM-DD) for filtering
-    var formattedDocDate = formatDateToComparable(docDateCell);
-
-    // Extract the year from the document date
-    var docYear = formattedDocDate ? formattedDocDate.split('-')[0] : "";
-
-    // Filter logic for the date range
-    var showRow = (university === "" || universityText.includes(university)) &&
-                  (docApprovedDateStart === "" || formattedDocDate >= docApprovedDateStart) &&
-                  (docApprovedDateEnd === "" || formattedDocDate <= docApprovedDateEnd) &&
-                  (selectedYear === "" || docYear === selectedYear);
-
-    if (showRow) {
-      rows[i].style.display = ""; // Show row
-    } else {
-      rows[i].style.display = "none"; // Hide row
+$(function() {
+  // Initialize date range picker
+  $('#dateRangeFilter').daterangepicker({
+    startDate: moment().startOf('day'),
+    endDate: moment(),
+    ranges: {
+      'Today': [moment(), moment()],
+      'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+      'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+      'Last 14 Days': [moment().subtract(13, 'days'), moment()],
+      'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+      'This Week': [moment().startOf('week'), moment().endOf('week')],
+      'Last Week': [moment().subtract(1, 'week').startOf('week'), moment().subtract(1, 'week').endOf('week')],
+      'This Month': [moment().startOf('month'), moment().endOf('month')],
+      'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+    },
+    locale: {
+      format: 'YYYY-MM-DD'
     }
+  }, function(start, end, label) {
+    filterTableByDateRange(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
+  });
+
+  // Clear filters
+  $('#clearFiltersBtn').on('click', function() {
+    $('#universityFilter').val('');
+    $('#yearFilter').val('');
+    $('#dateRangeFilter').val('');
+    filterTable();
+  });
+
+  // Event listeners for the filters
+  $('#universityFilter, #yearFilter').on('change', function() {
+    filterTable();
+  });
+
+  // Filter table logic
+  function filterTable() {
+    var university = $('#universityFilter').val().toLowerCase();
+    var selectedYear = $('#yearFilter').val();
+    var table = $('#dataTable');
+    var rows = table.find('tr');
+
+    rows.each(function(index) {
+      if (index === 0) return; // Skip header row
+
+      var universityCell = $(this).find('td:eq(29)').text().toLowerCase();
+      var docDateCell = $(this).find('td:eq(3)').text().trim();
+      var formattedDocDate = formatDateToComparable(docDateCell);
+      var docYear = formattedDocDate.split('-')[0];
+
+      var showRow = (!university || universityCell.includes(university)) &&
+                    (!selectedYear || docYear === selectedYear);
+
+      $(this).toggle(showRow);
+    });
   }
-}
 
-// Function to convert DD/MM/YYYY or other date formats to YYYY-MM-DD for easy comparison
-function formatDateToComparable(date) {
-  if (!date) return "";
+  // Filter by date range function
+  function filterTableByDateRange(startDate, endDate) {
+    var table = $('#dataTable');
+    var rows = table.find('tr');
 
-  // Check for DD/MM/YYYY format
-  if (date.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
-    var parts = date.split('/');
-    return parts[2] + '-' + parts[1] + '-' + parts[0]; // Convert to YYYY-MM-DD
+    rows.each(function(index) {
+      if (index === 0) return; // Skip header row
+
+      var docDateCell = $(this).find('td:eq(3)').text().trim();
+      var formattedDocDate = formatDateToComparable(docDateCell);
+
+      var showRow = formattedDocDate >= startDate && formattedDocDate <= endDate;
+      $(this).toggle(showRow);
+    });
   }
 
-  // If it's already in YYYY-MM-DD, return it as is
-  if (date.match(/^\d{4}-\d{2}-\d{2}$/)) {
-    return date;
+  // Format date function (convert DD/MM/YYYY to YYYY-MM-DD)
+  function formatDateToComparable(date) {
+    if (!date) return "";
+    if (date.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+      var parts = date.split('/');
+      return parts[2] + '-' + parts[1] + '-' + parts[0];
+    }
+    return date; // Assuming it's already in YYYY-MM-DD format
   }
-
-  return ""; // Return empty string if the date format doesn't match
-}
-
+});
 
 </script>
-
-
-
  
   <!-- Additional JavaScript Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>

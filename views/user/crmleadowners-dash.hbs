@@ -507,7 +507,27 @@ color: #ffffff;
 <div class="container-fluid pt-4 px-4">
     <div class="row g-4">
         <!-- Unique Date Range Filter and Button -->
-`
+  <div class="col-12 col-md-12 d-flex">
+    {{#if user}}
+        <div class="filter-card glassmorphism p-4 shadow-lg d-flex">
+            <!-- Date Range Input -->
+            <div class="floating-label-wrapper">
+                <label for="dateRange" class="floating-label">Date Range</label>
+                <input type="text" id="dateRange" class="form-control shadow-sm circular-input" placeholder="Select Date or Range">
+            </div>
+
+            <!-- Filter Button -->
+            <button class="btn btn-glass shadow-sm circular-btn ms-3" id="latestBtn">
+                <i class="bi bi-filter-circle"></i>
+            </button>
+
+            <!-- Clear Button -->
+            <button class="btn btn-danger shadow-sm circular-btn ms-3" id="clearBtn">
+                <i class="bi bi-x-circle"></i>
+            </button>
+        </div>
+    {{/if}}
+</div>
              {{!-- <div class="col-6 col-md-6 d-flex">
       
                <button>Report</button>
@@ -1238,54 +1258,64 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 <script>
+// Function to get preset date ranges
+function getDatePresets(preset) {
+  const today = new Date();
+  
+  // Utility function to clone the date
+  const cloneDate = (date) => new Date(date.getTime());
+  
+  const startOfWeek = (date) => {
+    const diff = date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1); // Start on Monday
+    return new Date(date.setDate(diff));
+  };
+
+  const presets = {
+    'Today': [cloneDate(today), cloneDate(today)],
+    'Yesterday': [
+      new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1),
+      new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1)
+    ],
+    'Last 7 Days': [new Date(today.getFullYear(), today.getMonth(), today.getDate() - 6), cloneDate(today)],
+    'Last 14 Days': [new Date(today.getFullYear(), today.getMonth(), today.getDate() - 13), cloneDate(today)],
+    'Last 30 Days': [new Date(today.getFullYear(), today.getMonth(), today.getDate() - 29), cloneDate(today)],
+    'This Week': [startOfWeek(cloneDate(new Date())), cloneDate(new Date())],
+    'Last Week': [
+      startOfWeek(cloneDate(new Date(today.setDate(today.getDate() - 7)))),
+      cloneDate(new Date(today.setDate(today.getDate() + 6)))
+    ],
+    'This Month': [new Date(today.getFullYear(), today.getMonth(), 1), cloneDate(today)],
+    'Last Month': [
+      new Date(today.getFullYear(), today.getMonth() - 1, 1),
+      new Date(today.getFullYear(), today.getMonth(), 0)
+    ]
+  };
+
+  return presets[preset];
+}
+
+// Event listener for the latestBtn
 document.getElementById('latestBtn').addEventListener('click', function() {
     const dateRange = document.getElementById('dateRange').value;
-    const preset = document.getElementById('presetDateRange').value;
-
     let startDate, endDate;
 
-    // Get today's date
-    const today = new Date();
-
-    // Calculate startDate and endDate based on the selected preset
-    switch(preset) {
-        case 'today':
-            startDate = endDate = today.toISOString().split('T')[0];
-            break;
-        case 'this-week':
-            const firstDayOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 1));
-            const lastDayOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 7));
-            startDate = firstDayOfWeek.toISOString().split('T')[0];
-            endDate = lastDayOfWeek.toISOString().split('T')[0];
-            break;
-        case 'last-month':
-            const firstDayOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-            const lastDayOfLastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
-            startDate = firstDayOfLastMonth.toISOString().split('T')[0];
-            endDate = lastDayOfLastMonth.toISOString().split('T')[0];
-            break;
-        case 'last-year':
-            const firstDayOfLastYear = new Date(today.getFullYear() - 1, 0, 1);
-            const lastDayOfLastYear = new Date(today.getFullYear() - 1, 11, 31);
-            startDate = firstDayOfLastYear.toISOString().split('T')[0];
-            endDate = lastDayOfLastYear.toISOString().split('T')[0];
-            break;
-        default:
-            if (dateRange) {
-                // Handle single date or range
-                if (dateRange.includes(' to ')) {
-                    [startDate, endDate] = dateRange.split(' to ');
-                } else {
-                    // Single date: Use the same date for both startDate and endDate
-                    startDate = endDate = dateRange;
-                }
-            }
-            break;
+    if (dateRange) {
+        // Handle single date or range
+        if (dateRange.includes(' to ')) {
+            [startDate, endDate] = dateRange.split(' to ').map(date => date.trim());
+        } else {
+            // Single date: Use the same date for both startDate and endDate
+            startDate = endDate = dateRange;
+        }
+    } else {
+        // Default to today's date if no dateRange selected
+        const today = new Date();
+        startDate = endDate = today.toISOString().split('T')[0];
     }
 
     // Check if no valid date is selected
     if (!startDate || !endDate) {
-        alert('Please select a date range or a preset date range.');
+        alert('Please select a date range.');
         return;
     }
 
@@ -1296,14 +1326,43 @@ document.getElementById('latestBtn').addEventListener('click', function() {
 
 // Clear button event listener
 document.getElementById('clearBtn').addEventListener('click', function() {
-    // Clear the date range input and preset selection
+    // Clear the date range input
     document.getElementById('dateRange').value = '';
-    document.getElementById('presetDateRange').value = '';
 
     // Redirect to the dashboard without any query parameters
     window.location.href = '/crm-lead-owner-dashboard';
 });
 
+// Flatpickr configuration for date range
+flatpickr("#dateRange", {
+  mode: "range", // Allow both single date and range selection
+  dateFormat: "Y-m-d", // Ensure this matches your expected format
+  onChange: function(selectedDates, dateStr, instance) {
+    console.log("Selected Dates:", selectedDates, dateStr); // Log for debugging
+  },
+  onOpen: function(selectedDates, dateStr, instance) {
+    // Inject date presets
+    if (!document.getElementById('preset-container')) {
+      const presetContainer = document.createElement('div');
+      presetContainer.id = 'preset-container';
+      presetContainer.className = 'date-presets';
+      
+      const presets = ['Today', 'Yesterday', 'Last 7 Days', 'Last 14 Days', 'Last 30 Days', 'This Week', 'Last Week', 'This Month', 'Last Month'];
+      presets.forEach(preset => {
+        const presetButton = document.createElement('button');
+        presetButton.className = 'btn btn-sm btn-outline-secondary m-1';
+        presetButton.innerText = preset;
+        presetButton.addEventListener('click', () => {
+          const [start, end] = getDatePresets(preset);
+          instance.setDate([start, end]); // Set the date range in flatpickr
+        });
+        presetContainer.appendChild(presetButton);
+      });
+      
+      instance.calendarContainer.appendChild(presetContainer);
+    }
+  }
+});
 </script>
 
 
