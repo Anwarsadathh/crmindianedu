@@ -364,7 +364,6 @@
 
 
 
-
      <div class="container-fluid pt-4 px-4">
   <div class="row g-4">
     <!-- Lead Owner Dropdown -->
@@ -372,23 +371,23 @@
       <div class="filter-card glassmorphism p-4 shadow-lg d-flex">
         <div class="floating-label-wrapper">
           <label for="leadOwner" class="floating-label">Select Lead Owner</label>
-          <select id="leadOwner" class="form-control shadow-sm circular-input">
-            <option value="">Select Lead Owner</option>
-            {{#each leadOwners}}
-              <option value="{{this.email}}" {{#if (eq this.email ../selectedLeadOwner)}}selected{{/if}}>{{this.email}}</option>
-            {{/each}}
-          </select>
-        </div>
-        <div class="floating-label-wrapper ms-3">
-          <label for="dateRange" class="floating-label">Select Date or Range</label>
-          <input type="text" id="dateRange" class="form-control shadow-sm circular-input" placeholder="Select Date or Date Range">
-        </div>
-        <button class="btn btn-glass shadow-sm circular-btn ms-3" id="filterBtn">
-          <i class="bi bi-filter-circle"></i>
-        </button>
-        <button class="btn btn-danger shadow-sm circular-btn ms-3" id="clearBtn">
-          <i class="bi bi-x-circle"></i>
-        </button>
+           <select id="leadOwner" class="form-control shadow-sm circular-input">
+        <option value="">Select Lead Owner</option>
+        {{#each leadOwners}}
+          <option value="{{this.email}}" {{#if (eq this.email ../selectedLeadOwner)}}selected{{/if}}>{{this.email}}</option>
+        {{/each}}
+      </select>
+    </div>
+    <div class="floating-label-wrapper ms-3">
+      <label for="dateRange" class="floating-label">Select Date or Range</label>
+      <input type="text" id="dateRange" class="form-control shadow-sm circular-input" placeholder="Select Date or Date Range">
+    </div>
+    <button class="btn btn-glass shadow-sm circular-btn ms-3" id="filterBtn">
+      <i class="bi bi-filter-circle"></i>
+    </button>
+    <button class="btn btn-danger shadow-sm circular-btn ms-3" id="clearBtn">
+      <i class="bi bi-x-circle"></i>
+    </button>
       </div>
     </div>
 
@@ -1139,11 +1138,84 @@ document.addEventListener("DOMContentLoaded", function() {
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <script>
+// Function to get preset date ranges
+function getDatePresets(preset) {
+  const today = new Date();
+  
+  // Utility function to clone the date
+  const cloneDate = (date) => new Date(date.getTime());
+  
+  const startOfWeek = (date) => {
+    const diff = date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1); // Start on Monday
+    return new Date(date.setDate(diff));
+  };
+
+  const presets = {
+    'Today': [cloneDate(today), cloneDate(today)],
+    'Yesterday': [
+      new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1),
+      new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1)
+    ],
+    'Last 7 Days': [new Date(today.getFullYear(), today.getMonth(), today.getDate() - 6), cloneDate(today)],
+    'Last 14 Days': [new Date(today.getFullYear(), today.getMonth(), today.getDate() - 13), cloneDate(today)],
+    
+    // Correct "Last 30 Days" preset
+    'Last 30 Days': [
+      new Date(today.getFullYear(), today.getMonth(), today.getDate() - 29), // Start date
+      cloneDate(today) // End date (today)
+    ],
+    
+    'This Week': [startOfWeek(cloneDate(new Date())), cloneDate(new Date())],
+    'Last Week': [
+      startOfWeek(cloneDate(new Date(today.setDate(today.getDate() - 7)))),
+      cloneDate(new Date(today.setDate(today.getDate() + 6)))
+    ],
+    'This Month': [new Date(today.getFullYear(), today.getMonth(), 1), cloneDate(today)],
+    'Last Month': [
+      new Date(today.getFullYear(), today.getMonth() - 1, 1),
+      new Date(today.getFullYear(), today.getMonth(), 0)
+    ]
+  };
+
+  // Log the result to debug
+  if (preset === 'Last 30 Days') {
+    console.log("Start Date for Last 30 Days:", presets['Last 30 Days'][0].toISOString().split('T')[0]);
+    console.log("End Date for Last 30 Days:", presets['Last 30 Days'][1].toISOString().split('T')[0]);
+  }
+
+  return presets[preset];
+}
+
+
+
+
 flatpickr("#dateRange", {
   mode: "range", // Allow both single date and range selection
   dateFormat: "Y-m-d", // Ensure this matches your expected format
   onChange: function(selectedDates, dateStr, instance) {
     console.log("Selected Dates:", selectedDates, dateStr); // Log for debugging
+  },
+  onOpen: function(selectedDates, dateStr, instance) {
+    // Inject date presets
+    if (!document.getElementById('preset-container')) {
+      const presetContainer = document.createElement('div');
+      presetContainer.id = 'preset-container';
+      presetContainer.className = 'date-presets';
+      
+      const presets = ['Today', 'Yesterday', 'Last 7 Days', 'Last 14 Days', 'Last 30 Days', 'This Week', 'Last Week', 'This Month', 'Last Month'];
+      presets.forEach(preset => {
+        const presetButton = document.createElement('button');
+        presetButton.className = 'btn btn-sm btn-outline-secondary m-1';
+        presetButton.innerText = preset;
+        presetButton.addEventListener('click', () => {
+          const [start, end] = getDatePresets(preset);
+          instance.setDate([start, end]); // Set the date range in flatpickr
+        });
+        presetContainer.appendChild(presetButton);
+      });
+      
+      instance.calendarContainer.appendChild(presetContainer);
+    }
   }
 });
 
@@ -1155,43 +1227,33 @@ document.getElementById("filterBtn").addEventListener("click", function() {
   
   // Handle single date and range selections
   if (selectedDateRange.includes(" to ")) {
-    // Date range selected (two dates)
     [startDate, endDate] = selectedDateRange.split(" to ").map(date => date.trim());
   } else {
-    // Single date selected, use it for both startDate and endDate
     startDate = selectedDateRange;
     endDate = selectedDateRange;
   }
 
-  // Debugging logs
   console.log("Selected Lead Owner:", leadOwner);
   console.log("Start Date:", startDate);
   console.log("End Date:", endDate);
 
-  // Build the query string with startDate, endDate, and showLatestSubstage=true
   const query = new URLSearchParams({
     leadOwnerEmail: leadOwner,
-    startDate: startDate || "",  // Default to empty string if not selected
-    endDate: endDate || "",      // Default to empty string if not selected
-    showLatestSubstage: true     // Ensure this is always true
+    startDate: startDate || "",
+    endDate: endDate || "",
+    showLatestSubstage: true
   }).toString();
 
-  console.log("Query String:", query);
-
-  // Redirect to the dashboard with query parameters
   window.location.href = `/crm-tl-dashboard?${query}`;
 });
 
 document.getElementById("clearBtn").addEventListener("click", function() {
-  // Reset the filters
   document.getElementById("leadOwner").value = "";
   document.getElementById("dateRange").value = "";
 
-  // Redirect to the dashboard without query parameters
   window.location.href = "/crm-tl-dashboard";
 });
 </script>
-
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>

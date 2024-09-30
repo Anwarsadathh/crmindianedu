@@ -501,3 +501,10 @@ body {
     z-index: 3 !important;
 }
 
+#dataTable thead {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 100 !important;
+    /* Ensure the header stays on top of the table content */
+    /* Set a background color to the header */
+}

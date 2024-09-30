@@ -653,9 +653,9 @@ button{
 </td>
 <td>
     <!-- Initial Registration Date Field (docApprovedDate) -->
+    <!-- Initial Registration Date Field (docApprovedDate) -->
     <input type="date" name="docApprovedDate" class="form-control date-input"
-           value="{{this.docApprovedDate}}" 
-           {{#unless (eq this.documentStatus "Approved")}}style="display:none;"{{/unless}}>
+           value="{{this.docApprovedDate}}" pattern="\d{2}-\d{2}-\d{4}"  {{#unless (eq this.documentStatus "Approved")}}style="display:none;"{{/unless}}>
 </td>
 
 <td class="detail-row">

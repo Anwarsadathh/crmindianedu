@@ -908,127 +908,6 @@ router.get("/lead-details", verifyLogin, async (req, res) => {
 
 
 
-// router.get("/crm-lead-owner-details", async (req, res) => {
-//   // Check if the user is logged in
-//   if (!req.session.user) {
-//     return res.redirect("/lead-login");
-//   }
-
-//   try {
-//     // Fetch lead stage data
-//     const leadStage = await serviceHelpers.getAllLeadStage();
-//     const uniqueLeadStages = Array.from(
-//       new Set(leadStage.map((stage) => stage.mainStage))
-//     ).map((mainStage) =>
-//       leadStage.find((stage) => stage.mainStage === mainStage)
-//     );
-
-//     // Fetch lead owner data from session
-//     const leadOwnerName = req.session.user.email;
-
-//     // Fetch data from collections
-//     const [googlesheets, referrals, leadOwners] = await Promise.all([
-//       serviceHelpers.getAllGooglsheets(),
-//       serviceHelpers.getAllReferral(),
-//       serviceHelpers.getAllLeadOwners(),
-//     ]);
-
-//     // Combine data from both collections
-//     const combinedData = [...googlesheets, ...referrals];
-
-//     // Log incoming _id from query parameters
-//     console.log("Query _id:", req.query._id);
-
-//     // Filter combined data based on query parameters
-//     let filteredData = combinedData.filter(
-//       (item) => item.leadOwnerName === leadOwnerName && item.assignLead !== null
-//     );
-
-//     // Log filtered data before applying further filters
-//     console.log("Filtered Data before _id filter:", filteredData);
-
-//     // Handle multiple filters for name, email, etc.
-//     const filterFields = ["email"];
-//     filterFields.forEach((field) => {
-//       if (req.query[field]) {
-//         const values = Array.isArray(req.query[field])
-//           ? req.query[field]
-//           : [req.query[field]];
-//         filteredData = filteredData.filter((item) =>
-//           values.includes(item[field])
-//         );
-//       }
-//     });
-
-//     // Log filtered data after _id filter
-//     console.log("Filtered Data after _id filter:", filteredData);
-
-//     // Sort data by assignDate
-//     const sortedData = filteredData.sort(
-//       (a, b) => new Date(b.assignDate) - new Date(a.assignDate)
-//     );
-
-//     // Log sorted data
-//     console.log("Sorted Data:", sortedData);
-
-//     // Render the view with filtered and sorted data
-//     res.render("user/crmleadowners-details", {
-//       admin: true,
-//       googlesheets: sortedData,
-//       leadOwners,
-//       leadStage: uniqueLeadStages,
-//       userEmail: req.session.user.email,
-//       userName: req.session.user.name,
-//     });
-//   } catch (error) {
-//     console.error("Error fetching lead details:", error);
-//     res.status(500).send("Internal Server Error");
-//   }
-// });
-
-router.post("/crm-lead-owner-details", async (req, res) => {
-  try {
-    // Parse the list of IDs from the request body
-    const ids = JSON.parse(req.body.ids);
-
-    // Fetch lead owner data from session
-    const leadOwnerName = req.session.user.email;
-
-    // Fetch data from collections (similar to the GET request handler)
-    const [googlesheets, referrals, leadOwners] = await Promise.all([
-      serviceHelpers.getAllGooglsheets(),
-      serviceHelpers.getAllReferral(),
-      serviceHelpers.getAllLeadOwners(),
-    ]);
-
-    // Combine data from both collections
-    const combinedData = [...googlesheets, ...referrals];
-
-    // Filter combined data based on the lead owner and assigned lead
-    let filteredData = combinedData.filter(
-      (item) => item.leadOwnerName === leadOwnerName && item.assignLead !== null
-    );
-
-    // Filter the data based on the provided IDs
-    if (ids.length > 0) {
-      filteredData = filteredData.filter((item) =>
-        ids.includes(item._id.toString())
-      );
-    }
-
-    // Continue with the logic to render or send the response
-    res.render("user/crmleadowners-details", {
-      // Pass required data to the view
-      googlesheets: filteredData, // Use the filtered data here
-      leadOwners, // Pass the leadOwners data if needed
-      // Add any other required variables for rendering the view
-    });
-  } catch (error) {
-    console.error("Error processing POST request:", error);
-    res.status(500).send("Internal Server Error");
-  }
-});
-
 router.get("/crm-lead-owner-details", async (req, res) => {
   // Check if the user is logged in
   if (!req.session.user) {
@@ -1057,51 +936,40 @@ router.get("/crm-lead-owner-details", async (req, res) => {
     // Combine data from both collections
     const combinedData = [...googlesheets, ...referrals];
 
-    // Log incoming ids from query parameters
-    console.log("Query ids:", req.query.ids);
+    // Log incoming _id from query parameters
+    console.log("Query _id:", req.query._id);
 
-    // Parse the ids field to handle multiple IDs (comma-separated)
-    const ids = req.query.ids ? req.query.ids.split(",") : [];
-
-    // Filter combined data based on the lead owner and assignLead fields
+    // Filter combined data based on query parameters
     let filteredData = combinedData.filter(
       (item) => item.leadOwnerName === leadOwnerName && item.assignLead !== null
     );
 
-    console.log("Filtered Data before ids filter:", filteredData);
+    // Log filtered data before applying further filters
+    console.log("Filtered Data before _id filter:", filteredData);
 
-    // Filter the data by multiple ids if any exist
-    if (ids.length > 0) {
-      filteredData = filteredData.filter(
-        (item) => ids.includes(item._id.toString()) // Cast _id to string to match
-      );
-    }
+    // Handle multiple filters for name, email, etc.
+    const filterFields = ["email"];
+    filterFields.forEach((field) => {
+      if (req.query[field]) {
+        const values = Array.isArray(req.query[field])
+          ? req.query[field]
+          : [req.query[field]];
+        filteredData = filteredData.filter((item) =>
+          values.includes(item[field])
+        );
+      }
+    });
 
-    console.log("Filtered Data after ids filter:", filteredData);
+    // Log filtered data after _id filter
+    console.log("Filtered Data after _id filter:", filteredData);
 
     // Sort data by assignDate
     const sortedData = filteredData.sort(
       (a, b) => new Date(b.assignDate) - new Date(a.assignDate)
     );
 
+    // Log sorted data
     console.log("Sorted Data:", sortedData);
-
-    // Extract additional query parameters
-    const { startDate, endDate, filterType, stage, showLatestSubstage } =
-      req.query;
-
-    // Fetch lead status counts
-    const {
-      mainStageCounts,
-      stageCounts,
-      subStageCounts,
-      totalLeads,
-      documents,
-    } = await serviceHelpers.getLeadStatusCountsok(
-      leadOwnerName,
-      startDate,
-      endDate
-    );
 
     // Render the view with filtered and sorted data
     res.render("user/crmleadowners-details", {
@@ -1111,17 +979,149 @@ router.get("/crm-lead-owner-details", async (req, res) => {
       leadStage: uniqueLeadStages,
       userEmail: req.session.user.email,
       userName: req.session.user.name,
-      mainStageCounts,
-      stageCounts,
-      subStageCounts,
-      totalLeads,
-      documents,
     });
   } catch (error) {
     console.error("Error fetching lead details:", error);
     res.status(500).send("Internal Server Error");
   }
 });
+
+// router.post("/crm-lead-owner-details", async (req, res) => {
+//   try {
+//     // Parse the list of IDs from the request body
+//     const ids = JSON.parse(req.body.ids);
+
+//     // Fetch lead owner data from session
+//     const leadOwnerName = req.session.user.email;
+
+//     // Fetch data from collections (similar to the GET request handler)
+//     const [googlesheets, referrals, leadOwners] = await Promise.all([
+//       serviceHelpers.getAllGooglsheets(),
+//       serviceHelpers.getAllReferral(),
+//       serviceHelpers.getAllLeadOwners(),
+//     ]);
+
+//     // Combine data from both collections
+//     const combinedData = [...googlesheets, ...referrals];
+
+//     // Filter combined data based on the lead owner and assigned lead
+//     let filteredData = combinedData.filter(
+//       (item) => item.leadOwnerName === leadOwnerName && item.assignLead !== null
+//     );
+
+//     // Filter the data based on the provided IDs
+//     if (ids.length > 0) {
+//       filteredData = filteredData.filter((item) =>
+//         ids.includes(item._id.toString())
+//       );
+//     }
+
+//     // Continue with the logic to render or send the response
+//     res.render("user/crmleadowners-details", {
+//       // Pass required data to the view
+//       googlesheets: filteredData, // Use the filtered data here
+//       leadOwners, // Pass the leadOwners data if needed
+//       // Add any other required variables for rendering the view
+//     });
+//   } catch (error) {
+//     console.error("Error processing POST request:", error);
+//     res.status(500).send("Internal Server Error");
+//   }
+// });
+
+// router.get("/crm-lead-owner-details", async (req, res) => {
+//   // Check if the user is logged in
+//   if (!req.session.user) {
+//     return res.redirect("/lead-login");
+//   }
+
+//   try {
+//     // Fetch lead stage data
+//     const leadStage = await serviceHelpers.getAllLeadStage();
+//     const uniqueLeadStages = Array.from(
+//       new Set(leadStage.map((stage) => stage.mainStage))
+//     ).map((mainStage) =>
+//       leadStage.find((stage) => stage.mainStage === mainStage)
+//     );
+
+//     // Fetch lead owner data from session
+//     const leadOwnerName = req.session.user.email;
+
+//     // Fetch data from collections
+//     const [googlesheets, referrals, leadOwners] = await Promise.all([
+//       serviceHelpers.getAllGooglsheets(),
+//       serviceHelpers.getAllReferral(),
+//       serviceHelpers.getAllLeadOwners(),
+//     ]);
+
+//     // Combine data from both collections
+//     const combinedData = [...googlesheets, ...referrals];
+
+//     // Log incoming ids from query parameters
+//     console.log("Query ids:", req.query.ids);
+
+//     // Parse the ids field to handle multiple IDs (comma-separated)
+//     const ids = req.query.ids ? req.query.ids.split(",") : [];
+
+//     // Filter combined data based on the lead owner and assignLead fields
+//     let filteredData = combinedData.filter(
+//       (item) => item.leadOwnerName === leadOwnerName && item.assignLead !== null
+//     );
+
+//     console.log("Filtered Data before ids filter:", filteredData);
+
+//     // Filter the data by multiple ids if any exist
+//     if (ids.length > 0) {
+//       filteredData = filteredData.filter(
+//         (item) => ids.includes(item._id.toString()) // Cast _id to string to match
+//       );
+//     }
+
+//     console.log("Filtered Data after ids filter:", filteredData);
+
+//     // Sort data by assignDate
+//     const sortedData = filteredData.sort(
+//       (a, b) => new Date(b.assignDate) - new Date(a.assignDate)
+//     );
+
+//     console.log("Sorted Data:", sortedData);
+
+//     // Extract additional query parameters
+//     const { startDate, endDate, filterType, stage, showLatestSubstage } =
+//       req.query;
+
+//     // Fetch lead status counts
+//     const {
+//       mainStageCounts,
+//       stageCounts,
+//       subStageCounts,
+//       totalLeads,
+//       documents,
+//     } = await serviceHelpers.getLeadStatusCountsok(
+//       leadOwnerName,
+//       startDate,
+//       endDate
+//     );
+
+//     // Render the view with filtered and sorted data
+//     res.render("user/crmleadowners-details", {
+//       admin: true,
+//       googlesheets: sortedData,
+//       leadOwners,
+//       leadStage: uniqueLeadStages,
+//       userEmail: req.session.user.email,
+//       userName: req.session.user.name,
+//       mainStageCounts,
+//       stageCounts,
+//       subStageCounts,
+//       totalLeads,
+//       documents,
+//     });
+//   } catch (error) {
+//     console.error("Error fetching lead details:", error);
+//     res.status(500).send("Internal Server Error");
+//   }
+// });
 
 
 
