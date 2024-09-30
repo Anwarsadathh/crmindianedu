@@ -1035,11 +1035,11 @@ h3 {
                     <td class="hideable">{{this.intake}}</td>
                    
                     <td class="hideable">{{this.initialRegistration}}</td>
-                    <td class="hideable">{{this.initialDate}}</td>
+                    <td class="hideable">{{formatDates this.initialDate}}</td>
                     <td class="hideable">
                         <button class="btn btn-status btn-paid">{{this.universityPaid}}</button>
                     </td>
-                    <td >{{this.universityPaidDate}}</td>
+                    <td >{{formatDates this.universityPaidDate}}</td>
                     <td class="hideable">
                         <button class="btn btn-status btn-approved">{{this.documentStatus}}</button>
                     </td>
