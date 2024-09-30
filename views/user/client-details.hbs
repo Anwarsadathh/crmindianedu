@@ -71,7 +71,7 @@
      .date-input {
     width: 100% !important;
     padding: 6px!important;
-    font-size: 9px !important;
+    font-size: 10px !important;
     border-radius: 4px !important;
     border: 1px solid #ced4da !important;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075) !important;
@@ -113,7 +113,7 @@
 }
 /* Button styles */
 .btn-status {
-    font-size: 9px; /* Smaller font size for buttons */
+    font-size: 10px; /* Smaller font size for buttons */
     padding: 4px 8px; /* Smaller padding for buttons */
     transition: background-color 0.3s ease;
 }
@@ -167,7 +167,7 @@
     width: 100%;
     height: 500px !important;
     border-collapse: collapse;
-    font-size: 9px; /* Smaller font size for table content */
+    font-size: 10px; /* Smaller font size for table content */
     table-layout: fixed; /* Ensures fixed widths are respected */
     overflow: auto; /* To allow scrolling if necessary */
 }
@@ -186,7 +186,7 @@
     text-align: left;
     padding: 6px; /* Reduced padding for a smaller appearance */
     border: 1px solid #dee2e6;
-    font-size: 9px; /* Consistent smaller font size */
+    font-size: 10px; /* Consistent smaller font size */
     width: 120px; /* Fixed width for consistency */
     overflow: hidden; /* Prevent overflow for fixed-width cells */
     text-overflow: ellipsis; /* Add ellipsis for overflowed text */
@@ -310,10 +310,16 @@
 .table-wrapper {
     position: relative; /* To contain the sticky header */
     overflow: auto; /* Allows the table body to scroll */
-    height: 450px; /* Set a height for the scrolling area */
+    height: 520px; /* Set a height for the scrolling area */
+}
+#dataTable thead {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 100 !important; /* Ensure the header stays on top of the table content */
+    background-color: #fff ; /* Set a background color to the header */
 }
 input, select{
-font-size: 9px !important;
+font-size: 10px !important;
 color: black !important;
 background-color: #dee8f2 !important;
 }
@@ -331,7 +337,7 @@ background-color: #dee8f2 !important;
     color: white;
 }
 button{
-    font-size: 9px !important;
+    font-size: 10px !important;
 }
 
 
@@ -342,10 +348,10 @@ button{
   border: 1px solid #18181a;
   color: #18181a;
   display: inline-block;
-  font-size: 9px;
+  font-size: 10px;
   line-height: 15px;
   border-radius: 7px;
-  padding: 8px 8px 7px;
+  padding: 6px 6px 7px;
   text-decoration: none;
   cursor: pointer;
   background: #fff;
@@ -498,10 +504,8 @@ button{
 
 
 
-            <div class="container-fluida tt  ">
 
-      <div class="table-responsive">
-        <button  id="saveButton" class="button-57" role="button"><span class="text">Save Changes</span><span>Save</span></button>
+        <button  id="saveButton" class="button-57 mt-2" role="button"><span class="text">Save Changes</span><span>Save</span></button>
  <div class="table-wrapper ">
     <table class="table" id="dataTable">
         
@@ -551,7 +555,7 @@ button{
                             {{#each formData}}
                             <tr data-id="{{_id}}">
                                 <td>{{incrementIndex @index}}</td>
-                                <td class="text-danger sticky" >{{this.date}}</td>
+                                <td class="text-danger sticky" >{{formatDates this.date}}</td>
                                 <td class="">{{this.studentid}}</td>
                                 <td>{{this.mentor}}</td>
                                 <td class="sticky-second">{{this.name}}</td>
@@ -740,8 +744,7 @@ button{
 </table>
   
   </div>
-     </div>
-</div>
+  
 
  
 <script>
