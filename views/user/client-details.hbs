@@ -555,7 +555,7 @@ button{
                             {{#each formData}}
                             <tr data-id="{{_id}}">
                                 <td>{{incrementIndex @index}}</td>
-                                <td>{{this.date}}<input type="date" class="form-control" value="{{this.date}}" /></td>
+                                <td class="sticky" >{{formatDates this.date}}<input type="date" class="form-control" value="{{this.date}}" /></td>
                                 <td class="">{{this.studentid}}</td>
                                 <td>{{this.mentor}}</td>
                                 <td class="sticky-second">{{this.name}}</td>
