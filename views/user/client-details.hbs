@@ -1318,17 +1318,33 @@ function saveRowData(row) {
 }
 
 function saveData() {
-    $('#dataTable tbody tr').each(function () {
-        saveRowData($(this));  // Call saveRowData for each row
-    });
-
     Swal.fire({
-        title: 'Success!',
-        text: 'All changes have been saved successfully.',
-        icon: 'success',
-        confirmButtonText: 'OK'
+        title: 'Are you sure?',
+        text: 'Do you want to save all changes?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, save it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Proceed with saving data if user confirms
+            $('#dataTable tbody tr').each(function () {
+                saveRowData($(this));  // Call saveRowData for each row
+            });
+
+            Swal.fire({
+                title: 'Success!',
+                text: 'All changes have been saved successfully.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                // Reload the page after successful confirmation
+                location.reload();
+            });
+        }
     });
 }
+
 
 </script>
 
