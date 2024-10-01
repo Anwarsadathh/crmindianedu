@@ -1439,9 +1439,9 @@ router.post('/send-bulk-message', async (req, res) => {
   const { message, numbers } = req.body;
 
   try {
-    // Use Intekart API to send messages
+    // Use Interakt API to send messages
     const result = await intekartService.sendBulkMessage(numbers, message);
-    
+
     // Send a successful response back to the frontend
     res.json({ success: true, result });
   } catch (error) {

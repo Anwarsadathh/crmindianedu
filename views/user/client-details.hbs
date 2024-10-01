@@ -310,8 +310,11 @@
 .table-wrapper {
     position: relative; /* To contain the sticky header */
     overflow: auto; /* Allows the table body to scroll */
-    height: 520px; /* Set a height for the scrolling area */
+    height: 80vh; /* Use viewport height units to make it responsive */
+    max-height: 100vh; /* Ensure it doesn't exceed the screen height */
+    min-height: 50vh; /* Optional: Set a minimum height */
 }
+
 #dataTable thead {
     position: sticky !important;
     top: 0 !important;
@@ -413,7 +416,10 @@ button{
 #dataTable{
     background-color: white !important;
 }
-
+label{
+        font-size: 10px !important;
+        font-weight: 500;
+       }
 </style>
 
 </head>
@@ -503,6 +509,61 @@ button{
             <!-- Navbar End -->
 
 
+    <!-- Button Section -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap">
+        <!-- University Filter -->
+        <div class="col-md-8 d-flex justify-content-start align-items-center flex-wrap">
+            <div class="col-md-2">
+                <label for="universityFilter" class="form-label"><b>Filter by University:</b></label>
+                <select id="universityFilter" class="form-select filter-select">
+                    <option value="">All Universities</option>
+                    <option value="Manipal Jaipur University">Manipal Jaipur University</option>
+                    <option value="Manipal Sikkim University">Manipal Sikkim University</option>
+                    <option value="Jain Online University">Jain Online University</option>
+                    <option value="Jain ODL University">Jain ODL University</option>
+                    <option value="Vignan University">Vignan University</option>
+                    <option value="Amity University">Amity University</option>
+                    <option value="SVSU">SVSU</option>
+                    <option value="Aligarh Muslim University Online">Aligarh Muslim University Online</option>
+                    <option value="KLU Online">KLU Online</option>
+                    <option value="Mizoram University">Mizoram University</option>
+                    <option value="Jamia Hamdard University">Jamia Hamdard University</option>
+                    <option value="Uttaranchal University">Uttaranchal University</option>
+                    <option value="Andhra University">Andhra University</option>
+                    <option value="LPU">LPU</option>
+                    <option value="Amrita University">Amrita University</option>
+                    <option value="DY Patil University">DY Patil University</option>
+                </select>
+            </div>
+
+            <!-- Date Range Filter -->
+            <div class="col-md-3 ms-2">
+                <label for="dateRangeFilter" class="form-label"><b>Select Date:</b></label>
+                <input type="text" id="dateRangeFilter" class="form-control" />
+            </div>
+
+            <!-- Filter by Year -->
+            <div class="col-md-2 ms-2">
+                <label for="yearFilter" class="form-label"><b>Filter By Year:</b></label>
+                <select id="yearFilter" class="form-select filter-select">
+                    <option value="">All Years</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                    <option value="2022">2022</option>
+                    <option value="2021">2021</option>
+                </select>
+            </div>
+
+            <!-- Clear Button -->
+            <div class="col-md-1 ms-2 align-self-end">
+                <button id="clearFiltersBtn" class="btn btn-sm btn-danger">
+                    <i class="fas fa-times-circle"></i> 
+                </button>
+            </div>
+        </div>
+
+   
+</div>
 
 
         <button  id="saveButton" class="button-57 mt-2" role="button"><span class="text">Save Changes</span><span>Save</span></button>
@@ -746,6 +807,267 @@ button{
   </div>
   
 
+
+  <!-- Include daterangepicker CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+<!-- Include jQuery (required) and moment.js (for date manipulation) -->
+<script src="https://cdn.jsdelivr.net/npm/moment/moment.min.js"></script>
+
+<!-- Include daterangepicker JS -->
+<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script>
+$(function() {
+  // Initialize date range picker
+  $('#dateRangeFilter').daterangepicker({
+    startDate: moment().startOf('day'),
+    endDate: moment(),
+    ranges: {
+      'Today': [moment(), moment()],
+      'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+      'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+      'Last 14 Days': [moment().subtract(13, 'days'), moment()],
+      'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+      'This Week': [moment().startOf('week'), moment().endOf('week')],
+      'Last Week': [moment().subtract(1, 'week').startOf('week'), moment().subtract(1, 'week').endOf('week')],
+      'This Month': [moment().startOf('month'), moment().endOf('month')],
+      'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().endOf('month')]
+    },
+    locale: {
+      format: 'YYYY-MM-DD'
+    }
+  }, function(start, end, label) {
+    clearOldSelections();  // Clear old data selection
+    filterTableByDateRange(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
+    hideHideableElements(); // Hide elements with .hideable class after filtering
+  });
+
+  // Clear filters button event handler
+  $('#clearFiltersBtn').on('click', function() {
+    clearAllFilters();
+    hideHideableElements(); // Hide elements with .hideable class
+  });
+
+  // Close button event handler to clear filters
+  $('#closeBtn').on('click', function() {
+    clearAllFilters();
+    hideHideableElements(); // Hide elements with .hideable class
+  });
+
+  // Event listeners for the filters
+  $('#universityFilter, #yearFilter').on('change', function() {
+    filterTable();
+    hideHideableElements(); // Hide elements with .hideable class after filtering
+  });
+
+  // Initialize DataTable with pageLength and lengthMenu
+  const table = $('#dataTable').DataTable({
+    pageLength: 100,
+    lengthMenu: [[100, 25, 10, -1], [100, 25, 10, "All"]]
+  });
+
+  // Function to clear previous selections
+  function clearOldSelections() {
+    // Clear all custom filters and reset search
+    $.fn.dataTable.ext.search = [];  // Clear all custom search functions
+    table.search('').columns().search('').draw();  // Clear previous searches and redraw
+  }
+
+  // Clear all filters (university, year, and date range)
+  function clearAllFilters() {
+    $('#universityFilter').val('');  // Clear university filter
+    $('#yearFilter').val('');        // Clear year filter
+    $('#dateRangeFilter').val('');   // Clear date range filter
+    clearOldSelections();            // Clear DataTable filters
+    table.draw();                    // Redraw the table with cleared filters
+  }
+
+  // Filter table logic (global search applied across all rows)
+  function filterTable() {
+    var university = $('#universityFilter').val().toLowerCase();
+    var selectedYear = $('#yearFilter').val();
+
+    // Create search strings for university and year
+    var universitySearch = university ? university : '';
+    var yearSearch = selectedYear ? selectedYear : '';
+
+    // Apply column-specific filters (for example: column 29 for university, column 3 for year)
+    table.column(16).search(universitySearch).draw(); // Assuming column 29 is university
+    table.column(1).search(yearSearch).draw(); // Assuming column 3 is date year
+
+    hideHideableElements(); // Hide elements with .hideable class after filtering
+  }
+
+ // Filter by date range function (global filter)
+function filterTableByDateRange(startDate, endDate) {
+    // Add custom date range filter
+    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+        var docDate = data[1]; // Assuming the date column is at index 1 (0-based index)
+        var formattedDocDate = formatDateToComparable(docDate); // Use the date formatting function
+
+        // Compare the date with the provided range
+        if (formattedDocDate >= startDate && formattedDocDate <= endDate) {
+            return true;
+        }
+        return false;
+    });
+    table.draw();
+}
+
+  // Function to hide elements with .hideable class
+  function hideHideableElements() {
+    $('.hideable').hide(); // Hide all elements with .hideable class
+  }
+
+ // Function to format date (make sure to match the format of your input)
+function formatDateToComparable(date) {
+    if (!date) return "";
+    if (date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        return date; // Date is already in YYYY-MM-DD format
+    } else if (date.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+        var parts = date.split('/');
+        return parts[2] + '-' + parts[1] + '-' + parts[0]; // Convert DD/MM/YYYY to YYYY-MM-DD
+    }
+    return date; // Fallback, if format is unexpected
+}
+
+  // Toggle columns visibility
+  $('#hideFieldsButton').on('click', function() {
+    const columnsToToggle = $('.toggle-column, .hideable');
+    const isHidden = columnsToToggle.is(':hidden');
+
+    if (isHidden) {
+      columnsToToggle.show();
+      $('#toggleIcon').removeClass('fa-eye').addClass('fa-eye-slash');
+    } else {
+      columnsToToggle.hide();
+      $('#toggleIcon').removeClass('fa-eye-slash').addClass('fa-eye');
+    }
+  });
+
+  // Initially hide columns
+  $('.toggle-column, .hideable').hide();
+});
+</script>
+
+
+{{!-- <script>
+$(function() {
+  // Initialize date range picker
+  $('#dateRangeFilter').daterangepicker({
+    startDate: moment().startOf('day'),
+    endDate: moment(),
+    ranges: {
+      'Today': [moment(), moment()],
+      'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+      'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+      'Last 14 Days': [moment().subtract(13, 'days'), moment()],
+      'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+      'This Week': [moment().startOf('week'), moment().endOf('week')],
+      'Last Week': [moment().subtract(1, 'week').startOf('week'), moment().subtract(1, 'week').endOf('week')],
+      'This Month': [moment().startOf('month'), moment().endOf('month')],
+      'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().endOf('month')]
+    },
+    locale: {
+      format: 'YYYY-MM-DD'
+    }
+  }, function(start, end) {
+    filterTableByDateRange(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
+  });
+
+  // Initialize DataTable with pageLength and lengthMenu
+  const table = $('#dataTable').DataTable({
+    pageLength: 100,
+    lengthMenu: [[100, 25, 10, -1], [100, 25, 10, "All"]]
+  });
+
+  // Clear previous selections
+  function clearOldSelections() {
+    $.fn.dataTable.ext.search = [];
+    table.search('').columns().search('').draw();
+  }
+
+  // Clear all filters (university, year, and date range)
+  function clearAllFilters() {
+    $('#universityFilter').val('');
+    $('#yearFilter').val('');
+    $('#dateRangeFilter').val('');
+    clearOldSelections();
+    table.draw();
+  }
+
+ // Filter by date range function (for docApprovedDate)
+function filterTableByDateRange(startDate, endDate) {
+  $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+    var docApprovedDate = data[2]; // Assuming docApprovedDate is in column 23
+    var formattedDocApprovedDate = formatDateToComparable(docApprovedDate);
+
+    if (!formattedDocApprovedDate) {
+      return false; // Exclude rows with no date
+    }
+
+    // Check if the date falls within the range
+    if (formattedDocApprovedDate >= startDate && formattedDocApprovedDate <= endDate) {
+      return true;
+    }
+    return false;
+  });
+  table.draw();
+}
+
+// Function to format the date (assumes docApprovedDate is in DD/MM/YYYY or YYYY-MM-DD)
+function formatDateToComparable(date) {
+  if (!date) return null;
+
+  // If date is in DD/MM/YYYY format, convert to YYYY-MM-DD
+  if (date.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+    var parts = date.split('/');
+    return `${parts[2]}-${parts[1]}-${parts[0]}`; // Convert to YYYY-MM-DD
+  }
+
+  // If date is already in YYYY-MM-DD format
+  if (date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+    return date;
+  }
+
+  return null; // Return null if the date format is invalid
+}
+
+  
+  // Event listeners for university and year filters
+  $('#universityFilter, #yearFilter').on('change', function() {
+    filterTable();
+  });
+
+  // Filter table logic for university and year
+  function filterTable() {
+    var university = $('#universityFilter').val().toLowerCase();
+    var selectedYear = $('#yearFilter').val();
+    
+    var universitySearch = university ? university : '';
+    var yearSearch = selectedYear ? selectedYear : '';
+
+    // Apply filters to columns (adjust column numbers as per table)
+    table.column(16).search(universitySearch).draw(); // Assuming column 29 is university
+    table.column(2).search(yearSearch).draw(); // Assuming column 3 is the year
+
+    hideHideableElements(); // Hide elements with .hideable class
+  }
+
+  // Clear filters button event handler
+  $('#clearFiltersBtn').on('click', function() {
+    clearAllFilters();
+    hideHideableElements();
+  });
+
+  // Function to hide elements with .hideable class
+  function hideHideableElements() {
+    $('.hideable').hide();
+  }
+});
+
+</script> --}}
+
  
 <script>
     const tableWrapper = document.querySelector('.table-wrapper');
@@ -878,7 +1200,7 @@ Indian Edu Hub`;
 
 <!-- Include SweetAlert2 for alerts -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-       <script>
+       {{!-- <script>
 $(document).ready(function() {
    const table = $('#dataTable').DataTable({
         pageLength: 100, // Default to showing 100 entries
@@ -886,7 +1208,7 @@ $(document).ready(function() {
     });
 });
 
-</script>
+</script> --}}
 <script>
 $(document).ready(function () {
     // Handle row status for each row on page load
