@@ -8,7 +8,7 @@ const session = require("express-session");
 const createError = require("http-errors");
 const bodyParser = require("body-parser");
 const flash = require("connect-flash");
-// const cron = require("node-cron"); // Comment this out if you don't want the cron job
+const MongoStore = require("connect-mongo"); // For persistent session storage
 
 require("dotenv").config();
 
@@ -18,6 +18,7 @@ const db = require("./config/connection");
 
 const app = express();
 
+// Helper function to format dates
 const formatDates = function (date) {
   if (!date) return ""; // Return empty string if the date is null/undefined
 
@@ -50,18 +51,15 @@ const formatDates = function (date) {
   return "Invalid Date"; // Return "Invalid Date" if the input is not a valid date
 };
 
-
-
 const hbs = exphbs.create({
   extname: "hbs",
   defaultLayout: "user-layout",
   layoutsDir: path.join(__dirname, "views/layout"),
   partialsDir: path.join(__dirname, "views/partials"),
   helpers: {
-    formatDates: formatDates ,// Register the formatDate helper
+    formatDates: formatDates, // Register the formatDates helper
     formatDate: function (date) {
       if (!date) return "N/A";
-
       const options = {
         day: "2-digit",
         month: "2-digit",
@@ -71,10 +69,8 @@ const hbs = exphbs.create({
         second: "2-digit",
         hour12: true, // 12-hour format with AM/PM
       };
-
-      return new Date(date).toLocaleString("en-IN", options); // Formats the date and time in DD/MM/YYYY, HH:MM:SS AM/PM format
+      return new Date(date).toLocaleString("en-IN", options);
     },
-
     incrementIndex: function (index) {
       return index + 1;
     },
@@ -85,11 +81,11 @@ const hbs = exphbs.create({
       return arg1 == arg2;
     },
     not: function (value) {
-  return !value;
+      return !value;
     },
     and: function (arg1, arg2) {
-  return arg1 && arg2;
-},
+      return arg1 && arg2;
+    },
     ifCond: function (v1, operator, v2, options) {
       switch (operator) {
         case "==":
@@ -155,8 +151,7 @@ const hbs = exphbs.create({
   },
 });
 
-
-
+// Setup Handlebars as the view engine
 app.engine("hbs", hbs.engine);
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "hbs");
@@ -168,24 +163,34 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.json());
+
+// Setup persistent session storage with connect-mongo
+const sessionStore = MongoStore.create({
+  mongoUrl: process.env.MONGODB_URL, // Make sure this points to the correct MongoDB URL
+  collectionName: "sessions", // Collection where sessions will be stored
+  ttl: 14 * 24 * 60 * 60, // Session TTL (time to live) in seconds, 14 days
+});
+
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET, // Strong secret from environment variables
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false },
+    store: sessionStore, // Store sessions in MongoDB
+    cookie: {
+      secure: false, // Set to true if using HTTPS
+      maxAge: 14 * 24 * 60 * 60 * 1000, // Expire cookies after 14 days
+    },
   })
 );
 
 app.use(flash());
-
 
 app.use((req, res, next) => {
   res.locals.error = req.flash("error");
   res.locals.success = req.flash("success");
   next();
 });
-
 
 // Database connection
 db.connect((err) => {
@@ -215,11 +220,5 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.render("error");
 });
-
-// Comment this out if you want to control updates only through button click
-// cron.schedule("* * * * *", () => {
-//   console.log("Running a task every minute");
-//   updateDatabase().catch(console.error);
-// });
 
 module.exports = app;
