@@ -269,7 +269,9 @@ input:focus, select:focus, textarea:focus {
 .table-wrapper {
     position: relative; /* To contain the sticky header */
     overflow: auto; /* Allows the table body to scroll */
-    height: 400px; /* Set a height for the scrolling area */
+    height: 70vh; /* Use viewport height units to make it responsive */
+    max-height: 100vh; /* Ensure it doesn't exceed the screen height */
+    min-height: 50vh; /* Optional: Set a minimum height */
 }
 
 /* Ensure the table takes the full width of its container */
@@ -884,9 +886,9 @@ h3 {
 <div class="container tt  px-2">
 <div class="container">
     <!-- Button Section -->
-    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+    <div class="d-flex justify-content-between align-items-center  flex-wrap">
         <!-- University Filter -->
-      
+      <div class="col-md-8 d-flex justify-content-start align-items-center flex-wrap">
   <!-- University Filter -->
   <div class="col-md-2">
     <label for="universityFilter" class="form-label"><b>Filter by University:</b></label>
@@ -912,7 +914,7 @@ h3 {
   </div>
 
   <!-- Date Range Filter -->
-  <div class="col-md-4">
+  <div class="col-md-2 ms-2">
     <label for="dateRangeFilter" class="form-label"><b>Select Date Range:</b></label>
     <input type="text" id="dateRangeFilter" class="form-control" />
   </div>
@@ -935,10 +937,10 @@ h3 {
       <i class="fas fa-times-circle"></i> 
     </button>
   </div>
-
+</div>
 
         <!-- Save Changes Button -->
-        <div class="col-md-2 ms-2">
+        <div class="col-md-2 ">
             <button id="saveChangesBtn" class="btn btn-primary mx">Save Changes</button>
           <button id="hideFieldsButton" class="btn-sm btn-dark mx-2" role="button">
     <span class="text">
@@ -1913,64 +1915,91 @@ $(function() {
       'This Week': [moment().startOf('week'), moment().endOf('week')],
       'Last Week': [moment().subtract(1, 'week').startOf('week'), moment().subtract(1, 'week').endOf('week')],
       'This Month': [moment().startOf('month'), moment().endOf('month')],
-      'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+      'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().endOf('month')]
     },
     locale: {
       format: 'YYYY-MM-DD'
     }
   }, function(start, end, label) {
+    clearOldSelections();  // Clear old data selection
     filterTableByDateRange(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
+    hideHideableElements(); // Hide elements with .hideable class after filtering
   });
 
-  // Clear filters
+  // Clear filters button event handler
   $('#clearFiltersBtn').on('click', function() {
-    $('#universityFilter').val('');
-    $('#yearFilter').val('');
-    $('#dateRangeFilter').val('');
-    filterTable();
+    clearAllFilters();
+    hideHideableElements(); // Hide elements with .hideable class
+  });
+
+  // Close button event handler to clear filters
+  $('#closeBtn').on('click', function() {
+    clearAllFilters();
+    hideHideableElements(); // Hide elements with .hideable class
   });
 
   // Event listeners for the filters
   $('#universityFilter, #yearFilter').on('change', function() {
     filterTable();
+    hideHideableElements(); // Hide elements with .hideable class after filtering
   });
 
-  // Filter table logic
+  // Initialize DataTable with pageLength and lengthMenu
+  const table = $('#dataTable').DataTable({
+    pageLength: 100,
+    lengthMenu: [[100, 25, 10, -1], [100, 25, 10, "All"]]
+  });
+
+  // Function to clear previous selections
+  function clearOldSelections() {
+    // Clear all custom filters and reset search
+    $.fn.dataTable.ext.search = [];  // Clear all custom search functions
+    table.search('').columns().search('').draw();  // Clear previous searches and redraw
+  }
+
+  // Clear all filters (university, year, and date range)
+  function clearAllFilters() {
+    $('#universityFilter').val('');  // Clear university filter
+    $('#yearFilter').val('');        // Clear year filter
+    $('#dateRangeFilter').val('');   // Clear date range filter
+    clearOldSelections();            // Clear DataTable filters
+    table.draw();                    // Redraw the table with cleared filters
+  }
+
+  // Filter table logic (global search applied across all rows)
   function filterTable() {
     var university = $('#universityFilter').val().toLowerCase();
     var selectedYear = $('#yearFilter').val();
-    var table = $('#dataTable');
-    var rows = table.find('tr');
 
-    rows.each(function(index) {
-      if (index === 0) return; // Skip header row
+    // Create search strings for university and year
+    var universitySearch = university ? university : '';
+    var yearSearch = selectedYear ? selectedYear : '';
 
-      var universityCell = $(this).find('td:eq(29)').text().toLowerCase();
-      var docDateCell = $(this).find('td:eq(3)').text().trim();
-      var formattedDocDate = formatDateToComparable(docDateCell);
-      var docYear = formattedDocDate.split('-')[0];
+    // Apply column-specific filters (for example: column 29 for university, column 3 for year)
+    table.column(29).search(universitySearch).draw(); // Assuming column 29 is university
+    table.column(3).search(yearSearch).draw(); // Assuming column 3 is date year
 
-      var showRow = (!university || universityCell.includes(university)) &&
-                    (!selectedYear || docYear === selectedYear);
-
-      $(this).toggle(showRow);
-    });
+    hideHideableElements(); // Hide elements with .hideable class after filtering
   }
 
-  // Filter by date range function
+  // Filter by date range function (global filter)
   function filterTableByDateRange(startDate, endDate) {
-    var table = $('#dataTable');
-    var rows = table.find('tr');
+    // Add custom date range filter
+    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+      var docDate = data[3]; // Assuming the date column is at index 3
+      var formattedDocDate = formatDateToComparable(docDate);
 
-    rows.each(function(index) {
-      if (index === 0) return; // Skip header row
-
-      var docDateCell = $(this).find('td:eq(3)').text().trim();
-      var formattedDocDate = formatDateToComparable(docDateCell);
-
-      var showRow = formattedDocDate >= startDate && formattedDocDate <= endDate;
-      $(this).toggle(showRow);
+      if (formattedDocDate >= startDate && formattedDocDate <= endDate) {
+        return true;
+      }
+      return false;
     });
+    table.draw();
+  }
+
+  // Function to hide elements with .hideable class
+  function hideHideableElements() {
+    $('.hideable').hide(); // Hide all elements with .hideable class
   }
 
   // Format date function (convert DD/MM/YYYY to YYYY-MM-DD)
@@ -1982,9 +2011,28 @@ $(function() {
     }
     return date; // Assuming it's already in YYYY-MM-DD format
   }
-});
 
+  // Toggle columns visibility
+  $('#hideFieldsButton').on('click', function() {
+    const columnsToToggle = $('.toggle-column, .hideable');
+    const isHidden = columnsToToggle.is(':hidden');
+
+    if (isHidden) {
+      columnsToToggle.show();
+      $('#toggleIcon').removeClass('fa-eye').addClass('fa-eye-slash');
+    } else {
+      columnsToToggle.hide();
+      $('#toggleIcon').removeClass('fa-eye-slash').addClass('fa-eye');
+    }
+  });
+
+  // Initially hide columns
+  $('.toggle-column, .hideable').hide();
+});
 </script>
+
+
+
  
   <!-- Additional JavaScript Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -1995,7 +2043,7 @@ $(function() {
   <script src="lib/tempusdominus/js/moment.min.js"></script>
   <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
   <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
-<script>
+{{!-- <script>
     $(document).ready(function() {
         // Initialize DataTable
         const table = $('#dataTable').DataTable({
@@ -2023,7 +2071,7 @@ $(function() {
         // Initially hide the columns
         $('.toggle-column, .hideable').hide();
     });
-</script>
+</script> --}}
 
   <!-- Template Javascript -->
   <script src="js/main.js"></script>
