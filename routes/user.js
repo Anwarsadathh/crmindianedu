@@ -1241,7 +1241,7 @@ router.get("/sample-report", (req, res) => {
 });
 
 
-router.get("/accounts-client-details", (req, res) => {
+router.get("/accounts-client-details",verifyAccounts, (req, res) => {
    serviceHelpers
     .getAllClientdashboard()
     .then((formData) => {
@@ -1258,7 +1258,7 @@ router.get("/accounts-client-details", (req, res) => {
 });
  
 
-router.get("/accounts-wallets", async (req, res) => {
+router.get("/accounts-wallets",verifyAccounts, async (req, res) => {
   try {
     const supers = await serviceHelpers.getAllSuper();
 
