@@ -1241,6 +1241,65 @@ router.get("/sample-report", (req, res) => {
 });
 
 
+router.get("/accounts-client-details", (req, res) => {
+   serviceHelpers
+    .getAllClientdashboard()
+    .then((formData) => {
+      console.log(formData);
+      res.render("user/accounts-client-details", {
+        admin: true,
+        formData,
+      });
+    })
+    .catch((error) => {
+      console.error("Error fetching client details:", error);
+      res.status(500).send("An error occurred while fetching client details.");
+    });
+});
+ 
+
+router.get("/accounts-wallets", async (req, res) => {
+  try {
+    const supers = await serviceHelpers.getAllSuper();
+
+    if (supers.length === 0) {
+      return res.status(404).json({ message: "No institutes found" });
+    }
+
+    const institutesWithWallets = supers.map((institute) => {
+      const totalWalletAmount = institute.wallet
+        ? institute.wallet.reduce(
+            (sum, transaction) => sum + transaction.amount,
+            0
+          )
+        : 0;
+
+      const totalWalletAmountP = institute.walletP
+        ? institute.walletP.reduce(
+            (sum, transaction) => sum + transaction.amount,
+            0
+          )
+        : 0;
+
+      return {
+        ...institute,
+        totalWalletAmount,
+        totalWalletAmountP,
+      };
+    });
+
+    res.render("user/accounts-wallet", {
+      institutes: institutesWithWallets,
+      currentDate: new Date(),
+    });
+  } catch (error) {
+    console.error("Error retrieving institutes:", error);
+    res.status(500).json({
+      message: "An error occurred while retrieving the institutes.",
+    });
+  }
+});
+
 
 router.post("/submit-form-sug", async (req, res) => {
   const formData = req.body;

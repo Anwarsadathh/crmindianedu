@@ -20,20 +20,10 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
  <!-- Add necessary meta tags and links to CSS/JS files -->
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-
-<!-- DataTables CSS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css">
-
-<!-- DataTables JavaScript -->
-<script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
-<!-- DataTables CSS -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-
-<!-- DataTables JS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
 
 
     <!-- Libraries Stylesheet -->
@@ -290,6 +280,9 @@ header img {
 .filter-options{
     width: 15%;
 }
+h3{
+    font-weight: 800 !important;
+}
     </style>
 </head>
 
@@ -321,9 +314,9 @@ header img {
                     <a href="/accounts-dashboard" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Dashboard</a>
                      <a href="/accounts-details" class="nav-link  text-white" ><i class="fa fa-laptop me-2 text-dark"></i>Leads</a>
                      <a href="/create-payments" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Create Pay Steps</a>
-                 <a href="/accounts-invoice" class="nav-item nav-link text-dark active"><i class="fa fa-tachometer-alt me-2 text-dark"></i>Invoice</a>
-                <a href="/accounts-wallets" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Wallet</a>
-                 <a href="/accounts-client-details" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Client Support</a>
+                 <a href="/accounts-invoice" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Invoice</a>
+                <a href="/accounts-wallets" class="nav-item nav-link text-dark active"><i class="fa fa-tachometer-alt me-2 text-dark"></i>Wallet</a>
+                <a href="/accounts-client-details" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Client Support</a>
                 </div>
             </nav>
         </div>
@@ -373,207 +366,121 @@ header img {
             </nav>
             <!-- Navbar End -->
 
+ <div class="container mt-3">
+  <!-- Wallet Balance -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title"><i class="fa fa-wallet me-2"></i>Wallet Summary</h5>
 
+      {{#each institutes}}
+      <div class="row">
+        <!-- Wallet Total Card -->
+        <div class="col-md-6 mb-3">
+          <div class="card bg-gradient-white p-3">
+            <h6 class="card-title">Total IEHD</h6>
+            <p id="total-raised" class="card-text">₹{{totalWalletAmount}}</p>
+          </div>
+        </div>
 
-{{!-- <!-- Table End -->
-<div class="container-fluid pt-4 px-4" style="width: 100%;">
-  <div class="row g-4"> --}}
-    <div class="container mt-2">
+        <!-- WalletP Total Card -->
+        <div class="col-md-6 mb-3">
+          <div class="card bg-gradient-white p-3">
+            <h6 class="card-title">Total IEHP</h6>
+            <p id="total-not-raised" class="card-text">₹{{totalWalletAmountP}}</p>
+          </div>
+        </div>
+      </div>
+      {{/each}}
 
+      <p class="text-muted">Last updated: {{formatDate currentDate}}</p>
+    </div>
+  </div>
 
-      <!-- Transaction History -->
-      <div class="card mb-4 mt-3 ">
-        <div class="card-body">
-          <h4 class="card-title">
-  <i class="fa fa-history me-2"></i>
-  <span id="table-heading">All Invoice</span>
-</h4>
-          
-<!-- Filter Options in the UI -->
-<div class="filter-options" >
-  <label for="filter-status">Filter by Status: </label>
-  <select id="filter-status" class="form-control">
-    <option value="">All</option>
-    <option value="raised">Raised</option>
-    <option value="not-raised">Not Raised</option>
-    <option value="credited">Credited</option>
-    <option value="pending">Pending</option>
-  </select>
-</div>
+  <!-- Wallet and WalletP Tables -->
+  {{#each institutes}}
+  <h3 >IEHD</h3>
 
-<!-- Responsive Table -->
-<div class="table-responsive">
-  <table id="invoiceTable" class="table table-striped">
+  <!-- Wallet Table -->
+  <table id="walletTable{{@index}}" class="table display">
     <thead>
       <tr>
-        <th>Select</th>
-        <th hidden>id</th>
-        <th>Institute Name</th>
-        <th>Institute ID</th>
-        <th>Raise Date</th>
+        <th>Date</th>
+        <th>Amount</th>
         <th>Student ID</th>
         <th>Name</th>
         <th>Course</th>
         <th>Email</th>
         <th>Mobile</th>
-        <th>State</th>
-        <th>Amount</th>
-        <th>Status (Raised)</th>
-        <th>Status (Credited)</th>
-        <th>Credited Date</th>
       </tr>
     </thead>
     <tbody>
-      {{#each raisedDetails}}
+      {{#each wallet}}
       <tr>
-        <td><input type="checkbox" class="select-row" data-index="{{this._id}}" {{#if this.isCredited}}disabled{{/if}}></td>
-        <td hidden>{{this._id}}</td>
-        <td> <b>{{this.institutename}}</b> </td>
-        <td><b>{{this.instituteid}}</b></td>
-        <td>{{formatDate this.raisedAt}}</td>
+        <td>{{formatDate this.date}}</td>
+        <td>₹{{this.amount}}</td>
         <td>{{this.studentDetails.studentid}}</td>
         <td>{{this.studentDetails.name}}</td>
         <td>{{this.studentDetails.course}}</td>
         <td>{{this.studentDetails.email}}</td>
         <td>{{this.studentDetails.mobile}}</td>
-        <td>{{this.studentDetails.state}}</td>
-        <td>₹{{this.amount}}</td>
-        <td>
-          {{#if this.isRaised}}
-            <span class="badge bg-success raised-status">Raised {{this.raisedNumber}}</span>
-          {{else}}
-            <span class="badge bg-danger raised-status">Not Raised</span>
-          {{/if}}
-        </td>
-        <td>
-          {{#if this.isCredited}}
-            <span class="badge bg-success">Credited</span>
-          {{else}}
-            <span class="badge bg-warning text-dark">Pending</span>
-          {{/if}}
-        </td>
-        <td class="text-danger font-weight-bold">{{formatDate this.creditedAt}}</td>
+      </tr>
+      {{else}}
+      <tr>
+        <td colspan="7">No transactions found in Wallet</td>
       </tr>
       {{/each}}
     </tbody>
   </table>
+<hr style="border: 2px dashed #007BFF; width: 100%; margin: 40px 0;">
+
+  <!-- WalletP Table -->
+  <h3>IEHP</h3>
+  <table id="walletPTable{{@index}}" class="table display">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Amount</th>
+        <th>Student ID</th>
+        <th>Name</th>
+        <th>Course</th>
+        <th>Email</th>
+        <th>Mobile</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each walletP}}
+      <tr>
+        <td>{{formatDate this.date}}</td>
+        <td>₹{{this.amount}}</td>
+        <td>{{this.studentDetails.studentid}}</td>
+        <td>{{this.studentDetails.name}}</td>
+        <td>{{this.studentDetails.course}}</td>
+        <td>{{this.studentDetails.email}}</td>
+        <td>{{this.studentDetails.mobile}}</td>
+      </tr>
+      {{else}}
+      <tr>
+        <td colspan="7">No transactions found in WalletP</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  {{/each}}
+
+  <script>
+    $(document).ready(function() {
+      // Initialize DataTables for each institute
+      {{#each institutes}}
+      $('#walletTable{{@index}}').DataTable();
+      $('#walletPTable{{@index}}').DataTable();
+      {{/each}}
+    });
+  </script>
 </div>
 
 
-<!-- Deposit/Withdraw Buttons -->
-<!-- Button to handle Invoice Credit -->
-<div class="d-flex justify-content-end me-4 mt-4">
-  <button id="raise-invoice-btn" class="btn btn-secondary"><i class="fa fa-check-circle me-1"></i>Credit Selected Invoices</button>
-</div>
 
-    </div>
-  {{!-- </div>
-</div> --}}
-
-<script>
-$(document).ready(function () {
-  // Initialize the DataTable
-  var table = $('#invoiceTable').DataTable();
-
-  // Get query parameter for status filter if present
-  const urlParams = new URLSearchParams(window.location.search);
-  const statusFilter = urlParams.get('statusFilter');
-
-  if (statusFilter) {
-    $('#filter-status').val(statusFilter); // Set dropdown to current filter
-    updateHeading(statusFilter); // Update the heading based on the filter
-  }
-
-  // Update the heading text based on the selected dropdown
-  function updateHeading(filterValue) {
-    var headingText = '';
-
-    switch (filterValue) {
-      case 'raised':
-        headingText = 'Raised Invoice';
-        break;
-      case 'not-raised':
-        headingText = 'Not Raised Invoice';
-        break;
-      case 'credited':
-        headingText = 'Credited Invoice';
-        break;
-      case 'pending':
-        headingText = 'Pending Invoice';
-        break;
-      default:
-        headingText = 'All Invoices'; // Default heading when no filter is selected
-        break;
-    }
-
-    $('#table-heading').text(headingText);
-  }
-
-  // Filter logic for status and update heading
-  $('#filter-status').on('change', function () {
-    var filterValue = $(this).val();
-
-    updateHeading(filterValue); // Update heading based on the selected filter
-
-    if (filterValue === 'raised') {
-      table.column(12).search('Raised').draw();
-    } else if (filterValue === 'not-raised') {
-      table.column(12).search('Not Raised').draw();
-    } else if (filterValue === 'credited') {
-      table.column(13).search('Credited').draw();
-    } else if (filterValue === 'pending') {
-      table.column(13).search('Pending').draw();
-    } else {
-      table.search('').columns().search('').draw(); // Reset filter
-    }
-
-    // Redirect to the filtered route (preserve the filter in URL)
-    var url = "/accounts-invoice";
-    if (filterValue) {
-      url += `?statusFilter=${filterValue}`;
-    }
-    window.location.href = url; // Redirect to apply filter server-side
-  });
-});
-
-</script>
-<script>
-    document.getElementById('raise-invoice-btn').addEventListener('click', async function () {
-  const selectedIndexes = [];
-
-  document.querySelectorAll('.select-row').forEach((checkbox) => {
-    if (checkbox.checked && !checkbox.disabled) {
-      selectedIndexes.push(checkbox.dataset.index);
-    }
-  });
-
-  if (selectedIndexes.length > 0) {
-    try {
-      const response = await fetch('/update-wallet-status-bulk-ac', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          indexes: selectedIndexes,
-          isCredited: true
-        })
-      });
-
-      if (response.ok) {
-        // Update UI to reflect status change
-        location.reload();
-      } else {
-        console.error('Failed to credit invoices');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  } else {
-    alert('Please select at least one entry to credit.');
-  }
-});
-
-
-</script>
   
   <!-- Additional JavaScript Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>

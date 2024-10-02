@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Leads</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+ <!-- Add necessary meta tags and links to CSS/JS files -->
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css">
+
+<!-- DataTables JavaScript -->
+<script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+
+<!-- DataTables Buttons CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/3.0.1/css/buttons.dataTables.css">
+
+<!-- DataTables Buttons JavaScript -->
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/dataTables.buttons.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.dataTables.js"></script>
+
+<!-- JSZip -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<!-- pdfmake -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+<!-- DataTables Buttons HTML5 and Print JavaScript -->
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.print.min.js"></script>
+
+<!-- DataTables Select JavaScript -->
+<script src="https://cdn.datatables.net/select/2.0.0/js/dataTables.select.js"></script>
+<script src="https://cdn.datatables.net/select/2.0.0/js/select.dataTables.js"></script>
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+ <style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
+
+.search{
+  
+  top:6px;
+  left:9px;
+}
+     .date-input {
+    width: 100% !important;
+    padding: 6px!important;
+    font-size: 10px !important;
+    border-radius: 4px !important;
+    border: 1px solid #ced4da !important;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075) !important;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
+}
+
+.date-input:focus {
+    border-color: #80bdff !important;
+    outline: 0 !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+}
+
+.form-control{
+    
+    border:none;
+    padding-left:32px;
+}
+.tt {
+    margin-top: 9px;
+    border-radius: 9px;
+
+}
+.container{
+    background-color: #f2f9f6 !important; /* Very pale mint green */
+
+}
+.table-responsive{
+    padding: 9px;
+}
+.form-control:focus{
+    
+    border:none;
+    box-shadow:none;
+}
+
+.green{
+    
+    color:green;
+}
+/* Button styles */
+.btn-status {
+    font-size: 10px; /* Smaller font size for buttons */
+    padding: 4px 8px; /* Smaller padding for buttons */
+    transition: background-color 0.3s ease;
+}
+
+.btn-not-paid {
+    background-color: #e8172c; /* Red */
+    color: #fff;
+}
+
+.btn-paid {
+    background-color: #28a745; /* Green */
+    color: #fff;
+}
+
+.btn-not-approved {
+    background-color: #ffc107; /* Yellow */
+    color: #000;
+}
+
+.btn-approved {
+    background-color: #17a2b8; /* Teal */
+    color: #fff;
+}
+
+.btn-not-done {
+    background-color: #ffc107; /* Yellow */
+    color: #000;
+}
+
+.btn-done {
+    background-color: #28a745; /* Green */
+    color: #fff;
+}
+
+.btn-status.active-paid {
+    background-color: #28a745 !important; /* Green */
+    color: #fff;
+}
+
+.btn-status.active-not-paid {
+    background-color: #dc3545 !important; /* Red */
+    color: #fff;
+}
+
+.btn-status.active-not-approved {
+    background-color: #ffc107 !important; /* Yellow */
+    color: #000;
+}
+/* Ensure the table takes the full width of its container */
+.table {
+    width: 100%;
+    height: 500px !important;
+    border-collapse: collapse;
+    font-size: 10px; /* Smaller font size for table content */
+    table-layout: fixed; /* Ensures fixed widths are respected */
+    overflow: auto; /* To allow scrolling if necessary */
+}
+
+/* Ensure the table header stays fixed at the top */
+.table thead th {
+    position: sticky;
+    top: 0;
+    background-color: #fff; /* Solid background color for visibility */
+    z-index: 2; /* Ensure it stays on top of other content */
+}
+
+/* Table header and cells styling */
+.table thead th,
+.table tbody td {
+    text-align: left;
+    padding: 6px; /* Reduced padding for a smaller appearance */
+    border: 1px solid #dee2e6;
+    font-size: 10px; /* Consistent smaller font size */
+    width: 120px; /* Fixed width for consistency */
+    overflow: hidden; /* Prevent overflow for fixed-width cells */
+    text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+.table thead th {
+    background-color: #232f65;
+    color: #ffffff;
+}
+
+/* Hover color for rows */
+.table tbody tr:hover {
+    background-color: #d0e3ff; 
+}
+
+/* Sticky position for the first column (studentname) */
+.table tbody td.sticky {
+    position: sticky;
+    left: 0;
+    background-color: #fff;
+    z-index: 1;
+}
+
+/* Sticky position for the second column (studentid) */
+.table tbody td.sticky-second {
+    position: sticky;
+    left: 120px; /* Adjust based on the width of the first sticky column */
+    background-color: #fff;
+    z-index: 1;
+}
+
+/* Sticky position for the third column */
+.table tbody td.sticky-third {
+    position: sticky;
+    left: 240px; /* Adjust based on the combined width of first and second sticky columns */
+    background-color: #fff;
+    z-index: 1;
+}
+
+/* Sticky position for the fourth column */
+.table tbody td.sticky-fourth {
+    position: sticky;
+    left: 360px; /* Adjust based on the combined width of first, second, and third sticky columns */
+    background-color: #fff;
+    z-index: 1;
+}
+
+/* Ensure that the sticky headers remain above the sticky columns */
+.table thead th.sticky {
+    position: sticky !important;
+    left: 0 !important;
+    z-index: 3 !important;
+}
+
+.table thead th.sticky-second {
+    position: sticky !important;
+    left: 120px !important;
+    z-index: 3 !important;
+}
+
+.table thead th.sticky-third {
+    position: sticky !important;
+    left: 240px !important;
+    z-index: 3 !important;
+}
+
+.table thead th.sticky-fourth {
+    position: sticky !important;
+    left: 360px !important;
+    z-index: 3 !important;
+}
+
+/* Adjust other table-related styles if necessary */
+
+
+.btn-status.active-approved {
+    background-color: #17a2b8 !important; /* Teal */
+    color: #fff;
+}
+
+.btn-status.active-not-done {
+    background-color: #ffc107 !important; /* Yellow */
+    color: #000;
+}
+
+.btn-status.active-done {
+    background-color: #28a745 !important; /* Green */
+    color: #f4f4f4;
+}
+/* DataTables styles */
+.dataTables_wrapper .dataTables_filter {
+    float: right;
+    text-align: right;
+    margin-bottom: 9px; /* Add margin below the search bar */
+}
+
+.dataTables_wrapper .dataTables_filter input {
+    margin-left: 0.5em;
+    display: inline-block;
+    width: auto;
+    margin-bottom: 9px; /* Add margin below the search bar */
+        position: sticky !important;
+}
+
+.dataTables_wrapper .dataTables_length {
+    float: left;
+    margin-bottom: 9px; /* Add margin below the length dropdown */
+}
+
+.dataTables_wrapper .dataTables_info {
+    float: left;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+    float: right;
+    margin-top: 9px; /* Add margin above the pagination controls */
+
+}
+/* Container for table */
+.table-wrapper {
+    position: relative; /* To contain the sticky header */
+    overflow: auto; /* Allows the table body to scroll */
+    height: 80vh; /* Use viewport height units to make it responsive */
+    max-height: 100vh; /* Ensure it doesn't exceed the screen height */
+    min-height: 50vh; /* Optional: Set a minimum height */
+}
+
+#dataTable thead {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 100 !important; /* Ensure the header stays on top of the table content */
+    background-color: #fff ; /* Set a background color to the header */
+}
+input, select{
+font-size: 10px !important;
+color: black !important;
+background-color: #dee8f2 !important;
+}
+/* Button styles */
+
+/* Correct button: Green background for correct answers */
+.btn-correct {
+    background-color: #28a745; /* Green color */
+    color: white;
+}
+
+/* Incorrect button: Red background for wrong answers */
+.btn-incorrect {
+    background-color: #dc3545; /* Red color */
+    color: white;
+}
+button{
+    font-size: 10px !important;
+}
+
+
+/* CSS */
+.button-57 {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #18181a;
+  color: #18181a;
+  display: inline-block;
+  font-size: 10px;
+  line-height: 15px;
+  border-radius: 7px;
+  padding: 6px 6px 7px;
+  text-decoration: none;
+  cursor: pointer;
+  background: #fff;
+  user-select: none;
+  margin-bottom: ;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-57 span:first-child {
+  position: relative;
+  transition: color 600ms cubic-bezier(0.48, 0, 0.12, 1);
+  z-index: 10;
+}
+
+.button-57 span:last-child {
+  color: white;
+  display: block;
+  position: absolute;
+  bottom: 0;
+  transition: all 500ms cubic-bezier(0.48, 0, 0.12, 1);
+  z-index: 100;
+  opacity: 0;
+  top: 50%;
+  left: 50%;
+  transform: translateY(225%) translateX(-50%);
+  height: 14px;
+  line-height: 13px;
+}
+
+.button-57:after {
+  content: "";
+  position: absolute;
+  bottom: -50%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  transform-origin: bottom center;
+  transition: transform 600ms cubic-bezier(0.48, 0, 0.12, 1);
+  transform: skewY(9.3deg) scaleY(0);
+  z-index: 50;
+}
+
+.button-57:hover:after {
+  transform-origin: bottom center;
+  transform: skewY(9.3deg) scaleY(2);
+}
+
+.button-57:hover span:last-child {
+  transform: translateX(-50%) translateY(-100%);
+  opacity: 1;
+  transition: all 900ms cubic-bezier(0.48, 0, 0.12, 1);
+}
+.container-fluida{
+    background-color: #d6d6d6 !important;
+    padding: 9px !important;
+}
+#dataTable{
+    background-color: white !important;
+}
+label{
+        font-size: 10px !important;
+        font-weight: 500;
+       }
+</style>
+
+</head>
+
+<body>
+    <div class="container-xxl position-relative bg-white d-flex p-0" style="background-color: #232f65;">
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+
+
+        <!-- Sidebar Start -->
+        <div class="sidebar pe-4 pb-3" style="background-color: #232f65;">
+            <nav class="navbar " style="background-color: #232f65;">
+                <a href="/accounts-dashboard" class="navbar-brand mx-4 mb-3">
+                    <h3 class="text-primary"> <img src="/images/indian-hub-logo-vert-white-e1662813826792.png" alt="Indian Edu Hub Logo" class="log"></h3>
+                </a>
+                <div class="d-flex align-items-center ms-4 mb-4" style="background-color: #232f65;">
+                      
+                    <div class="ms-3" >
+                        <h6 class="mb-0 text-white">Indianeduhub</h6>
+                        <span style="color: rgb(209, 211, 212);">Accounts</span>
+                    </div>
+                </div>
+                <div class="navbar-nav w-100" style="background-color: #232f65;">
+                    <a href="/accounts-dashboard" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Dashboard</a>
+                     <a href="/accounts-details" class="nav-link  text-white" ><i class="fa fa-laptop me-2 text-dark"></i>Leads</a>
+                     <a href="/create-payments" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Create Pay Steps</a>
+                 <a href="/accounts-invoice" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Invoice</a>
+                <a href="/accounts-wallets" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Wallet</a>
+                <a href="/accounts-client-details" class="nav-item nav-link text-dark active"><i class="fa fa-tachometer-alt me-2 text-dark"></i>Client Support</a>
+                </div>
+            </nav>
+        </div>
+        <!-- Sidebar End -->
+
+
+        <!-- Content Start -->
+        <div class="content">
+            <!-- Navbar Start -->
+            <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
+                <a href="/accounts-dashboard" class="navbar-brand d-flex d-lg-none me-4">
+                    <h2 class="text-primary mb-0"><img src="/img/ie.png" alt="Indian Edu Hub Logo" style="height: 30px;"></h2>
+                </a>
+                <a href="#" class="sidebar-toggler flex-shrink-0">
+                    <i class="fa fa-bars"></i>
+                </a>
+                <form class="d-none d-md-flex ms-4">
+                    <input class="form-control border-0" type="search" placeholder="Search">
+                </form>
+                <div class="navbar-nav align-items-center ms-auto">
+                    
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="fa fa-bell me-lg-2"></i>
+                            <span class="d-none d-lg-inline-flex">Notificatin</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                            <a href="#" class="dropdown-item">
+                                <h6 class="fw-normal mb-0">Profile updated</h6>
+                                <small>15 minutes ago</small>
+                            </a>
+                       
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item text-center">See all notifications</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <img class="rounded-circle me-lg-2" src="/images/anon.webp" alt="" style="width: 40px; height: 40px;">
+                            <span class="d-none d-lg-inline-flex">Accounts</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                            <a href="#" class="dropdown-item">Log Out</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <!-- Navbar End -->
+
+   <!-- Button Section -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap">
+        <!-- University Filter -->
+        <div class="col-md-8 d-flex justify-content-start align-items-center flex-wrap">
+            <div class="col-md-2">
+                <label for="universityFilter" class="form-label"><b>Filter by University:</b></label>
+                <select id="universityFilter" class="form-select filter-select">
+                    <option value="">All Universities</option>
+                    <option value="Manipal Jaipur University">Manipal Jaipur University</option>
+                    <option value="Manipal Sikkim University">Manipal Sikkim University</option>
+                    <option value="Jain Online University">Jain Online University</option>
+                    <option value="Jain ODL University">Jain ODL University</option>
+                    <option value="Vignan University">Vignan University</option>
+                    <option value="Amity University">Amity University</option>
+                    <option value="SVSU">SVSU</option>
+                    <option value="Aligarh Muslim University Online">Aligarh Muslim University Online</option>
+                    <option value="KLU Online">KLU Online</option>
+                    <option value="Mizoram University">Mizoram University</option>
+                    <option value="Jamia Hamdard University">Jamia Hamdard University</option>
+                    <option value="Uttaranchal University">Uttaranchal University</option>
+                    <option value="Andhra University">Andhra University</option>
+                    <option value="LPU">LPU</option>
+                    <option value="Amrita University">Amrita University</option>
+                    <option value="DY Patil University">DY Patil University</option>
+                </select>
+            </div>
+<!-- Additional Status Filter Dropdown -->
+<div class="col-md-2 ms-2">
+    <label for="statusFilter" class="form-label"><b>Filter by Status:</b></label>
+    <select id="statusFilter" class="form-select filter-select">
+        <option value="">All Statuses</option>
+        <option value="Not Done">Not Done</option>
+        <option value="Done">Done</option>
+        <option value="Approved">Approved</option>
+        <option value="Not Approved">Not Approved</option>
+    </select>
+</div>
+
+            <!-- Date Range Filter -->
+            <div class="col-md-3 ms-2">
+                <label for="dateRangeFilter" class="form-label"><b>Select Date:</b></label>
+                <input type="text" id="dateRangeFilter" class="form-control" />
+            </div>
+
+            <!-- Filter by Year -->
+            <div class="col-md-2 ms-2">
+                <label for="yearFilter" class="form-label"><b>Filter By Year:</b></label>
+                <select id="yearFilter" class="form-select filter-select">
+                    <option value="">All Years</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                    <option value="2022">2022</option>
+                    <option value="2021">2021</option>
+                </select>
+            </div>
+
+            <!-- Clear Button -->
+            <div class="col-md-1 ms-2 align-self-end">
+                <button id="clearFiltersBtn" class="btn btn-sm btn-danger">
+                    <i class="fas fa-times-circle"></i> 
+                </button>
+            </div>
+        </div>
+
+   
+</div>
+
+
+        <button  id="saveButton" class="button-57 mt-2" role="button"><span class="text">Save Changes</span><span>Save</span></button>
+ <div class="table-wrapper ">
+    <table class="table" id="dataTable">
+        
+      <thead>
+        <tr class="bg-light">
+          <th>No.</th>
+                                <th class="sticky">Date</th>
+                               <th >Student ID</th>
+                                <th>Mentor</th>
+                                <th class="sticky-second">Student Name</th>
+                                <th class="sticky-third">Course</th>
+                                <th class="sticky-fourth">Specialization</th>
+                                <th>Email</th>
+                                <th>Mobile Number</th>
+                                <th>State</th>
+                                <th>City</th>
+                                <th>Role</th>
+                                <th>Specific Name</th>
+                                <th>Service Pack</th>
+                                <th>Intake</th>
+                                <th>Mentorship</th>
+                                <th>Uni Selected</th>
+                                <th>Initial Reg</th>
+                                 <th>Initial Reg Date</th>
+                                <th>Uni Paid</th>
+                                <th>Uni Fee Paid Date</th>
+                                <th>Document Status</th>
+                                <th>Doc Approved Date</th>
+                                <th>Uni Refund Initiated</th>
+                                <th>Date of Uni Refund Initiated</th>
+                                <th>IEH Refund Initiated</th>
+                                <th>Date of IEH Refund Initiated</th>
+                                <th>Scholarship</th>
+                                <th>Mode</th>
+                                <th>Amount</th>
+                                <th>UG/PG</th>
+                                <th>Semester Status</th>
+                                <th>Batch</th>
+                                <th>Enrollment No</th>
+                                <th>Application No</th>
+                                <th>ID Approved</th>
+                                <th>Action</th>
+        </tr>
+      </thead>
+  <tbody>
+                            {{#each formData}}
+                            <tr data-id="{{_id}}">
+                                <td>{{incrementIndex @index}}</td>
+                                <td class="sticky" >{{formatDates this.date}}</td>
+                                <td class="">{{this.studentid}}</td>
+                                <td>{{this.mentor}}</td>
+                                <td class="sticky-second">{{this.name}}</td>
+                                <td class="sticky-third">{{this.course}}</td>
+                                <td class="sticky-fourth">{{this.specialization}}</td>
+                                 <td><input type="text" class="form-control" value="{{this.email}}" /></td>
+                                <td>{{this.mobile}}</td>
+                                <td>{{this.state}}</td>
+                                <td>{{this.city}}</td>
+                                <td>{{this.role}}</td>
+                                <td>{{this.specificName}}</td>
+                                <td>{{this.servicePack}}</td>
+                                <td>
+                                    {{this.intake}}
+                                </td>
+                                  <td>
+                                   {{this.mentorshipStatus}}
+                                </td>
+                                <td>
+ {{this.university}}
+</td>
+
+             <td>
+   <!-- Initial Registration Field -->
+    <button class="btn btn-status {{#if (eq this.initialRegistration "✔")}}btn-correct{{else}}btn-incorrect{{/if}}"
+            onclick="toggleInitialRegistration(this)">
+        {{#if (eq this.initialRegistration "✔")}}✔{{else}}✘{{/if}}
+    </button>
+</td>
+
+<td>
+  {{this.initialDate}}
+</td>
+
+
+
+                                <td>
+                                    <button class="btn btn-status {{#if (eq this.universityPaid "Paid")}}btn-paid{{else}}btn-not-paid{{/if}}" onclick="toggleStatuss(this, 'University Paid')">
+                                        {{#if (eq this.universityPaid "Paid")}}Paid{{else}}Not Paid{{/if}}
+                                    </button>
+                                </td>
+                                <td>{{this.universityPaidDate}}</td>
+                        <td>
+    <button class="btn btn-status {{#if (eq this.documentStatus "Approved")}}btn-approved{{else}}btn-not-approved{{/if}}" onclick="toggleStatus(this, 'Document Status')">
+        {{#if (eq this.documentStatus "Approved")}}Approved{{else}}Not Approved{{/if}}
+    </button>
+</td>
+<td>
+   {{this.docApprovedDate}}
+</td>
+
+<td class="detail-row">
+    {{this.unirefundinitiated}}
+</td>
+<td class="refund-cell detail-row">
+   {{this.dateOfRefundInitiateduni}}
+</td>
+<td class="detail-row">
+   {{this.iehrefundinitiated}}
+</td>
+<td class="refund-cell detail-row">
+   {{this.iehrefundinitiated}}
+</td>
+
+
+                                  <td>{{this.scholarship}}</td>
+                                <td>
+                                    {{this.feepaid}}
+                                </td>
+                                <td>{{this.feePaidAmount}}</td>
+                                    <td>
+      {{this.degreeType}}
+    </td>
+                                <td>
+                                    {{this.semesterStatus}}
+                                </td>
+                                <td>
+                                    {{this.batch}}
+                                </td>
+                                <td>{{this.enrollmentNo}}</td>
+                                 <td>{{this.applicationNo}}</td>
+                                <td>
+                                   {{this.idApproved}}
+                                </td>
+   <td>
+    <button class="btn btn-status {{#if (eq assignaccounts 'Assigned to accounts department')}}btn-paid{{else}}btn-not-paid{{/if}}" 
+            onclick="toggleAssignment(this)">
+        {{#if (eq assignaccounts 'Assigned to accounts department')}}Assigned to accounts department{{else}}Assign to accounts department{{/if}}
+    </button>
+</td>
+
+
+
+
+                            </tr>
+                            {{/each}}
+                        </tbody>
+</table>
+  
+  </div>
+  
+
+
+  <!-- Include daterangepicker CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+<!-- Include jQuery (required) and moment.js (for date manipulation) -->
+<script src="https://cdn.jsdelivr.net/npm/moment/moment.min.js"></script>
+
+<!-- Include daterangepicker JS -->
+<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script>
+$(function() {
+  // Initialize date range picker
+  $('#dateRangeFilter').daterangepicker({
+    startDate: moment().startOf('day'),
+    endDate: moment(),
+    ranges: {
+      'Today': [moment(), moment()],
+      'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+      'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+      'Last 14 Days': [moment().subtract(13, 'days'), moment()],
+      'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+      'This Week': [moment().startOf('week'), moment().endOf('week')],
+      'Last Week': [moment().subtract(1, 'week').startOf('week'), moment().subtract(1, 'week').endOf('week')],
+      'This Month': [moment().startOf('month'), moment().endOf('month')],
+      'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().endOf('month')]
+    },
+    locale: {
+      format: 'YYYY-MM-DD'
+    }
+  }, function(start, end, label) {
+    clearOldSelections();  // Clear old data selection
+    filterTableByDateRange(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
+    hideHideableElements(); // Hide elements with .hideable class after filtering
+  });
+
+  // Clear filters button event handler
+  $('#clearFiltersBtn').on('click', function() {
+    clearAllFilters();
+    hideHideableElements(); // Hide elements with .hideable class
+  });
+
+  // Close button event handler to clear filters
+  $('#closeBtn').on('click', function() {
+    clearAllFilters();
+    hideHideableElements(); // Hide elements with .hideable class
+  });
+
+  // Event listeners for the filters
+  $('#universityFilter, #yearFilter').on('change', function() {
+    filterTable();
+    hideHideableElements(); // Hide elements with .hideable class after filtering
+  });
+
+  // Initialize DataTable with pageLength and lengthMenu
+  const table = $('#dataTable').DataTable({
+    pageLength: 100,
+    lengthMenu: [[100, 25, 10, -1], [100, 25, 10, "All"]]
+  });
+
+  // Function to clear previous selections
+  function clearOldSelections() {
+    // Clear all custom filters and reset search
+    $.fn.dataTable.ext.search = [];  // Clear all custom search functions
+    table.search('').columns().search('').draw();  // Clear previous searches and redraw
+  }
+
+  // Clear all filters (university, year, and date range)
+  function clearAllFilters() {
+    $('#universityFilter').val('');  // Clear university filter
+    $('#yearFilter').val('');        // Clear year filter
+    $('#dateRangeFilter').val('');   // Clear date range filter
+    clearOldSelections();            // Clear DataTable filters
+    table.draw();                    // Redraw the table with cleared filters
+  }
+
+  // Filter table logic (global search applied across all rows)
+  function filterTable() {
+    var university = $('#universityFilter').val().toLowerCase();
+    var selectedYear = $('#yearFilter').val();
+
+    // Create search strings for university and year
+    var universitySearch = university ? university : '';
+    var yearSearch = selectedYear ? selectedYear : '';
+
+    // Apply column-specific filters (for example: column 29 for university, column 3 for year)
+    table.column(16).search(universitySearch).draw(); // Assuming column 29 is university
+    table.column(1).search(yearSearch).draw(); // Assuming column 3 is date year
+
+    hideHideableElements(); // Hide elements with .hideable class after filtering
+  }
+
+ // Filter by date range function (global filter)
+function filterTableByDateRange(startDate, endDate) {
+    // Add custom date range filter
+    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+        var docDate = data[1]; // Assuming the date column is at index 1 (0-based index)
+        var formattedDocDate = formatDateToComparable(docDate); // Use the date formatting function
+
+        // Compare the date with the provided range
+        if (formattedDocDate >= startDate && formattedDocDate <= endDate) {
+            return true;
+        }
+        return false;
+    });
+    table.draw();
+}
+
+  // Function to hide elements with .hideable class
+  function hideHideableElements() {
+    $('.hideable').hide(); // Hide all elements with .hideable class
+  }
+
+ // Function to format date (make sure to match the format of your input)
+function formatDateToComparable(date) {
+    if (!date) return "";
+    if (date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        return date; // Date is already in YYYY-MM-DD format
+    } else if (date.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+        var parts = date.split('/');
+        return parts[2] + '-' + parts[1] + '-' + parts[0]; // Convert DD/MM/YYYY to YYYY-MM-DD
+    }
+    return date; // Fallback, if format is unexpected
+}
+
+  // Toggle columns visibility
+  $('#hideFieldsButton').on('click', function() {
+    const columnsToToggle = $('.toggle-column, .hideable');
+    const isHidden = columnsToToggle.is(':hidden');
+
+    if (isHidden) {
+      columnsToToggle.show();
+      $('#toggleIcon').removeClass('fa-eye').addClass('fa-eye-slash');
+    } else {
+      columnsToToggle.hide();
+      $('#toggleIcon').removeClass('fa-eye-slash').addClass('fa-eye');
+    }
+  });
+
+  // Initially hide columns
+  $('.toggle-column, .hideable').hide();
+});
+</script>
+
+
+
+  
+  <!-- Additional JavaScript Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="lib/chart/chart.min.js"></script>
+  <script src="lib/easing/easing.min.js"></script>
+  <script src="lib/waypoints/waypoints.min.js"></script>
+  <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+  <script src="lib/tempusdominus/js/moment.min.js"></script>
+  <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
+  <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+  <!-- Template Javascript -->
+  <script src="js/main.js"></script>
+</body>
+</html>
