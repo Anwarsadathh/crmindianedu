@@ -504,14 +504,14 @@ label{
             </nav>
             <!-- Navbar End -->
 
-   <!-- Button Section -->
-    <div class="d-flex justify-content-between align-items-center flex-wrap">
-        <!-- University Filter -->
-        <div class="col-md-8 d-flex justify-content-start align-items-center flex-wrap">
-            <div class="col-md-2">
-                <label for="universityFilter" class="form-label"><b>Filter by University:</b></label>
-                <select id="universityFilter" class="form-select filter-select">
-                    <option value="">All Universities</option>
+  <!-- Button Section -->
+<div class="d-flex justify-content-between align-items-center flex-wrap">
+    <!-- University Filter -->
+    <div class="col-md-12 d-flex justify-content-start align-items-center flex-wrap">
+        <div class="col-md-2">
+            <label for="universityFilter" class="form-label"><b>Filter by University:</b></label>
+            <select id="universityFilter" class="form-select filter-select">
+                <option value="">All Universities</option>
                     <option value="Manipal Jaipur University">Manipal Jaipur University</option>
                     <option value="Manipal Sikkim University">Manipal Sikkim University</option>
                     <option value="Jain Online University">Jain Online University</option>
@@ -528,48 +528,57 @@ label{
                     <option value="LPU">LPU</option>
                     <option value="Amrita University">Amrita University</option>
                     <option value="DY Patil University">DY Patil University</option>
-                </select>
-            </div>
-<!-- Additional Status Filter Dropdown -->
-<div class="col-md-2 ms-2">
-    <label for="statusFilter" class="form-label"><b>Filter by Status:</b></label>
-    <select id="statusFilter" class="form-select filter-select">
-        <option value="">All Statuses</option>
-        <option value="Not Done">Not Done</option>
-        <option value="Done">Done</option>
-        <option value="Approved">Approved</option>
-        <option value="Not Approved">Not Approved</option>
-    </select>
-</div>
-
-            <!-- Date Range Filter -->
-            <div class="col-md-3 ms-2">
-                <label for="dateRangeFilter" class="form-label"><b>Select Date:</b></label>
-                <input type="text" id="dateRangeFilter" class="form-control" />
-            </div>
-
-            <!-- Filter by Year -->
-            <div class="col-md-2 ms-2">
-                <label for="yearFilter" class="form-label"><b>Filter By Year:</b></label>
-                <select id="yearFilter" class="form-select filter-select">
-                    <option value="">All Years</option>
-                    <option value="2024">2024</option>
-                    <option value="2023">2023</option>
-                    <option value="2022">2022</option>
-                    <option value="2021">2021</option>
-                </select>
-            </div>
-
-            <!-- Clear Button -->
-            <div class="col-md-1 ms-2 align-self-end">
-                <button id="clearFiltersBtn" class="btn btn-sm btn-danger">
-                    <i class="fas fa-times-circle"></i> 
-                </button>
-            </div>
+            </select>
         </div>
 
-   
+        <!-- Filter by Document Status -->
+        <div class="col-md-2 ms-2">
+            <label for="documentStatusFilter" class="form-label"><b>Filter by Document Status:</b></label>
+            <select id="documentStatusFilter" class="form-select filter-select">
+                <option value="">All Statuses</option>
+                <option value="Approved">Approved</option>
+                <option value="Not Approved">Not Approved</option>
+            </select>
+        </div>
+
+        <!-- Filter by Payment Status -->
+        <div class="col-md-2 ms-2">
+            <label for="universityPaidFilter" class="form-label"><b>Filter by Payment Status:</b></label>
+            <select id="universityPaidFilter" class="form-select filter-select">
+                <option value="">All Payments</option>
+                <option value="Paid">Paid</option>
+                <option value="Not Paid">Not Paid</option>
+            </select>
+        </div>
+
+        <!-- Date Range Filter -->
+        <div class="col-md-2 ms-2">
+            <label for="dateRangeFilter" class="form-label"><b>Select Date:</b></label>
+            <input type="text" id="dateRangeFilter" class="form-control" />
+        </div>
+
+        <!-- Filter by Year -->
+        <div class="col-md-2 ms-2">
+            <label for="yearFilter" class="form-label"><b>Filter By Year:</b></label>
+            <select id="yearFilter" class="form-select filter-select">
+                <option value="">All Years</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+                <option value="2022">2022</option>
+                <option value="2021">2021</option>
+            </select>
+        </div>
+
+        <!-- Clear Button -->
+        <div class="col-md-1 ms-2 align-self-end">
+            <button id="clearFiltersBtn" class="btn btn-sm btn-danger">
+                <i class="fas fa-times-circle"></i> 
+            </button>
+        </div>
+    </div>
 </div>
+   
+
 
 
  <div class="table-wrapper ">
@@ -734,139 +743,139 @@ label{
 <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script>
 $(function() {
-  // Initialize date range picker
-  $('#dateRangeFilter').daterangepicker({
-    startDate: moment().startOf('day'),
-    endDate: moment(),
-    ranges: {
-      'Today': [moment(), moment()],
-      'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-      'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-      'Last 14 Days': [moment().subtract(13, 'days'), moment()],
-      'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-      'This Week': [moment().startOf('week'), moment().endOf('week')],
-      'Last Week': [moment().subtract(1, 'week').startOf('week'), moment().subtract(1, 'week').endOf('week')],
-      'This Month': [moment().startOf('month'), moment().endOf('month')],
-      'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().endOf('month')]
-    },
-    locale: {
-      format: 'YYYY-MM-DD'
+    // Initialize date range picker
+    $('#dateRangeFilter').daterangepicker({
+        startDate: moment().startOf('day'),
+        endDate: moment(),
+        ranges: {
+            'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 14 Days': [moment().subtract(13, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Week': [moment().startOf('week'), moment().endOf('week')],
+            'Last Week': [moment().subtract(1, 'week').startOf('week'), moment().subtract(1, 'week').endOf('week')],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().endOf('month')]
+        },
+        locale: {
+            format: 'YYYY-MM-DD'
+        }
+    }, function(start, end, label) {
+        clearOldSelections();  // Clear old data selection
+        filterTableByDateRange(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
+        hideHideableElements(); // Hide elements with .hideable class after filtering
+    });
+
+    // Clear filters button event handler
+    $('#clearFiltersBtn').on('click', function() {
+        clearAllFilters();
+        hideHideableElements(); // Hide elements with .hideable class
+    });
+
+    // Close button event handler to clear filters
+    $('#closeBtn').on('click', function() {
+        clearAllFilters();
+        hideHideableElements(); // Hide elements with .hideable class
+    });
+
+    // Event listeners for the filters
+    $('#universityFilter, #yearFilter, #documentStatusFilter, #universityPaidFilter').on('change', function() {
+        filterTable();
+        hideHideableElements(); // Hide elements with .hideable class after filtering
+    });
+
+    // Initialize DataTable with pageLength and lengthMenu
+    const table = $('#dataTable').DataTable({
+        pageLength: 100,
+        lengthMenu: [[100, 25, 10, -1], [100, 25, 10, "All"]]
+    });
+
+    // Function to clear previous selections
+    function clearOldSelections() {
+        // Clear all custom filters and reset search
+        $.fn.dataTable.ext.search = [];  // Clear all custom search functions
+        table.search('').columns().search('').draw();  // Clear previous searches and redraw
     }
-  }, function(start, end, label) {
-    clearOldSelections();  // Clear old data selection
-    filterTableByDateRange(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
-    hideHideableElements(); // Hide elements with .hideable class after filtering
-  });
 
-  // Clear filters button event handler
-  $('#clearFiltersBtn').on('click', function() {
-    clearAllFilters();
-    hideHideableElements(); // Hide elements with .hideable class
-  });
+    // Clear all filters (university, year, document status, payment status, and date range)
+    function clearAllFilters() {
+        $('#universityFilter').val('');  
+        $('#yearFilter').val('');        
+        $('#documentStatusFilter').val(''); // Clear document status filter
+        $('#universityPaidFilter').val(''); // Clear university paid filter
+        $('#dateRangeFilter').val('');   
+        clearOldSelections();            
+        table.draw();                    
+    }
 
-  // Close button event handler to clear filters
-  $('#closeBtn').on('click', function() {
-    clearAllFilters();
-    hideHideableElements(); // Hide elements with .hideable class
-  });
-
-  // Event listeners for the filters
-  $('#universityFilter, #yearFilter').on('change', function() {
-    filterTable();
-    hideHideableElements(); // Hide elements with .hideable class after filtering
-  });
-
-  // Initialize DataTable with pageLength and lengthMenu
-  const table = $('#dataTable').DataTable({
-    pageLength: 100,
-    lengthMenu: [[100, 25, 10, -1], [100, 25, 10, "All"]]
-  });
-
-  // Function to clear previous selections
-  function clearOldSelections() {
-    // Clear all custom filters and reset search
-    $.fn.dataTable.ext.search = [];  // Clear all custom search functions
-    table.search('').columns().search('').draw();  // Clear previous searches and redraw
-  }
-
-  // Clear all filters (university, year, and date range)
-  function clearAllFilters() {
-    $('#universityFilter').val('');  // Clear university filter
-    $('#yearFilter').val('');        // Clear year filter
-    $('#dateRangeFilter').val('');   // Clear date range filter
-    clearOldSelections();            // Clear DataTable filters
-    table.draw();                    // Redraw the table with cleared filters
-  }
-
-  // Filter table logic (global search applied across all rows)
-  function filterTable() {
+    function filterTable() {
     var university = $('#universityFilter').val().toLowerCase();
     var selectedYear = $('#yearFilter').val();
+    var documentStatus = $('#documentStatusFilter').val(); // 'Approved' or 'Not Approved'
+    var universityPaidStatus = $('#universityPaidFilter').val();
 
-    // Create search strings for university and year
-    var universitySearch = university ? university : '';
-    var yearSearch = selectedYear ? selectedYear : '';
-
-    // Apply column-specific filters (for example: column 29 for university, column 3 for year)
-    table.column(16).search(universitySearch).draw(); // Assuming column 29 is university
-    table.column(1).search(yearSearch).draw(); // Assuming column 3 is date year
+    // Apply column-specific filters
+    table.column(16).search(university || '').draw(); // Assuming column 16 is for University
+    table.column(1).search(selectedYear || '').draw(); // Assuming column 1 is for Year
+    table.column(22).search(documentStatus || '').draw(); // Assuming column 22 is for Document Status
+    table.column(20).search(universityPaidStatus || '').draw(); // Assuming column 20 is for University Paid Status
 
     hideHideableElements(); // Hide elements with .hideable class after filtering
-  }
+}
 
- // Filter by date range function (global filter)
-function filterTableByDateRange(startDate, endDate) {
-    // Add custom date range filter
-    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-        var docDate = data[1]; // Assuming the date column is at index 1 (0-based index)
-        var formattedDocDate = formatDateToComparable(docDate); // Use the date formatting function
 
-        // Compare the date with the provided range
-        if (formattedDocDate >= startDate && formattedDocDate <= endDate) {
-            return true;
+    // Filter by date range function (global filter)
+    function filterTableByDateRange(startDate, endDate) {
+        // Add custom date range filter
+        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+            var docDate = data[1]; // Assuming the date column is at index 1 (0-based index)
+            var formattedDocDate = formatDateToComparable(docDate); // Use the date formatting function
+
+            // Compare the date with the provided range
+            if (formattedDocDate >= startDate && formattedDocDate <= endDate) {
+                return true;
+            }
+            return false;
+        });
+        table.draw();
+    }
+
+    // Function to hide elements with .hideable class
+    function hideHideableElements() {
+        $('.hideable').hide(); // Hide all elements with .hideable class
+    }
+
+    // Function to format date (make sure to match the format of your input)
+    function formatDateToComparable(date) {
+        if (!date) return "";
+        if (date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+            return date; // Date is already in YYYY-MM-DD format
+        } else if (date.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+            var parts = date.split('/');
+            return parts[2] + '-' + parts[1] + '-' + parts[0]; // Convert DD/MM/YYYY to YYYY-MM-DD
         }
-        return false;
+        return date; // Fallback, if format is unexpected
+    }
+
+    // Toggle columns visibility
+    $('#hideFieldsButton').on('click', function() {
+        const columnsToToggle = $('.toggle-column, .hideable');
+        const isHidden = columnsToToggle.is(':hidden');
+
+        if (isHidden) {
+            columnsToToggle.show();
+            $('#toggleIcon').removeClass('fa-eye').addClass('fa-eye-slash');
+        } else {
+            columnsToToggle.hide();
+            $('#toggleIcon').removeClass('fa-eye-slash').addClass('fa-eye');
+        }
     });
-    table.draw();
-}
 
-  // Function to hide elements with .hideable class
-  function hideHideableElements() {
-    $('.hideable').hide(); // Hide all elements with .hideable class
-  }
-
- // Function to format date (make sure to match the format of your input)
-function formatDateToComparable(date) {
-    if (!date) return "";
-    if (date.match(/^\d{4}-\d{2}-\d{2}$/)) {
-        return date; // Date is already in YYYY-MM-DD format
-    } else if (date.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
-        var parts = date.split('/');
-        return parts[2] + '-' + parts[1] + '-' + parts[0]; // Convert DD/MM/YYYY to YYYY-MM-DD
-    }
-    return date; // Fallback, if format is unexpected
-}
-
-  // Toggle columns visibility
-  $('#hideFieldsButton').on('click', function() {
-    const columnsToToggle = $('.toggle-column, .hideable');
-    const isHidden = columnsToToggle.is(':hidden');
-
-    if (isHidden) {
-      columnsToToggle.show();
-      $('#toggleIcon').removeClass('fa-eye').addClass('fa-eye-slash');
-    } else {
-      columnsToToggle.hide();
-      $('#toggleIcon').removeClass('fa-eye-slash').addClass('fa-eye');
-    }
-  });
-
-  // Initially hide columns
-  $('.toggle-column, .hideable').hide();
+    // Initially hide columns
+    $('.toggle-column, .hideable').hide();
 });
 </script>
-
-
 
   
   <!-- Additional JavaScript Libraries -->
