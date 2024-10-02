@@ -669,6 +669,56 @@ router.post("/update-lead-status", async (req, res) => {
   }
 });
 
+router.post("/update-senumber", async (req, res) => {
+  const { id, senumber } = req.body;
+
+  try {
+    // Build the query to check if the ID is a valid ObjectId or use it as a plain string
+    const query = ObjectId.isValid(id) ? { _id: new ObjectId(id) } : { id };
+
+    // Fetch the lead data from both collections
+    const [googlesheet, referral] = await Promise.all([
+      db.get().collection(collection.GOOGLESHEETS_COLLECTION).findOne(query),
+      db.get().collection(collection.REFERRAL_COLLECTION).findOne(query),
+    ]);
+
+    // Determine which collection the document exists in
+    if (googlesheet) {
+      // Update the document in GOOGLESHEETS_COLLECTION
+      await db
+        .get()
+        .collection(collection.GOOGLESHEETS_COLLECTION)
+        .updateOne(
+          query, // Use the query to find the document
+          { $set: { senumber: senumber } } // Update the senumber field
+        );
+    } else if (referral) {
+      // Update the document in REFERRAL_COLLECTION
+      await db
+        .get()
+        .collection(collection.REFERRAL_COLLECTION)
+        .updateOne(
+          query, // Use the query to find the document
+          { $set: { senumber: senumber } } // Update the senumber field
+        );
+    } else {
+      // If no document was found in either collection
+      return res.json({
+        success: false,
+        message: "No document found in either collection.",
+      });
+    }
+
+    // Success response
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error updating senumber:", error);
+    res.json({
+      success: false,
+      message: "An error occurred while updating the senumber.",
+    });
+  }
+});
 
 
 router.post("/get-sub-stage-mandatory", async (req, res) => {
@@ -2508,8 +2558,8 @@ router.post("/se-form", async (req, res) => {
   }
 });
 
-router.get("/se-form-temp", (req, res) => {
-  res.render("user/formst", { user: true });
+router.get("/se-form-client", (req, res) => {
+  res.render("user/formclientdirect", { user: true });
 });
 
 router.post("/se-form-temp", async (req, res) => {

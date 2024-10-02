@@ -232,11 +232,8 @@
                             <label for="mobile">Mobile Number</label>
                             <input type="text" class="form-control" id="mobile" name="mobile" required>
                         </div>
-                            <div class="form-row ">
-         <div class="form-group col-md-12">
-                            <label for="university">University</label>
-                            <input type="text" class="form-control" id="university" name="university" required>
-                        </div> <input type="text" class="form-control" id="assign" name="assign" value="client" hidden required></div>
+                        
+         
                         <div class="form-row ">
                             <div class="form-group col-md-6">
                                 <label for="state">State</label>
@@ -282,14 +279,10 @@
                         <div class="form-group col-md-6">
                             <label for="servicePack">Service Paid</label>
                             <select id="servicePack" name="servicePack" class="form-control" required>
-                                 <option value="1000">1000</option>
+                                 <option value="1000">199</option>
                                 <option value="1999">1999</option>
-                                <option value="4999">4999</option>
                                 <option value="6999">6999</option>
                                 <option value="8999">8999</option>
-                                <option value="8999 with EMI">8999 with EMI</option>
-                                <option value="16999">16999</option>
-                                <option value="18999">18999</option>
                             </select>
                         </div>
                          </div>
@@ -310,8 +303,8 @@
                                 <option value="Not Applied">Not Applied</option>
                             </select>
                         </div>
-                         
-                         </div>
+      
+                          </div>
                            <div class="form-row ">
                             <div class="form-group col-md-6">
                             <label for="role">Counselor or Institute</label>
@@ -328,6 +321,41 @@
                             </select>
                         </div>
                          </div>
+                          <div class="form-row ">
+                            <div class="form-group col-md-6 col-md-6">
+                            <label for="batch">Mentor</label>
+                        <select class="form-select" >
+                                        <option value="" disabled selected>Select Mentor</option>
+                                        <option value="Sayed Shahid" >Sayed Shahid</option>
+                                        <option value="Liya" >Liya</option>
+                                        <option value="Anas" >Anas</option>
+                                        <option value="Jawhar" >Jawhar</option>
+                                    </select>
+
+                                        </div>
+                          <div class="form-group col-md-6">
+                            <label for="scholarship">University</label>
+                          <select class="form-select">
+                                        <option value="" disabled selected>Select University</option>
+                                        <option value="Manipal Jaipur University">Manipal Jaipur University</option>
+                                        <option value="Manipal Sikkim University" >Manipal Sikkim University</option>
+                                        <option value="Jain Online University" >Jain Online University</option>
+                                        <option value="Jain ODL University">Jain ODL University</option>
+                                        <option value="Vignan University" >Vignan University</option>
+                                        <option value="Amity University" >Amity University</option>
+                                        <option value="SVSU" >SVSU</option>
+                                        <option value="Aligarh Muslim University Online" >Aligarh Muslim University Online</option>
+                                        <option value="KLU Online" >KLU Online</option>
+                                        <option value="Mizoram University" >Mizoram University</option>
+                                        <option value="Jamia Hamdard University" >Jamia Hamdard University</option>
+                                        <option value="Uttaranchal University" >Uttaranchal University</option>
+                                        <option value="Andhra University" >Andhra University</option>
+                                        <option value="LPU" >LPU</option>
+                                        <option value="Amrita University" >Amrita University</option>
+                                        <option value="DY Patil University" >DY Patil University</option>
+                                    </select>
+                         </div>
+                             </div>
                     <div class="form-group">
     <label>Intake</label>
     <div class="d-flex flex-wrap">
@@ -343,6 +371,7 @@
             <input type="radio" class="form-check-input" id="monthEnd" name="intake" value="Month End" required>
             <label class="form-check-label" for="monthEnd">Month End</label>
         </div>
+        <input type="text" class="form-control" id="assign" name="assign" value="client" hidden required>
         <div class="form-check">
             <input type="radio" class="form-check-input" id="nextIntake" name="intake" value="Next Intake" required>
             <label class="form-check-label" for="nextIntake">Next Intake</label>
@@ -374,7 +403,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const state = decodeURIComponent(urlParams.get('state') || '');
    const budget = decodeURIComponent(urlParams.get('budget') || '');
  const referredBy = decodeURIComponent(urlParams.get('referredBy') || '');
-
+  const senumber = decodeURIComponent(urlParams.get('senumber') || '');
+  
         // Log the extracted values for debugging
         console.log('Extracted URL Parameters:', {
             name,
@@ -398,6 +428,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('state').value = state;
         document.getElementById('budget').value = budget;
         document.getElementById('referredBy').value = referredBy;
+        document.getElementById('date').value = senumber;
     } catch (error) {
         console.error('Error populating form:', error);
         Swal.fire({
@@ -464,7 +495,7 @@ async function submitForm(event) {
     formData.forEach((value, key) => formObject[key] = value);
 
     try {
-        const response = await fetch('/se-form-temp', {
+        const response = await fetch('/se-form', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -234,7 +234,7 @@ background-color: #eaeef2 !important;
 }
     #dataTable {
     table-layout: auto;
-    width: 50px !important;
+    width: 50px ;
 }
 
 #dataTable th, #dataTable td {
@@ -515,6 +515,9 @@ background-color: #eaeef2 !important;
                                 <th>Lead Status</th>
                                 <th>Send</th>
                                 <th>SE</th>
+                                  <th >DOA</th>
+                                 <th>Save DOA</th>
+                                 <th>SE Client</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -609,6 +612,16 @@ background-color: #eaeef2 !important;
         <td>
             <button class="btn-sm btn-primary" onclick="redirectToSEForm(this)">SE FORM</button>
         </td>
+        
+   <td>
+  <input type="date" class="form-control senumber-input" value="{{this.senumber}}" />
+</td>
+    <td>
+      <button class="btn-sm btn-success save-senumber-btn" data-id="{{this._id}}">Save</button>
+    </td>
+     <td>
+            <button class="btn-sm btn-primary" onclick="redirectToSEFormClient(this)">SE FORM Client</button>
+        </td>
     </tr>
     {{/each}}
 </tbody>
@@ -620,6 +633,7 @@ background-color: #eaeef2 !important;
         Please save each stage of the lead form as you progress.
     </div>
 </div>
+
 
 
 
@@ -1122,6 +1136,42 @@ function redirectToSEForm(button) {
     window.location.href = url.toString();
 }
 
+
+function redirectToSEFormClient(button) {
+    const row = button.closest('tr');
+
+    // Fetch values from the corresponding table columns
+    const name = row.querySelector('td:nth-child(8)').textContent.trim();
+    const email = row.querySelector('td:nth-child(20)').textContent.trim();
+    const whatsapp = row.querySelector('td:nth-child(9)').textContent.trim();
+    const course = row.querySelector('td:nth-child(17)').textContent.trim();
+    const specialization = row.querySelector('td:nth-child(28)').textContent.trim();
+    const city = row.querySelector('td:nth-child(16)').textContent.trim();
+    const state = row.querySelector('td:nth-child(7)').textContent.trim();
+    const budget = row.querySelector('td:nth-child(15)').textContent.trim();
+    const referredBy = row.querySelector('td:nth-child(3)').textContent.trim(); // ReferredBy
+
+    // Fetch the SE number (now a date) from the input field
+    const senumber = row.querySelector('.senumber-input').value.trim();
+
+    // Construct URL with query parameters
+    const url = new URL('/se-form-client', window.location.origin);
+    url.searchParams.append('name', encodeURIComponent(name));
+    url.searchParams.append('email', encodeURIComponent(email));
+    url.searchParams.append('whatsapp', encodeURIComponent(whatsapp));
+    url.searchParams.append('course', encodeURIComponent(course));
+    url.searchParams.append('specialization', encodeURIComponent(specialization));
+    url.searchParams.append('city', encodeURIComponent(city)); // Add city
+    url.searchParams.append('state', encodeURIComponent(state)); // Add state
+    url.searchParams.append('budget', encodeURIComponent(budget));
+    url.searchParams.append('referredBy', encodeURIComponent(referredBy)); // Add ReferredBy
+    url.searchParams.append('senumber', encodeURIComponent(senumber)); // Pass SE number (now a date)
+
+    // Redirect to SE Form page
+    window.location.href = url.toString();
+}
+
+
 </script>
 <script>document.addEventListener('DOMContentLoaded', () => {
     // Event listener for the follow-up date input
@@ -1606,7 +1656,37 @@ $(document).ready(function() {
 
 
 
+<script>
+  // Save the new senumber value
+  function savemblnumbr(button) {
+    const row = button.closest('tr');  // Get the current row
+    const id = $(button).data('id');   // Get the ID from the data attribute
+    const senumber = row.querySelector('.senumber-input').value;  // Get the value of the senumber
 
+    // AJAX request to update the senumber
+    $.ajax({
+      url: '/update-senumber',  // Backend route
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({ id: id, senumber: senumber }),  // Send the id and new senumber value
+      success: function(response) {
+        if (response.success) {
+          alert("SE Number updated successfully!");
+        } else {
+          alert("Failed to update SE Number.");
+        }
+      },
+      error: function() {
+        alert("Error in the request.");
+      }
+    });
+  }
+
+  // Attach the event listener to the save button
+  $(document).on('click', '.save-senumber-btn', function() {
+    savemblnumbr(this);
+  });
+</script>
 
   <!-- Additional JavaScript Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
