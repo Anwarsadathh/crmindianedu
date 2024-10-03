@@ -504,7 +504,7 @@ label{
             </nav>
             <!-- Navbar End -->
 
-  <!-- Button Section -->
+ <!-- Button Section -->
 <div class="d-flex justify-content-between align-items-center flex-wrap">
     <!-- University Filter -->
     <div class="col-md-12 d-flex justify-content-start align-items-center flex-wrap">
@@ -512,7 +512,7 @@ label{
             <label for="universityFilter" class="form-label"><b>Filter by University:</b></label>
             <select id="universityFilter" class="form-select filter-select">
                 <option value="">All Universities</option>
-                    <option value="Manipal Jaipur University">Manipal Jaipur University</option>
+               <option value="Manipal Jaipur University">Manipal Jaipur University</option>
                     <option value="Manipal Sikkim University">Manipal Sikkim University</option>
                     <option value="Jain Online University">Jain Online University</option>
                     <option value="Jain ODL University">Jain ODL University</option>
@@ -531,23 +531,15 @@ label{
             </select>
         </div>
 
-        <!-- Filter by Document Status -->
+        <!-- Combined Filter by Document and Payment Status -->
         <div class="col-md-2 ms-2">
-            <label for="documentStatusFilter" class="form-label"><b>Filter by Document Status:</b></label>
-            <select id="documentStatusFilter" class="form-select filter-select">
+            <label for="statusFilter" class="form-label"><b>Filter by Status:</b></label>
+            <select id="statusFilter" class="form-select filter-select">
                 <option value="">All Statuses</option>
-                <option value="Approved">Approved</option>
-                <option value="Not Approved">Not Approved</option>
-            </select>
-        </div>
-
-        <!-- Filter by Payment Status -->
-        <div class="col-md-2 ms-2">
-            <label for="universityPaidFilter" class="form-label"><b>Filter by Payment Status:</b></label>
-            <select id="universityPaidFilter" class="form-select filter-select">
-                <option value="">All Payments</option>
-                <option value="Paid">Paid</option>
-                <option value="Not Paid">Not Paid</option>
+                <option value="Paid">Uni Paid</option>
+                <option value="Not Paid">Uni Not Paid</option>
+                <option value="Approved">Doc Approved</option>
+                <option value="Not Approved">Doc Not Approved</option>
             </select>
         </div>
 
@@ -773,14 +765,14 @@ $(function() {
         hideHideableElements(); // Hide elements with .hideable class
     });
 
-    // Close button event handler to clear filters
-    $('#closeBtn').on('click', function() {
-        clearAllFilters();
-        hideHideableElements(); // Hide elements with .hideable class
+    // Combined filter logic for both document and payment status
+    $('#statusFilter').on('change', function() {
+        filterTable(); // Call your filter function when dropdown value changes
+        hideHideableElements(); // Hide elements with .hideable class after filtering
     });
 
-    // Event listeners for the filters
-    $('#universityFilter, #yearFilter, #documentStatusFilter, #universityPaidFilter').on('change', function() {
+    // Event listeners for other filters
+    $('#universityFilter, #yearFilter').on('change', function() {
         filterTable();
         hideHideableElements(); // Hide elements with .hideable class after filtering
     });
@@ -798,28 +790,51 @@ $(function() {
         table.search('').columns().search('').draw();  // Clear previous searches and redraw
     }
 
-    // Clear all filters (university, year, document status, payment status, and date range)
+    // Clear all filters (university, year, status, and date range)
     function clearAllFilters() {
         $('#universityFilter').val('');  
         $('#yearFilter').val('');        
-        $('#documentStatusFilter').val(''); // Clear document status filter
-        $('#universityPaidFilter').val(''); // Clear university paid filter
+        $('#statusFilter').val(''); // Clear combined filter
         $('#dateRangeFilter').val('');   
         clearOldSelections();            
         table.draw();                    
     }
-
-    function filterTable() {
+function filterTable() {
     var university = $('#universityFilter').val().toLowerCase();
     var selectedYear = $('#yearFilter').val();
-    var documentStatus = $('#documentStatusFilter').val(); // 'Approved' or 'Not Approved'
-    var universityPaidStatus = $('#universityPaidFilter').val();
+    var combinedStatus = $('#statusFilter').val(); // The combined document and payment status filter
 
-    // Apply column-specific filters
+    console.log('Combined Status Selected:', combinedStatus);
+
+    // Apply university and year filters
     table.column(16).search(university || '').draw(); // Assuming column 16 is for University
     table.column(1).search(selectedYear || '').draw(); // Assuming column 1 is for Year
-    table.column(22).search(documentStatus || '').draw(); // Assuming column 22 is for Document Status
-    table.column(20).search(universityPaidStatus || '').draw(); // Assuming column 20 is for University Paid Status
+
+    // Clear other filters before applying a new one
+    table.column(20).search('').draw(); // Clear Payment Status filter
+    table.column(22).search('').draw(); // Clear Document Status filter
+
+    // Check for Document Status (Approved / Not Approved) filter
+    if (combinedStatus === "Approved" || combinedStatus === "Not Approved") {
+        console.log("Applying Document Status Filter:", combinedStatus);
+        
+        // Apply filter for Document Status (Column 22 is assumed to hold Document Status)
+        table.column(22).search(combinedStatus.trim() || '').draw();
+    }
+    // Check for Payment Status (Paid / Not Paid) filter
+    else if (combinedStatus === "Paid" || combinedStatus === "Not Paid") {
+        console.log("Applying Payment Status Filter:", combinedStatus);
+
+        // Apply filter for Payment Status (Column 20 is assumed to hold Payment Status)
+        table.column(20).search(combinedStatus.trim() || '').draw();
+    } 
+    else {
+        console.log("Clearing all filters");
+
+        // If no status selected, clear all filters
+        table.column(20).search('').draw(); // Clear Payment Status
+        table.column(22).search('').draw(); // Clear Document Status
+    }
 
     hideHideableElements(); // Hide elements with .hideable class after filtering
 }
@@ -841,11 +856,6 @@ $(function() {
         table.draw();
     }
 
-    // Function to hide elements with .hideable class
-    function hideHideableElements() {
-        $('.hideable').hide(); // Hide all elements with .hideable class
-    }
-
     // Function to format date (make sure to match the format of your input)
     function formatDateToComparable(date) {
         if (!date) return "";
@@ -856,6 +866,11 @@ $(function() {
             return parts[2] + '-' + parts[1] + '-' + parts[0]; // Convert DD/MM/YYYY to YYYY-MM-DD
         }
         return date; // Fallback, if format is unexpected
+    }
+
+    // Function to hide elements with .hideable class
+    function hideHideableElements() {
+        $('.hideable').hide(); // Hide all elements with .hideable class
     }
 
     // Toggle columns visibility
@@ -876,7 +891,6 @@ $(function() {
     $('.toggle-column, .hideable').hide();
 });
 </script>
-
   
   <!-- Additional JavaScript Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
