@@ -659,15 +659,11 @@ label{
 
 
                                 <td>
-                                    <button class="btn btn-status {{#if (eq this.universityPaid "Paid")}}btn-paid{{else}}btn-not-paid{{/if}}" onclick="toggleStatuss(this, 'University Paid')">
-                                        {{#if (eq this.universityPaid "Paid")}}Paid{{else}}Not Paid{{/if}}
-                                    </button>
+                                    {{this.universityPaid}}
                                 </td>
                                 <td>{{this.universityPaidDate}}</td>
                         <td>
-    <button class="btn btn-status {{#if (eq this.documentStatus "Approved")}}btn-approved{{else}}btn-not-approved{{/if}}" onclick="toggleStatus(this, 'Document Status')">
-        {{#if (eq this.documentStatus "Approved")}}Approved{{else}}Not Approved{{/if}}
-    </button>
+   {{this.documentStatus}}
 </td>
 <td>
    {{this.docApprovedDate}}
@@ -807,37 +803,38 @@ function filterTable() {
     console.log('Combined Status Selected:', combinedStatus);
 
     // Apply university and year filters
-    table.column(16).search(university || '').draw(); // Assuming column 16 is for University
-    table.column(1).search(selectedYear || '').draw(); // Assuming column 1 is for Year
+    table.column(16).search(university || '').draw(); // University filter at column 16
+    table.column(1).search(selectedYear || '').draw(); // Year filter at column 1 (date)
 
     // Clear other filters before applying a new one
-    table.column(20).search('').draw(); // Clear Payment Status filter
-    table.column(22).search('').draw(); // Clear Document Status filter
+    table.column(19).search('').draw(); // Clear University Paid Status filter
+    table.column(21).search('').draw(); // Clear Document Status filter
 
     // Check for Document Status (Approved / Not Approved) filter
     if (combinedStatus === "Approved" || combinedStatus === "Not Approved") {
         console.log("Applying Document Status Filter:", combinedStatus);
         
-        // Apply filter for Document Status (Column 22 is assumed to hold Document Status)
-        table.column(22).search(combinedStatus.trim() || '').draw();
+        // Apply filter for Document Status (Column 21 is for Document Status)
+        table.column(21).search('^' + combinedStatus + '$', true, false).draw(); // Exact match using regex
     }
     // Check for Payment Status (Paid / Not Paid) filter
     else if (combinedStatus === "Paid" || combinedStatus === "Not Paid") {
         console.log("Applying Payment Status Filter:", combinedStatus);
 
-        // Apply filter for Payment Status (Column 20 is assumed to hold Payment Status)
-        table.column(20).search(combinedStatus.trim() || '').draw();
+        // Apply filter for University Paid Status (Column 19)
+        table.column(19).search('^' + combinedStatus + '$', true, false).draw(); // Exact match using regex
     } 
     else {
         console.log("Clearing all filters");
 
         // If no status selected, clear all filters
-        table.column(20).search('').draw(); // Clear Payment Status
-        table.column(22).search('').draw(); // Clear Document Status
+        table.column(19).search('').draw(); // Clear Payment Status
+        table.column(21).search('').draw(); // Clear Document Status
     }
 
     hideHideableElements(); // Hide elements with .hideable class after filtering
 }
+
 
 
     // Filter by date range function (global filter)

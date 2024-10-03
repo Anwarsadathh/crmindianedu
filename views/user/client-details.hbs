@@ -911,7 +911,7 @@ label{
 <!-- Include daterangepicker JS -->
 <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script>
-$(function() {
+$(function() { 
     // Initialize date range picker
     $('#dateRangeFilter').daterangepicker({
         startDate: moment().startOf('day'),
@@ -938,7 +938,8 @@ $(function() {
 
     // Clear filters button event handler
     $('#clearFiltersBtn').on('click', function() {
-        clearAllFilters();
+        clearAllFilters();  // Clear all filters
+        showAllRows();      // Ensure all rows are visible
         hideHideableElements(); // Hide elements with .hideable class
     });
 
@@ -967,55 +968,81 @@ $(function() {
         table.search('').columns().search('').draw();  // Clear previous searches and redraw
     }
 
-    // Clear all filters (university, year, status, and date range)
+    // Function to clear all filters and show all rows
     function clearAllFilters() {
         $('#universityFilter').val('');  
         $('#yearFilter').val('');        
         $('#statusFilter').val(''); // Clear combined filter
         $('#dateRangeFilter').val('');   
-        clearOldSelections();            
-        table.draw();                    
-    }
-function filterTable() {
-    var university = $('#universityFilter').val().toLowerCase();
-    var selectedYear = $('#yearFilter').val();
-    var combinedStatus = $('#statusFilter').val(); // The combined document and payment status filter
-
-    console.log('Combined Status Selected:', combinedStatus);
-
-    // Apply university and year filters
-    table.column(16).search(university || '').draw(); // Assuming column 16 is for University
-    table.column(1).search(selectedYear || '').draw(); // Assuming column 1 is for Year
-
-    // Clear other filters before applying a new one
-    table.column(20).search('').draw(); // Clear Payment Status filter
-    table.column(22).search('').draw(); // Clear Document Status filter
-
-    // Check for Document Status (Approved / Not Approved) filter
-    if (combinedStatus === "Approved" || combinedStatus === "Not Approved") {
-        console.log("Applying Document Status Filter:", combinedStatus);
-        
-        // Apply filter for Document Status (Column 22 is assumed to hold Document Status)
-        table.column(22).search(combinedStatus.trim() || '').draw();
-    }
-    // Check for Payment Status (Paid / Not Paid) filter
-    else if (combinedStatus === "Paid" || combinedStatus === "Not Paid") {
-        console.log("Applying Payment Status Filter:", combinedStatus);
-
-        // Apply filter for Payment Status (Column 20 is assumed to hold Payment Status)
-        table.column(20).search(combinedStatus.trim() || '').draw();
-    } 
-    else {
-        console.log("Clearing all filters");
-
-        // If no status selected, clear all filters
-        table.column(20).search('').draw(); // Clear Payment Status
-        table.column(22).search('').draw(); // Clear Document Status
+        clearOldSelections();  // Reset all filters
+        table.draw();          // Redraw the table
     }
 
-    hideHideableElements(); // Hide elements with .hideable class after filtering
-}
+    // Function to filter the table
+    function filterTable() {
+        var university = $('#universityFilter').val().toLowerCase();
+        var selectedYear = $('#yearFilter').val();
+        var combinedStatus = $('#statusFilter').val(); // The combined document and payment status filter
 
+        // Apply university and year filters
+        table.column(16).search(university || '').draw(); // Assuming column 16 is for University
+        table.column(1).search(selectedYear || '').draw(); // Assuming column 1 is for Year
+
+        if (combinedStatus === "Approved" || combinedStatus === "Not Approved") {
+            // Clear payment status filter first
+            table.column(20).search('').draw();
+
+            // Loop through the rows to manually check the document status from the button
+            table.rows({ filter: 'applied' }).every(function(rowIdx, tableLoop, rowLoop) {
+                var rowData = this.node();
+                var documentStatusBtn = $(rowData).find('td:eq(22) button'); // Assuming column 22 contains the Document Status button
+
+                // Extract the actual text content (Approved or Not Approved) from the button
+                var documentStatus = documentStatusBtn.text().trim();
+
+                // Only show rows that match the selected document status
+                if (documentStatus === combinedStatus) {
+                    $(rowData).show();
+                } else {
+                    $(rowData).hide();
+                }
+            });
+
+        } else if (combinedStatus === "Paid" || combinedStatus === "Not Paid") {
+            // Clear document status filter first
+            table.column(22).search('').draw();
+
+            // Loop through the rows to manually check the payment status from the button
+            table.rows({ filter: 'applied' }).every(function(rowIdx, tableLoop, rowLoop) {
+                var rowData = this.node();
+                var paymentStatusBtn = $(rowData).find('td:eq(20) button'); // Assuming column 20 contains the Payment Status button
+
+                // Extract the actual text content (Paid or Not Paid) from the button
+                var paymentStatus = paymentStatusBtn.text().trim();
+
+                // Only show rows that match the selected payment status
+                if (paymentStatus === combinedStatus) {
+                    $(rowData).show();
+                } else {
+                    $(rowData).hide();
+                }
+            });
+
+        } else {
+            showAllRows(); // No filters selected, show all rows
+        }
+
+        hideHideableElements(); // Hide elements with .hideable class after filtering
+    }
+
+    // Function to show all rows (clear manual hiding)
+    function showAllRows() {
+        table.rows().every(function(rowIdx, tableLoop, rowLoop) {
+            var rowData = this.node();
+            $(rowData).show(); // Make sure all rows are visible
+        });
+        table.draw(); // Redraw the table to reflect the changes
+    }
 
     // Filter by date range function (global filter)
     function filterTableByDateRange(startDate, endDate) {
@@ -1067,6 +1094,7 @@ function filterTable() {
     // Initially hide columns
     $('.toggle-column, .hideable').hide();
 });
+
 </script>
 
 
