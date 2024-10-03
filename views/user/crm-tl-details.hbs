@@ -1226,24 +1226,41 @@ $(document).ready(function() {
 
     // Helper function to parse various timestamp formats
     function parseTimeStamp(timeStampText) {
-        let date = null;
-        // Try parsing different formats
-        if (timeStampText.match(/^\d{1,2}\/\d{1,2}\/\d{4}, \d{1,2}:\d{2}:\d{2} [apmAPM]{2}$/)) {
-            // Format: "27/8/2024, 2:20:27 PM"
-            date = new Date(timeStampText);
-        } else if (timeStampText.match(/^\w+ \d{1,2} \d{4} \d{1,2}:\d{2}$/)) {
-            // Format: "February 16 2024 07:26"
-            date = new Date(timeStampText);
-        } else {
-            // Attempt to parse as a general date string
-            date = new Date(timeStampText);
+        let parsedDate = null;
+
+        // List of known date formats
+        const formats = [
+            "DD/MM/YYYY, h:mm:ss A",  // "27/8/2024, 2:20:27 PM"
+            "MMMM DD YYYY HH:mm",     // "February 16 2024 07:26"
+            "YYYY-MM-DDTHH:mm:ssZ",   // ISO format: "2024-09-02T01:38:15+00:00"
+            "YYYY-MM-DD",             // "2024-09-02"
+            "DD/MM/YYYY",             // "14/09/2024"
+            "MM/DD/YYYY",             // "09/14/2024"
+            "MMM DD, YYYY h:mm A"     // "Aug 27, 2024 2:20 PM"
+        ];
+
+        // Try parsing with moment.js if available (uncomment the code below if using moment.js)
+        // parsedDate = moment(timeStampText, formats, true).isValid() ? moment(timeStampText, formats, true).toDate() : new Date(NaN);
+
+        // If you are not using moment.js, manually parse the dates
+        formats.forEach(function(format) {
+            const momentDate = moment(timeStampText, format, true);
+            if (momentDate.isValid()) {
+                parsedDate = momentDate.toDate();
+            }
+        });
+
+        // Fallback to direct Date object parsing if needed
+        if (!parsedDate || isNaN(parsedDate)) {
+            parsedDate = new Date(timeStampText);
         }
-        return date;
+
+        return parsedDate;
     }
 });
-
 </script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
  
   <!-- Additional JavaScript Libraries -->
