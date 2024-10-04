@@ -69,6 +69,9 @@ body {
     font-size: 10px;
     background-color: #160070 !important;
 }
+.btn-danger{
+    font-size: 10px;
+}
 .table-responsive{
     margin-top: 15px;
 }
@@ -412,6 +415,7 @@ background-color: #1c008b !important;
                 <button id="bulkAssignButton" class="btn btn-secondary mb-3">
     Re-Assign Selected Leads
 </button>
+<button id="deleteSelected" class="btn btn-danger mb-3 float-end" disabled>Delete </button>
 </div>
  
                <div class="filter-card glassmorphism p-3 shadow-lg d-flex">
@@ -1085,7 +1089,105 @@ $(document).ready(function() {
 });
 </script>
 
+<script>
+ document.addEventListener('DOMContentLoaded', function() {
+    let isDragging = false;
+    let isChecked = false;
 
+    const tableRows = document.querySelectorAll('#dataTable tbody tr');
+    const selectAllCheckbox = document.getElementById('selectAll');
+    const checkboxes = document.querySelectorAll('.select-lead');
+    const deleteButton = document.getElementById('deleteSelected');
+
+    // Handle select all functionality
+    selectAllCheckbox.addEventListener('click', function() {
+        const isSelectAllChecked = selectAllCheckbox.checked;
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = isSelectAllChecked;
+        });
+        updateDeleteButtonState();
+    });
+
+    // Drag-select functionality
+    tableRows.forEach(row => {
+        row.addEventListener('mousedown', function(event) {
+            const checkbox = row.querySelector('.select-lead');
+            isDragging = true;
+            isChecked = !checkbox.checked;
+            checkbox.checked = isChecked;
+            event.preventDefault();  // Prevents text selection
+            updateDeleteButtonState();
+        });
+
+        row.addEventListener('mousemove', function() {
+            if (isDragging) {
+                const checkbox = row.querySelector('.select-lead');
+                checkbox.checked = isChecked;
+                updateDeleteButtonState();
+            }
+        });
+
+        row.addEventListener('mouseup', function() {
+            isDragging = false;
+        });
+    });
+
+    document.addEventListener('mouseup', function() {
+        isDragging = false;
+    });
+
+    // Enable/disable delete button based on selection
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            updateDeleteButtonState();
+        });
+    });
+
+    // Update delete button state based on checkbox selection
+    function updateDeleteButtonState() {
+        const selectedCheckboxes = document.querySelectorAll('.select-lead:checked');
+        deleteButton.disabled = selectedCheckboxes.length === 0;
+    }
+
+    // Delete selected rows
+    deleteButton.addEventListener('click', function () {
+        const selectedIds = Array.from(document.querySelectorAll('.select-lead:checked'))
+            .map(checkbox => checkbox.dataset.id);
+
+        if (selectedIds.length > 0) {
+            if (confirm("Are you sure you want to delete the selected records?")) {
+                // Send an AJAX request to delete the selected records
+                fetch('/delete-leads', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ ids: selectedIds }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Optionally remove deleted rows without reloading the page
+                        selectedIds.forEach(id => {
+                            const row = document.querySelector(`.select-lead[data-id='${id}']`).closest('tr');
+                            if (row) row.remove();
+                        });
+                        alert('Selected records deleted successfully!');
+                        updateDeleteButtonState();  // Re-check the button state
+                    } else {
+                        alert('Failed to delete records.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while deleting records.');
+                });
+            }
+        }
+    });
+});
+
+</script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 

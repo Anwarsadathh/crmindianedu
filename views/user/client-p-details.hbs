@@ -505,6 +505,7 @@ button{
   {{/each}}
 </tbody>
 
+
 </table>
 
   
@@ -538,58 +539,58 @@ button{
     </div>
   </div>
 </div>
+
 <script>
-   document.getElementById('sendBulkMessage').addEventListener('click', function() {
-  const message = document.getElementById('message').value;
+  document.getElementById('sendBulkMessage').addEventListener('click', function() {
+    const message = document.getElementById('message').value;
 
-  if (message.trim() === '') {
-    alert('Please enter a message');
-    return;
-  }
+    if (message.trim() === '') {
+      alert('Please enter a message');
+      return;
+    }
 
-  const mobileNumbers = [];
-  document.querySelectorAll('tr[data-id]').forEach(row => {
-    const checkbox = row.querySelector('.select-partner');
-    if (checkbox.checked) { // Only collect mobile numbers for selected rows
-      const mobileNumber = row.querySelector('td:nth-child(6)').textContent.trim();
-      if (mobileNumber) {
-        mobileNumbers.push(mobileNumber);
+    const mobileNumbers = [];
+    document.querySelectorAll('tr[data-id]').forEach(row => {
+      const checkbox = row.querySelector('.select-partner');
+      if (checkbox.checked) { // Only collect mobile numbers for selected rows
+        const mobileNumber = row.querySelector('td:nth-child(6)').textContent.trim();
+        if (mobileNumber) {
+          mobileNumbers.push(mobileNumber);
+        }
       }
+    });
+
+    if (mobileNumbers.length === 0) {
+      alert('No mobile numbers selected');
+      return;
     }
+
+    // Send the message to selected numbers using the bulk API
+    fetch('/send-bulk-message', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ message: message, numbers: mobileNumbers }),
+    })
+    .then(response => response.json())
+    .then(result => {
+      if (result.success) {
+        alert('Message sent to selected numbers');
+      } else {
+        alert('Failed to send message');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Error sending message');
+    });
+
+    // Close the modal
+    $('#bulkSendModal').modal('hide');
   });
-
-  if (mobileNumbers.length === 0) {
-    alert('No mobile numbers selected');
-    return;
-  }
-
-  // Send the message to selected numbers using the bulk API
-  fetch('/send-bulk-message', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ message: message, numbers: mobileNumbers }),
-  })
-  .then(response => response.json())
-  .then(result => {
-    if (result.success) {
-      alert('Message sent to selected numbers');
-    } else {
-      alert('Failed to send message');
-    }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    alert('Error sending message');
-  });
-
-  // Close the modal
-  $('#bulkSendModal').modal('hide');
-});
-
-
 </script>
+
 
 
 <!-- Include SweetAlert2 for alerts -->

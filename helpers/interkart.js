@@ -1,46 +1,73 @@
 const axios = require("axios");
 
 const sendBulkMessage = async (numbers, message) => {
+  const apiUrl = "https://api.interakt.ai/v1/public/message/"; // Interakt API URL
+  const apiKey = "b3hCczZhNHJWdFFpSWd0NDFNUFd1b0NyYnJtUDc1VnNSd1NVeGNuN09NWTo="; // Replace with your actual API Key
+
   try {
-    const apiUrl = "https://api.interakt.ai/v1/public/message/"; // Interakt API URL
-    const apiKey =
-      "b3hCczZhNHJWdFFpSWd0NDFNUFd1b0NyYnJtUDc1VnNSd1NVeGNuN09NWTo="; // Replace with your actual API Key from Interakt
+    const sendPromises = numbers.map(async (number) => {
+      const payload = {
+        countryCode: "91", // Country code
+        phoneNumber: number, // Individual phone number
+        type: "Text", // Trying to send a text message
+        data: { message: message }, // Message content
+        callbackData: "bulk_send", // Optional callback data
+      };
 
-    // Format the numbers to include the country code if necessary
-    const formattedNumbers = numbers.map((number) => `${number}`);
+      const headers = {
+        Authorization: `Basic ${apiKey}`,
+        "Content-Type": "application/json",
+      };
 
-    // Prepare the payload
-    const payload = {
-      countryCode: "91", // Replace with your country code (without "+")
-      phoneNumber: formattedNumbers.join(","), // Comma-separated list of mobile numbers
-      type: "Template",
-      template: {
-        name: "your_correct_template_code", // Replace with the exact template code from Interakt
-        languageCode: "en", // Replace with the template's language code
-        headerValues: ["Header Value"], // Replace with actual header values
-        bodyValues: [message], // Dynamic message body
-        buttonValues: {}, // If there are buttons, provide their values here
-      },
-      callbackData: "custom_data", // Optional additional data
-    };
+      try {
+        // Send the POST request to Interakt for a free-form message
+        const response = await axios.post(apiUrl, payload, { headers });
+        return response.data;
+      } catch (error) {
+        if (
+          error.response &&
+          error.response.status === 400 &&
+          error.response.data.message.includes("within last 24 hours")
+        ) {
+          // If the customer hasn't interacted within the last 24 hours, send a template message instead
+          console.log(
+            `24-hour window expired for ${number}, sending template message.`
+          );
 
-    // Set up headers
-    const headers = {
-      Authorization: `Basic ${apiKey}`, // Replace with actual authentication header
-      "Content-Type": "application/json",
-    };
+          const templatePayload = {
+            countryCode: "91", // Country code
+            phoneNumber: number, // Individual phone number
+            type: "Template", // Using a WhatsApp template message
+            template: {
+              name: "your_template_name", // Replace with your actual template name
+              languageCode: "en", // Language code for the template
+              components: [
+                {
+                  type: "body",
+                  parameters: [
+                    { type: "text", text: "Your custom message content here" },
+                  ],
+                },
+              ],
+            },
+            callbackData: "bulk_send", // Optional callback data
+          };
 
-    // Send the POST request to Interakt
-    const response = await axios.post(apiUrl, payload, { headers });
+          // Send the template message as a fallback
+          const templateResponse = await axios.post(apiUrl, templatePayload, {
+            headers,
+          });
+          return templateResponse.data;
+        } else {
+          // If it's a different error, throw it
+          throw error;
+        }
+      }
+    });
 
-    // Check the response
-    if (response.data.success) {
-      console.log("Messages sent successfully:", response.data);
-      return response.data;
-    } else {
-      console.error("Failed to send messages:", response.data);
-      throw new Error(response.data.message || "Failed to send messages");
-    }
+    // Wait for all promises to resolve
+    const responses = await Promise.all(sendPromises);
+    return responses;
   } catch (error) {
     console.error("Error in sendBulkMessage:", error);
     throw error;
