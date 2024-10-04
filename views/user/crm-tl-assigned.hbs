@@ -958,20 +958,20 @@ $(document).ready(function() {
         lengthMenu: [[100, 25, 10, -1], [100, 25, 10, "All"]]
     });
 
-    // Initialize Flatpickr for date ranges
     flatpickr("#timeStampRange", {
-        mode: "single", // Changed to single mode for single date selection
+        mode: "range", // Use range mode for timeStamp input
         dateFormat: "Y-m-d"
     });
+
     flatpickr("#assignDateRange", {
-        mode: "single", // Changed to single mode for single date selection
+        mode: "range", // Multiple mode for assignDate
         dateFormat: "Y-m-d"
     });
 
     // Filter Button Event Listener
     document.getElementById('filterBtn').addEventListener('click', function() {
         const leadOwner = document.getElementById('leadOwner').value.toLowerCase();
-        const timeStampRange = document.getElementById('timeStampRange').value;
+        const timeStampRange = document.getElementById('timeStampRange').value; 
         const assignDateRange = document.getElementById('assignDateRange').value;
         const state = document.getElementById('state').value.toLowerCase();
         const city = document.getElementById('city').value.toLowerCase();
@@ -996,104 +996,93 @@ $(document).ready(function() {
         table.page.len(100).draw(); // Revert to default of 100 rows per page
     });
 
-   function filterAndDisplayData(leadOwner, timeStampRange, assignDateRange, state, city, course) {
-    // Helper function to handle single date input
-    function parseDateRange(dateRange) {
-        if (dateRange) {
-            const date = new Date(dateRange);
-            return { start: date, end: date }; // Treat as single date
+    function filterAndDisplayData(leadOwner, timeStampRange, assignDateRange, state, city, course) {
+        // Dynamic date parsing function
+        function parseDynamicDate(dateString) {
+            const parsedDate = new Date(dateString);
+            return isNaN(parsedDate.getTime()) ? moment(dateString).toDate() : parsedDate;
         }
-        return { start: null, end: null };
+
+        // Parse the assignDate range
+        const assignDateDates = assignDateRange ? assignDateRange.split(' to ') : [];
+        const assignDateStartDate = assignDateDates.length === 2 ? parseDynamicDate(assignDateDates[0]) : 
+                                     assignDateDates.length === 1 ? parseDynamicDate(assignDateDates[0]) : null;
+        const assignDateEndDate = assignDateDates.length === 2 ? parseDynamicDate(assignDateDates[1]) : null;
+
+        // Parse the timeStamp range
+        const timeStampDates = timeStampRange ? timeStampRange.split(' to ') : [];
+        const timeStampStartDate = timeStampDates.length === 2 ? parseDynamicDate(timeStampDates[0]) : 
+                                   timeStampDates.length === 1 ? parseDynamicDate(timeStampDates[0]) : null;
+        const timeStampEndDate = timeStampDates.length === 2 ? parseDynamicDate(timeStampDates[1]) : null;
+
+        // Clear existing custom filters
+        $.fn.dataTable.ext.search.pop();
+
+        // Add custom filter
+        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+            const rowLeadOwner = $(table.row(dataIndex).node()).find('span').text().toLowerCase();
+            const rowState = data[10].toLowerCase(); // Column index for State
+            const rowCity = data[11].toLowerCase(); // Column index for City
+            const rowCourse = data[9].toLowerCase(); // Column index for Course
+            const timeStampText = data[2]; // Column index for Time Stamp
+            const assignDateText = $(table.row(dataIndex).node()).find('td').eq(4).text(); // Access hidden Assign Date via index
+
+            const rowTimeStamp = parseDynamicDate(timeStampText);
+            const rowAssignDate = parseDynamicDate(assignDateText); // Parse Assign Date
+
+            // Apply filters
+            let showRow = true;
+
+            if (leadOwner && rowLeadOwner !== leadOwner) showRow = false;
+            if (state && rowState !== state) showRow = false;
+            if (city && rowCity !== city) showRow = false;
+            if (course && rowCourse !== course) showRow = false;
+
+            // Check the timeStamp range
+            if (timeStampStartDate) {
+                if (timeStampEndDate) {
+                    // Check for range
+                    if (rowTimeStamp < timeStampStartDate || rowTimeStamp > timeStampEndDate || isNaN(rowTimeStamp)) {
+                        showRow = false;
+                    }
+                } else {
+                    // Check for single date
+                    if (rowTimeStamp.toDateString() !== timeStampStartDate.toDateString()) {
+                        showRow = false;
+                    }
+                }
+            }
+
+            // Check the assign date range
+            if (assignDateStartDate) {
+                if (assignDateEndDate) {
+                    // Check for range
+                    if (rowAssignDate < assignDateStartDate || rowAssignDate > assignDateEndDate || isNaN(rowAssignDate)) {
+                        showRow = false;
+                    }
+                } else {
+                    // Check for single date
+                    if (rowAssignDate.toDateString() !== assignDateStartDate.toDateString()) {
+                        showRow = false;
+                    }
+                }
+            }
+
+            return showRow;
+        });
+
+        // Redraw the table to reflect changes
+        table.draw();
+
+        // Scroll to the first visible row
+        const firstVisibleRow = $('#dataTable tbody tr:visible').first();
+        if (firstVisibleRow.length) {
+            $('html, body').animate({
+                scrollTop: firstVisibleRow.offset().top
+            }, 500);
+        }
     }
-
-    // Parse the date ranges for Time Stamp and Assign Date
-    const timeStampDates = parseDateRange(timeStampRange);
-    const assignDateDates = parseDateRange(assignDateRange);
-
-    const timeStampStartDate = timeStampDates.start;
-    const assignDateStartDate = assignDateDates.start;
-
-    // Clear existing custom filters
-    $.fn.dataTable.ext.search.pop();
-
-    // Add custom filter
-    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-        const rowLeadOwner = $(table.row(dataIndex).node()).find('span').text().toLowerCase();
-        const rowState = data[10].toLowerCase(); // Column index for State
-        const rowCity = data[11].toLowerCase(); // Column index for City
-        const rowCourse = data[9].toLowerCase(); // Column index for Course
-        const timeStampText = data[2]; // Column index for Time Stamp
-        const assignDateText = $(table.row(dataIndex).node()).find('td').eq(4).text(); // Access hidden Assign Date via index
-
-        // Function to parse different date formats using moment.js
-        function parseDate(dateString) {
-            const formats = [
-                "DD/MM/YYYY, h:mm:ss a", // Example: 14/9/2024, 4:55:46 pm
-                "MMMM DD YYYY HH:mm",     // Example: August 23 2024 10:15
-                "YYYY-MM-DDTHH:mm:ssZ",   // Example: 2024-09-02T01:38:15+
-                "YYYY-MM-DD",             // Example: 2024-09-02
-                "DD/MM/YYYY",             // Example: 14/09/2024
-                "MM/DD/YYYY"              // Example: 09/14/2024
-            ];
-
-            const parsedDate = moment(dateString, formats, true);
-            return parsedDate.isValid() ? parsedDate.toDate() : new Date(NaN);
-        }
-
-        // Parse dates
-        const rowTimeStamp = parseDate(timeStampText);
-        const rowAssignDate = new Date(assignDateText); // Assign Date in 'YYYY-MM-DD' format
-
-        // Debugging Logs
-        console.log("Filtering row:");
-        console.log("Lead Owner: ", rowLeadOwner);
-        console.log("State: ", rowState);
-        console.log("City: ", rowCity);
-        console.log("Course: ", rowCourse);
-        console.log("Time Stamp: ", rowTimeStamp);
-        console.log("Assign Date: ", rowAssignDate);
-        console.log("Time Stamp Range Start: ", timeStampStartDate);
-        console.log("Assign Date Range Start: ", assignDateStartDate);
-
-        // Apply filters
-        let showRow = true;
-
-        if (leadOwner && rowLeadOwner !== leadOwner) showRow = false;
-        if (state && rowState !== state) showRow = false;
-        if (city && rowCity !== city) showRow = false;
-        if (course && rowCourse !== course) showRow = false;
-
-        // Check if rowTimeStamp matches the selected timeStamp date
-        if (timeStampStartDate && rowTimeStamp.toDateString() !== timeStampStartDate.toDateString()) {
-            console.log("Row filtered out by timeStamp");
-            showRow = false;
-        }
-
-        // Check if rowAssignDate matches the selected assign date
-        if (assignDateStartDate && rowAssignDate.toDateString() !== assignDateStartDate.toDateString()) {
-            console.log("Row filtered out by assignDate");
-            showRow = false;
-        }
-
-        return showRow;
-    });
-
-    // Redraw the table to reflect changes
-    table.draw();
-
-    // Scroll to the first visible row
-    const firstVisibleRow = $('#dataTable tbody tr:visible').first();
-    if (firstVisibleRow.length) {
-        $('html, body').animate({
-            scrollTop: firstVisibleRow.offset().top
-        }, 500);
-    }
-}
-
 });
-
-
-
 </script>
 
 
