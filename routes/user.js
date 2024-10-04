@@ -19,7 +19,7 @@ const PDFDocument = require("pdfkit");
 const intekartService = require("../helpers/interkart");
 // // Call the function periodically (e.g., every minute)
 // setInterval(checkFollowUps, 10000);
-
+const axios = require("axios");
 
 // Configure the transporter
 const transporter = nodemailer.createTransport({
@@ -1543,21 +1543,64 @@ router.get("/p-details", verifyClient, async (req, res) => {
   }
 });
 
+// // Route to send bulk WhatsApp messages
+// router.post('/send-bulk-message', async (req, res) => {
+//   const { message, numbers } = req.body;
+
+//   try {
+//     // Use Interakt API to send messages
+//     const result = await intekartService.sendBulkMessage(numbers, message);
+
+//     // Send a successful response back to the frontend
+//     res.json({ success: true, result });
+//   } catch (error) {
+//     console.error('Error sending bulk messages:', error);
+//     res.status(500).json({ success: false, message: 'Failed to send messages' });
+//   }
+// });
+
+// Interakt API Key
+const API_KEY = "b3hCczZhNHJWdFFpSWd0NDFNUFd1b0NyYnJtUDc1VnNSd1NVeGNuN09NWTo=";  // Replace with your actual Interakt API Key
+
 // Route to send bulk WhatsApp messages
-router.post('/send-bulk-message', async (req, res) => {
+router.post("/send-bulk-message", async (req, res) => {
   const { message, numbers } = req.body;
 
   try {
-    // Use Interakt API to send messages
-    const result = await intekartService.sendBulkMessage(numbers, message);
+    const promises = numbers.map((number) => {
+      return axios
+        .post(
+          "https://api.interakt.ai/v1/public/message/",
+          {
+            fullPhoneNumber: `91${number}`, // Format mobile number with country code
+            callbackData: "bulk_message",
+            type: "Text",
+            data: {
+              message: message,
+            },
+          },
+          {
+            headers: {
+              Authorization: `Basic ${API_KEY}`,
+              "Content-Type": "application/json",
+            },
+            timeout: 5000, // Optional: Add timeout for each request
+          }
+        )
+        .catch((err) => {
+          console.error(`Failed to send message to ${number}:`, err);
+          return { success: false, number, error: err.message };
+        });
+    });
 
-    // Send a successful response back to the frontend
-    res.json({ success: true, result });
+    const results = await Promise.all(promises);
+    res.json({ success: true, results });
   } catch (error) {
-    console.error('Error sending bulk messages:', error);
-    res.status(500).json({ success: false, message: 'Failed to send messages' });
+    console.error("Error sending bulk messages:", error);
+    res.status(500).json({ success: false, error: error.message });
   }
 });
+
 
 router.get("/ap-details",verifyClient, async (req, res) => {
   try {

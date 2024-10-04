@@ -7,69 +7,38 @@ const sendBulkMessage = async (numbers, message) => {
   try {
     const sendPromises = numbers.map(async (number) => {
       const payload = {
-        countryCode: "91", // Country code
+        countryCode: "91", // Country code for India
         phoneNumber: number, // Individual phone number
-        type: "Text", // Trying to send a text message
-        data: { message: message }, // Message content
+        type: "Template", // Using a WhatsApp template message
         callbackData: "bulk_send", // Optional callback data
+        template: {
+          name: "sample_template_test", // Replace with your actual template name
+          languageCode: "en", // Language code for the template
+          bodyValues: [
+            message, // Ensure this matches the expected parameters of the template
+          ],
+        },
       };
 
       const headers = {
-        Authorization: `Basic ${apiKey}`,
+        // Change to 'Bearer' if required, or ensure Basic Auth is set correctly
+        Authorization: `Basic ${Buffer.from(`${apiKey}:`).toString("base64")}`,
         "Content-Type": "application/json",
       };
 
-      try {
-        // Send the POST request to Interakt for a free-form message
-        const response = await axios.post(apiUrl, payload, { headers });
-        return response.data;
-      } catch (error) {
-        if (
-          error.response &&
-          error.response.status === 400 &&
-          error.response.data.message.includes("within last 24 hours")
-        ) {
-          // If the customer hasn't interacted within the last 24 hours, send a template message instead
-          console.log(
-            `24-hour window expired for ${number}, sending template message.`
-          );
-
-          const templatePayload = {
-            countryCode: "91", // Country code
-            phoneNumber: number, // Individual phone number
-            type: "Template", // Using a WhatsApp template message
-            template: {
-              name: "your_template_name", // Replace with your actual template name
-              languageCode: "en", // Language code for the template
-              components: [
-                {
-                  type: "body",
-                  parameters: [
-                    { type: "text", text: "Your custom message content here" },
-                  ],
-                },
-              ],
-            },
-            callbackData: "bulk_send", // Optional callback data
-          };
-
-          // Send the template message as a fallback
-          const templateResponse = await axios.post(apiUrl, templatePayload, {
-            headers,
-          });
-          return templateResponse.data;
-        } else {
-          // If it's a different error, throw it
-          throw error;
-        }
-      }
+      // Send the POST request to Interakt
+      const response = await axios.post(apiUrl, payload, { headers });
+      return response.data;
     });
 
     // Wait for all promises to resolve
     const responses = await Promise.all(sendPromises);
     return responses;
   } catch (error) {
-    console.error("Error in sendBulkMessage:", error);
+    console.error(
+      "Error in sendBulkMessage:",
+      error.response ? error.response.data : error.message
+    );
     throw error;
   }
 };
