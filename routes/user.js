@@ -1562,7 +1562,6 @@ router.get("/p-details", verifyClient, async (req, res) => {
 // Interakt API Key
 const API_KEY = "b3hCczZhNHJWdFFpSWd0NDFNUFd1b0NyYnJtUDc1VnNSd1NVeGNuN09NWTo=";  // Replace with your actual Interakt API Key
 
-// Route to send bulk WhatsApp messages
 router.post("/send-bulk-message", async (req, res) => {
   const { message, numbers } = req.body;
 
@@ -1587,16 +1586,29 @@ router.post("/send-bulk-message", async (req, res) => {
             timeout: 5000, // Optional: Add timeout for each request
           }
         )
+        .then(() => ({
+          success: true,
+          number,
+        }))
         .catch((err) => {
-          console.error(`Failed to send message to ${number}:`, err);
+          if (err.response) {
+            console.error(`Failed to send message to ${number}:`, {
+              status: err.response.status,
+              data: err.response.data,
+              headers: err.response.headers,
+            });
+          } else {
+            console.error(`Failed to send message to ${number}:`, err.message);
+          }
           return { success: false, number, error: err.message };
         });
+
     });
 
     const results = await Promise.all(promises);
     res.json({ success: true, results });
   } catch (error) {
-    console.error("Error sending bulk messages:", error);
+    console.error("Error sending bulk messages:", error.message); // Log only the message
     res.status(500).json({ success: false, error: error.message });
   }
 });

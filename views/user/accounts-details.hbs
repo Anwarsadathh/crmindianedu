@@ -973,6 +973,7 @@ h3 {
                     <th>Student ID</th>
                     <th>Student Name</th>
                     <th>Course</th>
+                    <th class="toggle-column">Spec</th>
                     <th class="toggle-column">Email</th>
                     <th class="toggle-column">Mobile Number</th>
                     <th class="toggle-column">State</th>
@@ -1023,6 +1024,7 @@ h3 {
                     <td class="text-dark font-weight-bold">{{this.studentid}}</td>
                     <td>{{this.name}}</td>
                     <td >{{this.course}}</td>
+                     <td class="hideable">{{this.specialization}}</td>
                     <td class="hideable">{{this.email}}</td>
                     <td class="hideable">{{this.mobile}}</td>
                     <td class="hideable" >{{this.state}}</td>
@@ -1080,41 +1082,10 @@ h3 {
             <option value="PG" {{#if (eq this.degreeType "PG")}}selected{{/if}}>PG</option>
         </select>
     </td>
-         <td>
-  {{#if (eq this.university "Manipal Jaipur University")}}
-    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=Soubin.sukumaran@onlinemanipal.com" target="_blank">Manipal Jaipur University</a>
-  {{else if (eq this.university "Manipal Sikkim University")}}
-    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=Soubin.sukumaran@onlinemanipal.com" target="_blank">Manipal Sikkim University</a>
-  {{else if (eq this.university "Jain Online University")}}
-    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=adarsh.kh@usdcglobal.com" target="_blank">Jain Online University</a>
-  {{else if (eq this.university "Jain ODL University")}}
-    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=Syed.imran@teamlease.com" target="_blank">Jain ODL University</a>
-  {{else if (eq this.university "Vignan University")}}
-    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=adarsh.kh@usdcglobal.com" target="_blank">Vignan University</a>
-  {{else if (eq this.university "Amity University")}}
-    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=billing@univoedtech.com" target="_blank">Amity University</a>
-  {{else if (eq this.university "SVSU")}}
-    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=syed.imran@teamlease.com" target="_blank">SVSU</a>
-  {{else if (eq this.university "Aligarh Muslim University Online")}}
-    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=syed.imran@teamlease.com" target="_blank">Aligarh Muslim University Online</a>
-  {{else if (eq this.university "KLU Online")}}
-    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=syed.imran@teamlease.com" target="_blank">KLU Online</a>
-  {{else if (eq this.university "Mizoram University" )}}
-    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=syed.imran@teamlease.com" target="_blank">Mizoram University</a>
-{{else if (eq this.university "MIZORAM UNIVERSITY")}}
-    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=syed.imran@teamlease.com" target="_blank">MIZORAM UNIVERSITY</a>
-
-  {{else if (eq this.university "Jamia Hamdard University")}}
-    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=syed.imran@teamlease.com" target="_blank">Jamia Hamdard University</a>
-  {{else if (eq this.university "Uttaranchal University")}}
-    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=syed.imran@teamlease.com" target="_blank">Uttaranchal University</a>
-  {{else if (eq this.university "Andhra University")}}
-    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=syed.imran@teamlease.com" target="_blank">Andhra University</a>
-  {{else if (eq this.university "LPU")}}
-    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=connectprashantraghuvanshi@gmail.com" target="_blank">LPU</a>
-  {{else}}
+       <td>
+  <a href="#" onclick="sendEmail('{{this.university}}', '{{this.name}}', '{{this.enrollmentNo}}', '{{this.course}}', '{{this.specialization}}', '{{this.feePaidAmount}}', '{{this.batch}}')">
     {{this.university}}
-  {{/if}}
+  </a>
 </td>
 <td>
   <input 
@@ -1318,6 +1289,69 @@ h3 {
     </div>
     </div>
 </div>
+
+<script>
+  function sendEmail(university, name, enrollmentNo, course, specialization, feePaidAmount, batch) {
+    let email = '';
+    let subject = 'Request for Invoice for MBA HR Admission - January Batch';
+    let body = `Dear ${university} Team,\n\n` +
+               `I hope this message finds you well.\n\n` +
+               `We would like to request an invoice for one of our students who has enrolled in the January batch. Below are the details:\n\n` +
+               `Name: ${name}\n` +
+               `Enrollment Number: ${enrollmentNo}\n` +
+               `Course: ${course}, ${specialization}\n` +
+               `Fee Paid: ₹${feePaidAmount}\n` +
+               `Batch: ${batch}\n\n` +
+               `Please provide the invoice for this payment at your earliest convenience to enable the release of our payout.\n\n` +
+               `Should you require any additional information, please feel free to reach out.\n\n` +
+               `Thank you for your assistance.\n\n` +
+               `Best regards,\n` +
+               `[Your Name]\n` +
+               `[Your Position]\n` +
+               `[Your Contact Information]`;
+
+    // Convert the university name to lowercase to handle case-insensitive matching
+    switch (university.toLowerCase()) {
+      case "manipal jaipur university":
+      case "manipal sikkim university":
+        email = 'Soubin.sukumaran@onlinemanipal.com';
+        break;
+      case "jain online university":
+        email = 'adarsh.kh@usdcglobal.com';
+        break;
+      case "jain odl university":
+        email = 'Syed.imran@teamlease.com';
+        break;
+      case "vignan university":
+        email = 'adarsh.kh@usdcglobal.com';
+        break;
+      case "amity university":
+        email = 'billing@univoedtech.com';
+        break;
+      case "svsu":
+      case "aligarh muslim university online":
+      case "klu online":
+      case "mizoram university":
+      case "jamia hamdard university":
+      case "uttaranchal university":
+      case "andhra university":
+        email = 'syed.imran@teamlease.com';
+        break;
+      case "lpu":
+        email = 'connectprashantraghuvanshi@gmail.com';
+        break;
+      default:
+        email = ''; // Handle default case if necessary
+    }
+
+    // Encode the email subject and body for use in a URL
+    const mailtoLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    
+    // Open the mailto link in a new tab/window
+    window.open(mailtoLink, '_blank');
+  }
+</script>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
@@ -1978,7 +2012,7 @@ $(function() {
     var yearSearch = selectedYear ? selectedYear : '';
 
     // Apply column-specific filters (for example: column 29 for university, column 3 for year)
-    table.column(29).search(universitySearch).draw(); // Assuming column 29 is university
+    table.column(30).search(universitySearch).draw(); // Assuming column 29 is university
     table.column(3).search(yearSearch).draw(); // Assuming column 3 is date year
 
     hideHideableElements(); // Hide elements with .hideable class after filtering
@@ -2045,35 +2079,6 @@ $(function() {
   <script src="lib/tempusdominus/js/moment.min.js"></script>
   <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
   <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
-{{!-- <script>
-    $(document).ready(function() {
-        // Initialize DataTable
-        const table = $('#dataTable').DataTable({
-            pageLength: 100, // Default to showing 100 entries
-            lengthMenu: [[100, 25, 10, -1], [100, 25, 10, "All"]] // Options for 100, 25, 10, and All entries per page
-        });
-
-        $('#hideFieldsButton').on('click', function() {
-            const columnsToToggle = $('.toggle-column, .hideable');
-            const isHidden = columnsToToggle.is(':hidden');
-
-            if (isHidden) {
-                // Instantly show all columns without animation
-                columnsToToggle.show();
-                // Change button icon to "Hide"
-                $('#toggleIcon').removeClass('fa-eye').addClass('fa-eye-slash');
-            } else {
-                // Instantly hide all columns without animation
-                columnsToToggle.hide();
-                // Change button icon to "Show"
-                $('#toggleIcon').removeClass('fa-eye-slash').addClass('fa-eye');
-            }
-        });
-
-        // Initially hide the columns
-        $('.toggle-column, .hideable').hide();
-    });
-</script> --}}
 
   <!-- Template Javascript -->
   <script src="js/main.js"></script>
