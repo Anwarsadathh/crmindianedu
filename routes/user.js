@@ -1564,8 +1564,82 @@ const apiKey = "b3hCczZhNHJWdFFpSWd0NDFNUFd1b0NyYnJtUDc1VnNSd1NVeGNuN09NWTo=";  
 
 const encodedCredentials = Buffer.from(`${apiKey}:`).toString("base64"); // Encode for Basic Auth
 
+// router.post("/send-bulk-message", async (req, res) => {
+//   const { numbers } = req.body;
+
+//   try {
+//     // Ensure numbers array exists
+//     if (!numbers || numbers.length === 0) {
+//       return res
+//         .status(400)
+//         .json({ success: false, message: "Numbers not provided" });
+//     }
+
+//     const messageTemplate =
+//       "Dear Customer, we regret to inform you that your selection criteria do not match with any of our universities. Kindly resubmit the form or contact our help desk.";
+
+//     // Function to send message to each number
+//     const promises = numbers.map((number) => {
+//       return axios
+//         .post(
+//           "https://api.interakt.ai/v1/public/message/",
+//           {
+//             countryCode: "+91", // Assuming country code for India, replace if needed
+//             phoneNumber: number,
+//             type: "Text",
+//             callbackData: "bulk_message", // Optional data for callback
+//             template: {
+//               name: "sample_template_test", // Ensure this matches a defined template
+//               languageCode: "en", // Assuming English language
+//               headerValues: [], // Assuming no header values are needed
+//               bodyValues: [messageTemplate], // Predefined message for all recipients
+//               buttonValues: {
+//                 0: ["https://suggest.indianeduhub.in/"], // URL for resubmission
+//                 1: ["7411370505"], // Help desk phone number
+//               },
+//             },
+//           },
+//           {
+//             headers: {
+//               Authorization: `Basic ${encodedCredentials}`,
+//               "Content-Type": "application/json",
+//             },
+//             timeout: 5000, // Optional: Add a timeout for each request
+//           }
+//         )
+//         .then(() => ({
+//           success: true,
+//           number,
+//         }))
+//         .catch((err) => {
+//           // Error handling with detailed logging
+//           if (err.response) {
+//             console.error(`Failed to send message to ${number}:`, {
+//               status: err.response.status,
+//               data: err.response.data,
+//               headers: err.response.headers,
+//             });
+//           } else {
+//             console.error(`Failed to send message to ${number}:`, err.message);
+//           }
+//           return { success: false, number, error: err.message };
+//         });
+//     });
+
+//     // Wait for all promises (messages) to resolve
+//     const results = await Promise.all(promises);
+
+//     // Respond with the success/failure status of each message
+//     res.json({ success: true, results });
+//   } catch (error) {
+//     console.error("Error sending bulk messages:", error.message);
+//     res.status(500).json({ success: false, error: error.message });
+//   }
+// });
+
+
 router.post("/send-bulk-message", async (req, res) => {
-  const { numbers } = req.body;
+  const { numbers, names } = req.body; // Expect an array of names associated with each number
 
   try {
     // Ensure numbers array exists
@@ -1575,33 +1649,38 @@ router.post("/send-bulk-message", async (req, res) => {
         .json({ success: false, message: "Numbers not provided" });
     }
 
-    const messageTemplate =
-      "Dear Customer, we regret to inform you that your selection criteria do not match with any of our universities. Kindly resubmit the form or contact our help desk.";
+    // Ensure names array exists and matches the numbers array length
+    if (!names || names.length !== numbers.length) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message:
+            "Names not provided or do not match the number of recipients",
+        });
+    }
 
     // Function to send message to each number
-    const promises = numbers.map((number) => {
+    const promises = numbers.map((number, index) => {
       return axios
         .post(
           "https://api.interakt.ai/v1/public/message/",
           {
-            countryCode: "+91", // Assuming country code for India, replace if needed
-            phoneNumber: number,
-            type: "Text",
-            callbackData: "bulk_message", // Optional data for callback
+            countryCode: "+91", // Assuming country code for India
+            phoneNumber: number, // WhatsApp number to send to
+            callbackData: "bulk_positive_message", // Optional data for callback
+            type: "Template", // Type of message
             template: {
-              name: "sample_template_test", // Ensure this matches a defined template
+              name: "negative_auto_msg", // Ensure this matches a defined template
               languageCode: "en", // Assuming English language
-              headerValues: [], // Assuming no header values are needed
-              bodyValues: [messageTemplate], // Predefined message for all recipients
-              buttonValues: {
-                0: ["https://suggest.indianeduhub.in/"], // URL for resubmission
-                1: ["7411370505"], // Help desk phone number
-              },
+              headerValues: [], // No PDF link required
+              // Remove fileName from the request entirely
+              bodyValues: [names[index]], // Use the corresponding name from the names array
             },
           },
           {
             headers: {
-              Authorization: `Basic ${encodedCredentials}`,
+              Authorization: `Basic b3hCczZhNHJWdFFpSWd0NDFNUFd1b0NyYnJtUDc1VnNSd1NVeGNuN09NWTo=`, // Replace with your actual credentials
               "Content-Type": "application/json",
             },
             timeout: 5000, // Optional: Add a timeout for each request
@@ -1636,7 +1715,6 @@ router.post("/send-bulk-message", async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 });
-
 
 
 
