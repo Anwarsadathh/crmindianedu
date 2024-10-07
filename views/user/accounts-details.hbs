@@ -1002,10 +1002,10 @@ h3 {
                 <tr class="bg-light">
                     <th hidden>id</th>
                     <th>No.</th>
-                    <th >Date</th>
-                    <th >Doc Date</th>
+                    <th class="sticky">Date</th>
+                    <th class="sticky-second">Doc Date</th>
                     <th>Student ID</th>
-                    <th class="sticky">Student Name</th>
+                    <th class="sticky-third">Student Name</th>
                     <th>Course</th>
                     <th class="toggle-column">Spec</th>
                     <th class="toggle-column">Email</th>
@@ -1054,10 +1054,10 @@ h3 {
                <tr data-id="{{this._id}}">
         <td hidden>{{this._id}}</td> <!-- The ID is stored in a hidden cell for reference -->
                     <td>{{incrementIndex @index}}</td>
-                    <td class="text-danger font-weight-bold " >{{formatDates this.date}}</td>
-                    <td class="text-danger font-weight-bold ">{{formatDates this.docApprovedDate}}</td>
+                    <td class="text-danger font-weight-bold sticky" >{{formatDates this.date}}</td>
+                    <td class="text-danger font-weight-bold sticky-second">{{formatDates this.docApprovedDate}}</td>
                     <td class="text-dark font-weight-bold">{{this.studentid}}</td>
-                    <td class="sticky">{{this.name}}</td>
+                    <td class="sticky-third">{{this.name}}</td>
                     <td >{{this.course}}</td>
                      <td class="hideable">{{this.specialization}}</td>
                     <td class="hideable">{{this.email}}</td>
