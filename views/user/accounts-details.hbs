@@ -214,57 +214,7 @@ input:focus, select:focus, textarea:focus {
     
     color:green;
 }
-/* Button styles */
-.btn-status {
-    font-size: 10px; /* Smaller font size for buttons */
-    padding: 4px 8px; /* Smaller padding for buttons */
-    transition: background-color 0.3s ease;
-}
 
-.btn-not-paid {
-    background-color: #e8172c; /* Red */
-    color: #fff;
-}
-
-.btn-paid {
-    background-color: #28a745; /* Green */
-    color: #fff;
-}
-
-.btn-not-approved {
-    background-color: #ffc107; /* Yellow */
-    color: #000;
-}
-
-.btn-approved {
-    background-color: #17a2b8; /* Teal */
-    color: #fff;
-}
-
-.btn-not-done {
-    background-color: #ffc107; /* Yellow */
-    color: #000;
-}
-
-.btn-done {
-    background-color: #28a745; /* Green */
-    color: #fff;
-}
-
-.btn-status.active-paid {
-    background-color: #28a745 !important; /* Green */
-    color: #fff;
-}
-
-.btn-status.active-not-paid {
-    background-color: #dc3545 !important; /* Red */
-    color: #fff;
-}
-
-.btn-status.active-not-approved {
-    background-color: #ffc107 !important; /* Yellow */
-    color: #000;
-}
 /* Container for table */
 .table-wrapper {
     position: relative; /* To contain the sticky header */
@@ -315,6 +265,62 @@ input:focus, select:focus, textarea:focus {
 }
 /* Adjust other table-related styles if necessary */
 
+/* Sticky position for the first column (studentname) */
+.table tbody td.sticky {
+    position: sticky;
+    left: 0;
+    background-color: #fff;
+    z-index: 1;
+}
+
+/* Sticky position for the second column (studentid) */
+.table tbody td.sticky-second {
+    position: sticky;
+    left: 120px; /* Adjust based on the width of the first sticky column */
+    background-color: #fff;
+    z-index: 1;
+}
+
+/* Sticky position for the third column */
+.table tbody td.sticky-third {
+    position: sticky;
+    left: 240px; /* Adjust based on the combined width of first and second sticky columns */
+    background-color: #fff;
+    z-index: 1;
+}
+
+/* Sticky position for the fourth column */
+.table tbody td.sticky-fourth {
+    position: sticky;
+    left: 360px; /* Adjust based on the combined width of first, second, and third sticky columns */
+    background-color: #fff;
+    z-index: 1;
+}
+
+/* Ensure that the sticky headers remain above the sticky columns */
+.table thead th.sticky {
+    position: sticky !important;
+    left: 0 !important;
+    z-index: 3 !important;
+}
+
+.table thead th.sticky-second {
+    position: sticky !important;
+    left: 120px !important;
+    z-index: 3 !important;
+}
+
+.table thead th.sticky-third {
+    position: sticky !important;
+    left: 240px !important;
+    z-index: 3 !important;
+}
+
+.table thead th.sticky-fourth {
+    position: sticky !important;
+    left: 360px !important;
+    z-index: 3 !important;
+}
 
 .btn-status.active-approved {
     background-color: #17a2b8 !important; /* Teal */
@@ -331,32 +337,60 @@ input:focus, select:focus, textarea:focus {
     color: #fff;
 }
 /* DataTables Customization */
-.dataTables_wrapper .dataTables_filter {
-    float: right;
-    text-align: right;
-    margin-bottom: 10px;
+.dataTables_wrapper {
+    position: relative; /* Make this container relative for absolute positioning */
 }
 
+/* Sticky filter box */
+.dataTables_wrapper .dataTables_filter {
+    position: sticky !important; /* Make it sticky */
+    top: 0; /* Distance from the top when scrolling */
+    background: white; /* Set background to prevent overlap */
+    z-index: 10; /* Ensure it stays above other elements */
+    float: right; /* Keep alignment */
+    text-align: right;
+    margin-bottom: 10px;
+    padding: 5px; /* Add some padding for better look */
+}
+
+/* Sticky filter input */
 .dataTables_wrapper .dataTables_filter input {
     margin-left: 0.5em;
     display: inline-block;
     width: auto;
 }
 
+/* Sticky length selection */
 .dataTables_wrapper .dataTables_length {
-    float: left;
+    position: sticky !important; /* Make it sticky */
+    top: 0; /* Distance from the top when scrolling */
+    background: white; /* Set background to prevent overlap */
+    z-index: 10; /* Ensure it stays above other elements */
+    float: left; /* Keep alignment */
     margin-bottom: 10px;
+    padding: 5px; /* Add some padding for better look */
 }
 
+/* Sticky info */
 .dataTables_wrapper .dataTables_info {
-    float: left;
+    position: sticky !important; /* Make it sticky */
+    top: 0; /* Distance from the top when scrolling */
+    background: white; /* Set background to prevent overlap */
+    z-index: 10; /* Ensure it stays above other elements */
+    float: left; /* Keep alignment */
     margin-top: 10px;
 }
 
+/* Sticky pagination */
 .dataTables_wrapper .dataTables_paginate {
-    float: right;
+    position: sticky !important; /* Make it sticky */
+    top: 0; /* Distance from the top when scrolling */
+    background: white; /* Set background to prevent overlap */
+    z-index: 10; /* Ensure it stays above other elements */
+    float: right; /* Keep alignment */
     margin-top: 10px;
 }
+
 
 /* Wallet Cards Layout for Small Screens */
 @media (max-width: 768px) {
@@ -968,10 +1002,10 @@ h3 {
                 <tr class="bg-light">
                     <th hidden>id</th>
                     <th>No.</th>
-                    <th>Date</th>
-                    <th>Doc Date</th>
+                    <th >Date</th>
+                    <th >Doc Date</th>
                     <th>Student ID</th>
-                    <th>Student Name</th>
+                    <th class="sticky">Student Name</th>
                     <th>Course</th>
                     <th class="toggle-column">Spec</th>
                     <th class="toggle-column">Email</th>
@@ -1020,10 +1054,10 @@ h3 {
                <tr data-id="{{this._id}}">
         <td hidden>{{this._id}}</td> <!-- The ID is stored in a hidden cell for reference -->
                     <td>{{incrementIndex @index}}</td>
-                    <td class="text-danger font-weight-bold">{{formatDates this.date}}</td>
-                    <td class="text-danger font-weight-bold">{{formatDates this.docApprovedDate}}</td>
+                    <td class="text-danger font-weight-bold " >{{formatDates this.date}}</td>
+                    <td class="text-danger font-weight-bold ">{{formatDates this.docApprovedDate}}</td>
                     <td class="text-dark font-weight-bold">{{this.studentid}}</td>
-                    <td>{{this.name}}</td>
+                    <td class="sticky">{{this.name}}</td>
                     <td >{{this.course}}</td>
                      <td class="hideable">{{this.specialization}}</td>
                     <td class="hideable">{{this.email}}</td>

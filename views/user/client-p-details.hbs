@@ -605,16 +605,18 @@ document.getElementById("sendBulkMessage").addEventListener("click", function ()
   document.getElementById("sendBulkMessage").addEventListener("click", function () {
     const selectedNumbers = [];
     const selectedNames = [];
+    const selectedInt = []; // Track institute names
 
-    // Loop through each partner and collect selected mobile numbers and their names
+    // Loop through each partner and collect selected mobile numbers, owner names, and institute names
     document.querySelectorAll(".select-partner:checked").forEach((checkbox) => {
       const row = checkbox.closest("tr");
-      const mobileNumber = row.querySelector("td:nth-child(6)").innerText.trim(); // Fetch mobile number from the table
+      const mobileNumber = row.querySelector("td:nth-child(6)").innerText.trim(); // Fetch mobile number
       const instituteName = row.querySelector("td:nth-child(3)").innerText.trim(); // Fetch institute name
       const ownerName = row.querySelector("td:nth-child(5)").innerText.trim(); // Fetch owner name
 
       selectedNumbers.push(mobileNumber);
-      selectedNames.push(`${ownerName}`); // Combine the institute name and owner name
+      selectedNames.push(ownerName); // Store owner name
+      selectedInt.push(instituteName); // Store institute name
     });
 
     if (selectedNumbers.length === 0) {
@@ -622,7 +624,7 @@ document.getElementById("sendBulkMessage").addEventListener("click", function ()
       return;
     }
 
-    // Send the selected numbers and names to the backend
+    // Send the selected numbers, names, and institute names to the backend
     fetch("/send-bulk-message", {
       method: "POST",
       headers: {
@@ -630,7 +632,8 @@ document.getElementById("sendBulkMessage").addEventListener("click", function ()
       },
       body: JSON.stringify({
         numbers: selectedNumbers, // Send the selected numbers
-        names: selectedNames // Send the names
+        names: selectedNames, // Send the owner names
+        selectedInt: selectedInt, // Send the institute names
       }),
     })
       .then((response) => response.json())

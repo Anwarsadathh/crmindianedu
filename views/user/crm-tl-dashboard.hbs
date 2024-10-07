@@ -698,7 +698,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // Handle stage card click
+   // Handle stage card click
     document.querySelectorAll(".stage-card").forEach(function(stageCard) {
         stageCard.addEventListener("click", function() {
             selectedStage = this.dataset.stage;
@@ -706,16 +706,69 @@ document.addEventListener("DOMContentLoaded", function() {
 
             showBackButton();
 
-            // Show sub-stage cards related to the selected stage
-            document.querySelectorAll(".sub-stage-card").forEach(function(card) {
-                card.classList.add("d-none");
-            });
-            document.querySelectorAll(`.sub-stage-card[data-stage="${selectedStage}"]`).forEach(function(subStageCard) {
-                subStageCard.classList.remove("d-none");
-            });
-            bootstrap.Modal.getInstance(document.getElementById('actionModal')).hide();
+            // Show the action modal
+            new bootstrap.Modal(document.getElementById('actionModal')).show();
+
+            // Update button text to "Show Sub-Stages"
+            document.getElementById("showCardsBtn").textContent = "Show Sub-Stages";
+
+            // Attach action listeners
+            document.getElementById("showCardsBtn").onclick = function() {
+                // Hide all other stages and sub-stages
+                document.querySelectorAll(".stage-card, .sub-stage-card").forEach(function(card) {
+                    card.classList.add("d-none");
+                });
+
+                // Show the clicked stage count
+                document.querySelectorAll(`.stage-card[data-stage="${selectedStage}"]`).forEach(function(stageCard) {
+                    stageCard.classList.remove("d-none");
+                });
+
+                // Show sub-stage cards related to the selected stage
+                document.querySelectorAll(`.sub-stage-card[data-stage="${selectedStage}"]`).forEach(function(subStageCard) {
+                    subStageCard.classList.remove("d-none");
+                });
+
+                bootstrap.Modal.getInstance(document.getElementById('actionModal')).hide();
+            };
+
+            document.getElementById("showTableBtn").onclick = function() {
+                // Display the table in the modal
+                const modalTableBody = document.getElementById('modalTableBody');
+                modalTableBody.innerHTML = ''; // Clear previous data
+                documents.forEach(doc => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                               <td><input type="checkbox" class="row-checkbox" data-documents='${JSON.stringify(doc)}'></td>
+                   <td>${doc.timeStamp}</td>
+                        <td>${doc.assignDate}</td>
+                            <td>${doc.name}</td>
+                            <td>${doc.email}</td>
+                            <td>${doc.mobile}</td>
+                            <td>${doc.whatsapp}</td>
+                            <td>${doc.course}</td>
+                            <td>${doc.specialization}</td>
+                    `;
+                    modalTableBody.appendChild(row);
+                });
+                bootstrap.Modal.getInstance(document.getElementById('actionModal')).hide();
+                new bootstrap.Modal(document.getElementById('detailsModal')).show();
+                
+                 document.getElementById("redirectBtn").onclick = function() {
+                    const selectedDocs = Array.from(document.querySelectorAll(".row-checkbox:checked"))
+                        .map(checkbox => JSON.parse(checkbox.getAttribute('data-documents')));
+
+                    if (selectedDocs.length === 0) {
+                        alert("Please select at least one row before proceeding.");
+                        return;
+                    }
+
+                    redirectToDetailsPage(selectedDocs);
+                };
+            };
         });
     });
+
 
     // Handle sub-stage card click
     document.querySelectorAll(".sub-stage-card").forEach(function(subStageCard) {

@@ -1639,7 +1639,7 @@ const encodedCredentials = Buffer.from(`${apiKey}:`).toString("base64"); // Enco
 
 
 router.post("/send-bulk-message", async (req, res) => {
-  const { numbers, names } = req.body; // Expect an array of names associated with each number
+  const { numbers, names, selectedInt } = req.body; // Expect arrays of numbers, names, and institute names
 
   try {
     // Ensure numbers array exists
@@ -1650,14 +1650,17 @@ router.post("/send-bulk-message", async (req, res) => {
     }
 
     // Ensure names array exists and matches the numbers array length
-    if (!names || names.length !== numbers.length) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message:
-            "Names not provided or do not match the number of recipients",
-        });
+    if (
+      !names ||
+      names.length !== numbers.length ||
+      !selectedInt ||
+      selectedInt.length !== numbers.length
+    ) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Names or institute names not provided or do not match the number of recipients",
+      });
     }
 
     // Function to send message to each number
@@ -1671,11 +1674,10 @@ router.post("/send-bulk-message", async (req, res) => {
             callbackData: "bulk_positive_message", // Optional data for callback
             type: "Template", // Type of message
             template: {
-              name: "negative_auto_msg", // Ensure this matches a defined template
+              name: "sample_template_test", // Ensure this matches a defined template
               languageCode: "en", // Assuming English language
               headerValues: [], // No PDF link required
-              // Remove fileName from the request entirely
-              bodyValues: [names[index]], // Use the corresponding name from the names array
+              bodyValues: [names[index], selectedInt[index]], // Pass both owner name and institute name
             },
           },
           {
@@ -1715,6 +1717,8 @@ router.post("/send-bulk-message", async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 });
+
+
 
 
 
