@@ -1293,10 +1293,10 @@ h3 {
 <script>
   function sendEmail(university, name, enrollmentNo, course, specialization, feePaidAmount, batch) {
     let email = '';
-    let subject = 'Request for Invoice for MBA HR Admission - January Batch';
+   let subject = `Request for Invoice for MBA HR Admission - ${batch}`;
     let body = `Dear ${university} Team,\n\n` +
                `I hope this message finds you well.\n\n` +
-               `We would like to request an invoice for one of our students who has enrolled in the January batch. Below are the details:\n\n` +
+               `We would like to request an invoice for one of our students who has enrolled in the ${batch}. Below are the details:\n\n` +
                `Name: ${name}\n` +
                `Enrollment Number: ${enrollmentNo}\n` +
                `Course: ${course}, ${specialization}\n` +
