@@ -1560,30 +1560,51 @@ router.get("/p-details", verifyClient, async (req, res) => {
 // });
 
 // Interakt API Key
-const API_KEY = "b3hCczZhNHJWdFFpSWd0NDFNUFd1b0NyYnJtUDc1VnNSd1NVeGNuN09NWTo=";  // Replace with your actual Interakt API Key
+const apiKey = "b3hCczZhNHJWdFFpSWd0NDFNUFd1b0NyYnJtUDc1VnNSd1NVeGNuN09NWTo=";  // Replace with your actual Interakt API Key
+
+const encodedCredentials = Buffer.from(`${apiKey}:`).toString("base64"); // Encode for Basic Auth
 
 router.post("/send-bulk-message", async (req, res) => {
-  const { message, numbers } = req.body;
+  const { numbers } = req.body;
 
   try {
+    // Ensure numbers array exists
+    if (!numbers || numbers.length === 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Numbers not provided" });
+    }
+
+    const messageTemplate =
+      "Dear Customer, we regret to inform you that your selection criteria do not match with any of our universities. Kindly resubmit the form or contact our help desk.";
+
+    // Function to send message to each number
     const promises = numbers.map((number) => {
       return axios
         .post(
           "https://api.interakt.ai/v1/public/message/",
           {
-            fullPhoneNumber: `91${number}`, // Format mobile number with country code
-            callbackData: "bulk_message",
+            countryCode: "+91", // Assuming country code for India, replace if needed
+            phoneNumber: number,
             type: "Text",
-            data: {
-              message: message,
+            callbackData: "bulk_message", // Optional data for callback
+            template: {
+              name: "sample_template_test", // Ensure this matches a defined template
+              languageCode: "en", // Assuming English language
+              headerValues: [], // Assuming no header values are needed
+              bodyValues: [messageTemplate], // Predefined message for all recipients
+              buttonValues: {
+                0: ["https://suggest.indianeduhub.in/"], // URL for resubmission
+                1: ["7411370505"], // Help desk phone number
+              },
             },
           },
           {
             headers: {
-              Authorization: `Basic ${API_KEY}`,
+              Authorization: `Basic ${encodedCredentials}`,
               "Content-Type": "application/json",
             },
-            timeout: 5000, // Optional: Add timeout for each request
+            timeout: 5000, // Optional: Add a timeout for each request
           }
         )
         .then(() => ({
@@ -1591,6 +1612,7 @@ router.post("/send-bulk-message", async (req, res) => {
           number,
         }))
         .catch((err) => {
+          // Error handling with detailed logging
           if (err.response) {
             console.error(`Failed to send message to ${number}:`, {
               status: err.response.status,
@@ -1602,16 +1624,72 @@ router.post("/send-bulk-message", async (req, res) => {
           }
           return { success: false, number, error: err.message };
         });
-
     });
 
+    // Wait for all promises (messages) to resolve
     const results = await Promise.all(promises);
+
+    // Respond with the success/failure status of each message
     res.json({ success: true, results });
   } catch (error) {
-    console.error("Error sending bulk messages:", error.message); // Log only the message
+    console.error("Error sending bulk messages:", error.message);
     res.status(500).json({ success: false, error: error.message });
   }
 });
+
+
+
+
+// router.post("/send-bulk-message", async (req, res) => {
+//   const { message, numbers } = req.body;
+
+//   try {
+//     const promises = numbers.map((number) => {
+//       return axios
+//         .post(
+//           "https://api.interakt.ai/v1/public/message/",
+//           {
+//             fullPhoneNumber: `91${number}`, // Format mobile number with country code
+//             callbackData: "bulk_message",
+//             type: "Text",
+//             data: {
+//               message: message,
+//             },
+//           },
+//           {
+//             headers: {
+//               Authorization: `Basic ${apiKey}`,
+//               "Content-Type": "application/json",
+//             },
+//             timeout: 5000, // Optional: Add timeout for each request
+//           }
+//         )
+//         .then(() => ({
+//           success: true,
+//           number,
+//         }))
+//         .catch((err) => {
+//           if (err.response) {
+//             console.error(`Failed to send message to ${number}:`, {
+//               status: err.response.status,
+//               data: err.response.data,
+//               headers: err.response.headers,
+//             });
+//           } else {
+//             console.error(`Failed to send message to ${number}:`, err.message);
+//           }
+//           return { success: false, number, error: err.message };
+//         });
+
+//     });
+
+//     const results = await Promise.all(promises);
+//     res.json({ success: true, results });
+//   } catch (error) {
+//     console.error("Error sending bulk messages:", error.message); // Log only the message
+//     res.status(500).json({ success: false, error: error.message });
+//   }
+// });
 
 
 router.get("/ap-details",verifyClient, async (req, res) => {

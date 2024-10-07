@@ -996,6 +996,7 @@ h3 {
                     <th class="toggle-column">Semester Status</th>
                     <th class="toggle-column">Batch</th>
                     <th class="toggle-column">Enrollment No</th>
+                    <th class="toggle-column">ApplicationNo</th>
                     <th>Degree Type</th>
                     <th>University</th>
                     <th>TEA</th>
@@ -1075,6 +1076,7 @@ h3 {
                     <td class="hideable">{{this.semesterStatus}}</td>
                     <td class="hideable">{{this.batch}}</td>
                     <td class="hideable">{{this.enrollmentNo}}</td>
+                    <td class="hideable">{{this.applicationNo}}</td>
                                        <td>
         <select class="form-select">
             <option value="" {{#if (eq this.degreeType "")}}selected{{/if}}>Select Degree</option>
@@ -1083,7 +1085,7 @@ h3 {
         </select>
     </td>
        <td>
-  <a href="#" onclick="sendEmail('{{this.university}}', '{{this.name}}', '{{this.enrollmentNo}}', '{{this.course}}', '{{this.specialization}}', '{{this.feePaidAmount}}', '{{this.batch}}')">
+  <a href="#" onclick="sendEmail('{{this.university}}', '{{this.name}}', '{{this.enrollmentNo}}', '{{this.course}}', '{{this.specialization}}', '{{this.feePaidAmount}}', '{{this.feepaid}}', '{{this.batch}}' ,'{{this.applicationNo}}')">
     {{this.university}}
   </a>
 </td>
@@ -1291,7 +1293,7 @@ h3 {
 </div>
 
 <script>
-  function sendEmail(university, name, enrollmentNo, course, specialization, feePaidAmount, batch) {
+  function sendEmail(university, name, enrollmentNo, course, specialization, feePaidAmount,feepaid, batch,applicationNo) {
     let email = '';
    let subject = `Request for Invoice for MBA HR Admission - ${batch}`;
     let body = `Dear ${university} Team,\n\n` +
@@ -1301,14 +1303,17 @@ h3 {
                `Enrollment Number: ${enrollmentNo}\n` +
                `Course: ${course}, ${specialization}\n` +
                `Fee Paid: ₹${feePaidAmount}\n` +
-               `Batch: ${batch}\n\n` +
+               `Mode of Payment: ${feepaid}\n` +
+               `Batch: ${batch}\n` +
+               `Application: ${applicationNo}\n\n` +
+          
                `Please provide the invoice for this payment at your earliest convenience to enable the release of our payout.\n\n` +
                `Should you require any additional information, please feel free to reach out.\n\n` +
                `Thank you for your assistance.\n\n` +
                `Best regards,\n` +
-               `[Your Name]\n` +
-               `[Your Position]\n` +
-               `[Your Contact Information]`;
+               `Hafsa Rouf\n` +
+               `Finance Team\n` +
+               `9945330505`;
 
     // Convert the university name to lowercase to handle case-insensitive matching
     switch (university.toLowerCase()) {
@@ -2012,7 +2017,7 @@ $(function() {
     var yearSearch = selectedYear ? selectedYear : '';
 
     // Apply column-specific filters (for example: column 29 for university, column 3 for year)
-    table.column(30).search(universitySearch).draw(); // Assuming column 29 is university
+    table.column(31).search(universitySearch).draw(); // Assuming column 29 is university
     table.column(3).search(yearSearch).draw(); // Assuming column 3 is date year
 
     hideHideableElements(); // Hide elements with .hideable class after filtering

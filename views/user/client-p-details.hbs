@@ -506,6 +506,7 @@ button{
 </tbody>
 
 
+
 </table>
 
   
@@ -515,7 +516,7 @@ button{
 
  
 
-<!-- Bulk Send Modal -->
+{{!-- <!-- Bulk Send Modal -->
 <div class="modal fade" id="bulkSendModal" tabindex="-1" role="dialog" aria-labelledby="bulkSendModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -578,6 +579,69 @@ document.getElementById("sendBulkMessage").addEventListener("click", function ()
     });
 });
 
+</script> --}}
+<!-- Bulk Send Modal -->
+<div class="modal fade" id="bulkSendModal" tabindex="-1" role="dialog" aria-labelledby="bulkSendModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="bulkSendModalLabel">Send WhatsApp Message</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>The predefined template message will be sent to all selected recipients.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="sendBulkMessage">Send Message</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Script to handle sending bulk messages -->
+<script>
+  document.getElementById("sendBulkMessage").addEventListener("click", function () {
+    const selectedNumbers = [];
+
+    // Loop through each partner and collect selected mobile numbers
+    document.querySelectorAll(".select-partner:checked").forEach((checkbox) => {
+      const row = checkbox.closest("tr");
+      const mobileNumber = row.querySelector("td:nth-child(6)").innerText.trim(); // Fetch mobile number from the table
+      selectedNumbers.push(mobileNumber);
+    });
+
+    if (selectedNumbers.length === 0) {
+      alert("No recipients selected.");
+      return;
+    }
+
+    // Send the selected numbers to the backend
+    fetch("/send-bulk-message", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        numbers: selectedNumbers, // Send the selected numbers
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          alert("Messages sent successfully!");
+        } else {
+          console.error("Error response:", data);
+          alert("Error sending messages.");
+        }
+      })
+      .catch((error) => {
+        console.error("Fetch error:", error);
+        alert("Network error occurred while sending messages.");
+      });
+  });
 </script>
 
 
