@@ -592,6 +592,11 @@ document.getElementById("sendBulkMessage").addEventListener("click", function ()
       </div>
       <div class="modal-body">
         <p>The predefined template message will be sent to all selected recipients.</p>
+        <div class="form-group">
+          <label for="templateNameInput">Template Name:</label>
+         <input type="text" id="templateNameInput" class="form-control" placeholder="Enter Template Name">
+
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -606,6 +611,12 @@ document.getElementById("sendBulkMessage").addEventListener("click", function ()
     const selectedNumbers = [];
     const selectedNames = [];
     const selectedInt = []; // Track institute names
+    const templateName = document.getElementById("templateNameInput").value.trim(); // Get template name input
+
+    if (!templateName) {
+      alert("Please enter a template name.");
+      return;
+    }
 
     // Loop through each partner and collect selected mobile numbers, owner names, and institute names
     document.querySelectorAll(".select-partner:checked").forEach((checkbox) => {
@@ -624,7 +635,7 @@ document.getElementById("sendBulkMessage").addEventListener("click", function ()
       return;
     }
 
-    // Send the selected numbers, names, and institute names to the backend
+    // Send the selected numbers, names, institute names, and template name to the backend
     fetch("/send-bulk-message", {
       method: "POST",
       headers: {
@@ -634,6 +645,7 @@ document.getElementById("sendBulkMessage").addEventListener("click", function ()
         numbers: selectedNumbers, // Send the selected numbers
         names: selectedNames, // Send the owner names
         selectedInt: selectedInt, // Send the institute names
+        templateName: templateName, // Send the dynamic template name
       }),
     })
       .then((response) => response.json())
@@ -641,8 +653,8 @@ document.getElementById("sendBulkMessage").addEventListener("click", function ()
         if (data.success) {
           alert("Messages sent successfully!");
         } else {
-          console.error("Error response:", data);
-          alert("Error sending messages.");
+          // Show error in alert if available
+          alert(`Error: ${data.message || "An error occurred while sending messages."}`);
         }
       })
       .catch((error) => {

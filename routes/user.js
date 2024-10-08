@@ -1639,17 +1639,15 @@ const encodedCredentials = Buffer.from(`${apiKey}:`).toString("base64"); // Enco
 
 
 router.post("/send-bulk-message", async (req, res) => {
-  const { numbers, names, selectedInt } = req.body; // Expect arrays of numbers, names, and institute names
+  const { numbers, names, selectedInt, templateName } = req.body; // Include templateName
 
   try {
-    // Ensure numbers array exists
     if (!numbers || numbers.length === 0) {
       return res
         .status(400)
         .json({ success: false, message: "Numbers not provided" });
     }
 
-    // Ensure names array exists and matches the numbers array length
     if (
       !names ||
       names.length !== numbers.length ||
@@ -1663,21 +1661,20 @@ router.post("/send-bulk-message", async (req, res) => {
       });
     }
 
-    // Function to send message to each number
     const promises = numbers.map((number, index) => {
       return axios
         .post(
           "https://api.interakt.ai/v1/public/message/",
           {
-            countryCode: "+91", // Assuming country code for India
-            phoneNumber: number, // WhatsApp number to send to
-            callbackData: "bulk_positive_message", // Optional data for callback
-            type: "Template", // Type of message
+            countryCode: "+91",
+            phoneNumber: number,
+            callbackData: "bulk_positive_message",
+            type: "Template",
             template: {
-              name: "sample_template_test", // Ensure this matches a defined template
-              languageCode: "en", // Assuming English language
+              name: templateName, // Use dynamic template name from the request
+              languageCode: "en",
               headerValues: [], // No PDF link required
-              bodyValues: [names[index], selectedInt[index]], // Pass both owner name and institute name
+              bodyValues: [names[index]], // Pass owner name
             },
           },
           {
@@ -1685,38 +1682,40 @@ router.post("/send-bulk-message", async (req, res) => {
               Authorization: `Basic b3hCczZhNHJWdFFpSWd0NDFNUFd1b0NyYnJtUDc1VnNSd1NVeGNuN09NWTo=`, // Replace with your actual credentials
               "Content-Type": "application/json",
             },
-            timeout: 5000, // Optional: Add a timeout for each request
+            timeout: 5000,
           }
         )
-        .then(() => ({
-          success: true,
-          number,
-        }))
+        .then(() => ({ success: true, number }))
         .catch((err) => {
-          // Error handling with detailed logging
           if (err.response) {
-            console.error(`Failed to send message to ${number}:`, {
-              status: err.response.status,
-              data: err.response.data,
-              headers: err.response.headers,
-            });
+            // Log detailed error and send back to client
+            console.error(
+              `Failed to send message to ${number}:`,
+              err.response.data
+            );
+            return {
+              success: false,
+              number,
+              error: err.response.data.message || "Failed to send message.",
+            };
           } else {
             console.error(`Failed to send message to ${number}:`, err.message);
+            return { success: false, number, error: err.message };
           }
-          return { success: false, number, error: err.message };
         });
     });
 
-    // Wait for all promises (messages) to resolve
     const results = await Promise.all(promises);
 
-    // Respond with the success/failure status of each message
-    res.json({ success: true, results });
+    // Check if any result is unsuccessful
+    const hasErrors = results.some((result) => !result.success);
+    res.json({ success: !hasErrors, results });
   } catch (error) {
     console.error("Error sending bulk messages:", error.message);
     res.status(500).json({ success: false, error: error.message });
   }
 });
+
 
 
 

@@ -140,13 +140,22 @@
     background-color: #ffc107 !important; /* Yellow */
     color: #000;
 }
-
-/* General table adjustments to maintain consistency */
+/* Ensure the table takes the full width of its container */
 .table {
-    font-size: 10px; /* Smaller font size for the table */
-    border-collapse: collapse; /* Remove gaps between borders */
+    height: 500px !important;
+    border-collapse: collapse;
+    font-size: 10px; /* Smaller font size for table content */
+    table-layout: fixed; /* Ensures fixed widths are respected */
+    overflow: auto; /* To allow scrolling if necessary */
 }
 
+/* Ensure the table header stays fixed at the top */
+.table thead th {
+    position: sticky;
+    top: 0;
+    background-color: #fff; /* Solid background color for visibility */
+    z-index: 2; /* Ensure it stays on top of other content */
+}
 
 /* Table header and cells styling */
 .table thead th,
@@ -155,12 +164,20 @@
     padding: 6px; /* Reduced padding for a smaller appearance */
     border: 1px solid #dee2e6;
     font-size: 10px; /* Consistent smaller font size */
-    width: 80px; /* Fixed width for consistency */
     overflow: hidden; /* Prevent overflow for fixed-width cells */
     text-overflow: ellipsis; /* Add ellipsis for overflowed text */
     white-space: nowrap; /* Prevent text wrapping */
 }
 
+.table thead th {
+    background-color: #232f65;
+    color: #ffffff;
+}
+
+/* Hover color for rows */
+.table tbody tr:hover {
+    background-color: #d0e3ff; 
+}
 
 /* Sticky position for the first column (studentname) */
 .table tbody td.sticky {
@@ -280,7 +297,7 @@
     z-index: 100 !important; /* Ensure the header stays on top of the table content */
     background-color: #fff ; /* Set a background color to the header */
 }
-input, select , textarea{
+input, select{
 font-size: 10px !important;
 color: black !important;
 background-color: #dee8f2 !important;
@@ -593,65 +610,15 @@ h3 {
         font-size: 10px !important;
         font-weight: 500;
        }
-
-
-/* Styling for the search box */
-.dataTables_wrapper .dataTables_filter input {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    width: 60% !important; /* Adjust width as needed */
-    font-size: 9px !important;
-    padding: 4px !important;
-    background-color: white; /* Prevent overlap */
-}
-
-/* Align the controls */
-.dataTables_wrapper .dataTables_filter {
-    text-align: end !important;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background-color: white; /* Prevent overlap */
-}
-
-/* Sticky "Show entries" dropdown */
-.dataTables_wrapper .dataTables_length {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background-color: white; /* Prevent overlap */
-    padding: 10px; /* Add padding for better spacing */
-    display: inline-block; /* Keep it aligned */
-}
-
-/* Sticky dropdown select inside the "Show entries" */
-.dataTables_wrapper .dataTables_length select {
-    font-size: 10px !important;
-    padding: 5px !important;
-    width: auto !important; /* Auto width to fit content */
-    margin-left: 10px !important;
-    z-index: 10;
-}
-
-/* Sticky pagination controls */
-.dataTables_wrapper .dataTables_paginate {
-    position: sticky;
-    bottom: 0;
-    z-index: 10;
-    background-color: white;
-    padding-bottom: 10px; /* Add some padding for clarity */
-}
-
-/* Table header styling */
-.table thead th {
-    top: 0;
-    background-color: #232f65;
-    color: #ffffff;
-    z-index: 2; /* Ensure header stays above content */
-}
-
-
+       .width{
+        width: 20px !important;
+       }
+        .widths{
+        width: 120px !important;
+       }
+        .widthsx{
+        width: 170px !important;
+       }
 </style>
 </head>
 
@@ -818,51 +785,51 @@ h3 {
             <thead>
                 <tr class="bg-light">
                     <th hidden>id</th>
-                    <th style="width: 10px !important;">No.</th>
-                    <th class="sticky">Date</th>
-                    <th class="sticky-second">Doc Date</th>
-                    <th>Student ID</th>
-                    <th class="sticky-third" >Student Name</th>
-                    <th>Course</th>
-                    <th class="toggle-column">Spec</th>
-                    <th class="toggle-column">Email</th>
-                    <th class="toggle-column">Mobile Number</th>
-                    <th class="toggle-column">State</th>
-                    <th class="toggle-column">Counselor Name</th>
-                    <th >Service Pack</th>
-                    <th class="toggle-column">Intake</th>
+                    <th class="width">No.</th>
+                    <th class="sticky width">Date</th>
+                    <th class="sticky-second width">Doc Date</th>
+                    <th class="width">Student ID</th>
+                    <th class="widths sticky-third">Student Name</th>
+                    <th class="width">Course</th>
+                    <th class="toggle-column width">Spec</th>
+                    <th class="toggle-column width">Email</th>
+                    <th class="toggle-column width">Mobile Number</th>
+                    <th class="toggle-column width">State</th>
+                    <th class="toggle-column width">Counselor Name</th>
+                    <th class="width">Service Pack</th>
+                    <th class="toggle-column width">Intake</th>
                     
-                    <th class="toggle-column">Initial Reg</th>
-                    <th class="toggle-column">Initial Reg Date</th>
-                    <th class="toggle-column">Uni Paid</th>
-                    <th >Uni Fee Paid Date</th>
-                    <th class="toggle-column">Document Status</th>
-                    <th class="toggle-column">Uni Refund Initiated</th>
-                    <th class="toggle-column">Date of Uni Refund Initiated</th>
-                    <th class="toggle-column">IEH Refund Initiated</th>
-                    <th class="toggle-column">Date of IEH Refund Initiated</th>
-                    <th class="toggle-column">Scholarship</th>
-                    <th >Mode</th>
-                    <th >Amount</th>
-                    <th class="toggle-column">Semester Status</th>
-                    <th class="toggle-column">Batch</th>
-                    <th class="toggle-column">Enrollment No</th>
-                    <th class="toggle-column">ApplicationNo</th>
-                    <th>Degree Type</th>
-                    <th>University</th>
-                    <th>TEA</th>
-                    <th>Study Status</th>
-                         <th>Payment Step 1</th> <!-- New header -->
-    <th>Details for Step 1</th> <!-- New header -->
-    <th>Payment Step 2</th> <!-- New header -->
-    <th>Details for Step 2</th> <!-- New header -->
-    <th>Payment Step 3</th> <!-- New header -->
-    <th>Details for Step 3</th> <!-- New header -->
-    <th>Final Status</th>
-    <th>TGA</th>
-    <th>Referral Wallet</th>
-    <th>Partner Wallet</th>
-    <th>Own Wallet</th>
+                    <th class="toggle-column width">Initial Reg</th>
+                    <th class="toggle-column width">Initial Reg Date</th>
+                    <th class="toggle-column widths">Uni Paid</th>
+                    <th class="widths">Uni Fee Paid Date</th>
+                    <th class="toggle-column width">Document Status</th>
+                    <th class="toggle-column width">Uni Refund Initiated</th>
+                    <th class="toggle-column width">Date of Uni Refund Initiated</th>
+                    <th class="toggle-column width">IEH Refund Initiated</th>
+                    <th class="toggle-column width">Date of IEH Refund Initiated</th>
+                    <th class="toggle-column width">Scholarship</th>
+                    <th class="widths">Mode</th>
+                    <th class="widths">Amount</th>
+                    <th class="toggle-column widths">Semester Status</th>
+                    <th class="toggle-column widths">Batch</th>
+                    <th class="toggle-column widths">Enrollment No</th>
+                    <th class="toggle-column widths">ApplicationNo</th>
+                    <th class="widths">Degree Type</th>
+                    <th class="widths">University</th>
+                    <th class="widths">TEA</th>
+                    <th class="widths" >Study Status</th>
+                         <th class="widths">Payment Step 1</th> <!-- New header -->
+    <th class="widthsx">Details for Step 1</th> <!-- New header -->
+    <th class="widths">Payment Step 2</th> <!-- New header -->
+    <th class="widthsx">Details for Step 2</th> <!-- New header -->
+    <th class="widths">Payment Step 3</th> <!-- New header -->
+    <th class="widthsx">Details for Step 3</th> <!-- New header -->
+    <th class="widths">Final Status</th>
+    <th class="widths">TGA</th>
+    <th class="widths">Referral Wallet</th>
+    <th class="widths">Partner Wallet</th>
+    <th class="widths">Own Wallet</th>
     {{!-- <th>Action</th> --}}
                 </tr>
             </thead>
@@ -870,11 +837,11 @@ h3 {
                 {{#each formData}}
                <tr data-id="{{this._id}}">
         <td hidden>{{this._id}}</td> <!-- The ID is stored in a hidden cell for reference -->
-                    <td style="width: 10px !important;">{{incrementIndex @index}}</td>
+                    <td class="width">{{incrementIndex @index}}</td>
                     <td class="text-danger font-weight-bold sticky" >{{formatDates this.date}}</td>
-                    <td class="text-danger font-weight-bold sticky-second" >{{formatDates this.docApprovedDate}}</td>
-                    <td class="text-dark font-weight-bold">{{this.studentid}}</td>
-                    <td class="sticky-third" >{{this.name}}</td>
+                    <td class="text-danger font-weight-bold sticky-second">{{formatDates this.docApprovedDate}}</td>
+                    <td class="text-dark font-weight-bold ">{{this.studentid}}</td>
+                    <td class="sticky-third">{{this.name}}</td>
                     <td >{{this.course}}</td>
                      <td class="hideable">{{this.specialization}}</td>
                     <td class="hideable">{{this.email}}</td>
@@ -940,7 +907,7 @@ h3 {
     {{this.university}}
   </a>
 </td>
-<td>
+<td >
   <input 
     type="number" 
     id="totalExpectedAMt" 
@@ -978,7 +945,7 @@ h3 {
 
 
            <!-- Payment Step 1 -->
-<td>
+<td >
   <select id="paymentStep1Dropdown" class="form-select date">
     <option disabled selected>Select One</option>
     {{#each ../payments.[0].payments.[0].fields}}
@@ -1835,16 +1802,12 @@ $(function() {
     filterTable();
     hideHideableElements(); // Hide elements with .hideable class after filtering
   });
-// Initialize DataTable with pageLength and lengthMenu
-const table = $('#dataTable').DataTable({
-    pageLength: 100,
-    lengthMenu: [[100, 25, 10, -1], [100, 25, 10, "All"]],
-    scrollY: "500px", // Enable vertical scrolling for the table
-    scrollX: true, // Enable horizontal scrolling for the table
-    paging: true, // Enable pagination
-    fixedHeader: true // Makes the header fixed
-});
 
+  // Initialize DataTable with pageLength and lengthMenu
+  const table = $('#dataTable').DataTable({
+    pageLength: 100,
+    lengthMenu: [[100, 25, 10, -1], [100, 25, 10, "All"]]
+  });
 
   // Function to clear previous selections
   function clearOldSelections() {
