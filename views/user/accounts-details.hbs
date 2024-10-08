@@ -38,132 +38,28 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
-     <style>
+  <style>
     @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
-body {
-    color: #000 !important; /* Ensure all text is black */
-}
-
-select {
-    color: #000 !important; /* Ensure select text is black */
-}
-
-
-
-::-ms-input-placeholder { /* Microsoft Edge */
-    color: #000 !important;
-}
-
-
-/* CSS */
-.button-57 {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid #18181a;
-  color: #18181a;
-  display: inline-block;
-  font-size: 10px;
-  line-height: 11px;
-  border-radius: 7px;
-  padding: 8px 8px 7px;
-  text-decoration: none;
-  cursor: pointer;
-  background: #fff;
-  user-select: none;
-  margin-bottom: ;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-}
-
-.button-57 span:first-child {
-  position: relative;
-  transition: color 600ms cubic-bezier(0.48, 0, 0.12, 1);
-  z-index: 10;
-}
-
-.button-57 span:last-child {
-  color: white;
-  display: block;
-  position: absolute;
-  bottom: 0;
-  transition: all 500ms cubic-bezier(0.48, 0, 0.12, 1);
-  z-index: 100;
-  opacity: 0;
-  top: 50%;
-  left: 50%;
-  transform: translateY(225%) translateX(-50%);
-  height: 14px;
-  line-height: 13px;
-}
-
-.button-57:after {
-  content: "";
-  position: absolute;
-  bottom: -50%;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: black;
-  transform-origin: bottom center;
-  transition: transform 600ms cubic-bezier(0.48, 0, 0.12, 1);
-  transform: skewY(9.3deg) scaleY(0);
-  z-index: 50;
-}
-
-.button-57:hover:after {
-  transform-origin: bottom center;
-  transform: skewY(7.3deg) scaleY(2);
-}
-
-.button-57:hover span:last-child {
-  transform: translateX(-50%) translateY(-100%);
-  opacity: 1;
-  transition: all 900ms cubic-bezier(0.48, 0, 0.12, 1);
-}
-/* Define transition for hiding/showing fields and header */
-.hide-fields {
-  display: none;
-  opacity: 0;
-  transition: opacity 0.5s ease, display 0s ease 0.5s;
-}
-
-.show-fields {
-  display: table-cell;
-  opacity: 1;
-  transition: opacity 0.5s ease;
-}
-
-.hide-header {
-  display: none;
-}
-
-.show-header {
-  display: table-header-group;
-}
- .hide {
-            display: none;
-        }
-        .fade-out {
-            opacity: 0;
-            transition: opacity 0.5s ease-out;
-        }
-        .fade-in {
-            opacity: 1;
-            transition: opacity 0.5s ease-in;
-        }
-        .amt{
-            width: 100px !important;
-            font-size: 11px;
-        }
-         .amts{
-            width: 150px !important;
-            font-size: 11px;
-        }
 
 .search{
   
   top:6px;
-  left:10px;
+  left:9px;
+}
+     .date-input {
+    width: 100% !important;
+    padding: 6px!important;
+    font-size: 10px !important;
+    border-radius: 4px !important;
+    border: 1px solid #ced4da !important;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075) !important;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
+}
+
+.date-input:focus {
+    border-color: #80bdff !important;
+    outline: 0 !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
 }
 
 .form-control{
@@ -172,69 +68,90 @@ select {
     padding-left:32px;
 }
 .tt {
-    margin-top: 10px;
-    padding: 20px;
-    border-radius: 10px;background-color: #f2f9f6; /* Very pale mint green */
+    margin-top: 9px;
+    border-radius: 9px;
 
 }
-.btn-primary {
-    font-size: 10px;
-    background-color: #007bff !important;
-}
-.btn-dark{
-  font-size: 10px !important;
-}
-select,textarea{
-       font-size: 13px !important;
+.container{
+    background-color: #f2f9f6 !important; /* Very pale mint green */
+
 }
 .table-responsive{
-    padding: 10px;
+    padding: 9px;
 }
 .form-control:focus{
     
     border:none;
     box-shadow:none;
 }
-input, select, textarea {
-  background-color: #f0f0f0 !important; /* Light gray background */
-  border: 1px solid #cccccc !important; /* Soft gray border */
-  color: #333333 !important; /* Dark gray text for better readability */
-  padding: 8px;
-  border-radius: 4px; /* Slightly rounded corners for a modern look */
-  transition: border-color 0.3s ease, background-color 0.3s ease;
-}
-
-input:focus, select:focus, textarea:focus {
-  background-color: #ffffff !important; /* White background when focused */
-  border-color: #007BFF !important; /* Blue border on focus for better user feedback */
-  outline: none;
-}
 
 .green{
     
     color:green;
 }
-
-/* Container for table */
-.table-wrapper {
-    position: relative; /* To contain the sticky header */
-    overflow: auto; /* Allows the table body to scroll */
-    height: 70vh; /* Use viewport height units to make it responsive */
-    max-height: 100vh; /* Ensure it doesn't exceed the screen height */
-    min-height: 50vh; /* Optional: Set a minimum height */
+/* Button styles */
+.btn-status {
+    font-size: 10px; /* Smaller font size for buttons */
+    padding: 4px 8px; /* Smaller padding for buttons */
+    transition: background-color 0.3s ease;
 }
 
-/* Ensure the table takes the full width of its container */
+.btn-not-paid {
+    background-color: #e8172c; /* Red */
+    color: #fff;
+}
+
+.btn-paid {
+    background-color: #28a745; /* Green */
+    color: #fff;
+}
+
+.btn-not-approved {
+    background-color: #ffc107; /* Yellow */
+    color: #000;
+}
+
+.btn-approved {
+    background-color: #17a2b8; /* Teal */
+    color: #fff;
+}
+
+.btn-not-done {
+    background-color: #ffc107; /* Yellow */
+    color: #000;
+}
+
+.btn-done {
+    background-color: #28a745; /* Green */
+    color: #fff;
+}
+
+.btn-status.active-paid {
+    background-color: #28a745 !important; /* Green */
+    color: #fff;
+}
+
+.btn-status.active-not-paid {
+    background-color: #dc3545 !important; /* Red */
+    color: #fff;
+}
+
+.btn-status.active-not-approved {
+    background-color: #ffc107 !important; /* Yellow */
+    color: #000;
+}
+{{!-- /* Ensure the table takes the full width of its container */
 .table {
-    width: 100%;
+    height: 500px !important;
     border-collapse: collapse;
     font-size: 10px; /* Smaller font size for table content */
-    table-layout: fixed; /* Ensures fixed widths are respected */
-    background-color: white !important;
+    table-layout: auto; /* Allow the table to adjust column widths based on content */
+    overflow: auto; /* To allow scrolling if necessary */
+    width: 100%; /* Ensure the table takes full width of the container */
 }
 
 /* Ensure the table header stays fixed at the top */
-.table thead {
+.table thead th {
     position: sticky;
     top: 0;
     background-color: #fff; /* Solid background color for visibility */
@@ -247,10 +164,9 @@ input:focus, select:focus, textarea:focus {
     text-align: left;
     padding: 6px; /* Reduced padding for a smaller appearance */
     border: 1px solid #dee2e6;
-    font-size: 11px; /* Consistent smaller font size */
-    width: 120px; /* Fixed width for consistency */
-    font-family: Arial, Helvetica, sans-serif;
-    overflow: hidden; /* Prevent overflow for fixed-width cells */
+    font-size: 10px; /* Consistent smaller font size */
+    width: 90px; /* Auto width to fit content dynamically */
+    overflow: hidden; /* Prevent overflow for cells */
     text-overflow: ellipsis; /* Add ellipsis for overflowed text */
     white-space: nowrap; /* Prevent text wrapping */
 }
@@ -260,11 +176,45 @@ input:focus, select:focus, textarea:focus {
     color: #ffffff;
 }
 
-.table tbody tr:hover {
-    background-color: #d0e3ff; /* Hover color for rows */
-}
-/* Adjust other table-related styles if necessary */
 
+/* Hover color for rows */
+.table tbody tr:hover {
+    background-color: #d0e3ff; 
+} --}}
+/* Ensure the table takes the full width of its container */
+.table {
+    height: 500px !important;
+    border-collapse: collapse;
+    font-size: 10px; /* Smaller font size for table content */
+    table-layout: fixed; /* Ensures fixed widths are respected */
+    overflow: auto; /* To allow scrolling if necessary */
+}
+
+/* Ensure the table header stays fixed at the top */
+.table thead th {
+    position: sticky;
+    top: 0;
+    background-color: #fff; /* Solid background color for visibility */
+    z-index: 2; /* Ensure it stays on top of other content */
+}
+
+/* Table header and cells styling */
+.table thead th,
+.table tbody td {
+    text-align: left;
+    padding: 6px; /* Reduced padding for a smaller appearance */
+    border: 1px solid #dee2e6;
+    font-size: 10px; /* Consistent smaller font size */
+    width: 80px; /* Fixed width for consistency */
+    overflow: hidden; /* Prevent overflow for fixed-width cells */
+    text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+.table thead th {
+    background-color: #232f65;
+    color: #ffffff;
+}
 /* Sticky position for the first column (studentname) */
 .table tbody td.sticky {
     position: sticky;
@@ -322,6 +272,9 @@ input:focus, select:focus, textarea:focus {
     z-index: 3 !important;
 }
 
+/* Adjust other table-related styles if necessary */
+
+
 .btn-status.active-approved {
     background-color: #17a2b8 !important; /* Teal */
     color: #fff;
@@ -334,227 +287,88 @@ input:focus, select:focus, textarea:focus {
 
 .btn-status.active-done {
     background-color: #28a745 !important; /* Green */
-    color: #fff;
+    color: #f4f4f4;
 }
-/* DataTables Customization */
-.dataTables_wrapper {
-    position: relative; /* Make this container relative for absolute positioning */
-}
-
-/* Sticky filter box */
+/* DataTables styles */
 .dataTables_wrapper .dataTables_filter {
-    position: sticky !important; /* Make it sticky */
-    top: 0; /* Distance from the top when scrolling */
-    background: white; /* Set background to prevent overlap */
-    z-index: 10; /* Ensure it stays above other elements */
-    float: right; /* Keep alignment */
+    float: right;
     text-align: right;
-    margin-bottom: 10px;
-    padding: 5px; /* Add some padding for better look */
+    margin-bottom: 9px; /* Add margin below the search bar */
 }
 
-/* Sticky filter input */
 .dataTables_wrapper .dataTables_filter input {
     margin-left: 0.5em;
     display: inline-block;
     width: auto;
+    margin-bottom: 9px; /* Add margin below the search bar */
+        position: sticky !important;
 }
 
-/* Sticky length selection */
 .dataTables_wrapper .dataTables_length {
-    position: sticky !important; /* Make it sticky */
-    top: 0; /* Distance from the top when scrolling */
-    background: white; /* Set background to prevent overlap */
-    z-index: 10; /* Ensure it stays above other elements */
-    float: left; /* Keep alignment */
-    margin-bottom: 10px;
-    padding: 5px; /* Add some padding for better look */
+    float: left;
+    margin-bottom: 9px; /* Add margin below the length dropdown */
 }
 
-/* Sticky info */
 .dataTables_wrapper .dataTables_info {
-    position: sticky !important; /* Make it sticky */
-    top: 0; /* Distance from the top when scrolling */
-    background: white; /* Set background to prevent overlap */
-    z-index: 10; /* Ensure it stays above other elements */
-    float: left; /* Keep alignment */
-    margin-top: 10px;
+    float: left;
 }
 
-/* Sticky pagination */
 .dataTables_wrapper .dataTables_paginate {
-    position: sticky !important; /* Make it sticky */
-    top: 0; /* Distance from the top when scrolling */
-    background: white; /* Set background to prevent overlap */
-    z-index: 10; /* Ensure it stays above other elements */
-    float: right; /* Keep alignment */
-    margin-top: 10px;
+    float: right;
+    margin-top: 9px; /* Add margin above the pagination controls */
+
+}
+/* Container for table */
+.table-wrapper {
+    position: relative; /* To contain the sticky header */
+    overflow: auto; /* Allows the table body to scroll */
+    height: 80vh; /* Use viewport height units to make it responsive */
+    max-height: 100vh; /* Ensure it doesn't exceed the screen height */
+    min-height: 50vh; /* Optional: Set a minimum height */
 }
 
-
-/* Wallet Cards Layout for Small Screens */
-@media (max-width: 768px) {
-    .col-md-3 {
-        width: 48%; /* Two cards per row */
-        margin-bottom: 15px; /* Add space between cards */
-    }
-
-    .card-title {
-        font-size: 10px;
-    }
-
-    .card-text {
-        font-size: 9px;
-    }
-
-    /* Adjust table font size */
-    .table thead th,
-    .table tbody td {
-        font-size: 9px;
-        padding: 6px;
-    }
-
-    .dataTables_wrapper .dataTables_filter input {
-        width: 60% !important; /* Make the search box smaller to fit the screen */
-        font-size: 9px !important; /* Smaller font size */
-        padding: 4px !important;
-        margin: 5px 0 !important; /* Add some margin for better spacing */
-    }
-
-    .dataTables_wrapper .dataTables_length select {
-        font-size: 10px !important;
-        padding: 5px !important;
-        width: 30% !important; /* Reduce the width of the dropdown */
-        margin-left: 10px !important; /* Space between dropdown and other elements */
-    }
-
-    /* Align the controls */
-    .dataTables_wrapper .dataTables_filter {
-        text-align: end !important; /* Align the search box to the right */
-        margin-bottom: 10px !important; /* Add margin for spacing */
-    }
-
-    .dataTables_wrapper .dataTables_length {
-        text-align: end !important; /* Align the show entries dropdown */
-        margin-bottom: 10px !important; /* Add margin for spacing */
-    }
-
-    .dashboard-container {
-        padding: 10px;
-        margin-top: 60px;
-    }
-
-    .modal-dialog {
-        max-width: 100%; /* Full width on small screens */
-    }
-
-.filter-options {
-        width: 100% !important; /* Set the filter options to full width for mobile */
-        text-align: left !important; /* Align text to the left to look balanced */
-        margin-bottom: 10px !important; /* Add space below for better layout */
-    }
-
-    .filter-options label {
-        font-size: 10px !important; /* Smaller font size for mobile */
-        margin-right: 5px; /* Add space between label and dropdown */
-    }
-
-    .filter-options select {
-        width: 30% !important; /* Adjust width of the select dropdown */
-        font-size: 10px !important; /* Smaller font size for select dropdown */
-        padding: 5px !important; /* Reduce padding */
-    }
-
-    /* Adjust the 'Show' dropdown width for 10, 25, 100 */
-    .dataTables_wrapper .dataTables_length select {
-        width: 35% !important; /* Reduce width of the 'Show' dropdown */
-        font-size: 10px !important;
-        padding: 4px !important;
-        margin-left: 0 !important; /* Align to the left */
-         margin-top: 10px !important; /* Align to the left */
-    }
+#dataTable thead {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 100 !important; /* Ensure the header stays on top of the table content */
+    background-color: #fff ; /* Set a background color to the header */
 }
+input, select , textarea{
+font-size: 10px !important;
+color: black !important;
+background-color: #dee8f2 !important;
+}
+/* Button styles */
 
-.btn-glass:hover{
-    background-color: #007bff !important;
-}
-    #dataTable {
-    table-layout: auto;
-    width: 50px !important;
-}
-
-#dataTable th, #dataTable td {
-    white-space: nowrap;
-    padding: 8px 12px; /* Adjust padding as needed */
-}
-.animated-btn {
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.3s ease-in-out;
-}
-
-.animated-btn::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 300%;
-    height: 300%;
-    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 80%);
-    transition: transform 0.3s ease-in-out;
-    transform: translate(-50%, -50%) scale(0);
-    z-index: 0;
-}
-
-.animated-btn:hover::before {
-    transform: translate(-50%, -50%) scale(1);
-}
-
-.animated-btn:hover {
-    transform: scale(1.05);
-}
-
-.animated-btn {
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.3s ease-in-out;
-    font-weight: bold;
-}
-
-.animated-btn:after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255,255,255,0.4);
-    transition: opacity 0.3s ease-in-out;
-    opacity: 0;
-    z-index: 1;
-}
-
-.animated-btn:hover:after {
-    opacity: 1;
-}
-
-.animated-btn {
-    background: linear-gradient(45deg, #007bff, #0056b3);
-    border: none;
+/* Correct button: Green background for correct answers */
+.btn-correct {
+    background-color: #28a745; /* Green color */
     color: white;
-    padding: 5px 10px;
-    font-size: 10px;
-    border-radius: 5px;
-    text-transform: uppercase;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-.date{
-    font-size: 11px; 
-    width: auto;"
 }
 
- /* Modal Container */
+/* Incorrect button: Red background for wrong answers */
+.btn-incorrect {
+    background-color: #dc3545; /* Red color */
+    color: white;
+}
+button{
+    font-size: 10px !important;
+}
+
+
+.container-fluida{
+    background-color: #d6d6d6 !important;
+    padding: 9px !important;
+}
+#dataTable{
+    background-color: white !important;
+}
+label{
+        font-size: 10px !important;
+        font-weight: 500;
+       }
+
+        /* Modal Container */
 .modal {
   display: none;
   position: fixed;
@@ -832,9 +646,6 @@ h3 {
         font-size: 10px !important;
         font-weight: 500;
        }
-        .btn i {
-        margin-right: 5px; /* Space between icon and text */
-    }
 </style>
 </head>
 
@@ -1001,11 +812,11 @@ h3 {
             <thead>
                 <tr class="bg-light">
                     <th hidden>id</th>
-                    <th>No.</th>
+                    <th style="width: 10px !important;">No.</th>
                     <th class="sticky">Date</th>
                     <th class="sticky-second">Doc Date</th>
                     <th>Student ID</th>
-                    <th class="sticky-third">Student Name</th>
+                    <th class="sticky-third" style="width: 10px !important;">Student Name</th>
                     <th>Course</th>
                     <th class="toggle-column">Spec</th>
                     <th class="toggle-column">Email</th>
@@ -1053,11 +864,11 @@ h3 {
                 {{#each formData}}
                <tr data-id="{{this._id}}">
         <td hidden>{{this._id}}</td> <!-- The ID is stored in a hidden cell for reference -->
-                    <td>{{incrementIndex @index}}</td>
-                    <td class="text-danger font-weight-bold sticky" >{{formatDates this.date}}</td>
-                    <td class="text-danger font-weight-bold sticky-second">{{formatDates this.docApprovedDate}}</td>
+                    <td style="width: 10px !important;">{{incrementIndex @index}}</td>
+                    <td class="text-danger font-weight-bold sticky" style="width: 20px !important;">{{formatDates this.date}}</td>
+                    <td class="text-danger font-weight-bold sticky-second" style="width: 20px !important;">{{formatDates this.docApprovedDate}}</td>
                     <td class="text-dark font-weight-bold">{{this.studentid}}</td>
-                    <td class="sticky-third">{{this.name}}</td>
+                    <td class="sticky-third" style="width: 20px !important;">{{this.name}}</td>
                     <td >{{this.course}}</td>
                      <td class="hideable">{{this.specialization}}</td>
                     <td class="hideable">{{this.email}}</td>
