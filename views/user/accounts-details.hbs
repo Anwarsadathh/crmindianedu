@@ -140,63 +140,13 @@
     background-color: #ffc107 !important; /* Yellow */
     color: #000;
 }
-{{!-- /* Ensure the table takes the full width of its container */
+
+/* General table adjustments to maintain consistency */
 .table {
-    height: 500px !important;
-    border-collapse: collapse;
-    font-size: 10px; /* Smaller font size for table content */
-    table-layout: auto; /* Allow the table to adjust column widths based on content */
-    overflow: auto; /* To allow scrolling if necessary */
-    width: 100%; /* Ensure the table takes full width of the container */
+    font-size: 10px; /* Smaller font size for the table */
+    border-collapse: collapse; /* Remove gaps between borders */
 }
 
-/* Ensure the table header stays fixed at the top */
-.table thead th {
-    position: sticky;
-    top: 0;
-    background-color: #fff; /* Solid background color for visibility */
-    z-index: 2; /* Ensure it stays on top of other content */
-}
-
-/* Table header and cells styling */
-.table thead th,
-.table tbody td {
-    text-align: left;
-    padding: 6px; /* Reduced padding for a smaller appearance */
-    border: 1px solid #dee2e6;
-    font-size: 10px; /* Consistent smaller font size */
-    width: 90px; /* Auto width to fit content dynamically */
-    overflow: hidden; /* Prevent overflow for cells */
-    text-overflow: ellipsis; /* Add ellipsis for overflowed text */
-    white-space: nowrap; /* Prevent text wrapping */
-}
-
-.table thead th {
-    background-color: #232f65;
-    color: #ffffff;
-}
-
-
-/* Hover color for rows */
-.table tbody tr:hover {
-    background-color: #d0e3ff; 
-} --}}
-/* Ensure the table takes the full width of its container */
-.table {
-    height: 500px !important;
-    border-collapse: collapse;
-    font-size: 10px; /* Smaller font size for table content */
-    table-layout: fixed; /* Ensures fixed widths are respected */
-    overflow: auto; /* To allow scrolling if necessary */
-}
-
-/* Ensure the table header stays fixed at the top */
-.table thead th {
-    position: sticky;
-    top: 0;
-    background-color: #fff; /* Solid background color for visibility */
-    z-index: 2; /* Ensure it stays on top of other content */
-}
 
 /* Table header and cells styling */
 .table thead th,
@@ -211,10 +161,7 @@
     white-space: nowrap; /* Prevent text wrapping */
 }
 
-.table thead th {
-    background-color: #232f65;
-    color: #ffffff;
-}
+
 /* Sticky position for the first column (studentname) */
 .table tbody td.sticky {
     position: sticky;
@@ -646,6 +593,65 @@ h3 {
         font-size: 10px !important;
         font-weight: 500;
        }
+
+
+/* Styling for the search box */
+.dataTables_wrapper .dataTables_filter input {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    width: 60% !important; /* Adjust width as needed */
+    font-size: 9px !important;
+    padding: 4px !important;
+    background-color: white; /* Prevent overlap */
+}
+
+/* Align the controls */
+.dataTables_wrapper .dataTables_filter {
+    text-align: end !important;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: white; /* Prevent overlap */
+}
+
+/* Sticky "Show entries" dropdown */
+.dataTables_wrapper .dataTables_length {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: white; /* Prevent overlap */
+    padding: 10px; /* Add padding for better spacing */
+    display: inline-block; /* Keep it aligned */
+}
+
+/* Sticky dropdown select inside the "Show entries" */
+.dataTables_wrapper .dataTables_length select {
+    font-size: 10px !important;
+    padding: 5px !important;
+    width: auto !important; /* Auto width to fit content */
+    margin-left: 10px !important;
+    z-index: 10;
+}
+
+/* Sticky pagination controls */
+.dataTables_wrapper .dataTables_paginate {
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    background-color: white;
+    padding-bottom: 10px; /* Add some padding for clarity */
+}
+
+/* Table header styling */
+.table thead th {
+    top: 0;
+    background-color: #232f65;
+    color: #ffffff;
+    z-index: 2; /* Ensure header stays above content */
+}
+
+
 </style>
 </head>
 
@@ -816,7 +822,7 @@ h3 {
                     <th class="sticky">Date</th>
                     <th class="sticky-second">Doc Date</th>
                     <th>Student ID</th>
-                    <th class="sticky-third" style="width: 10px !important;">Student Name</th>
+                    <th class="sticky-third" >Student Name</th>
                     <th>Course</th>
                     <th class="toggle-column">Spec</th>
                     <th class="toggle-column">Email</th>
@@ -865,10 +871,10 @@ h3 {
                <tr data-id="{{this._id}}">
         <td hidden>{{this._id}}</td> <!-- The ID is stored in a hidden cell for reference -->
                     <td style="width: 10px !important;">{{incrementIndex @index}}</td>
-                    <td class="text-danger font-weight-bold sticky" style="width: 20px !important;">{{formatDates this.date}}</td>
-                    <td class="text-danger font-weight-bold sticky-second" style="width: 20px !important;">{{formatDates this.docApprovedDate}}</td>
+                    <td class="text-danger font-weight-bold sticky" >{{formatDates this.date}}</td>
+                    <td class="text-danger font-weight-bold sticky-second" >{{formatDates this.docApprovedDate}}</td>
                     <td class="text-dark font-weight-bold">{{this.studentid}}</td>
-                    <td class="sticky-third" style="width: 20px !important;">{{this.name}}</td>
+                    <td class="sticky-third" >{{this.name}}</td>
                     <td >{{this.course}}</td>
                      <td class="hideable">{{this.specialization}}</td>
                     <td class="hideable">{{this.email}}</td>
@@ -1829,12 +1835,16 @@ $(function() {
     filterTable();
     hideHideableElements(); // Hide elements with .hideable class after filtering
   });
-
-  // Initialize DataTable with pageLength and lengthMenu
-  const table = $('#dataTable').DataTable({
+// Initialize DataTable with pageLength and lengthMenu
+const table = $('#dataTable').DataTable({
     pageLength: 100,
-    lengthMenu: [[100, 25, 10, -1], [100, 25, 10, "All"]]
-  });
+    lengthMenu: [[100, 25, 10, -1], [100, 25, 10, "All"]],
+    scrollY: "500px", // Enable vertical scrolling for the table
+    scrollX: true, // Enable horizontal scrolling for the table
+    paging: true, // Enable pagination
+    fixedHeader: true // Makes the header fixed
+});
+
 
   // Function to clear previous selections
   function clearOldSelections() {
