@@ -1755,7 +1755,7 @@ const storagew = multer.diskStorage({
 
 // File filter for images and videos
 const fileFilter = (req, file, cb) => {
-  const allowedTypes = /jpeg|jpg|png|gif|mp4|mov|avi|mkv/;
+  const allowedTypes = /jpeg|jpg|webp|png|gif|mp4|mov|avi|mkv/;
   const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
   const mimetype = allowedTypes.test(file.mimetype);
 
@@ -1821,7 +1821,7 @@ router.post("/send-bulk-message-student", async (req, res) => {
               name: templateName,
               languageCode: "en",
               headerValues: [mediaUrl], // Add media URL dynamically
-              bodyValues: [names[index]], // Replace with appropriate values for the message body
+              bodyValues: [names[index], institutes[index]], // Replace with appropriate values for the message body
             },
           },
           {
@@ -1896,7 +1896,7 @@ router.post("/send-bulk-message-p", async (req, res) => {
               name: templateName,
               languageCode: "en",
               headerValues: [mediaUrl], // Add media URL dynamically
-              bodyValues: [names[index]],
+              bodyValues: [names[index], selectedInt[index]],
             },
           },
           {
