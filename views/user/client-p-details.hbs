@@ -460,7 +460,7 @@ button{
   <!-- Add a checkbox column to select rows -->
 <thead>
   <tr class="bg-light">
-    <th>Select</th> <!-- Checkbox column -->
+     <th><input type="checkbox" id="selectAll" />Select</th> <!-- Select All Checkbox -->
     <th>No.</th>
     <th>Institute Name</th>
     <th>Institute ID</th>
@@ -613,6 +613,14 @@ document.getElementById("sendBulkMessage").addEventListener("click", function ()
 </div>
 
 <script>
+  // Select All functionality
+  document.getElementById('selectAll').addEventListener('change', function() {
+    const checked = this.checked; // Get the checked state of the select all checkbox
+    document.querySelectorAll('.select-partner').forEach((checkbox) => {
+      checkbox.checked = checked; // Set the state of each checkbox
+    });
+  });
+
   document.getElementById("sendBulkMessage").addEventListener("click", async function () {
     const selectedNumbers = [];
     const selectedNames = [];

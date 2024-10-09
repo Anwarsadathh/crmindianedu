@@ -455,7 +455,7 @@ button{
     <table class="table" id="dataTable">
   <thead>
     <tr class="bg-light">
-        <th>Select</th>
+       <th><input type="checkbox" id="selectAll" />All</th> <!-- Select All checkbox -->
       <th>No.</th>
       <th>Date</th>
       <th>Name</th>
@@ -504,123 +504,130 @@ button{
 
  <!-- Modal for bulk sending WhatsApp messages with image upload -->
 <div class="modal fade" id="bulkSendModal" tabindex="-1" role="dialog" aria-labelledby="bulkSendModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="bulkSendModalLabel">Send WhatsApp Message</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p>The predefined template message will be sent to all selected recipients.</p>
-        <div class="form-group">
-          <label for="templateNameInput">Template Name:</label>
-          <input type="text" id="templateNameInput" class="form-control" placeholder="Enter Template Name">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bulkSendModalLabel">Send WhatsApp Message</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>The predefined template message will be sent to all selected recipients.</p>
+                <div class="form-group">
+                    <label for="templateNameInput">Template Name:</label>
+                    <input type="text" id="templateNameInput" class="form-control" placeholder="Enter Template Name">
+                </div>
+                <div class="form-group">
+                    <label for="imageUploadInput">Upload Image/Video:</label>
+                    <input type="file" id="imageUploadInput" class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="sendBulkMessage">Send Message</button>
+            </div>
         </div>
-        <div class="form-group">
-          <label for="imageUploadInput">Upload Image/Video:</label>
-          <input type="file" id="imageUploadInput" class="form-control">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="sendBulkMessage">Send Message</button>
-      </div>
     </div>
-  </div>
 </div>
 
 <!-- JavaScript for handling the bulk message sending with image upload -->
 <script>
-  document.getElementById("sendBulkMessage").addEventListener("click", async function () {
-    const selectedNumbers = [];
-    const selectedNames = [];
-    const selectedInstitutes = [];
-    const templateName = document.getElementById("templateNameInput").value.trim();
-    const mediaFile = document.getElementById("imageUploadInput").files[0]; // Get uploaded media file (image or video)
-
-    // Validate template name
-    if (!templateName) {
-      alert("Please enter a template name.");
-      return;
-    }
-
-    // Validate image upload
-    if (!mediaFile) {
-      alert("Please upload an image or video.");
-      return;
-    }
-
-    // Loop through each selected partner (replace with actual checkboxes)
-    document.querySelectorAll(".select-partner:checked").forEach((checkbox) => {
-      const row = checkbox.closest("tr");
-      const mobileNumber = row.querySelector("td:nth-child(6)").innerText.trim(); // 6th column for mobile number
-      const ownerName = row.querySelector("td:nth-child(4)").innerText.trim(); // 4th column for owner name
-      const instituteName = row.querySelector("td:nth-child(13)").innerText.trim(); // 13th column for institute ID
-
-      if (mobileNumber && ownerName && instituteName) {
-        selectedNumbers.push(mobileNumber);
-        selectedNames.push(ownerName);
-        selectedInstitutes.push(instituteName);
-      }
+    document.getElementById("selectAll").addEventListener("change", function() {
+        const checkboxes = document.querySelectorAll(".select-partner");
+        checkboxes.forEach((checkbox) => {
+            checkbox.checked = this.checked; // Set each checkbox to the state of the Select All checkbox
+        });
     });
 
-    // Validate selected recipients
-    if (selectedNumbers.length === 0 || selectedNames.length !== selectedNumbers.length || selectedInstitutes.length !== selectedNumbers.length) {
-      alert("Names or institute names not provided or do not match the number of recipients.");
-      return;
-    }
+    document.getElementById("sendBulkMessage").addEventListener("click", async function () {
+        const selectedNumbers = [];
+        const selectedNames = [];
+        const selectedInstitutes = [];
+        const templateName = document.getElementById("templateNameInput").value.trim();
+        const mediaFile = document.getElementById("imageUploadInput").files[0]; // Get uploaded media file (image or video)
 
-    try {
-      // Upload the media to the server
-      const formData = new FormData();
-      formData.append('media', mediaFile);
-
-      const imageResponse = await fetch("/upload-media", {
-        method: "POST",
-        body: formData,
-      });
-
-      const imageData = await imageResponse.json();
-      if (!imageData.success) {
-        alert("Failed to upload media.");
-        return;
-      }
-
-      const mediaUrl = imageData.url; // Get the uploaded media URL
-
-      // Send the bulk WhatsApp message along with the media URL
-      fetch("/send-bulk-message-ap", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          numbers: selectedNumbers,
-          names: selectedNames,
-          institutes: selectedInstitutes,
-          templateName: templateName,
-          mediaUrl: mediaUrl, // Send the media URL to the backend
-        }),
-      })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          alert("Messages sent successfully!");
-        } else {
-          alert(`Error: ${data.message || "An error occurred while sending messages."}`);
+        // Validate template name
+        if (!templateName) {
+            alert("Please enter a template name.");
+            return;
         }
-      })
-      .catch((error) => {
-        console.error("Fetch error:", error);
-        alert("Network error occurred while sending messages.");
-      });
-    } catch (error) {
-      console.error("Error uploading media:", error);
-      alert("An error occurred while uploading the media.");
-    }
-  });
+
+        // Validate image upload
+        if (!mediaFile) {
+            alert("Please upload an image or video.");
+            return;
+        }
+
+        // Loop through each selected partner (replace with actual checkboxes)
+        document.querySelectorAll(".select-partner:checked").forEach((checkbox) => {
+            const row = checkbox.closest("tr");
+            const mobileNumber = row.querySelector("td:nth-child(6)").innerText.trim(); // 6th column for mobile number
+            const ownerName = row.querySelector("td:nth-child(4)").innerText.trim(); // 4th column for owner name
+            const instituteName = row.querySelector("td:nth-child(13)").innerText.trim(); // 13th column for institute ID
+
+            if (mobileNumber && ownerName && instituteName) {
+                selectedNumbers.push(mobileNumber);
+                selectedNames.push(ownerName);
+                selectedInstitutes.push(instituteName);
+            }
+        });
+
+        // Validate selected recipients
+        if (selectedNumbers.length === 0 || selectedNames.length !== selectedNumbers.length || selectedInstitutes.length !== selectedNumbers.length) {
+            alert("Names or institute names not provided or do not match the number of recipients.");
+            return;
+        }
+
+        try {
+            // Upload the media to the server
+            const formData = new FormData();
+            formData.append('media', mediaFile);
+
+            const imageResponse = await fetch("/upload-media", {
+                method: "POST",
+                body: formData,
+            });
+
+            const imageData = await imageResponse.json();
+            if (!imageData.success) {
+                alert("Failed to upload media.");
+                return;
+            }
+
+            const mediaUrl = imageData.url; // Get the uploaded media URL
+
+            // Send the bulk WhatsApp message along with the media URL
+            fetch("/send-bulk-message-ap", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    numbers: selectedNumbers,
+                    names: selectedNames,
+                    institutes: selectedInstitutes,
+                    templateName: templateName,
+                    mediaUrl: mediaUrl, // Send the media URL to the backend
+                }),
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    alert("Messages sent successfully!");
+                } else {
+                    alert(`Error: ${data.message || "An error occurred while sending messages."}`);
+                }
+            })
+            .catch((error) => {
+                console.error("Fetch error:", error);
+                alert("Network error occurred while sending messages.");
+            });
+        } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred during the process.");
+        }
+    });
 </script>
 
 
