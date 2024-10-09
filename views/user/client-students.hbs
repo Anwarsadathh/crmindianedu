@@ -15,8 +15,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Bootstrap CSS -->
-
+    
     <!-- Icon Font Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
@@ -72,7 +71,7 @@
      .date-input {
     width: 100% !important;
     padding: 6px!important;
-    font-size: 9px !important;
+    font-size: 10px !important;
     border-radius: 4px !important;
     border: 1px solid #ced4da !important;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075) !important;
@@ -114,7 +113,7 @@
 }
 /* Button styles */
 .btn-status {
-    font-size: 9px; /* Smaller font size for buttons */
+    font-size: 10px; /* Smaller font size for buttons */
     padding: 4px 8px; /* Smaller padding for buttons */
     transition: background-color 0.3s ease;
 }
@@ -168,12 +167,13 @@
     width: 100%;
     height: 500px !important;
     border-collapse: collapse;
-    font-size: 9px; /* Smaller font size for table content */
+    font-size: 10px; /* Smaller font size for table content */
     table-layout: fixed; /* Ensures fixed widths are respected */
+    overflow: auto; /* To allow scrolling if necessary */
 }
 
 /* Ensure the table header stays fixed at the top */
-.table thead {
+.table thead th {
     position: sticky;
     top: 0;
     background-color: #fff; /* Solid background color for visibility */
@@ -186,7 +186,7 @@
     text-align: left;
     padding: 6px; /* Reduced padding for a smaller appearance */
     border: 1px solid #dee2e6;
-    font-size: 9px; /* Consistent smaller font size */
+    font-size: 10px; /* Consistent smaller font size */
     width: 120px; /* Fixed width for consistency */
     overflow: hidden; /* Prevent overflow for fixed-width cells */
     text-overflow: ellipsis; /* Add ellipsis for overflowed text */
@@ -197,14 +197,68 @@
     background-color: #232f65;
     color: #ffffff;
 }
-/* Apply 9px font size to buttons and select inputs within a table */
 
-
+/* Hover color for rows */
 .table tbody tr:hover {
-    background-color: #d0e3ff; /* Hover color for rows */
+    background-color: #d0e3ff; 
 }
 
+/* Sticky position for the first column (studentname) */
+.table tbody td.sticky {
+    position: sticky;
+    left: 0;
+    background-color: #fff;
+    z-index: 1;
+}
 
+/* Sticky position for the second column (studentid) */
+.table tbody td.sticky-second {
+    position: sticky;
+    left: 120px; /* Adjust based on the width of the first sticky column */
+    background-color: #fff;
+    z-index: 1;
+}
+
+/* Sticky position for the third column */
+.table tbody td.sticky-third {
+    position: sticky;
+    left: 240px; /* Adjust based on the combined width of first and second sticky columns */
+    background-color: #fff;
+    z-index: 1;
+}
+
+/* Sticky position for the fourth column */
+.table tbody td.sticky-fourth {
+    position: sticky;
+    left: 360px; /* Adjust based on the combined width of first, second, and third sticky columns */
+    background-color: #fff;
+    z-index: 1;
+}
+
+/* Ensure that the sticky headers remain above the sticky columns */
+.table thead th.sticky {
+    position: sticky !important;
+    left: 0 !important;
+    z-index: 3 !important;
+}
+
+.table thead th.sticky-second {
+    position: sticky !important;
+    left: 120px !important;
+    z-index: 3 !important;
+}
+
+.table thead th.sticky-third {
+    position: sticky !important;
+    left: 240px !important;
+    z-index: 3 !important;
+}
+
+.table thead th.sticky-fourth {
+    position: sticky !important;
+    left: 360px !important;
+    z-index: 3 !important;
+}
 
 /* Adjust other table-related styles if necessary */
 
@@ -221,7 +275,7 @@
 
 .btn-status.active-done {
     background-color: #28a745 !important; /* Green */
-    color: #fff;
+    color: #f4f4f4;
 }
 /* DataTables styles */
 .dataTables_wrapper .dataTables_filter {
@@ -256,10 +310,19 @@
 .table-wrapper {
     position: relative; /* To contain the sticky header */
     overflow: auto; /* Allows the table body to scroll */
-    height: 450px; /* Set a height for the scrolling area */
+    height: 80vh; /* Use viewport height units to make it responsive */
+    max-height: 100vh; /* Ensure it doesn't exceed the screen height */
+    min-height: 50vh; /* Optional: Set a minimum height */
+}
+
+#dataTable thead {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 100 !important; /* Ensure the header stays on top of the table content */
+    background-color: #fff ; /* Set a background color to the header */
 }
 input, select{
-font-size: 9px !important;
+font-size: 10px !important;
 color: black !important;
 background-color: #dee8f2 !important;
 }
@@ -277,7 +340,7 @@ background-color: #dee8f2 !important;
     color: white;
 }
 button{
-    font-size: 9px !important;
+    font-size: 10px !important;
 }
 
 
@@ -288,10 +351,10 @@ button{
   border: 1px solid #18181a;
   color: #18181a;
   display: inline-block;
-  font-size: 9px;
+  font-size: 10px;
   line-height: 15px;
   border-radius: 7px;
-  padding: 8px 8px 7px;
+  padding: 6px 6px 7px;
   text-decoration: none;
   cursor: pointer;
   background: #fff;
@@ -353,9 +416,10 @@ button{
 #dataTable{
     background-color: white !important;
 }
-.btn-success{
-  background-color: #01bf1a;
-}
+label{
+        font-size: 10px !important;
+        font-weight: 500;
+       }
 </style>
 
 </head>
@@ -370,8 +434,7 @@ button{
         </div>
         <!-- Spinner End -->
 
-
-        <!-- Sidebar Start -->
+ <!-- Sidebar Start -->
         <div class="sidebar pe-4 pb-3" style="background-color: #232f65;">
             <nav class="navbar " style="background-color: #232f65;">
                 <a href="index.html" class="navbar-brand mx-4 mb-3">
@@ -390,9 +453,9 @@ button{
                     <div class="nav-item dropdown">
                          <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown"><i class="fa fa-users me-2 text-dark"></i>Message</a>
                         <div class="dropdown-menu bg-transparent border-0">
-                            <a href="/p-details" class="dropdown-item active">Partners</a>
+                            <a href="/p-details" class="dropdown-item ">Partners</a>
                             <a href="/ap-details" class="dropdown-item ">Affiliate-partners</a>
-                            <a href="/client-students" class="dropdown-item">Students</a>
+                            <a href="/client-students" class="dropdown-item active">Students</a>
                         </div>
                     </div>
                 <a href="https://app.interakt.ai/" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Interakt</a>
@@ -403,11 +466,12 @@ button{
         <!-- Sidebar End -->
 
 
+
         <!-- Content Start -->
         <div class="content">
             <!-- Navbar Start -->
             <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
-                <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
+                <a href="/accounts-dashboard" class="navbar-brand d-flex d-lg-none me-4">
                     <h2 class="text-primary mb-0"><img src="/img/ie.png" alt="Indian Edu Hub Logo" style="height: 30px;"></h2>
                 </a>
                 <a href="#" class="sidebar-toggler flex-shrink-0">
@@ -436,7 +500,7 @@ button{
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                             <img class="rounded-circle me-lg-2" src="/images/anon.webp" alt="" style="width: 40px; height: 40px;">
-                            <span class="d-none d-lg-inline-flex">Client</span>
+                            <span class="d-none d-lg-inline-flex">Accounts</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
                             <a href="#" class="dropdown-item">Log Out</a>
@@ -446,278 +510,171 @@ button{
             </nav>
             <!-- Navbar End -->
 
-
-
-            <div class="container-fluida tt  ">
-
-      <div class="table-responsive">
-        <!-- Bulk Send Button -->
-<button class="btn btn-sm btn-success float-end" id="bulkSendBtn" data-toggle="modal" data-target="#bulkSendModal">
-  Bulk Send WhatsApp Message
-</button>
-
-         <h6>Partners</h6>
- <div class="table-wrapper ">
-<table class="table" id="dataTable">
-  <!-- Add a checkbox column to select rows -->
-<thead>
-  <tr class="bg-light">
-     <th><input type="checkbox" id="selectAll" />Select</th> <!-- Select All Checkbox -->
-    <th>No.</th>
-    <th>Institute Name</th>
-    <th>Institute ID</th>
-    <th>Owner Name</th>
-    <th>Mobile</th>
-    <th>WhatsApp</th>
-    <th>Company Type</th>
-    <th>Established Date</th>
-    <th>Institute Provides</th>
-    <th>State</th>
-    <th>City</th>
-    <th>Email</th>
-    <th>Account Holder Name</th>
-    <th>Account Number</th>
-    <th>IFSC Code</th>
-    <th>Branch</th>
-  </tr>
-</thead>
-<tbody>
-  {{#each partners}}
-  <tr data-id="{{_id}}">
-    <td><input type="checkbox" class="select-partner" /></td> <!-- Checkbox for selecting -->
-    <td>{{incrementIndex @index}}</td>
-    <td>{{institutename}}</td>
-    <td>{{instituteid}}</td>
-    <td>{{owner_name}}</td>
-    <td>{{mobile_number}}</td>
-    <td>
-      <!-- WhatsApp icon button to send a message -->
-      <a href="https://wa.me/91{{mobile_number}}" target="_blank">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width="24" height="24">
-      </a>
-    </td>
-    <td>{{company_type}}</td>
-    <td>{{established_date}}</td>
-    <td>{{institute_provides}}</td>
-    <td>{{state}}</td>
-    <td>{{city}}</td>
-    <td>{{email}}</td>
-    <td>{{account_holder_name}}</td>
-    <td>{{account_number}}</td>
-    <td>{{ifsc_code}}</td>
-    <td>{{branch}}</td>
-  </tr>
-  {{/each}}
-</tbody>
-
-
-
-</table>
-
-  
-  </div>
-     </div>
-</div>
-
  
-
-{{!-- <!-- Bulk Send Modal -->
-<div class="modal fade" id="bulkSendModal" tabindex="-1" role="dialog" aria-labelledby="bulkSendModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="bulkSendModalLabel">Send WhatsApp Message</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+   
+<div class="container-fluid pt-1 px-4">
+    <div class="table-wrapper">
+        <button class="btn btn-sm btn-success float-end" id="bulkSendBtn" data-toggle="modal" data-target="#bulkSendModal">
+            Bulk Send WhatsApp Message
         </button>
-      </div>
-      <div class="modal-body">
-        <form id="bulkSendForm">
-          <div class="form-group">
-            <label for="message">Message</label>
-            <textarea class="form-control" id="message" rows="3" placeholder="Enter your message" required></textarea>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="sendBulkMessage">Send Message</button>
-      </div>
+        <table class="table" id="dataTable">
+            <thead>
+                <tr class="bg-light">
+                    <th>
+                        <input type="checkbox" id="selectAll" /> <!-- Select All Checkbox -->
+                    </th>
+                    <th class="sticky">Date</th>
+                    <th class="sticky-second">Student Name</th>
+                    <th class="sticky-third">Course</th>
+                    <th>Email</th>
+                    <th>Mobile Number</th>
+                    <th>State</th>
+                    <th>Uni Selected</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each formData}}
+                <tr data-id="{{_id}}">
+                    <td>
+                        <input type="checkbox" class="select-partner" /> <!-- Individual row checkbox -->
+                    </td>
+                    <td class="sticky">{{formatDates this.date}}</td>
+                    <td class="sticky-second">{{this.name}}</td>
+                    <td class="sticky-third">{{this.course}}</td>
+                    <td>{{this.email}}</td>
+                    <td>{{this.mobile}}</td>
+                    <td>{{this.state}}</td>
+                    <td>{{this.university}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
     </div>
-  </div>
 </div>
 
-<script>
-// Script to handle sending bulk messages
-document.getElementById("sendBulkMessage").addEventListener("click", function () {
-  const selectedNumbers = [];
-  const message = document.getElementById("message").value;
-
-  // Loop through each partner and collect selected mobile numbers
-  document.querySelectorAll(".select-partner:checked").forEach((checkbox) => {
-    const row = checkbox.closest("tr");
-    const mobileNumber = row.querySelector("td:nth-child(6)").innerText; // Fetch mobile number from the table
-    selectedNumbers.push(mobileNumber);
-  });
-
-  // Send the selected numbers and message to the backend
-  fetch("/send-bulk-message", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      message: message,
-      numbers: selectedNumbers,
-    }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.success) {
-        alert("Messages sent successfully!");
-      } else {
-        alert("Error sending messages.");
-      }
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
-});
-
-</script> --}}
-<!-- Bulk Send Modal -->
+<!-- Modal for bulk sending WhatsApp messages with image upload -->
 <div class="modal fade" id="bulkSendModal" tabindex="-1" role="dialog" aria-labelledby="bulkSendModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="bulkSendModalLabel">Send WhatsApp Message</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p>The predefined template message will be sent to all selected recipients.</p>
-        <div class="form-group">
-          <label for="templateNameInput">Template Name:</label>
-          <input type="text" id="templateNameInput" class="form-control" placeholder="Enter Template Name">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bulkSendModalLabel">Send WhatsApp Message</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>The predefined template message will be sent to all selected recipients.</p>
+                <div class="form-group">
+                    <label for="templateNameInput">Template Name:</label>
+                    <input type="text" id="templateNameInput" class="form-control" placeholder="Enter Template Name">
+                </div>
+                <div class="form-group">
+                    <label for="imageUploadInput">Upload Image/Video:</label>
+                    <input type="file" id="imageUploadInput" class="form-control" accept="image/*,video/*">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="sendBulkMessage">Send Message</button>
+            </div>
         </div>
-        <div class="form-group">
-          <label for="mediaUploadInput">Upload Image/Video:</label>
-          <input type="file" id="mediaUploadInput" class="form-control" accept="image/*,video/*">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="sendBulkMessage">Send Message</button>
-      </div>
     </div>
-  </div>
 </div>
 
+
 <script>
-  // Select All functionality
-  document.getElementById('selectAll').addEventListener('change', function() {
-    const checked = this.checked; // Get the checked state of the select all checkbox
-    document.querySelectorAll('.select-partner').forEach((checkbox) => {
-      checkbox.checked = checked; // Set the state of each checkbox
-    });
-  });
-
-  document.getElementById("sendBulkMessage").addEventListener("click", async function () {
-    const selectedNumbers = [];
-    const selectedNames = [];
-    const selectedInt = [];
-    const templateName = document.getElementById("templateNameInput").value.trim();
-    const mediaFile = document.getElementById("mediaUploadInput").files[0]; // Get uploaded file
-
-    if (!templateName) {
-      alert("Please enter a template name.");
-      return;
-    }
-
-    if (!mediaFile) {
-      alert("Please upload an image or video.");
-      return;
-    }
-
-    // Loop through each partner and collect selected mobile numbers, owner names, and institute names
-    document.querySelectorAll(".select-partner:checked").forEach((checkbox) => {
-      const row = checkbox.closest("tr");
-      const mobileNumber = row.querySelector("td:nth-child(6)").innerText.trim();
-      const instituteName = row.querySelector("td:nth-child(3)").innerText.trim();
-      const ownerName = row.querySelector("td:nth-child(5)").innerText.trim();
-
-      selectedNumbers.push(mobileNumber);
-      selectedNames.push(ownerName);
-      selectedInt.push(instituteName);
+    document.getElementById("selectAll").addEventListener("change", function () {
+        const checkboxes = document.querySelectorAll(".select-partner");
+        checkboxes.forEach((checkbox) => {
+            checkbox.checked = this.checked; // Set each checkbox to the state of the Select All checkbox
+        });
     });
 
-    if (selectedNumbers.length === 0) {
-      alert("No recipients selected.");
-      return;
-    }
+    document.getElementById("sendBulkMessage").addEventListener("click", async function () {
+        const selectedNumbers = [];
+        const selectedNames = [];
+        const selectedInstitutes = [];
+        const templateName = document.getElementById("templateNameInput").value.trim();
+        const mediaFile = document.getElementById("imageUploadInput").files[0]; // Get uploaded media file (image or video)
 
-    try {
-      // Upload the image or video to the server or cloud storage
-      const formData = new FormData();
-      formData.append('media', mediaFile);
+        // Validate template name
+        if (!templateName) {
+            alert("Please enter a template name.");
+            return;
+        }
 
-      const mediaResponse = await fetch("/upload-media", { // Modify the endpoint for your media upload logic
-        method: "POST",
-        body: formData,
-      });
+        // Validate image upload
+        if (!mediaFile) {
+            alert("Please upload an image or video.");
+            return;
+        }
 
-      const mediaData = await mediaResponse.json();
-      if (!mediaData.success) {
-        alert("Failed to upload media.");
-        return;
-      }
+        // Loop through each selected partner
+        document.querySelectorAll(".select-partner:checked").forEach((checkbox) => {
+            const row = checkbox.closest("tr");
+            const mobileNumber = row.querySelector("td:nth-child(6)").innerText.trim(); // 6th column for mobile number
+            const ownerName = row.querySelector("td:nth-child(3)").innerText.trim(); // 3rd column for student name
+            const instituteName = row.querySelector("td:nth-child(8)").innerText.trim(); // 8th column for university name
 
-      const mediaUrl = mediaData.url; // Get the uploaded media URL
+            if (mobileNumber && ownerName && instituteName) {
+                selectedNumbers.push(mobileNumber);
+                selectedNames.push(ownerName);
+                selectedInstitutes.push(instituteName);
+            }
+        });
 
-      // Send the selected numbers, names, institute names, template name, and media URL to the backend
-      const sendResponse = await fetch("/send-bulk-message-p", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          numbers: selectedNumbers,
-          names: selectedNames,
-          selectedInt: selectedInt,
-          templateName: templateName,
-          mediaUrl: mediaUrl, // Send the media URL to the backend
-        }),
-      });
+        // Validate selected recipients
+        if (selectedNumbers.length === 0 || selectedNames.length !== selectedNumbers.length || selectedInstitutes.length !== selectedNumbers.length) {
+            alert("Names or institute names not provided or do not match the number of recipients.");
+            return;
+        }
 
-      const data = await sendResponse.json();
-      if (data.success) {
-        alert("Messages sent successfully!");
-      } else {
-        alert(`Error: ${data.message || "An error occurred while sending messages."}`);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      alert("An error occurred while processing your request.");
-    }
-  });
+        try {
+            // Upload the media to the server
+            const formData = new FormData();
+            formData.append('media', mediaFile);
+
+            const imageResponse = await fetch("/upload-media", {
+                method: "POST",
+                body: formData,
+            });
+
+            const imageData = await imageResponse.json();
+            if (!imageData.success) {
+                alert("Failed to upload media.");
+                return;
+            }
+
+            const mediaUrl = imageData.url; // Get the uploaded media URL
+
+            // Send the bulk WhatsApp message along with the media URL
+            const response = await fetch("/send-bulk-message-student", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    numbers: selectedNumbers,
+                    names: selectedNames,
+                    institutes: selectedInstitutes,
+                    templateName: templateName,
+                    mediaUrl: mediaUrl, // Send the media URL to the backend
+                }),
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                alert("Messages sent successfully!");
+            } else {
+                alert(`Error: ${data.message || "An error occurred while sending messages."}`);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred during the process.");
+        }
+    });
 </script>
-
-
-
-<!-- Include SweetAlert2 for alerts -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-       <script>
-$(document).ready(function() {
-   const table = $('#dataTable').DataTable({
-        pageLength: 100, // Default to showing 100 entries
-        lengthMenu: [[100, 25, 10, -1], [100, 25, 10, "All"]] // Options for 100, 25, 10, and All entries per page
-    });
-});
-
-</script>
-
- <!-- jQuery, Popper.js, and Bootstrap JS -->
+  <!-- jQuery, Popper.js, and Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <!-- Additional JavaScript Libraries -->

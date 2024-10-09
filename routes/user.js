@@ -1724,6 +1724,25 @@ const encodedCredentials = Buffer.from(`${apiKey}:`).toString("base64"); // Enco
 
 // Configure Multer for file uploads
 // Configure storage for image and video uploads
+
+
+router.get("/client-students", verifyClient, (req, res) => {
+  serviceHelpers
+    .getAllClientdashboard()
+    .then((formData) => {
+      console.log(formData);
+      res.render("user/client-students", {
+        admin: true,
+        formData,
+      });
+    })
+    .catch((error) => {
+      console.error("Error fetching client details:", error);
+      res.status(500).send("An error occurred while fetching client details.");
+    });
+});
+
+
 // Configure storage for image and video uploads
 const storagew = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -1765,6 +1784,82 @@ router.post("/upload-media", uploadw.single("media"), (req, res) => {
   // Return success response with the file URL
   res.json({ success: true, url: mediaUrl });
 });
+
+router.post("/send-bulk-message-student", async (req, res) => {
+  const { numbers, names, institutes, templateName, mediaUrl } = req.body; // Include mediaUrl
+
+  try {
+    if (!numbers || numbers.length === 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Numbers not provided" });
+    }
+
+    if (
+      !names ||
+      names.length !== numbers.length ||
+      !institutes ||
+      institutes.length !== numbers.length
+    ) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Names or institute names not provided or do not match the number of recipients",
+      });
+    }
+
+    const promises = numbers.map((number, index) => {
+      return axios
+        .post(
+          "https://api.interakt.ai/v1/public/message/",
+          {
+            countryCode: "+91",
+            phoneNumber: number,
+            callbackData: "bulk_positive_message",
+            type: "Template",
+            template: {
+              name: templateName,
+              languageCode: "en",
+              headerValues: [mediaUrl], // Add media URL dynamically
+              bodyValues: [names[index]], // Replace with appropriate values for the message body
+            },
+          },
+          {
+            headers: {
+              Authorization: `Basic b3hCczZhNHJWdFFpSWd0NDFNUFd1b0NyYnJtUDc1VnNSd1NVeGNuN09NWTo=`, // Replace with your actual credentials
+              "Content-Type": "application/json",
+            },
+            timeout: 5000,
+          }
+        )
+        .then(() => ({ success: true, number }))
+        .catch((err) => {
+          if (err.response) {
+            console.error(
+              `Failed to send message to ${number}:`,
+              err.response.data
+            );
+            return {
+              success: false,
+              number,
+              error: err.response.data.message || "Failed to send message.",
+            };
+          } else {
+            console.error(`Failed to send message to ${number}:`, err.message);
+            return { success: false, number, error: err.message };
+          }
+        });
+    });
+
+    const results = await Promise.all(promises);
+    const hasErrors = results.some((result) => !result.success);
+    res.json({ success: !hasErrors, results });
+  } catch (error) {
+    console.error("Error sending bulk messages:", error.message);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 router.post("/send-bulk-message-p", async (req, res) => {
   const { numbers, names, selectedInt, templateName, mediaUrl } = req.body; // Include mediaUrl
 
@@ -1801,7 +1896,7 @@ router.post("/send-bulk-message-p", async (req, res) => {
               name: templateName,
               languageCode: "en",
               headerValues: [mediaUrl], // Add media URL dynamically
-              bodyValues: [names[index], selectedInt[index]],
+              bodyValues: [names[index]],
             },
           },
           {
@@ -2013,7 +2108,7 @@ router.post("/send-bulk-message-ap", async (req, res) => {
               name: templateName, // Use dynamic template name from the request
               languageCode: "en",
               headerValues: [mediaUrl], // No PDF link required
-              bodyValues: [names[index], institutes[index]], // Pass owner name
+              bodyValues: [names[index]], // Pass owner name
             },
           },
           {
