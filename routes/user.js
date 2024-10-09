@@ -1821,7 +1821,7 @@ router.post("/send-bulk-message-student", async (req, res) => {
               name: templateName,
               languageCode: "en",
               headerValues: [mediaUrl], // Add media URL dynamically
-              bodyValues: [names[index], institutes[index]], // Replace with appropriate values for the message body
+              bodyValues: [names[index]], // Replace with appropriate values for the message body
             },
           },
           {
@@ -1896,7 +1896,7 @@ router.post("/send-bulk-message-p", async (req, res) => {
               name: templateName,
               languageCode: "en",
               headerValues: [mediaUrl], // Add media URL dynamically
-              bodyValues: [names[index], selectedInt[index]],
+              bodyValues: [names[index]],
             },
           },
           {

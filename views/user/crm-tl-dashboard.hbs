@@ -505,6 +505,42 @@
     </div>
   </div>
 </div>
+<!-- Dropdown for MainStage -->
+<div class="form-group">
+  <label for="mainStageSelect">Main Stage</label>
+  <select id="mainStageSelect" class="form-select">
+    <option value="">Select Main Stage</option>
+    {{#each mainStageCounts}}
+      <option value="{{mainStage}}" data-documents='{{json this.documents}}'>{{mainStage}} ({{count}})</option>
+    {{/each}}
+  </select>
+</div>
+
+<!-- Dropdown for Stage (Populated based on selected Main Stage) -->
+<div class="form-group">
+  <label for="stageSelect">Stage</label>
+  <select id="stageSelect" class="form-select" disabled>
+    <option value="">Select Stage</option>
+    {{#each stageCounts}}
+      <option value="{{stage}}" data-main-stage="{{mainStage}}" class="d-none" data-documents='{{json this.documents}}'>
+        {{stage}} ({{count}})
+      </option>
+    {{/each}}
+  </select>
+</div>
+
+<!-- Dropdown for Sub-Stage (Populated based on selected Stage) -->
+<div class="form-group">
+  <label for="subStageSelect">Sub Stage</label>
+  <select id="subStageSelect" class="form-select" disabled>
+    <option value="">Select Sub Stage</option>
+    {{#each subStageCounts}}
+      <option value="{{subStage}}" data-stage="{{stage}}" class="d-none" data-documents='{{json this.documents}}'>
+        {{subStage}} ({{count}})
+      </option>
+    {{/each}}
+  </select>
+</div>
 
 <!-- Main Stage Cards -->
 {{#each mainStageCounts}}
