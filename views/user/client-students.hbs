@@ -420,6 +420,7 @@ label{
         font-size: 10px !important;
         font-weight: 500;
        }
+     
 </style>
 
 </head>
@@ -512,9 +513,10 @@ label{
 
  
    
-<div class="container-fluid pt-1 px-4">
+<div class="container-fluid pt-1 ">
+            <div class="bg-light rounded h-100 p-4">
     <div class="table-wrapper">
-        <button class="btn btn-sm btn-success float-end" id="bulkSendBtn" data-toggle="modal" data-target="#bulkSendModal">
+        <button class="btn btn-sm btn-success float-start" id="bulkSendBtn" data-toggle="modal" data-target="#bulkSendModal">
             Bulk Send WhatsApp Message
         </button>
         <table class="table" id="dataTable">
@@ -551,7 +553,7 @@ label{
         </table>
     </div>
 </div>
-
+  </div>
 <!-- Modal for bulk sending WhatsApp messages with image upload -->
 <div class="modal fade" id="bulkSendModal" tabindex="-1" role="dialog" aria-labelledby="bulkSendModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -573,6 +575,19 @@ label{
                     <input type="file" id="imageUploadInput" class="form-control" accept="image/*,video/*">
                 </div>
             </div>
+            <!-- Dropdown for selecting message type -->
+<div class="form-group">
+    <label for="messageTypeSelect">Select Message Type:</label>
+    <select id="messageTypeSelect" class="form-control">
+        <option value="promotional">Promotional</option>
+        <option value="transactional">Transactional</option>
+        <option value="informational">Informational</option>
+    </select>
+</div>
+
+<!-- Button to copy dropdown list options -->
+<button type="button" class="btn btn-primary" onclick="copyDropdown()">Copy Dropdown Options</button>
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" id="sendBulkMessage">Send Message</button>
@@ -673,6 +688,16 @@ label{
             alert("An error occurred during the process.");
         }
     });
+</script>
+
+       <script>
+$(document).ready(function() {
+   const table = $('#dataTable').DataTable({
+        pageLength: 100, // Default to showing 100 entries
+        lengthMenu: [[100, 25, 10, -1], [100, 25, 10, "All"]] // Options for 100, 25, 10, and All entries per page
+    });
+});
+
 </script>
   <!-- jQuery, Popper.js, and Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
