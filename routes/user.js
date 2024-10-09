@@ -1722,7 +1722,33 @@ router.post("/send-bulk-message-p", async (req, res) => {
   }
 });
 
-const uploadwh = multer({ dest: "uploads/" }); // Specify your uploads directory
+
+
+
+// Configure multer to accept only image files
+const storages = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // Specify the uploads directory
+  },
+  filename: function (req, file, cb) {
+    // Use the original file name or generate a new name
+    const ext = path.extname(file.originalname);
+    cb(null, `${Date.now()}${ext}`); // Ensure the file has an extension
+  }
+});
+
+const uploadwh = multer({
+  storage: storages,
+  fileFilter: (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    // Accept only jpg, jpeg, and png file types
+    if (ext === ".jpg" || ext === ".jpeg" || ext === ".png") {
+      cb(null, true);
+    } else {
+      cb(new Error("Only images are allowed (jpg, jpeg, png)"));
+    }
+  },
+});
 
 router.post(
   "/send-bulk-message-ap",
