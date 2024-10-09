@@ -597,8 +597,11 @@ document.getElementById("sendBulkMessage").addEventListener("click", function ()
         <p>The predefined template message will be sent to all selected recipients.</p>
         <div class="form-group">
           <label for="templateNameInput">Template Name:</label>
-         <input type="text" id="templateNameInput" class="form-control" placeholder="Enter Template Name">
-
+          <input type="text" id="templateNameInput" class="form-control" placeholder="Enter Template Name">
+        </div>
+        <div class="form-group">
+          <label for="imageUploadInput">Upload Image:</label>
+          <input type="file" id="imageUploadInput" class="form-control">
         </div>
       </div>
       <div class="modal-footer">
@@ -610,27 +613,33 @@ document.getElementById("sendBulkMessage").addEventListener("click", function ()
 </div>
 
 <script>
-  document.getElementById("sendBulkMessage").addEventListener("click", function () {
+  document.getElementById("sendBulkMessage").addEventListener("click", async function () {
     const selectedNumbers = [];
     const selectedNames = [];
-    const selectedInt = []; // Track institute names
-    const templateName = document.getElementById("templateNameInput").value.trim(); // Get template name input
+    const selectedInt = [];
+    const templateName = document.getElementById("templateNameInput").value.trim();
+    const imageFile = document.getElementById("imageUploadInput").files[0]; // Get uploaded file
 
     if (!templateName) {
       alert("Please enter a template name.");
       return;
     }
 
+    if (!imageFile) {
+      alert("Please upload an image.");
+      return;
+    }
+
     // Loop through each partner and collect selected mobile numbers, owner names, and institute names
     document.querySelectorAll(".select-partner:checked").forEach((checkbox) => {
       const row = checkbox.closest("tr");
-      const mobileNumber = row.querySelector("td:nth-child(6)").innerText.trim(); // Fetch mobile number
-      const instituteName = row.querySelector("td:nth-child(3)").innerText.trim(); // Fetch institute name
-      const ownerName = row.querySelector("td:nth-child(5)").innerText.trim(); // Fetch owner name
+      const mobileNumber = row.querySelector("td:nth-child(6)").innerText.trim();
+      const instituteName = row.querySelector("td:nth-child(3)").innerText.trim();
+      const ownerName = row.querySelector("td:nth-child(5)").innerText.trim();
 
       selectedNumbers.push(mobileNumber);
-      selectedNames.push(ownerName); // Store owner name
-      selectedInt.push(instituteName); // Store institute name
+      selectedNames.push(ownerName);
+      selectedInt.push(instituteName);
     });
 
     if (selectedNumbers.length === 0) {
@@ -638,32 +647,54 @@ document.getElementById("sendBulkMessage").addEventListener("click", function ()
       return;
     }
 
-    // Send the selected numbers, names, institute names, and template name to the backend
-    fetch("/send-bulk-message-p", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        numbers: selectedNumbers, // Send the selected numbers
-        names: selectedNames, // Send the owner names
-        selectedInt: selectedInt, // Send the institute names
-        templateName: templateName, // Send the dynamic template name
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          alert("Messages sent successfully!");
-        } else {
-          // Show error in alert if available
-          alert(`Error: ${data.message || "An error occurred while sending messages."}`);
-        }
-      })
-      .catch((error) => {
-        console.error("Fetch error:", error);
-        alert("Network error occurred while sending messages.");
+    try {
+      // Upload the image to the server or cloud storage (use your image upload logic)
+      const formData = new FormData();
+      formData.append('image', imageFile);
+
+      const imageResponse = await fetch("/upload-image", { // Modify the endpoint for your image upload logic
+        method: "POST",
+        body: formData,
       });
+
+      const imageData = await imageResponse.json();
+      if (!imageData.success) {
+        alert("Failed to upload image.");
+        return;
+      }
+
+      const mediaUrl = imageData.url; // Get the uploaded image URL
+
+      // Send the selected numbers, names, institute names, template name, and media URL to the backend
+      fetch("/send-bulk-message-p", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          numbers: selectedNumbers,
+          names: selectedNames,
+          selectedInt: selectedInt,
+          templateName: templateName,
+          mediaUrl: mediaUrl, // Send the image URL to the backend
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            alert("Messages sent successfully!");
+          } else {
+            alert(`Error: ${data.message || "An error occurred while sending messages."}`);
+          }
+        })
+        .catch((error) => {
+          console.error("Fetch error:", error);
+          alert("Network error occurred while sending messages.");
+        });
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      alert("An error occurred while uploading the image.");
+    }
   });
 </script>
 
