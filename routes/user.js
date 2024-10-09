@@ -1723,6 +1723,7 @@ const encodedCredentials = Buffer.from(`${apiKey}:`).toString("base64"); // Enco
 // });
 
 // Configure Multer for file uploads
+// Configure storage for image and video uploads
 const storagew = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "uploads/"); // Specify upload folder
@@ -1732,16 +1733,34 @@ const storagew = multer.diskStorage({
   },
 });
 
-const uploadw = multer({ storage: storagew});
+// File filter to allow only images and videos
+const fileFilter = (req, file, cb) => {
+  const fileTypes = /jpeg|jpg|png|gif|mp4|mov|avi|mkv/; // Allowed file extensions
+  const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
+  const mimeType = fileTypes.test(file.mimetype);
 
-// Image Upload Endpoint
-router.post("/upload-image", uploadw.single("image"), (req, res) => {
+  if (extname && mimeType) {
+    return cb(null, true);
+  } else {
+    cb("Error: File type not allowed! Please upload an image or a video.");
+  }
+};
+
+// Create the multer instance with storage and file filter
+const uploadw = multer({ 
+  storage: storagew,
+  fileFilter: fileFilter,
+  limits: { fileSize: 50 * 1024 * 1024 } // Set file size limit (50 MB in this case)
+});
+
+// Image and Video Upload Endpoint
+router.post("/upload-media", uploadw.single("media"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ success: false, message: "No file uploaded" });
   }
 
-  const imageUrl = `https://crm.indianeduhub.in/uploads/${req.file.filename}`; // Set the file path (modify as per your setup)
-  res.json({ success: true, url: imageUrl });
+  const mediaUrl = `https://crm.indianeduhub.in/uploads/${req.file.filename}`; // Set the file path (adjust as per your setup)
+  res.json({ success: true, url: mediaUrl });
 });
 
 router.post("/send-bulk-message-p", async (req, res) => {
