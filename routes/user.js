@@ -1761,12 +1761,14 @@ router.post(
       const templateName = req.body.templateName;
       const imageFile = req.file;
 
+      // Validate if numbers are provided
       if (!numbers || numbers.length === 0) {
         return res
           .status(400)
           .json({ success: false, message: "Numbers not provided" });
       }
 
+      // Validate if names and institutes are provided and match the number of recipients
       if (
         !names ||
         names.length !== numbers.length ||
@@ -1780,6 +1782,7 @@ router.post(
         });
       }
 
+      // Map through the numbers to send each message
       const promises = numbers.map((number, index) => {
         const messageData = {
           countryCode: "+91",
@@ -1794,6 +1797,7 @@ router.post(
           },
         };
 
+        // Add image file if it exists
         if (imageFile) {
           const imageUrl = `${req.protocol}://${req.get("host")}/uploads/${
             imageFile.filename
@@ -1804,10 +1808,11 @@ router.post(
           });
         }
 
+        // Send the message using Axios
         return axios
           .post("https://api.interakt.ai/v1/public/message/", messageData, {
             headers: {
-              Authorization: `Basic b3hCczZhNHJWdFFpSWd0NDFNUFd1b0NyYnJtUDc1VnNSd1NVeGNuN09NWTo=`, // Replace with actual credentials
+              Authorization: `Basic b3hCczZhNHJWdFFpSWd0NDFNUFd1b0NyYnJtUDc1VnNSd1NVeGNuN09NWTo=`, // Replace with your actual credentials
               "Content-Type": "application/json",
             },
             timeout: 50000,
@@ -1821,11 +1826,11 @@ router.post(
 
             if (err.response) {
               // Log full response data for debugging
+              console.error("Error Response Status:", err.response.status);
               console.error(
-                "Full response data:",
+                "Full Response Data:",
                 JSON.stringify(err.response.data, null, 2)
               );
-
               return {
                 success: false,
                 number,
@@ -1833,6 +1838,8 @@ router.post(
                 errorDetails: err.response.data || err.message,
               };
             } else {
+              // Handle network or timeout errors
+              console.error("Network or Timeout Error:", err.message);
               return {
                 success: false,
                 number,
@@ -1841,23 +1848,25 @@ router.post(
               };
             }
           });
-
       });
 
+      // Await for all message sending promises to resolve
       const results = await Promise.all(promises);
       const hasErrors = results.some((result) => !result.success);
+
+      // Send response with the results
       res.json({ success: !hasErrors, results });
     } catch (error) {
+      // Catch and log any other errors in the try block
       console.error("Error sending bulk messages:", error.message);
-      res
-        .status(500)
-        .json({
-          success: false,
-          error: "An error occurred while sending messages.",
-        });
+      res.status(500).json({
+        success: false,
+        error: "An error occurred while sending messages.",
+      });
     }
   }
 );
+
 
 
 
