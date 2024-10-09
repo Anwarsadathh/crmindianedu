@@ -1810,17 +1810,22 @@ router.post(
               Authorization: `Basic b3hCczZhNHJWdFFpSWd0NDFNUFd1b0NyYnJtUDc1VnNSd1NVeGNuN09NWTo=`, // Replace with actual credentials
               "Content-Type": "application/json",
             },
-            timeout: 5000,
+            timeout: 10000,
           })
           .then(() => ({ success: true, number }))
           .catch((err) => {
-            // Log the full error for debugging
             console.error(
               `Failed to send message to ${number}:`,
               JSON.stringify(err, null, 2)
             );
 
             if (err.response) {
+              // Log full response data for debugging
+              console.error(
+                "Full response data:",
+                JSON.stringify(err.response.data, null, 2)
+              );
+
               return {
                 success: false,
                 number,
@@ -1836,6 +1841,7 @@ router.post(
               };
             }
           });
+
       });
 
       const results = await Promise.all(promises);
