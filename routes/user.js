@@ -1724,33 +1724,34 @@ const encodedCredentials = Buffer.from(`${apiKey}:`).toString("base64"); // Enco
 
 // Configure Multer for file uploads
 // Configure storage for image and video uploads
+// Configure storage for image and video uploads
 const storagew = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/"); // Specify upload folder
+    cb(null, "uploads/"); // Make sure the uploads directory exists
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname)); // Rename file to avoid duplicates
+    cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
   },
 });
 
-// File filter to allow only images and videos
+// File filter for images and videos
 const fileFilter = (req, file, cb) => {
-  const fileTypes = /jpeg|jpg|png|gif|mp4|mov|avi|mkv/; // Allowed file extensions
-  const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
-  const mimeType = fileTypes.test(file.mimetype);
+  const allowedTypes = /jpeg|jpg|png|gif|mp4|mov|avi|mkv/;
+  const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = allowedTypes.test(file.mimetype);
 
-  if (extname && mimeType) {
+  if (extname && mimetype) {
     return cb(null, true);
   } else {
-    cb("Error: File type not allowed! Please upload an image or a video.");
+    cb("Error: Invalid file type. Only images and videos are allowed.");
   }
 };
 
-// Create the multer instance with storage and file filter
+// Multer instance for file upload
 const uploadw = multer({ 
   storage: storagew,
   fileFilter: fileFilter,
-  limits: { fileSize: 50 * 1024 * 1024 } // Set file size limit (50 MB in this case)
+  limits: { fileSize: 50 * 1024 * 1024 } // 50MB limit
 });
 
 // Image and Video Upload Endpoint
@@ -1759,10 +1760,11 @@ router.post("/upload-media", uploadw.single("media"), (req, res) => {
     return res.status(400).json({ success: false, message: "No file uploaded" });
   }
 
-  const mediaUrl = `https://crm.indianeduhub.in/uploads/${req.file.filename}`; // Set the file path (adjust as per your setup)
+  const mediaUrl = `https://crm.indianeduhub.in/uploads/${req.file.filename}`; // Modify the URL based on your server setup
+
+  // Return success response with the file URL
   res.json({ success: true, url: mediaUrl });
 });
-
 router.post("/send-bulk-message-p", async (req, res) => {
   const { numbers, names, selectedInt, templateName, mediaUrl } = req.body; // Include mediaUrl
 

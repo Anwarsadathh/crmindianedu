@@ -519,7 +519,7 @@ button{
           <input type="text" id="templateNameInput" class="form-control" placeholder="Enter Template Name">
         </div>
         <div class="form-group">
-          <label for="imageUploadInput">Upload Image:</label>
+          <label for="imageUploadInput">Upload Image/Video:</label>
           <input type="file" id="imageUploadInput" class="form-control">
         </div>
       </div>
@@ -531,14 +531,14 @@ button{
   </div>
 </div>
 
-<!-- JavaScript for handling the bulk message sending with image -->
+<!-- JavaScript for handling the bulk message sending with image upload -->
 <script>
   document.getElementById("sendBulkMessage").addEventListener("click", async function () {
     const selectedNumbers = [];
     const selectedNames = [];
     const selectedInstitutes = [];
     const templateName = document.getElementById("templateNameInput").value.trim();
-    const imageFile = document.getElementById("imageUploadInput").files[0]; // Get uploaded image file
+    const mediaFile = document.getElementById("imageUploadInput").files[0]; // Get uploaded media file (image or video)
 
     // Validate template name
     if (!templateName) {
@@ -547,12 +547,12 @@ button{
     }
 
     // Validate image upload
-    if (!imageFile) {
-      alert("Please upload an image.");
+    if (!mediaFile) {
+      alert("Please upload an image or video.");
       return;
     }
 
-    // Loop through each selected partner
+    // Loop through each selected partner (replace with actual checkboxes)
     document.querySelectorAll(".select-partner:checked").forEach((checkbox) => {
       const row = checkbox.closest("tr");
       const mobileNumber = row.querySelector("td:nth-child(6)").innerText.trim(); // 6th column for mobile number
@@ -566,31 +566,31 @@ button{
       }
     });
 
-    // Validate that the arrays have the same length
+    // Validate selected recipients
     if (selectedNumbers.length === 0 || selectedNames.length !== selectedNumbers.length || selectedInstitutes.length !== selectedNumbers.length) {
       alert("Names or institute names not provided or do not match the number of recipients.");
       return;
     }
 
     try {
-      // Upload the image to the server or cloud storage (use your image upload logic)
+      // Upload the media to the server
       const formData = new FormData();
-      formData.append('image', imageFile);
+      formData.append('media', mediaFile);
 
-      const imageResponse = await fetch("/upload-image", { // Modify the endpoint for your image upload logic
+      const imageResponse = await fetch("/upload-media", {
         method: "POST",
         body: formData,
       });
 
       const imageData = await imageResponse.json();
       if (!imageData.success) {
-        alert("Failed to upload image.");
+        alert("Failed to upload media.");
         return;
       }
 
-      const mediaUrl = imageData.url; // Get the uploaded image URL
+      const mediaUrl = imageData.url; // Get the uploaded media URL
 
-      // Send the selected numbers, names, institute names, template name, and media URL to the backend
+      // Send the bulk WhatsApp message along with the media URL
       fetch("/send-bulk-message-ap", {
         method: "POST",
         headers: {
@@ -599,26 +599,26 @@ button{
         body: JSON.stringify({
           numbers: selectedNumbers,
           names: selectedNames,
-          institutes: selectedInstitutes, // Use "institutes" to match backend route
+          institutes: selectedInstitutes,
           templateName: templateName,
-          mediaUrl: mediaUrl, // Send the image URL to the backend
+          mediaUrl: mediaUrl, // Send the media URL to the backend
         }),
       })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success) {
-            alert("Messages sent successfully!");
-          } else {
-            alert(`Error: ${data.message || "An error occurred while sending messages."}`);
-          }
-        })
-        .catch((error) => {
-          console.error("Fetch error:", error);
-          alert("Network error occurred while sending messages.");
-        });
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          alert("Messages sent successfully!");
+        } else {
+          alert(`Error: ${data.message || "An error occurred while sending messages."}`);
+        }
+      })
+      .catch((error) => {
+        console.error("Fetch error:", error);
+        alert("Network error occurred while sending messages.");
+      });
     } catch (error) {
-      console.error("Error uploading image:", error);
-      alert("An error occurred while uploading the image.");
+      console.error("Error uploading media:", error);
+      alert("An error occurred while uploading the media.");
     }
   });
 </script>
