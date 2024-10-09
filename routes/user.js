@@ -1750,48 +1750,37 @@ const uploadwh = multer({
   },
 });
 
-// Throttle function for delay between batches
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+router.post(
+  "/send-bulk-message-ap",
+  uploadwh.single("image"),
+  async (req, res) => {
+    try {
+      const numbers = JSON.parse(req.body.numbers);
+      const names = JSON.parse(req.body.names);
+      const institutes = JSON.parse(req.body.institutes);
+      const templateName = req.body.templateName;
+      const imageFile = req.file;
 
-const sendBatchMessages = async (batch, index, totalBatches) => {
-  console.log(`Sending batch ${index + 1}/${totalBatches}...`);
-  const results = await Promise.all(batch);
-  console.log(`Batch ${index + 1} completed.`);
-  return results;
-};
+      if (!numbers || numbers.length === 0) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Numbers not provided" });
+      }
 
-router.post("/send-bulk-message-ap", uploadwh.single("image"), async (req, res) => {
-  try {
-    const numbers = JSON.parse(req.body.numbers);
-    const names = JSON.parse(req.body.names);
-    const institutes = JSON.parse(req.body.institutes);
-    const templateName = req.body.templateName;
-    const imageFile = req.file;
+      if (
+        !names ||
+        names.length !== numbers.length ||
+        !institutes ||
+        institutes.length !== numbers.length
+      ) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Names or institute names not provided or do not match the number of recipients",
+        });
+      }
 
-    if (!numbers || numbers.length === 0) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Numbers not provided" });
-    }
-
-    if (
-      !names ||
-      names.length !== numbers.length ||
-      !institutes ||
-      institutes.length !== numbers.length
-    ) {
-      return res.status(400).json({
-        success: false,
-        message:
-          "Names or institute names not provided or do not match the number of recipients",
-      });
-    }
-
-    // Prepare batches (e.g., 50 messages per batch)
-    const batchSize = 50;
-    const batches = [];
-    for (let i = 0; i < numbers.length; i += batchSize) {
-      const batch = numbers.slice(i, i + batchSize).map((number, index) => {
+      const promises = numbers.map((number, index) => {
         const messageData = {
           countryCode: "+91",
           phoneNumber: number,
@@ -1801,13 +1790,18 @@ router.post("/send-bulk-message-ap", uploadwh.single("image"), async (req, res) 
             name: templateName,
             languageCode: "en",
             headerValues: [],
-            bodyValues: [names[i + index], institutes[i + index]],
+            bodyValues: [names[index], institutes[index]],
           },
         };
 
         if (imageFile) {
-          const imageUrl = `${req.protocol}://${req.get("host")}/uploads/${imageFile.filename}`;
-          messageData.template.headerValues.push({ type: "Image", link: imageUrl });
+          const imageUrl = `${req.protocol}://${req.get("host")}/uploads/${
+            imageFile.filename
+          }`;
+          messageData.template.headerValues.push({
+            type: "Image",
+            link: imageUrl,
+          });
         }
 
         return axios
@@ -1816,7 +1810,7 @@ router.post("/send-bulk-message-ap", uploadwh.single("image"), async (req, res) 
               Authorization: `Basic b3hCczZhNHJWdFFpSWd0NDFNUFd1b0NyYnJtUDc1VnNSd1NVeGNuN09NWTo=`, // Replace with actual credentials
               "Content-Type": "application/json",
             },
-            timeout: 40000,
+            timeout: 50000,
           })
           .then(() => ({ success: true, number }))
           .catch((err) => {
@@ -1828,7 +1822,7 @@ router.post("/send-bulk-message-ap", uploadwh.single("image"), async (req, res) 
             if (err.response) {
               // Log full response data for debugging
               console.error(
-                `Full response data for ${number}:`,
+                "Full response data:",
                 JSON.stringify(err.response.data, null, 2)
               );
 
@@ -1850,29 +1844,20 @@ router.post("/send-bulk-message-ap", uploadwh.single("image"), async (req, res) 
 
       });
 
-      batches.push(batch);
+      const results = await Promise.all(promises);
+      const hasErrors = results.some((result) => !result.success);
+      res.json({ success: !hasErrors, results });
+    } catch (error) {
+      console.error("Error sending bulk messages:", error.message);
+      res
+        .status(500)
+        .json({
+          success: false,
+          error: "An error occurred while sending messages.",
+        });
     }
-
-    const allResults = [];
-    for (let i = 0; i < batches.length; i++) {
-      const batchResults = await sendBatchMessages(batches[i], i, batches.length);
-      allResults.push(...batchResults);
-      if (i < batches.length - 1) {
-        await delay(240000); // Wait for 1 minute between batches
-      }
-    }
-
-    const hasErrors = allResults.some(result => !result.success);
-    res.json({ success: !hasErrors, results: allResults });
-
-  } catch (error) {
-    console.error("Error sending bulk messages:", error.message);
-    res.status(500).json({
-      success: false,
-      error: "An error occurred while sending messages.",
-    });
   }
-});
+);
 
 
 
