@@ -1752,9 +1752,10 @@ const uploadwh = multer({
 
 router.post(
   "/send-bulk-message-ap",
-  uploadwh.single("image"),
+  uploadwh.single("image"), // Middleware to handle image file upload
   async (req, res) => {
     try {
+      // Parse numbers, names, and institutes from the request body
       const numbers = JSON.parse(req.body.numbers);
       const names = JSON.parse(req.body.names);
       const institutes = JSON.parse(req.body.institutes);
