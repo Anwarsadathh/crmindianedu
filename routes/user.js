@@ -1638,7 +1638,7 @@ const encodedCredentials = Buffer.from(`${apiKey}:`).toString("base64"); // Enco
 // });
 
 
-router.post("/send-bulk-message", async (req, res) => {
+router.post("/send-bulk-message-p", async (req, res) => {
   const { numbers, names, selectedInt, templateName } = req.body; // Include templateName
 
   try {
@@ -1661,6 +1661,9 @@ router.post("/send-bulk-message", async (req, res) => {
       });
     }
 
+    const mediaUrl =
+      "https://indianeduhub.in/wp-content/uploads/indian-hub-logo-vertical-e1662813848753.png"; // Media URL for the header image
+
     const promises = numbers.map((number, index) => {
       return axios
         .post(
@@ -1673,8 +1676,11 @@ router.post("/send-bulk-message", async (req, res) => {
             template: {
               name: templateName, // Use dynamic template name from the request
               languageCode: "en",
-              headerValues: [], // No PDF link required
-              bodyValues: [names[index]], // Pass owner name
+              headerValues: [mediaUrl], // Add media URL for header image
+              bodyValues: [
+                names[index],
+                selectedInt[index], // Additional body values
+              ],
             },
           },
           {
@@ -1716,7 +1722,189 @@ router.post("/send-bulk-message", async (req, res) => {
   }
 });
 
+const uploadwh = multer({ dest: "uploads/" }); // Specify your uploads directory
 
+router.post(
+  "/send-bulk-message-ap",
+  uploadwh.single("image"),
+  async (req, res) => {
+    try {
+      const numbers = JSON.parse(req.body.numbers);
+      const names = JSON.parse(req.body.names);
+      const institutes = JSON.parse(req.body.institutes);
+      const templateName = req.body.templateName;
+      const imageFile = req.file;
+
+      if (!numbers || numbers.length === 0) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Numbers not provided" });
+      }
+
+      if (
+        !names ||
+        names.length !== numbers.length ||
+        !institutes ||
+        institutes.length !== numbers.length
+      ) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Names or institute names not provided or do not match the number of recipients",
+        });
+      }
+
+      // Handle sending messages with or without images
+      const promises = numbers.map((number, index) => {
+        const messageData = {
+          countryCode: "+91",
+          phoneNumber: number,
+          callbackData: "bulk_positive_message",
+          type: "Template",
+          template: {
+            name: templateName,
+            languageCode: "en",
+            headerValues: [],
+            bodyValues: [names[index]],
+          },
+        };
+
+        // If an image is uploaded, construct the public URL for it
+        if (imageFile) {
+          const imageUrl = `${req.protocol}://${req.get("host")}/uploads/${
+            imageFile.filename
+          }`;
+          messageData.template.headerValues.push({
+            type: "Image",
+            link: imageUrl,
+          });
+        }
+
+        // Send the message data to the API
+        return axios
+          .post("https://api.interakt.ai/v1/public/message/", messageData, {
+            headers: {
+              Authorization: `Basic b3hCczZhNHJWdFFpSWd0NDFNUFd1b0NyYnJtUDc1VnNSd1NVeGNuN09NWTo=`,
+              "Content-Type": "application/json",
+            },
+            timeout: 5000,
+          })
+          .then(() => ({ success: true, number }))
+          .catch((err) => {
+            if (err.response) {
+              console.error(
+                `Failed to send message to ${number}:`,
+                err.response.data
+              );
+              return {
+                success: false,
+                number,
+                error: err.response.data.message || "Failed to send message.",
+              };
+            } else {
+              console.error(
+                `Failed to send message to ${number}:`,
+                err.message
+              );
+              return { success: false, number, error: err.message };
+            }
+          });
+      });
+
+      const results = await Promise.all(promises);
+
+      const hasErrors = results.some((result) => !result.success);
+      res.json({ success: !hasErrors, results });
+    } catch (error) {
+      console.error("Error sending bulk messages:", error.message);
+      res
+        .status(500)
+        .json({
+          success: false,
+          error: "An error occurred while sending messages.",
+        });
+    }
+  }
+);
+
+
+// router.post("/send-bulk-message-ap", async (req, res) => {
+//   const { numbers, names, institutes, templateName } = req.body; // Use "institutes" here to match the frontend
+
+//   try {
+//     if (!numbers || numbers.length === 0) {
+//       return res
+//         .status(400)
+//         .json({ success: false, message: "Numbers not provided" });
+//     }
+
+//     if (
+//       !names ||
+//       names.length !== numbers.length ||
+//       !institutes ||
+//       institutes.length !== numbers.length
+//     ) {
+//       return res.status(400).json({
+//         success: false,
+//         message:
+//           "Names or institute names not provided or do not match the number of recipients",
+//       });
+//     }
+
+//     const promises = numbers.map((number, index) => {
+//       return axios
+//         .post(
+//           "https://api.interakt.ai/v1/public/message/",
+//           {
+//             countryCode: "+91",
+//             phoneNumber: number,
+//             callbackData: "bulk_positive_message",
+//             type: "Template",
+//             template: {
+//               name: templateName, // Use dynamic template name from the request
+//               languageCode: "en",
+//               headerValues: [], // No PDF link required
+//               bodyValues: [names[index]], // Pass owner name
+//             },
+//           },
+//           {
+//             headers: {
+//               Authorization: `Basic b3hCczZhNHJWdFFpSWd0NDFNUFd1b0NyYnJtUDc1VnNSd1NVeGNuN09NWTo=`, // Replace with your actual credentials
+//               "Content-Type": "application/json",
+//             },
+//             timeout: 5000,
+//           }
+//         )
+//         .then(() => ({ success: true, number }))
+//         .catch((err) => {
+//           if (err.response) {
+//             // Log detailed error and send back to client
+//             console.error(
+//               `Failed to send message to ${number}:`,
+//               err.response.data
+//             );
+//             return {
+//               success: false,
+//               number,
+//               error: err.response.data.message || "Failed to send message.",
+//             };
+//           } else {
+//             console.error(`Failed to send message to ${number}:`, err.message);
+//             return { success: false, number, error: err.message };
+//           }
+//         });
+//     });
+
+//     const results = await Promise.all(promises);
+
+//     // Check if any result is unsuccessful
+//     const hasErrors = results.some((result) => !result.success);
+//     res.json({ success: !hasErrors, results });
+//   } catch (error) {
+//     console.error("Error sending bulk messages:", error.message);
+//     res.status(500).json({ success: false, error: error.message });
+//   }
+// });
 
 
 

@@ -353,6 +353,9 @@ button{
 #dataTable{
     background-color: white !important;
 }
+.btn-success{
+  background-color: #01bf1a;
+}
 </style>
 
 </head>
@@ -447,7 +450,7 @@ button{
 
       <div class="table-responsive">
         <!-- Bulk Send Button -->
-<button class="btn btn-sm btn-success" id="bulkSendBtn" data-toggle="modal" data-target="#bulkSendModal">
+<button class="btn btn-sm btn-success float-end" id="bulkSendBtn" data-toggle="modal" data-target="#bulkSendModal">
   Bulk Send WhatsApp Message
 </button>
 
@@ -636,7 +639,7 @@ document.getElementById("sendBulkMessage").addEventListener("click", function ()
     }
 
     // Send the selected numbers, names, institute names, and template name to the backend
-    fetch("/send-bulk-message", {
+    fetch("/send-bulk-message-p", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

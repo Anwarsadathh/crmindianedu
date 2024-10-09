@@ -390,9 +390,9 @@ button{
                             <a href="/ap-details" class="dropdown-item active">Affiliate-partners</a>
                         </div>
                     </div>
+                <a href="https://app.interakt.ai/" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Interakt</a>
                     
                 </div>
-                <a href="https://app.interakt.ai/" class="nav-item nav-link text-white "><i class="fa fa-tachometer-alt me-2 text-dark"></i>Interakt</a>
             </nav>
         </div>
         <!-- Sidebar End -->
@@ -446,11 +446,16 @@ button{
             <div class="container-fluida tt  ">
 
       <div class="table-responsive">
+        <button class="btn btn-sm btn-success float-end" id="bulkSendBtn" data-toggle="modal" data-target="#bulkSendModal">
+  Bulk Send WhatsApp Message
+</button>
         <h6>Affiliate Partners</h6>
+        
  <div class="table-wrapper ">
     <table class="table" id="dataTable">
   <thead>
     <tr class="bg-light">
+        <th>Select</th>
       <th>No.</th>
       <th>Date</th>
       <th>Name</th>
@@ -467,30 +472,29 @@ button{
     </tr>
   </thead>
   <tbody>
-    {{#each apartners}}
-    <tr data-id="{{_id}}">
-      <td>{{incrementIndex @index}}</td>
-      <td>{{formatDate createdAt}}</td>
-      <td>{{name}}</td>
-      <td>{{email}}</td>
-      <td>{{mobNumber}}</td>
-     <td>
-  <!-- WhatsApp icon button to send a message -->
-  <a href="https://wa.me/91{{mobNumber}}" target="_blank">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width="24" height="24">
-  </a>
-</td>
-
-      <td>{{workingStatus}}</td>
-      <td>{{position}}</td>
-      <td>{{presentCompany}}</td>
-      <td>{{state}}</td>
-      <td>{{city}}</td>
-      <td>{{instituteid}}</td>
-     
-    </tr>
-    {{/each}}
-  </tbody>
+  {{#each apartners}}
+  <tr data-id="{{_id}}">
+     <td><input type="checkbox" class="select-partner" /></td> <!-- Checkbox for selecting -->
+    <td>{{incrementIndex @index}}</td>
+    <td>{{formatDate createdAt}}</td>
+    <td>{{name}}</td>
+    <td>{{email}}</td>
+    <td>{{mobNumber}}</td>
+    <td>
+      <!-- WhatsApp icon button to send a message -->
+      <a href="https://wa.me/91{{mobNumber}}" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width="24" height="24">
+      </a>
+    </td>
+    <td>{{workingStatus}}</td>
+    <td>{{position}}</td>
+    <td>{{presentCompany}}</td>
+    <td>{{state}}</td>
+    <td>{{city}}</td>
+    <td>{{instituteid}}</td>
+  </tr>
+  {{/each}}
+</tbody>
 </table>
 
   
@@ -498,7 +502,112 @@ button{
      </div>
 </div>
 
- 
+<!-- Modal for bulk sending WhatsApp messages -->
+<div class="modal fade" id="bulkSendModal" tabindex="-1" role="dialog" aria-labelledby="bulkSendModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="bulkSendModalLabel">Send WhatsApp Message</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>The predefined template message will be sent to all selected recipients.</p>
+        <div class="form-group">
+          <label for="templateNameInput">Template Name:</label>
+          <input type="text" id="templateNameInput" class="form-control" placeholder="Enter Template Name">
+        </div>
+        <div class="form-group">
+          <label for="imageUpload">Upload Image (optional):</label>
+          <input type="file" id="imageUpload" class="form-control" accept="image/*">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="sendBulkMessage">Send Message</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript for handling the bulk message sending -->
+<script>
+ document.getElementById("sendBulkMessage").addEventListener("click", function () {
+  const selectedNumbers = [];
+  const selectedNames = [];
+  const selectedInstitutes = [];
+  const templateName = document.getElementById("templateNameInput").value.trim();
+  const imageFile = document.getElementById("imageUpload").files[0]; // Get the selected image file
+
+  // Validate template name
+  if (!templateName) {
+    alert("Please enter a template name.");
+    return;
+  }
+
+  // Loop through each selected partner
+  document.querySelectorAll(".select-partner:checked").forEach((checkbox) => {
+    const row = checkbox.closest("tr");
+    const mobileNumber = row.querySelector("td:nth-child(6)").innerText.trim(); // 6th column for mobile number
+    const ownerName = row.querySelector("td:nth-child(4)").innerText.trim(); // 4th column for owner name
+    const instituteName = row.querySelector("td:nth-child(13)").innerText.trim(); // 13th column for institute ID
+
+    if (!mobileNumber) {
+      alert(`Mobile number not provided for ${ownerName}. Skipping this recipient.`);
+      return; // Skip the row if no mobile number is provided
+    }
+
+    if (mobileNumber && ownerName && instituteName) {
+      selectedNumbers.push(mobileNumber);
+      selectedNames.push(ownerName);
+      selectedInstitutes.push(instituteName);
+    }
+  });
+
+  // Validate that the arrays have the same length
+  if (selectedNumbers.length === 0) {
+    alert("No valid recipients selected. Please check the data and try again.");
+    return;
+  }
+
+  if (selectedNames.length !== selectedNumbers.length || selectedInstitutes.length !== selectedNumbers.length) {
+    alert("Mismatch between selected names and institute IDs. Please check the data.");
+    return;
+  }
+
+  // Prepare form data to include the image and other details
+  const formData = new FormData();
+  formData.append("numbers", JSON.stringify(selectedNumbers));
+  formData.append("names", JSON.stringify(selectedNames));
+  formData.append("institutes", JSON.stringify(selectedInstitutes));
+  formData.append("templateName", templateName);
+  
+  if (imageFile) {
+    formData.append("image", imageFile); // Append the image file
+  }
+
+  // Send the data to the backend
+  fetch("/send-bulk-message-ap", {
+    method: "POST",
+    body: formData, // Use formData to send image and other data
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        alert("Messages sent successfully!");
+      } else {
+        alert(`Error: ${data.message || "An error occurred while sending messages."}`);
+      }
+    })
+    .catch((error) => {
+      console.error("Fetch error:", error);
+      alert("Network error occurred while sending messages.");
+    });
+});
+
+
+</script>
 
 
 
@@ -514,7 +623,9 @@ $(document).ready(function() {
 
 </script>
 
- 
+  <!-- jQuery, Popper.js, and Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <!-- Additional JavaScript Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="lib/chart/chart.min.js"></script>

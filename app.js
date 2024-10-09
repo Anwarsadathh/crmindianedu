@@ -163,7 +163,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.json());
-
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Setup persistent session storage with connect-mongo
 const sessionStore = MongoStore.create({
   mongoUrl: process.env.MONGODB_URL, // Make sure this points to the correct MongoDB URL
