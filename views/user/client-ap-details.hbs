@@ -502,7 +502,7 @@ button{
      </div>
 </div>
 
-<!-- Modal for bulk sending WhatsApp messages -->
+ <!-- Modal for bulk sending WhatsApp messages with image upload -->
 <div class="modal fade" id="bulkSendModal" tabindex="-1" role="dialog" aria-labelledby="bulkSendModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -519,8 +519,8 @@ button{
           <input type="text" id="templateNameInput" class="form-control" placeholder="Enter Template Name">
         </div>
         <div class="form-group">
-          <label for="imageUpload">Upload Image (optional):</label>
-          <input type="file" id="imageUpload" class="form-control" accept="image/*">
+          <label for="imageUploadInput">Upload Image:</label>
+          <input type="file" id="imageUploadInput" class="form-control">
         </div>
       </div>
       <div class="modal-footer">
@@ -531,82 +531,96 @@ button{
   </div>
 </div>
 
-<!-- JavaScript for handling the bulk message sending -->
+<!-- JavaScript for handling the bulk message sending with image -->
 <script>
- document.getElementById("sendBulkMessage").addEventListener("click", function () {
-  const selectedNumbers = [];
-  const selectedNames = [];
-  const selectedInstitutes = [];
-  const templateName = document.getElementById("templateNameInput").value.trim();
-  const imageFile = document.getElementById("imageUpload").files[0]; // Get the selected image file
+  document.getElementById("sendBulkMessage").addEventListener("click", async function () {
+    const selectedNumbers = [];
+    const selectedNames = [];
+    const selectedInstitutes = [];
+    const templateName = document.getElementById("templateNameInput").value.trim();
+    const imageFile = document.getElementById("imageUploadInput").files[0]; // Get uploaded image file
 
-  // Validate template name
-  if (!templateName) {
-    alert("Please enter a template name.");
-    return;
-  }
-
-  // Loop through each selected partner
-  document.querySelectorAll(".select-partner:checked").forEach((checkbox) => {
-    const row = checkbox.closest("tr");
-    const mobileNumber = row.querySelector("td:nth-child(6)").innerText.trim(); // 6th column for mobile number
-    const ownerName = row.querySelector("td:nth-child(4)").innerText.trim(); // 4th column for owner name
-    const instituteName = row.querySelector("td:nth-child(13)").innerText.trim(); // 13th column for institute ID
-
-    if (!mobileNumber) {
-      alert(`Mobile number not provided for ${ownerName}. Skipping this recipient.`);
-      return; // Skip the row if no mobile number is provided
+    // Validate template name
+    if (!templateName) {
+      alert("Please enter a template name.");
+      return;
     }
 
-    if (mobileNumber && ownerName && instituteName) {
-      selectedNumbers.push(mobileNumber);
-      selectedNames.push(ownerName);
-      selectedInstitutes.push(instituteName);
+    // Validate image upload
+    if (!imageFile) {
+      alert("Please upload an image.");
+      return;
+    }
+
+    // Loop through each selected partner
+    document.querySelectorAll(".select-partner:checked").forEach((checkbox) => {
+      const row = checkbox.closest("tr");
+      const mobileNumber = row.querySelector("td:nth-child(6)").innerText.trim(); // 6th column for mobile number
+      const ownerName = row.querySelector("td:nth-child(4)").innerText.trim(); // 4th column for owner name
+      const instituteName = row.querySelector("td:nth-child(13)").innerText.trim(); // 13th column for institute ID
+
+      if (mobileNumber && ownerName && instituteName) {
+        selectedNumbers.push(mobileNumber);
+        selectedNames.push(ownerName);
+        selectedInstitutes.push(instituteName);
+      }
+    });
+
+    // Validate that the arrays have the same length
+    if (selectedNumbers.length === 0 || selectedNames.length !== selectedNumbers.length || selectedInstitutes.length !== selectedNumbers.length) {
+      alert("Names or institute names not provided or do not match the number of recipients.");
+      return;
+    }
+
+    try {
+      // Upload the image to the server or cloud storage (use your image upload logic)
+      const formData = new FormData();
+      formData.append('image', imageFile);
+
+      const imageResponse = await fetch("/upload-image", { // Modify the endpoint for your image upload logic
+        method: "POST",
+        body: formData,
+      });
+
+      const imageData = await imageResponse.json();
+      if (!imageData.success) {
+        alert("Failed to upload image.");
+        return;
+      }
+
+      const mediaUrl = imageData.url; // Get the uploaded image URL
+
+      // Send the selected numbers, names, institute names, template name, and media URL to the backend
+      fetch("/send-bulk-message-ap", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          numbers: selectedNumbers,
+          names: selectedNames,
+          institutes: selectedInstitutes, // Use "institutes" to match backend route
+          templateName: templateName,
+          mediaUrl: mediaUrl, // Send the image URL to the backend
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            alert("Messages sent successfully!");
+          } else {
+            alert(`Error: ${data.message || "An error occurred while sending messages."}`);
+          }
+        })
+        .catch((error) => {
+          console.error("Fetch error:", error);
+          alert("Network error occurred while sending messages.");
+        });
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      alert("An error occurred while uploading the image.");
     }
   });
-
-  // Validate that the arrays have the same length
-  if (selectedNumbers.length === 0) {
-    alert("No valid recipients selected. Please check the data and try again.");
-    return;
-  }
-
-  if (selectedNames.length !== selectedNumbers.length || selectedInstitutes.length !== selectedNumbers.length) {
-    alert("Mismatch between selected names and institute IDs. Please check the data.");
-    return;
-  }
-
-  // Prepare form data to include the image and other details
-  const formData = new FormData();
-  formData.append("numbers", JSON.stringify(selectedNumbers));
-  formData.append("names", JSON.stringify(selectedNames));
-  formData.append("institutes", JSON.stringify(selectedInstitutes));
-  formData.append("templateName", templateName);
-  
-  if (imageFile) {
-    formData.append("image", imageFile); // Append the image file
-  }
-
-  // Send the data to the backend
-  fetch("/send-bulk-message-ap", {
-    method: "POST",
-    body: formData, // Use formData to send image and other data
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.success) {
-        alert("Messages sent successfully!");
-      } else {
-        alert(`Error: ${data.message || "An error occurred while sending messages."}`);
-      }
-    })
-    .catch((error) => {
-      console.error("Fetch error:", error);
-      alert("Network error occurred while sending messages.");
-    });
-});
-
-
 </script>
 
 

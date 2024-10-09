@@ -1956,83 +1956,83 @@ router.post("/send-bulk-message-p", async (req, res) => {
 
 
 
-// router.post("/send-bulk-message-ap", async (req, res) => {
-//   const { numbers, names, institutes, templateName } = req.body; // Use "institutes" here to match the frontend
+router.post("/send-bulk-message-ap", async (req, res) => {
+  const { numbers, names, institutes, templateName, mediaUrl } = req.body; // Use "institutes" here to match the frontend
 
-//   try {
-//     if (!numbers || numbers.length === 0) {
-//       return res
-//         .status(400)
-//         .json({ success: false, message: "Numbers not provided" });
-//     }
+  try {
+    if (!numbers || numbers.length === 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Numbers not provided" });
+    }
 
-//     if (
-//       !names ||
-//       names.length !== numbers.length ||
-//       !institutes ||
-//       institutes.length !== numbers.length
-//     ) {
-//       return res.status(400).json({
-//         success: false,
-//         message:
-//           "Names or institute names not provided or do not match the number of recipients",
-//       });
-//     }
+    if (
+      !names ||
+      names.length !== numbers.length ||
+      !institutes ||
+      institutes.length !== numbers.length
+    ) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Names or institute names not provided or do not match the number of recipients",
+      });
+    }
 
-//     const promises = numbers.map((number, index) => {
-//       return axios
-//         .post(
-//           "https://api.interakt.ai/v1/public/message/",
-//           {
-//             countryCode: "+91",
-//             phoneNumber: number,
-//             callbackData: "bulk_positive_message",
-//             type: "Template",
-//             template: {
-//               name: templateName, // Use dynamic template name from the request
-//               languageCode: "en",
-//               headerValues: [], // No PDF link required
-//               bodyValues: [names[index]], // Pass owner name
-//             },
-//           },
-//           {
-//             headers: {
-//               Authorization: `Basic b3hCczZhNHJWdFFpSWd0NDFNUFd1b0NyYnJtUDc1VnNSd1NVeGNuN09NWTo=`, // Replace with your actual credentials
-//               "Content-Type": "application/json",
-//             },
-//             timeout: 5000,
-//           }
-//         )
-//         .then(() => ({ success: true, number }))
-//         .catch((err) => {
-//           if (err.response) {
-//             // Log detailed error and send back to client
-//             console.error(
-//               `Failed to send message to ${number}:`,
-//               err.response.data
-//             );
-//             return {
-//               success: false,
-//               number,
-//               error: err.response.data.message || "Failed to send message.",
-//             };
-//           } else {
-//             console.error(`Failed to send message to ${number}:`, err.message);
-//             return { success: false, number, error: err.message };
-//           }
-//         });
-//     });
+    const promises = numbers.map((number, index) => {
+      return axios
+        .post(
+          "https://api.interakt.ai/v1/public/message/",
+          {
+            countryCode: "+91",
+            phoneNumber: number,
+            callbackData: "bulk_positive_message",
+            type: "Template",
+            template: {
+              name: templateName, // Use dynamic template name from the request
+              languageCode: "en",
+              headerValues: [mediaUrl], // No PDF link required
+              bodyValues: [names[index], institutes[index]], // Pass owner name
+            },
+          },
+          {
+            headers: {
+              Authorization: `Basic b3hCczZhNHJWdFFpSWd0NDFNUFd1b0NyYnJtUDc1VnNSd1NVeGNuN09NWTo=`, // Replace with your actual credentials
+              "Content-Type": "application/json",
+            },
+            timeout: 5000,
+          }
+        )
+        .then(() => ({ success: true, number }))
+        .catch((err) => {
+          if (err.response) {
+            // Log detailed error and send back to client
+            console.error(
+              `Failed to send message to ${number}:`,
+              err.response.data
+            );
+            return {
+              success: false,
+              number,
+              error: err.response.data.message || "Failed to send message.",
+            };
+          } else {
+            console.error(`Failed to send message to ${number}:`, err.message);
+            return { success: false, number, error: err.message };
+          }
+        });
+    });
 
-//     const results = await Promise.all(promises);
+    const results = await Promise.all(promises);
 
-//     // Check if any result is unsuccessful
-//     const hasErrors = results.some((result) => !result.success);
-//     res.json({ success: !hasErrors, results });
-//   } catch (error) {
-//     console.error("Error sending bulk messages:", error.message);
-//     res.status(500).json({ success: false, error: error.message });
-//   }
-// });
+    // Check if any result is unsuccessful
+    const hasErrors = results.some((result) => !result.success);
+    res.json({ success: !hasErrors, results });
+  } catch (error) {
+    console.error("Error sending bulk messages:", error.message);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
 
 
 
