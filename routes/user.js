@@ -1791,7 +1791,7 @@ router.post(
             name: templateName,
             languageCode: "en",
             headerValues: [],
-            bodyValues: [names[index]],
+            bodyValues: [names[index], institutes[index]], // Additional body values],
           },
         };
 
