@@ -1780,7 +1780,6 @@ router.post(
         });
       }
 
-      // Handle sending messages with or without images
       const promises = numbers.map((number, index) => {
         const messageData = {
           countryCode: "+91",
@@ -1791,11 +1790,10 @@ router.post(
             name: templateName,
             languageCode: "en",
             headerValues: [],
-            bodyValues: [names[index], institutes[index]], // Additional body values],
+            bodyValues: [names[index]],
           },
         };
 
-        // If an image is uploaded, construct the public URL for it
         if (imageFile) {
           const imageUrl = `${req.protocol}://${req.get("host")}/uploads/${
             imageFile.filename
@@ -1806,39 +1804,41 @@ router.post(
           });
         }
 
-        // Send the message data to the API
         return axios
           .post("https://api.interakt.ai/v1/public/message/", messageData, {
             headers: {
-              Authorization: `Basic b3hCczZhNHJWdFFpSWd0NDFNUFd1b0NyYnJtUDc1VnNSd1NVeGNuN09NWTo=`,
+              Authorization: `Basic b3hCczZhNHJWdFFpSWd0NDFNUFd1b0NyYnJtUDc1VnNSd1NVeGNuN09NWTo=`, // Replace with actual credentials
               "Content-Type": "application/json",
             },
             timeout: 5000,
           })
           .then(() => ({ success: true, number }))
           .catch((err) => {
+            // Log the full error for debugging
+            console.error(
+              `Failed to send message to ${number}:`,
+              JSON.stringify(err, null, 2)
+            );
+
             if (err.response) {
-              console.error(
-                `Failed to send message to ${number}:`,
-                err.response.data
-              );
               return {
                 success: false,
                 number,
                 error: err.response.data.message || "Failed to send message.",
+                errorDetails: err.response.data || err.message,
               };
             } else {
-              console.error(
-                `Failed to send message to ${number}:`,
-                err.message
-              );
-              return { success: false, number, error: err.message };
+              return {
+                success: false,
+                number,
+                error: err.message || "Failed to send message.",
+                errorDetails: err,
+              };
             }
           });
       });
 
       const results = await Promise.all(promises);
-
       const hasErrors = results.some((result) => !result.success);
       res.json({ success: !hasErrors, results });
     } catch (error) {
@@ -1852,6 +1852,7 @@ router.post(
     }
   }
 );
+
 
 
 // router.post("/send-bulk-message-ap", async (req, res) => {
