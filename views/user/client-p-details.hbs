@@ -525,8 +525,14 @@ button{
       <div class="modal-body">
         <p>The predefined template message will be sent to all selected recipients.</p>
         <div class="form-group">
-          <label for="templateNameInput">Template Name:</label>
-          <input type="text" id="templateNameInput" class="form-control" placeholder="Enter Template Name">
+          <label for="templateNameSelect">Template Name:</label>
+          <select id="templateNameSelect" class="form-control">
+            <option value="">Select Template Name</option>
+            <option value="students_review">students_review</option>
+            <option value="student_referral">student_referral</option>
+            <option value="ap_referral_8p">ap_referral_8p</option>
+            <option value="ap_marketing_material">ap_marketing_material</option>
+          </select>
         </div>
         <div class="form-group">
           <label for="mediaUploadInput">Upload Image/Video:</label>
@@ -540,7 +546,6 @@ button{
     </div>
   </div>
 </div>
-
 <script>
 // Select All functionality
 document.getElementById('selectAll').addEventListener('change', function() {
@@ -554,11 +559,11 @@ document.getElementById("sendBulkMessage").addEventListener("click", async funct
   const selectedNumbers = [];
   const selectedNames = [];
   const selectedInt = [];
-  const templateName = document.getElementById("templateNameInput").value.trim();
+  const templateName = document.getElementById("templateNameSelect").value.trim(); // Corrected to get value from dropdown
   const mediaFile = document.getElementById("mediaUploadInput").files[0]; // Get uploaded file
 
   if (!templateName) {
-    alert("Please enter a template name.");
+    alert("Please select a template name.");
     return;
   }
 
@@ -620,7 +625,7 @@ document.getElementById("sendBulkMessage").addEventListener("click", async funct
         numbers: selectedNumbers,
         names: selectedNames,
         selectedInt: selectedInt,
-        templateName: templateName,
+        templateName: templateName, // Send the template name from dropdown
         mediaUrl: mediaUrl,
       }),
     });

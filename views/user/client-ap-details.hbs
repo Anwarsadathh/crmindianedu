@@ -503,7 +503,7 @@ button{
      </div>
 </div>
 
- <!-- Modal for bulk sending WhatsApp messages with image upload -->
+<!-- Modal for bulk sending WhatsApp messages with image upload -->
 <div class="modal fade" id="bulkSendModal" tabindex="-1" role="dialog" aria-labelledby="bulkSendModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -516,12 +516,18 @@ button{
             <div class="modal-body">
                 <p>The predefined template message will be sent to all selected recipients.</p>
                 <div class="form-group">
-                    <label for="templateNameInput">Template Name:</label>
-                    <input type="text" id="templateNameInput" class="form-control" placeholder="Enter Template Name">
+                    <label for="templateNameSelect">Template Name:</label>
+                    <select id="templateNameSelect" class="form-control">
+                        <option value="">Select Template Name</option>
+                        <option value="students_review">students_review</option>
+                        <option value="student_referral">student_referral</option>
+                        <option value="ap_referral_8p">ap_referral_8p</option>
+                        <option value="ap_marketing_material">ap_marketing_material</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="imageUploadInput">Upload Image/Video:</label>
-                    <input type="file" id="imageUploadInput" class="form-control">
+                    <input type="file" id="imageUploadInput" class="form-control" accept="image/*,video/*">
                 </div>
             </div>
             <div class="modal-footer">
@@ -545,12 +551,12 @@ button{
         const selectedNumbers = [];
         const selectedNames = [];
         const selectedInstitutes = [];
-        const templateName = document.getElementById("templateNameInput").value.trim();
+        const templateName = document.getElementById("templateNameSelect").value.trim(); // Get selected template name
         const mediaFile = document.getElementById("imageUploadInput").files[0]; // Get uploaded media file (image or video)
 
         // Validate template name
         if (!templateName) {
-            alert("Please enter a template name.");
+            alert("Please select a template name.");
             return;
         }
 
@@ -630,6 +636,7 @@ button{
         }
     });
 </script>
+
 
 
 
