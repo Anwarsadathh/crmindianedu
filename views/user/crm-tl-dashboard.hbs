@@ -505,7 +505,8 @@
     </div>
   </div>
 </div>
-<!-- Dropdown for MainStage -->
+
+<!-- Dropdown for Main Stage -->
 <div class="form-group">
   <label for="mainStageSelect">Main Stage</label>
   <select id="mainStageSelect" class="form-select">
@@ -522,9 +523,7 @@
   <select id="stageSelect" class="form-select" disabled>
     <option value="">Select Stage</option>
     {{#each stageCounts}}
-      <option value="{{stage}}" data-main-stage="{{mainStage}}" class="d-none" data-documents='{{json this.documents}}'>
-        {{stage}} ({{count}})
-      </option>
+      <option value="{{stage}}" data-main-stage="{{mainStage}}" class="d-none">{{stage}} ({{count}})</option>
     {{/each}}
   </select>
 </div>
@@ -535,12 +534,147 @@
   <select id="subStageSelect" class="form-select" disabled>
     <option value="">Select Sub Stage</option>
     {{#each subStageCounts}}
-      <option value="{{subStage}}" data-stage="{{stage}}" class="d-none" data-documents='{{json this.documents}}'>
-        {{subStage}} ({{count}})
-      </option>
+      <option value="{{subStage}}" data-stage="{{stage}}" class="d-none">{{subStage}} ({{count}})</option>
     {{/each}}
   </select>
 </div>
+
+<!-- Table to Display the Selected Stage and Sub-Stage Data -->
+<div class="table-responsive mt-4">
+  <table class="table table-bordered" id="data-table">
+    <thead>
+      <tr>
+         <th scope="col"><input type="checkbox" id="selectAllCheckbox"></th> <!-- Add "Select All" -->
+                 <th scope="col">Date</th>
+                 <th scope="col">Assigned</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Mobile</th>
+                <th scope="col">Course</th>
+                <th scope="col">Specialization</th>
+             
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Dynamic rows will be inserted here -->
+    </tbody>
+  </table>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const mainStageSelect = document.getElementById("mainStageSelect");
+    const stageSelect = document.getElementById("stageSelect");
+    const subStageSelect = document.getElementById("subStageSelect");
+    const dataTableBody = document.querySelector("#data-table tbody");
+
+    function updateTable() {
+        dataTableBody.innerHTML = "";  // Clear the table body
+        const selectedMainStage = mainStageSelect.value;
+        const selectedStage = stageSelect.value;
+        const selectedSubStage = subStageSelect.value;
+
+        console.log("Selected Main Stage:", selectedMainStage);
+        console.log("Selected Stage:", selectedStage);
+        console.log("Selected Sub Stage:", selectedSubStage);
+
+        let matchingDocuments = [];
+
+        // Get documents from the selected Main Stage
+        if (selectedMainStage) {
+            const mainStageOption = mainStageSelect.querySelector(`option[value="${selectedMainStage}"]`);
+            let mainStageDocuments = [];
+
+            try {
+                mainStageDocuments = JSON.parse(mainStageOption.getAttribute('data-documents'));
+                console.log("Main Stage Documents:", mainStageDocuments);
+            } catch (error) {
+                console.error('Error parsing documents:', error);
+            }
+
+            // Filter documents by Stage and Sub-Stage if selected
+            matchingDocuments = mainStageDocuments.filter(doc => {
+                console.log("Checking Document:", doc);
+                const matchesStage = !selectedStage || (doc.stage && doc.stage === selectedStage);
+                const matchesSubStage = !selectedSubStage || (doc.subStage && doc.subStage === selectedSubStage);
+                console.log(`Matches Stage: ${matchesStage}, Matches Sub-Stage: ${matchesSubStage}`);
+                return matchesStage && matchesSubStage;
+            });
+            console.log("Matching Documents:", matchingDocuments);
+        }
+
+        // Populate the table with matching documents
+        matchingDocuments.forEach(doc => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><input type="checkbox" class="row-checkbox" data-documents='${JSON.stringify(doc)}'></td>
+                <td>${doc.timeStamp || 'N/A'}</td>
+                <td>${doc.assignDate || 'N/A'}</td>
+                <td>${doc.name || 'N/A'}</td>
+                <td>${doc.email || 'N/A'}</td>
+                <td>${doc.mobile || 'N/A'}</td>
+                <td>${doc.course || 'N/A'}</td>
+                <td>${doc.specialization || 'N/A'}</td>
+            `;
+            dataTableBody.appendChild(row);
+        });
+
+        // If no documents match, show "No documents match the selected criteria."
+        if (matchingDocuments.length === 0) {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td colspan="8" class="text-center">No documents match the selected criteria.</td>`;
+            dataTableBody.appendChild(row);
+        }
+    }
+
+    mainStageSelect.addEventListener("change", function () {
+        const selectedMainStage = this.value;
+
+        if (selectedMainStage) {
+            stageSelect.disabled = false;
+            document.querySelectorAll('#stageSelect option').forEach(option => {
+                option.classList.add('d-none');
+            });
+
+            document.querySelectorAll(`#stageSelect option[data-main-stage="${selectedMainStage}"]`).forEach(option => {
+                option.classList.remove('d-none');
+            });
+
+            stageSelect.value = "";
+            subStageSelect.disabled = true;
+            subStageSelect.value = "";
+            updateTable(); // Update the table based on the selected Main Stage
+        } else {
+            stageSelect.disabled = true;
+            subStageSelect.disabled = true;
+            updateTable(); // Clear the table if no Main Stage is selected
+        }
+    });
+
+    // Handle Stage Change
+    stageSelect.addEventListener("change", function () {
+        const selectedStage = this.value;
+
+        // Enable Sub-Stage Dropdown if Stage is selected
+        if (selectedStage) {
+            subStageSelect.disabled = false;
+            document.querySelectorAll('#subStageSelect option').forEach(option => option.classList.add('d-none'));
+            document.querySelectorAll(`#subStageSelect option[data-stage="${selectedStage}"]`).forEach(option => option.classList.remove('d-none'));
+            subStageSelect.value = "";
+            updateTable(); // Update the table based on the selected Stage
+        } else {
+            subStageSelect.disabled = true;
+            updateTable(); // Clear the table if no Stage is selected
+        }
+    });
+
+    // Handle Sub-Stage Change
+    subStageSelect.addEventListener("change", function () {
+        updateTable(); // Update the table based on the selected Sub Stage
+    });
+});
+
+</script>
+
 
 <!-- Main Stage Cards -->
 {{#each mainStageCounts}}
