@@ -447,144 +447,71 @@ button{
             <!-- Navbar End -->
 
 
+<div class="container-fluida tt">
+  <div class="table-responsive">
+    <!-- Bulk Send Button -->
+    <button class="btn btn-sm btn-success float-end" id="bulkSendBtn" data-toggle="modal" data-target="#bulkSendModal">
+      Bulk Send WhatsApp Message
+    </button>
 
-            <div class="container-fluida tt  ">
-
-      <div class="table-responsive">
-        <!-- Bulk Send Button -->
-<button class="btn btn-sm btn-success float-end" id="bulkSendBtn" data-toggle="modal" data-target="#bulkSendModal">
-  Bulk Send WhatsApp Message
-</button>
-
-         <h6>Partners</h6>
- <div class="table-wrapper ">
-<table class="table" id="dataTable">
-  <!-- Add a checkbox column to select rows -->
-<thead>
-  <tr class="bg-light">
-     <th><input type="checkbox" id="selectAll" />Select</th> <!-- Select All Checkbox -->
-    <th>No.</th>
-    <th>Institute Name</th>
-    <th>Institute ID</th>
-    <th>Owner Name</th>
-    <th>Mobile</th>
-    <th>WhatsApp</th>
-    <th>Company Type</th>
-    <th>Established Date</th>
-    <th>Institute Provides</th>
-    <th>State</th>
-    <th>City</th>
-    <th>Email</th>
-    <th>Account Holder Name</th>
-    <th>Account Number</th>
-    <th>IFSC Code</th>
-    <th>Branch</th>
-  </tr>
-</thead>
-<tbody>
-  {{#each partners}}
-  <tr data-id="{{_id}}">
-    <td><input type="checkbox" class="select-partner" /></td> <!-- Checkbox for selecting -->
-    <td>{{incrementIndex @index}}</td>
-    <td>{{institutename}}</td>
-    <td>{{instituteid}}</td>
-    <td>{{owner_name}}</td>
-    <td>{{mobile_number}}</td>
-    <td>
-      <!-- WhatsApp icon button to send a message -->
-      <a href="https://wa.me/91{{mobile_number}}" target="_blank">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width="24" height="24">
-      </a>
-    </td>
-    <td>{{company_type}}</td>
-    <td>{{established_date}}</td>
-    <td>{{institute_provides}}</td>
-    <td>{{state}}</td>
-    <td>{{city}}</td>
-    <td>{{email}}</td>
-    <td>{{account_holder_name}}</td>
-    <td>{{account_number}}</td>
-    <td>{{ifsc_code}}</td>
-    <td>{{branch}}</td>
-  </tr>
-  {{/each}}
-</tbody>
-
-
-
-</table>
-
-  
-  </div>
-     </div>
-</div>
-
- 
-
-{{!-- <!-- Bulk Send Modal -->
-<div class="modal fade" id="bulkSendModal" tabindex="-1" role="dialog" aria-labelledby="bulkSendModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="bulkSendModalLabel">Send WhatsApp Message</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form id="bulkSendForm">
-          <div class="form-group">
-            <label for="message">Message</label>
-            <textarea class="form-control" id="message" rows="3" placeholder="Enter your message" required></textarea>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="sendBulkMessage">Send Message</button>
-      </div>
+    <h6>Partners</h6>
+    <div class="table-wrapper">
+      <table class="table" id="dataTable">
+        <!-- Add a checkbox column to select rows -->
+        <thead>
+          <tr class="bg-light">
+            <th><input type="checkbox" id="selectAll" />Select</th> <!-- Select All Checkbox -->
+            <th>No.</th>
+            <th>Institute Name</th>
+            <th>Institute ID</th>
+            <th>Owner Name</th>
+            <th>Mobile</th>
+            <th>WhatsApp</th>
+            <th>Company Type</th>
+            <th>Established Date</th>
+            <th>Institute Provides</th>
+            <th>State</th>
+            <th>City</th>
+            <th>Email</th>
+            <th>Account Holder Name</th>
+            <th>Account Number</th>
+            <th>IFSC Code</th>
+            <th>Branch</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each partners}}
+          <tr data-id="{{_id}}">
+            <td><input type="checkbox" class="select-partner" /></td> <!-- Checkbox for selecting -->
+            <td>{{incrementIndex @index}}</td>
+            <td>{{institutename}}</td>
+            <td>{{instituteid}}</td>
+            <td>{{owner_name}}</td>
+            <td>{{mobile_number}}</td>
+            <td>
+              <!-- WhatsApp icon button to send a message -->
+              <a href="https://wa.me/91{{mobile_number}}" target="_blank">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width="24" height="24">
+              </a>
+            </td>
+            <td>{{company_type}}</td>
+            <td>{{established_date}}</td>
+            <td>{{institute_provides}}</td>
+            <td>{{state}}</td>
+            <td>{{city}}</td>
+            <td>{{email}}</td>
+            <td>{{account_holder_name}}</td>
+            <td>{{account_number}}</td>
+            <td>{{ifsc_code}}</td>
+            <td>{{branch}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
 
-<script>
-// Script to handle sending bulk messages
-document.getElementById("sendBulkMessage").addEventListener("click", function () {
-  const selectedNumbers = [];
-  const message = document.getElementById("message").value;
-
-  // Loop through each partner and collect selected mobile numbers
-  document.querySelectorAll(".select-partner:checked").forEach((checkbox) => {
-    const row = checkbox.closest("tr");
-    const mobileNumber = row.querySelector("td:nth-child(6)").innerText; // Fetch mobile number from the table
-    selectedNumbers.push(mobileNumber);
-  });
-
-  // Send the selected numbers and message to the backend
-  fetch("/send-bulk-message", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      message: message,
-      numbers: selectedNumbers,
-    }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.success) {
-        alert("Messages sent successfully!");
-      } else {
-        alert("Error sending messages.");
-      }
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
-});
-
-</script> --}}
 <!-- Bulk Send Modal -->
 <div class="modal fade" id="bulkSendModal" tabindex="-1" role="dialog" aria-labelledby="bulkSendModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -615,113 +542,127 @@ document.getElementById("sendBulkMessage").addEventListener("click", function ()
 </div>
 
 <script>
-  // Select All functionality
-  document.getElementById('selectAll').addEventListener('change', function() {
-    const checked = this.checked; // Get the checked state of the select all checkbox
-    document.querySelectorAll('.select-partner').forEach((checkbox) => {
-      checkbox.checked = checked; // Set the state of each checkbox
-    });
+// Select All functionality
+document.getElementById('selectAll').addEventListener('change', function() {
+  const checked = this.checked;
+  document.querySelectorAll('.select-partner').forEach((checkbox) => {
+    checkbox.checked = checked;
+  });
+});
+
+document.getElementById("sendBulkMessage").addEventListener("click", async function () {
+  const selectedNumbers = [];
+  const selectedNames = [];
+  const selectedInt = [];
+  const templateName = document.getElementById("templateNameInput").value.trim();
+  const mediaFile = document.getElementById("mediaUploadInput").files[0]; // Get uploaded file
+
+  if (!templateName) {
+    alert("Please enter a template name.");
+    return;
+  }
+
+  if (!mediaFile) {
+    alert("Please upload an image or video.");
+    return;
+  }
+
+  // Loop through each partner and collect selected mobile numbers, owner names, and institute names
+  document.querySelectorAll(".select-partner:checked").forEach((checkbox) => {
+    const row = checkbox.closest("tr");
+    const mobileNumber = row.querySelector("td:nth-child(6)").innerText.trim();
+    const instituteName = row.querySelector("td:nth-child(3)").innerText.trim();
+    const ownerName = row.querySelector("td:nth-child(5)").innerText.trim();
+
+    selectedNumbers.push(mobileNumber);
+    selectedNames.push(ownerName);
+    selectedInt.push(instituteName);
   });
 
-  document.getElementById("sendBulkMessage").addEventListener("click", async function () {
-    const selectedNumbers = [];
-    const selectedNames = [];
-    const selectedInt = [];
-    const templateName = document.getElementById("templateNameInput").value.trim();
-    const mediaFile = document.getElementById("mediaUploadInput").files[0]; // Get uploaded file
+  if (selectedNumbers.length === 0) {
+    alert("No recipients selected.");
+    return;
+  }
 
-    if (!templateName) {
-      alert("Please enter a template name.");
-      return;
-    }
+  try {
+    // Upload the image or video to the server
+    const formData = new FormData();
+    formData.append('media', mediaFile);
 
-    if (!mediaFile) {
-      alert("Please upload an image or video.");
-      return;
-    }
-
-    // Loop through each partner and collect selected mobile numbers, owner names, and institute names
-    document.querySelectorAll(".select-partner:checked").forEach((checkbox) => {
-      const row = checkbox.closest("tr");
-      const mobileNumber = row.querySelector("td:nth-child(6)").innerText.trim();
-      const instituteName = row.querySelector("td:nth-child(3)").innerText.trim();
-      const ownerName = row.querySelector("td:nth-child(5)").innerText.trim();
-
-      selectedNumbers.push(mobileNumber);
-      selectedNames.push(ownerName);
-      selectedInt.push(instituteName);
+    const mediaResponse = await fetch("/upload-media", {
+      method: "POST",
+      body: formData,
     });
 
-    if (selectedNumbers.length === 0) {
-      alert("No recipients selected.");
-      return;
-    }
-
+    // Check if the response is valid JSON
+    const mediaResponseText = await mediaResponse.text();
+    let mediaData;
     try {
-      // Upload the image or video to the server or cloud storage
-      const formData = new FormData();
-      formData.append('media', mediaFile);
-
-      const mediaResponse = await fetch("/upload-media", { // Modify the endpoint for your media upload logic
-        method: "POST",
-        body: formData,
-      });
-
-      const mediaData = await mediaResponse.json();
-      if (!mediaData.success) {
-        alert("Failed to upload media.");
-        return;
-      }
-
-      const mediaUrl = mediaData.url; // Get the uploaded media URL
-
-      // Send the selected numbers, names, institute names, template name, and media URL to the backend
-      const sendResponse = await fetch("/send-bulk-message-p", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          numbers: selectedNumbers,
-          names: selectedNames,
-          selectedInt: selectedInt,
-          templateName: templateName,
-          mediaUrl: mediaUrl, // Send the media URL to the backend
-        }),
-      });
-
-      const data = await sendResponse.json();
-      if (data.success) {
-        alert("Messages sent successfully!");
-      } else {
-        alert(`Error: ${data.message || "An error occurred while sending messages."}`);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      alert("An error occurred while processing your request.");
+      mediaData = JSON.parse(mediaResponseText);
+    } catch (err) {
+      throw new Error("Invalid JSON response from /upload-media: " + mediaResponseText);
     }
-  });
+
+    if (!mediaData.success) {
+      alert("Failed to upload media.");
+      return;
+    }
+
+    const mediaUrl = mediaData.url; // Get the uploaded media URL
+
+    // Send the selected numbers, names, institute names, template name, and media URL to the backend
+    const sendResponse = await fetch("/send-bulk-message-p", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        numbers: selectedNumbers,
+        names: selectedNames,
+        selectedInt: selectedInt,
+        templateName: templateName,
+        mediaUrl: mediaUrl,
+      }),
+    });
+
+    // Check if the response is valid JSON
+    const sendResponseText = await sendResponse.text();
+    let sendData;
+    try {
+      sendData = JSON.parse(sendResponseText);
+    } catch (err) {
+      throw new Error("Invalid JSON response from /send-bulk-message-p: " + sendResponseText);
+    }
+
+    if (sendData.success) {
+      alert("Messages sent successfully!");
+    } else {
+      alert(`Error: ${sendData.message || "An error occurred while sending messages."}`);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    alert("An error occurred while processing your request: " + error.message);
+  }
+});
 </script>
-
-
 
 <!-- Include SweetAlert2 for alerts -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-       <script>
-$(document).ready(function() {
-   const table = $('#dataTable').DataTable({
-        pageLength: 100, // Default to showing 100 entries
-        lengthMenu: [[100, 25, 10, -1], [100, 25, 10, "All"]] // Options for 100, 25, 10, and All entries per page
-    });
-});
 
+<script>
+$(document).ready(function() {
+  const table = $('#dataTable').DataTable({
+    pageLength: 100, // Default to showing 100 entries
+    lengthMenu: [[100, 25, 10, -1], [100, 25, 10, "All"]] // Options for 100, 25, 10, and All entries per page
+  });
+});
 </script>
 
- <!-- jQuery, Popper.js, and Bootstrap JS -->
+<!-- jQuery, Popper.js, and Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <!-- Additional JavaScript Libraries -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+
   <script src="lib/chart/chart.min.js"></script>
   <script src="lib/easing/easing.min.js"></script>
   <script src="lib/waypoints/waypoints.min.js"></script>

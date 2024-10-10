@@ -1773,15 +1773,17 @@ const uploadw = multer({
   limits: { fileSize: 50 * 1024 * 1024 } // 50MB limit
 });
 
-// Image and Video Upload Endpoint
+// Media Upload Endpoint
 router.post("/upload-media", uploadw.single("media"), (req, res) => {
+  // Handle missing file
   if (!req.file) {
     return res.status(400).json({ success: false, message: "No file uploaded" });
   }
 
-  const mediaUrl = `https://crm.indianeduhub.in/uploads/${req.file.filename}`; // Modify the URL based on your server setup
+  // Construct the media URL based on where files are saved on your server
+  const mediaUrl = `https://crm.indianeduhub.in/uploads/${req.file.filename}`;
 
-  // Return success response with the file URL
+  // Return the media URL in the response
   res.json({ success: true, url: mediaUrl });
 });
 
@@ -1864,12 +1866,14 @@ router.post("/send-bulk-message-p", async (req, res) => {
   const { numbers, names, selectedInt, templateName, mediaUrl } = req.body; // Include mediaUrl
 
   try {
+    // Check if numbers are provided
     if (!numbers || numbers.length === 0) {
       return res
         .status(400)
         .json({ success: false, message: "Numbers not provided" });
     }
 
+    // Ensure names and selectedInt arrays match numbers array length
     if (
       !names ||
       names.length !== numbers.length ||
@@ -1883,6 +1887,7 @@ router.post("/send-bulk-message-p", async (req, res) => {
       });
     }
 
+    // Loop through all numbers and send the template message
     const promises = numbers.map((number, index) => {
       return axios
         .post(
@@ -1896,7 +1901,7 @@ router.post("/send-bulk-message-p", async (req, res) => {
               name: templateName,
               languageCode: "en",
               headerValues: [mediaUrl], // Add media URL dynamically
-              bodyValues: [names[index]],
+              bodyValues: [names[index]], // Dynamically add recipient's name
             },
           },
           {
@@ -1904,12 +1909,13 @@ router.post("/send-bulk-message-p", async (req, res) => {
               Authorization: `Basic b3hCczZhNHJWdFFpSWd0NDFNUFd1b0NyYnJtUDc1VnNSd1NVeGNuN09NWTo=`, // Replace with your actual credentials
               "Content-Type": "application/json",
             },
-            timeout: 5000,
+            timeout: 5000, // Adjust as necessary
           }
         )
-        .then(() => ({ success: true, number }))
+        .then(() => ({ success: true, number })) // Return success for each message
         .catch((err) => {
           if (err.response) {
+            // Log API error responses
             console.error(
               `Failed to send message to ${number}:`,
               err.response.data
@@ -1920,18 +1926,20 @@ router.post("/send-bulk-message-p", async (req, res) => {
               error: err.response.data.message || "Failed to send message.",
             };
           } else {
+            // Log network or other errors
             console.error(`Failed to send message to ${number}:`, err.message);
             return { success: false, number, error: err.message };
           }
         });
     });
 
+    // Wait for all API calls to resolve
     const results = await Promise.all(promises);
     const hasErrors = results.some((result) => !result.success);
-    res.json({ success: !hasErrors, results });
+    res.json({ success: !hasErrors, results }); // Send response with all results
   } catch (error) {
     console.error("Error sending bulk messages:", error.message);
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: error.message }); // Catch unexpected errors
   }
 });
 
