@@ -9,6 +9,7 @@ const createError = require("http-errors");
 const bodyParser = require("body-parser");
 const flash = require("connect-flash");
 const MongoStore = require("connect-mongo"); // For persistent session storage
+const multer = require("multer"); // File upload middleware
 
 require("dotenv").config();
 
@@ -51,13 +52,14 @@ const formatDates = function (date) {
   return "Invalid Date"; // Return "Invalid Date" if the input is not a valid date
 };
 
+// Handlebars setup with custom helpers
 const hbs = exphbs.create({
   extname: "hbs",
   defaultLayout: "user-layout",
   layoutsDir: path.join(__dirname, "views/layout"),
   partialsDir: path.join(__dirname, "views/partials"),
   helpers: {
-    formatDates: formatDates, // Register the formatDates helper
+    formatDates: formatDates,
     formatDate: function (date) {
       if (!date) return "N/A";
       const options = {
@@ -67,7 +69,7 @@ const hbs = exphbs.create({
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit",
-        hour12: true, // 12-hour format with AM/PM
+        hour12: true,
       };
       return new Date(date).toLocaleString("en-IN", options);
     },
@@ -156,14 +158,41 @@ app.engine("hbs", hbs.engine);
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "hbs");
 
+// Security middleware
+
 // Middleware setup
 app.use(logger("dev"));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "100mb" })); // Increase JSON payload limit
+app.use(bodyParser.urlencoded({ limit: "100mb", extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// Multer configuration for file uploads
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, "uploads")); // Save uploads to 'uploads' directory
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(
+      null,
+      file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
+    );
+  },
+});
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 100 * 1024 * 1024 }, // 100MB size limit
+});
+
+// Example file upload route
+app.post("/upload-media", upload.single("file"), (req, res) => {
+  res.json({ message: "File uploaded successfully", file: req.file });
+});
+
 // Setup persistent session storage with connect-mongo
 const sessionStore = MongoStore.create({
   mongoUrl: process.env.MONGODB_URL, // Make sure this points to the correct MongoDB URL
@@ -178,7 +207,7 @@ app.use(
     saveUninitialized: true,
     store: sessionStore, // Store sessions in MongoDB
     cookie: {
-      secure: false, // Set to true if using HTTPS
+      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
       maxAge: 14 * 24 * 60 * 60 * 1000, // Expire cookies after 14 days
     },
   })
